@@ -32,13 +32,6 @@ public class UserDetailsImpl implements UserDetails {
 		this.authorities = authorities;
 	}
 
-	public static UserDetailsImpl build(User user) {
-		List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(user.getAuthority().getAuthority()));
-
-		return new UserDetailsImpl(user.getId(), user.getUsername(),
-				user.getPassword(),
-				authorities);
-	}
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {

@@ -53,12 +53,8 @@ class UserRestController {
 	}
 
 	@GetMapping
-	public ResponseEntity<List<User>> findAll(@RequestParam(required = false) String auth) {
-		List<User> res;
-		if (auth != null) {
-			res = (List<User>) userService.findAllByAuthority(auth);
-		} else
-			res = (List<User>) userService.findAll();
+	public ResponseEntity<List<User>> findAll() {
+		List<User> res = (List<User>) userService.findAll();
 		return new ResponseEntity<>(res, HttpStatus.OK);
 	}
 
