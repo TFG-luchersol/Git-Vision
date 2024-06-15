@@ -26,7 +26,6 @@ import org.springframework.samples.gitVision.configuration.SecurityConfiguration
 import org.springframework.samples.gitVision.exceptions.AccessDeniedException;
 import org.springframework.samples.gitVision.exceptions.ResourceNotFoundException;
 import org.springframework.security.config.annotation.web.WebSecurityConfigurer;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -51,23 +50,16 @@ class UserControllerTests {
 	@MockBean
 	private UserService userService;
 
-	@MockBean
-	private AuthoritiesService authService;
-
 	@Autowired
 	private ObjectMapper objectMapper;
 
 	@Autowired
 	private MockMvc mockMvc;
 
-	private Authorities auth;
 	private User user, logged;
 
 	@BeforeEach
 	void setup() {
-		auth = new Authorities();
-		auth.setId(TEST_AUTH_ID);
-		auth.setAuthority("VET");
 
 		user = new User();
 		user.setId(1);
@@ -81,10 +73,6 @@ class UserControllerTests {
 		logged = new User();
 		logged.setUsername(details.getUsername());
 		logged.setPassword(details.getPassword());
-		Authorities aux = new Authorities();
-		for (GrantedAuthority auth : details.getAuthorities()) {
-			aux.setAuthority(auth.getAuthority());
-		}
 		return logged;
 	}
 
@@ -110,10 +98,6 @@ class UserControllerTests {
 	@Test
 	@WithMockUser("admin")
 	void shouldFindAllWithAuthority() throws Exception {
-		Authorities aux = new Authorities();
-		aux.setId(2);
-		aux.setAuthority("AUX");
-
 		User sara = new User();
 		sara.setId(2);
 		sara.setUsername("Sara");
@@ -129,19 +113,6 @@ class UserControllerTests {
 				.andExpect(jsonPath("$[?(@.id == 3)].username").value("Juan"));
 	}
 
-	@Test
-	@WithMockUser("admin")
-	void shouldFindAllAuths() throws Exception {
-		Authorities aux = new Authorities();
-		aux.setId(2);
-		aux.setAuthority("AUX");
-
-		when(this.authService.findAll()).thenReturn(List.of(auth, aux));
-
-		mockMvc.perform(get(BASE_URL + "/authorities")).andExpect(status().isOk())
-				.andExpect(jsonPath("$.size()").value(2)).andExpect(jsonPath("$[?(@.id == 1)].authority").value("VET"))
-				.andExpect(jsonPath("$[?(@.id == 2)].authority").value("AUX"));
-	}
 
 	@Test
 	@WithMockUser("admin")

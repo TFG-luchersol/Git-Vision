@@ -5,7 +5,6 @@ import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.gitVision.auth.payload.request.SignupRequest;
-import org.springframework.samples.gitVision.user.Authorities;
 import org.springframework.samples.gitVision.user.User;
 import org.springframework.samples.gitVision.user.UserService;
 import org.springframework.stereotype.Service;
@@ -25,7 +24,7 @@ public class AuthService {
 		User user = new User();
 		user.setUsername(request.getUsername());
 		String strRoles = request.getAuthority();
-		Authorities role;
+
 
 		
 	}

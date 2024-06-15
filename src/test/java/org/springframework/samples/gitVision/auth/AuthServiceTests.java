@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.samples.gitVision.auth.payload.request.SignupRequest;
-import org.springframework.samples.gitVision.user.AuthoritiesService;
 import org.springframework.samples.gitVision.user.User;
 import org.springframework.samples.gitVision.user.UserService;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,8 +19,6 @@ public class AuthServiceTests {
 	protected AuthService authService;
 	@Autowired
 	protected UserService userService;
-	@Autowired
-	protected AuthoritiesService authoritiesService;
 
 	@Test
 	@Transactional

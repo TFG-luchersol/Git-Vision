@@ -44,23 +44,15 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 class UserRestController {
 
 	private final UserService userService;
-	private final AuthoritiesService authService;
 
 	@Autowired
-	public UserRestController(UserService userService, AuthoritiesService authService) {
+	public UserRestController(UserService userService) {
 		this.userService = userService;
-		this.authService = authService;
 	}
 
 	@GetMapping
 	public ResponseEntity<List<User>> findAll() {
 		List<User> res = (List<User>) userService.findAll();
-		return new ResponseEntity<>(res, HttpStatus.OK);
-	}
-
-	@GetMapping("authorities")
-	public ResponseEntity<List<Authorities>> findAllAuths() {
-		List<Authorities> res = (List<Authorities>) authService.findAll();
 		return new ResponseEntity<>(res, HttpStatus.OK);
 	}
 
