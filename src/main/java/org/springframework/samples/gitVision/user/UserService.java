@@ -17,9 +17,6 @@ package org.springframework.samples.gitVision.user;
 
 import jakarta.validation.Valid;
 
-import org.kohsuke.github.GHApp;
-import org.kohsuke.github.GitHub;
-import org.kohsuke.github.connector.GitHubConnector;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
