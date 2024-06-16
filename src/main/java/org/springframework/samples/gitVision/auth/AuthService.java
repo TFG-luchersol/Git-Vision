@@ -23,10 +23,7 @@ public class AuthService {
 	public void createUser(@Valid SignupRequest request) {
 		User user = new User();
 		user.setUsername(request.getUsername());
-		String strRoles = request.getAuthority();
-
-
-		
+		String strRoles = request.getAuthority();	
 	}
 
 }

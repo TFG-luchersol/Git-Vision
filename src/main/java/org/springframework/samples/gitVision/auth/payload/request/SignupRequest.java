@@ -18,6 +18,8 @@ public class SignupRequest {
 
 	@NotBlank
 	private String password;
+
+	private String token;
 	
 	//Both
 	@NotBlank

@@ -1,10 +1,15 @@
 package org.springframework.samples.gitVision.auth;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import jakarta.validation.Valid;
 
+import org.kohsuke.github.GHCommit;
+import org.kohsuke.github.GHIssue;
+import org.kohsuke.github.GHUser;
+import org.kohsuke.github.GitHub;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.samples.gitVision.auth.payload.request.LoginRequest;
@@ -77,11 +82,22 @@ public class AuthController {
 	
 	@PostMapping("/signup")	
 	public ResponseEntity<MessageResponse> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
-		if (userService.existsUser(signUpRequest.getUsername()).equals(true)) {
-			return ResponseEntity.badRequest().body(new MessageResponse("Error: Username is already taken!"));
+		try {
+            String username = signUpRequest.getUsername();
+			String token = signUpRequest.getToken();
+            GitHub gitHub = GitHub.connect(username, token);
+            GHUser user = gitHub.getMyself();	
+			
+			if (userService.existsUser(username).equals(true)) 
+				return ResponseEntity.badRequest().body(new MessageResponse("Error: Username is already taken!"));
+
+			authService.createUser(signUpRequest);
+			return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+
+		} catch (IOException e) {
+			return ResponseEntity.badRequest().body(new MessageResponse("Error en login"));
 		}
-		authService.createUser(signUpRequest);
-		return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+		
 	}
 
 }
