@@ -58,16 +58,14 @@ public class AuthController {
 	public ResponseEntity authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 		try{
 			Authentication authentication = authenticationManager.authenticate(
-				new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+				new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getGithubToken()));
 
 			SecurityContextHolder.getContext().setAuthentication(authentication);
 			String jwt = jwtUtils.generateJwtToken(authentication);
 
 			UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-			List<String> roles = userDetails.getAuthorities().stream().map(item -> item.getAuthority())
-				.collect(Collectors.toList());
 
-			return ResponseEntity.ok().body(new JwtResponse(jwt, userDetails.getId(), userDetails.getUsername(), roles));
+			return ResponseEntity.ok().body(new JwtResponse(jwt, userDetails.getId(), userDetails.getUsername()));
 		}catch(BadCredentialsException exception){
 			return ResponseEntity.badRequest().body("Bad Credentials!");
 		}
@@ -88,14 +86,15 @@ public class AuthController {
             GitHub gitHub = GitHub.connect(username, token);
             GHUser user = gitHub.getMyself();	
 			
-			if (userService.existsUser(username).equals(true)) 
+			if (userService.existsUserByUsername(username)) 
 				return ResponseEntity.badRequest().body(new MessageResponse("Error: Username is already taken!"));
 
-			authService.createUser(signUpRequest);
+
+			authService.createUser(user, username, token);
 			return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
 
 		} catch (IOException e) {
-			return ResponseEntity.badRequest().body(new MessageResponse("Error en login"));
+			return ResponseEntity.badRequest().body(new MessageResponse("Error: The username or token can be incorrect"));
 		}
 		
 	}

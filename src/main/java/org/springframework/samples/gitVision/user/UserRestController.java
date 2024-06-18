@@ -16,6 +16,7 @@
 package org.springframework.samples.gitVision.user;
 
 import java.util.List;
+import java.util.Objects;
 
 import jakarta.validation.Valid;
 
@@ -32,7 +33,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -57,8 +57,8 @@ class UserRestController {
 	}
 
 	@GetMapping(value = "{id}")
-	public ResponseEntity<User> findById(@PathVariable("id") Integer id) {
-		return new ResponseEntity<>(userService.findUser(id), HttpStatus.OK);
+	public ResponseEntity<User> findById(@PathVariable("id") String id) {
+		return new ResponseEntity<>(userService.findUserById(id), HttpStatus.OK);
 	}
 
 	@PostMapping
@@ -70,17 +70,17 @@ class UserRestController {
 
 	@PutMapping(value = "{userId}")
 	@ResponseStatus(HttpStatus.OK)
-	public ResponseEntity<User> update(@PathVariable("userId") Integer id, @RequestBody @Valid User user) {
-		RestPreconditions.checkNotNull(userService.findUser(id), "User", "ID", id);
+	public ResponseEntity<User> update(@PathVariable("userId") String id, @RequestBody @Valid User user) {
+		RestPreconditions.checkNotNull(userService.findUserById(id), "User", "ID", id);
 		return new ResponseEntity<>(this.userService.updateUser(user, id), HttpStatus.OK);
 	}
 
 	@DeleteMapping(value = "{userId}")
 	@ResponseStatus(HttpStatus.OK)
-	public ResponseEntity<MessageResponse> delete(@PathVariable("userId") int id) {
-		RestPreconditions.checkNotNull(userService.findUser(id), "User", "ID", id);
-		if (userService.findCurrentUser().getId() != id) {
-			userService.deleteUser(id);
+	public ResponseEntity<MessageResponse> delete(@PathVariable("userId") String id) {
+		RestPreconditions.checkNotNull(userService.findUserByUsername(id), "User", "ID", id);
+		if (!Objects.equals(userService.findCurrentUser().getId(), id)) {
+			userService.deleteUserById(id);
 			return new ResponseEntity<>(new MessageResponse("User deleted!"), HttpStatus.OK);
 		} else
 			throw new AccessDeniedException("You can't delete yourself!");

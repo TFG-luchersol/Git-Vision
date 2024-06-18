@@ -36,21 +36,16 @@ public class UserService {
 		this.userRepository = userRepository;
 	}
 
-	@Transactional
-	public User saveUser(User user) throws DataAccessException {
-		userRepository.save(user);
-		return user;
-	}
-
 	@Transactional(readOnly = true)
-	public User findUser(String username) {
+	public User findUserByUsername(String username) {
 		return userRepository.findByUsername(username)
 				.orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
 	}
 
 	@Transactional(readOnly = true)
-	public User findUser(Integer id) {
-		return userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User", "id", id));
+	public User findUserById(String id) {
+		return userRepository.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("User", "id", id));
 	}
 
 	@Transactional(readOnly = true)
@@ -63,18 +58,18 @@ public class UserService {
 					.orElseThrow(() -> new ResourceNotFoundException("User", "Username", auth.getName()));
 	}
 
-	public Boolean existsUser(String username) {
-		return userRepository.existsByUsername(username);
-	}
-
 	@Transactional(readOnly = true)
 	public Iterable<User> findAll() {
 		return userRepository.findAll();
 	}
 
+	public Boolean existsUserByUsername(String username) {
+		return userRepository.existsByUsername(username);
+	}
+
 	@Transactional
-	public User updateUser(@Valid User user, Integer idToUpdate) {
-		User toUpdate = findUser(idToUpdate);
+	public User updateUser(@Valid User user, String idToUpdate) {
+		User toUpdate = findUserById(idToUpdate);
 		BeanUtils.copyProperties(user, toUpdate, "id");
 		userRepository.save(toUpdate);
 
@@ -82,9 +77,17 @@ public class UserService {
 	}
 
 	@Transactional
-	public void deleteUser(Integer id) {
-		User toDelete = findUser(id);
+	public User saveUser(User user) throws DataAccessException {
+		userRepository.save(user);
+		return user;
+	}
+
+	@Transactional
+	public void deleteUserById(String id) {
+		User toDelete = findUserById(id);
 		this.userRepository.delete(toDelete);
 	}
+
+	
 
 }

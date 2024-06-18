@@ -1,10 +1,11 @@
 package org.springframework.samples.gitVision.auth;
 
 import jakarta.transaction.Transactional;
-import jakarta.validation.Valid;
 
+import java.io.IOException;
+
+import org.kohsuke.github.GHUser;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.samples.gitVision.auth.payload.request.SignupRequest;
 import org.springframework.samples.gitVision.user.User;
 import org.springframework.samples.gitVision.user.UserService;
 import org.springframework.stereotype.Service;
@@ -20,10 +21,19 @@ public class AuthService {
 	}
 
 	@Transactional
-	public void createUser(@Valid SignupRequest request) {
+	public void createUser(GHUser request, String username, String token) {
 		User user = new User();
-		user.setUsername(request.getUsername());
-		String strRoles = request.getAuthority();	
+		try {
+			user.setId(request.getNodeId());
+			user.setUsername(username);
+			user.setGithubToken(token);
+			user.setEmail(request.getEmail());
+			user.setAvatarUrl(request.getAvatarUrl());
+		} catch (IOException e) {
+			System.out.println("Error: Error: User instantiation failed");
+		}
+		
+		userService.saveUser(user);
 	}
 
 }
