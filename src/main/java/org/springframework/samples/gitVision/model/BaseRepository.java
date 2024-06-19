@@ -1,7 +1,9 @@
 package org.springframework.samples.gitVision.model;
 
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.NoRepositoryBean;
 
-public interface BaseRepository<T> extends CrudRepository<T, String>{
+@NoRepositoryBean
+public interface BaseRepository<T> extends CrudRepository<T, Long>{
     
 }

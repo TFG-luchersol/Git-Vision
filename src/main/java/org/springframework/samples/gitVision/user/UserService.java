@@ -43,7 +43,7 @@ public class UserService {
 	}
 
 	@Transactional(readOnly = true)
-	public User findUserById(String id) {
+	public User findUserById(Long id) {
 		return userRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("User", "id", id));
 	}
@@ -68,7 +68,7 @@ public class UserService {
 	}
 
 	@Transactional
-	public User updateUser(@Valid User user, String idToUpdate) {
+	public User updateUser(@Valid User user, Long idToUpdate) {
 		User toUpdate = findUserById(idToUpdate);
 		BeanUtils.copyProperties(user, toUpdate, "id");
 		userRepository.save(toUpdate);
@@ -83,7 +83,7 @@ public class UserService {
 	}
 
 	@Transactional
-	public void deleteUserById(String id) {
+	public void deleteUserById(Long id) {
 		User toDelete = findUserById(id);
 		this.userRepository.delete(toDelete);
 	}

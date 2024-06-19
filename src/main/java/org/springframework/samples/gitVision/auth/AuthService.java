@@ -24,7 +24,7 @@ public class AuthService {
 	public void createUser(GHUser request, String token) {
 		User user = new User();
 		try {
-			user.setId(request.getNodeId());
+			user.setId(request.getId());
 			user.setUsername(request.getLogin());
 			user.setEmail(request.getEmail());
 			user.setAvatarUrl(request.getAvatarUrl());

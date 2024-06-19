@@ -10,6 +10,6 @@ public interface UserRepository extends BaseRepository<User>{
 
 	Boolean existsByUsername(String username);
 
-	Optional<User> findById(String id);
+	Optional<User> findById(Long id);
 	
 }
