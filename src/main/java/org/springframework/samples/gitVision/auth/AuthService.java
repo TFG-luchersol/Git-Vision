@@ -21,14 +21,14 @@ public class AuthService {
 	}
 
 	@Transactional
-	public void createUser(GHUser request, String username, String token) {
+	public void createUser(GHUser request, String token) {
 		User user = new User();
 		try {
 			user.setId(request.getNodeId());
-			user.setUsername(username);
-			user.setGithubToken(token);
+			user.setUsername(request.getLogin());
 			user.setEmail(request.getEmail());
 			user.setAvatarUrl(request.getAvatarUrl());
+			user.setGithubToken(token);
 		} catch (IOException e) {
 			System.out.println("Error: Error: User instantiation failed");
 		}

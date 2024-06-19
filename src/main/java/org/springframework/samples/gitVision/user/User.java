@@ -18,14 +18,14 @@ public class User extends BaseEntity {
 
 	@Column(unique = true)
 	String username;
+	
+	String email;
+
+	String avatarUrl;
 
 	@NotBlank
 	String githubToken;
 
 	String clockifyToken;
-	
-	String email;
-
-	String avatarUrl;
 
 }

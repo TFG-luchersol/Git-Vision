@@ -90,7 +90,7 @@ public class AuthController {
 				return ResponseEntity.badRequest().body(new MessageResponse("Error: Username is already taken!"));
 
 
-			authService.createUser(user, username, token);
+			authService.createUser(user, token);
 			return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
 
 		} catch (IOException e) {
