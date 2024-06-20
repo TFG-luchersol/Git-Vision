@@ -1,0 +1,26 @@
+.button-group{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-direction: column;
+}
+
+.button-group Button{
+    margin: 10px;
+    border-radius: 20px;
+    width: 90%;
+    background-color: blueviolet;
+    text-decoration-color: whitesmoke;
+}
+
+.center-title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 15px;
+}
+
+.custom-link {
+    text-decoration: none;
+    color: inherit;
+}

@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import tokenService from './services/token.service';
 import jwt_decode from "jwt-decode";
 import logo from "../src/static/images/logo.png";
+import { SiSwagger, SiGoogledocs } from "react-icons/si";
 
 function AppNavbar() {
     const [username, setUsername] = useState("");
@@ -19,25 +20,19 @@ function AppNavbar() {
     }, [jwt])
     
    
-    let userLinks = (
+    let user = (
             <>
                 <NavItem>
-                    <NavLink tag={Link} to="/dashboard">Dashboard</NavLink>
-                </NavItem>
-            </>
-        )
-    let userLogout = (
-            <>
-                <NavItem>
-                    <NavLink id="docs" tag={Link} to="/docs">Docs</NavLink>
+                    <NavLink id="docs" tag={Link} to="/docs">
+                        <SiGoogledocs title='Documentacion' style={{fontSize:50}}/>
+                    </NavLink>
                 </NavItem>
                 <NavItem>
-                    <NavLink id="plans" tag={Link} to="/plans">Pricing Plans</NavLink>
+                    <NavLink id="plans" tag={Link} to="/swagger">
+                        <SiSwagger title='Swagger' style={{fontSize:50}}/>
+                    </NavLink>
                 </NavItem>
                 <NavbarText className="justify-content-end">{username}</NavbarText>
-                <NavItem className="d-flex">
-                    <NavLink id="logout" tag={Link} to="/logout">Logout</NavLink>
-                </NavItem>
             </>
         )
 
@@ -52,11 +47,8 @@ function AppNavbar() {
                 </NavbarBrand>
                 <NavbarToggler onClick={toggleNavbar} className="ms-2" />
                 <Collapse isOpen={!collapsed} navbar>
-                    <Nav className="me-auto mb-2 mb-lg-0" navbar>
-                        {userLinks}
-                    </Nav>
                     <Nav className="ms-auto mb-2 mb-lg-0" navbar>
-                        {userLogout}
+                        {user}
                     </Nav>
                 </Collapse>
             </Navbar>

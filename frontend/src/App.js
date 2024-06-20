@@ -48,7 +48,7 @@ function App() {
         <AppNavbar />
         <Routes>
           <Route path="/" exact={true} element={<Home />} />
-          <Route path="/docs" element={<SwaggerDocs />} />
+          <Route path="/swagger" element={<SwaggerDocs />} />
           {publicRoutes}
           {userRoutes}
         </Routes>
