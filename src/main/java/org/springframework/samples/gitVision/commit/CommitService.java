@@ -1,14 +1,14 @@
 package org.springframework.samples.gitVision.commit;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestMapping;
+import java.time.LocalDateTime;
+import java.util.List;
 
-import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.samples.gitVision.commit.stats.CommitsByPerson;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@RequestMapping("/api/v1/commit")
-@Tag(name = "Commit")
 public class CommitService {
     
     CommitRepository commitRepository;
@@ -18,4 +18,15 @@ public class CommitService {
         this.commitRepository = commitRepository;
     }
 
+    @Transactional(readOnly = true)
+    public List<CommitsByPerson> getNumCommitsByUserInPeriod(LocalDateTime startDate, LocalDateTime endDate){
+        if(startDate == null && endDate == null)
+            return this.commitRepository.getNumCommitsByUser();
+        else if(startDate == null)
+            return this.commitRepository.getNumCommitsByUserBeforeThat(endDate);
+        else if(endDate == null)
+            return this.commitRepository.getNumCommitsByUserAfterThat(startDate);
+        else
+            return this.commitRepository.getNumCommitsByUser();
+    }
 }

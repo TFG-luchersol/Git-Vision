@@ -66,10 +66,10 @@
 			<artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>
 		<!-- Databases - Use H2 by default -->
-		<!-- <dependency>
+		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
-		</dependency> -->
+		</dependency>
 		<!--dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>

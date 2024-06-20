@@ -20,8 +20,8 @@ public class CommitRepositoryTest {
     CommitRepository commitRepository;
 
     @Test
-    void testCountCommitsByUser() {
-        List<CommitsByPerson> query = this.commitRepository.countCommitsByUser();
+    void testGetNumCommitsByUser() {
+        List<CommitsByPerson> query = this.commitRepository.getNumCommitsByUser();
         Map<String, Long> count = CommitsByPerson.parseNumCommitsByUsername(query);
         assertEquals(6, count.get("user_1").intValue());
         assertEquals(5, count.get("user_2").intValue());
@@ -29,10 +29,10 @@ public class CommitRepositoryTest {
     }
 
     @Test
-    void testCountCommitsByUserBeforeThat() {
+    void testGetNumCommitsByUserBeforeThat() {
         // <--  2004-02-01 23:00:00 
         LocalDateTime endDateTime = LocalDateTime.of(2004, 2, 1, 23, 0, 0);
-        List<CommitsByPerson> query = this.commitRepository.countCommitsByUserBeforeThat(endDateTime);
+        List<CommitsByPerson> query = this.commitRepository.getNumCommitsByUserBeforeThat(endDateTime);
         Map<String, Long> count = CommitsByPerson.parseNumCommitsByUsername(query);
         assertEquals(6, count.get("user_1").intValue());
         assertEquals(4, count.get("user_2").intValue());
@@ -40,10 +40,10 @@ public class CommitRepositoryTest {
     }
 
     @Test
-    void testCountCommitsByUserAfterThat() {
+    void testGetNumCommitsByUserAfterThat() {
         // 2003-02-01 23:00:00  -->
         LocalDateTime starDateTime = LocalDateTime.of(2003, 2, 1, 23, 0, 0);
-        List<CommitsByPerson> query = this.commitRepository.countCommitsByUserAfterThat(starDateTime);
+        List<CommitsByPerson> query = this.commitRepository.getNumCommitsByUserAfterThat(starDateTime);
         Map<String, Long> count = CommitsByPerson.parseNumCommitsByUsername(query);
         assertEquals(count.get("user_1").intValue(), 2);
         assertEquals(count.get("user_2").intValue(), 3);
@@ -51,11 +51,11 @@ public class CommitRepositoryTest {
     }
 
     @Test
-    void testCountCommitsByUserOnDate() {
+    void testGetNumCommitsByUserOnDate() {
         // 2003-02-01 23:00:00  --  2004-02-01 23:00:00
         LocalDateTime starDateTime = LocalDateTime.of(2003, 2, 1, 23, 0, 0),
                 endDateTime = LocalDateTime.of(2004, 2, 1, 23, 0, 0);
-        List<CommitsByPerson> query = this.commitRepository.countCommitsByUserOnDate(starDateTime, endDateTime);
+        List<CommitsByPerson> query = this.commitRepository.getNumCommitsByUserOnDate(starDateTime, endDateTime);
         Map<String, Long> count = CommitsByPerson.parseNumCommitsByUsername(query);
         assertEquals(2, count.get("user_1").intValue());
         assertEquals(2, count.get("user_2").intValue());
