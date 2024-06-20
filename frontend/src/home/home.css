@@ -7,10 +7,14 @@
 
 .button-group Button{
     margin: 10px;
-    border-radius: 20px;
+    border-radius: 10px;
     width: 90%;
     background-color: blueviolet;
     text-decoration-color: whitesmoke;
+}
+
+.button-group Button:hover{
+    background-color: rgb(104, 36, 169);
 }
 
 .center-title {

@@ -49,23 +49,24 @@ export default function Home() {
                 }
             
                 <Form onSubmit={handleSubmit} className='auth-form-container'>
-                    <title className='center-title'>
-                        <h1>Login</h1>
-                    </title>
-                    
+                    <div style={{margin: "30px"}}>
+                        <title className='center-title'>
+                            <h1>Login</h1>
+                        </title>
+                        
 
-                    <FormGroup>
-                        <Label>Username:</Label>
-                        <Input type='text' name='username' value={values.username || ""} onChange={handleChange}/>
-                    </FormGroup>
+                        <FormGroup>
+                            <Label>Username:</Label>
+                            <Input type='text' name='username' value={values.username || ""} onChange={handleChange}/>
+                        </FormGroup>
 
-                    <div className='button-group'>
-                        <Button type='submit'>Login</Button> 
-                        <Button type='button'>
-                            <Link className='custom-link' to={"/user/sing-in"}>Registrer</Link>
-                        </Button> 
+                        <div className='button-group'>
+                            <Button type='submit'>Login</Button> 
+                            <Button type='button'>
+                                <Link className='custom-link' to={"/user/sing-in"}>Registrer</Link>
+                            </Button> 
+                        </div>
                     </div>
-                    
                 </Form>
                 
             

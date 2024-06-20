@@ -9,10 +9,12 @@
 }
 
 .auth-form-container{
+    border-radius: 20px;
+    background-color: #0000001c;
     max-height: 800px;
     max-width: 500px;
-    height: 40%;
-    width: 40%;
+    height: auto;
+    width: 60%;
 }
 
 .auth-page-container h1 {
