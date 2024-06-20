@@ -22,14 +22,6 @@ function ErrorFallback({ error, resetErrorBoundary }) {
 
 function App() {
   const jwt = tokenService.getLocalAccessToken();
-  let roles = []
-  if (jwt) {
-    roles = getRolesFromJWT(jwt);
-  }
-
-  function getRolesFromJWT(jwt) {
-    return jwt_decode(jwt).authorities;
-  }
 
   let userRoutes = <></>;
   let publicRoutes = <></>;
