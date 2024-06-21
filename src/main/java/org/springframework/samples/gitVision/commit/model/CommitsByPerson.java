@@ -1,4 +1,4 @@
-package org.springframework.samples.gitvision.commit.stats;
+package org.springframework.samples.gitvision.commit.model;
 
 import java.util.List;
 import java.util.Map;

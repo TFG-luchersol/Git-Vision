@@ -16,11 +16,16 @@
 
 package org.springframework.samples.gitvision.util;
 
+import java.sql.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.Collection;
 import java.util.Objects;
 
 import org.springframework.orm.ObjectRetrievalFailureException;
-import org.springframework.samples.gitvision.model.entity.BaseEntity;
+import org.springframework.samples.gitvision.model.BaseEntity;
 
 /**
  * Utility methods for handling entities. Separate from the BaseEntity class mainly
@@ -28,7 +33,7 @@ import org.springframework.samples.gitvision.model.entity.BaseEntity;
  *
  * @author Juergen Hoeller
  * @author Sam Brannen
- * @see org.springframework.samples.gitvision.model.entity.BaseEntity
+ * @see org.springframework.samples.gitvision.model.BaseEntity
  * @since 29.10.2003
  */
 public abstract class EntityUtils {
@@ -41,14 +46,22 @@ public abstract class EntityUtils {
 	 * @return the found entity
 	 * @throws ObjectRetrievalFailureException if the entity was not found
 	 */
-	public static <T extends BaseEntity<?>> T getById(Collection<T> entities, Class<T> entityClass, String entityId)
+	public static <T extends BaseEntity> T getById(Collection<T> entities, Class<T> entityClass, Long entityId)
 			throws ObjectRetrievalFailureException {
 		for (T entity : entities) {
-			if (Objects.equals(entity.getId(), entityId) && entityClass.isInstance(entity)) {
+			if (entity.getId() == entityId && entityClass.isInstance(entity)) {
 				return entity;
 			}
 		}
 		throw new ObjectRetrievalFailureException(entityClass, entityId);
+	}
+
+	public static LocalDateTime parseDateToLocalDateTimeUTC(Date date){
+		return LocalDateTime.ofInstant(date.toInstant(), ZoneOffset.UTC);
+	}
+
+	public static LocalDate parseDateToLocalDateUTC(Date date){
+		return LocalDate.ofInstant(date.toInstant(), ZoneOffset.UTC);
 	}
 
 }

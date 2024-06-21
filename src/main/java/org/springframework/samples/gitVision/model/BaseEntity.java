@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.samples.gitvision.model.entity;
+package org.springframework.samples.gitvision.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -31,16 +31,20 @@ import jakarta.persistence.SequenceGenerator;
  * @author Juergen Hoeller
  */
 @MappedSuperclass
-public class BaseEntity<T>{
+public class BaseEntity{
 
 	@Id
-	protected T id;
+	@SequenceGenerator(name = "entity_seq", 
+		sequenceName = "entity_sequence", 
+		initialValue = 100)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "entity_seq")
+	protected Long id;
 
-	public T getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(T id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

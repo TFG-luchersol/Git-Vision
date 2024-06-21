@@ -4,8 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.samples.gitvision.commit.stats.CommitsByPerson;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.samples.gitvision.commit.model.CommitsByPerson;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -32,7 +31,6 @@ public class CommitController {
         @RequestParam(required = false) LocalDateTime endDate)
         {
         return this.commitService.getNumCommitsByUserInPeriod(startDate, endDate);
-    }
-    
+    }    
 
 }

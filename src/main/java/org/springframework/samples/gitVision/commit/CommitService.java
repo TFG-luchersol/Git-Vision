@@ -1,10 +1,14 @@
 package org.springframework.samples.gitvision.commit;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.kohsuke.github.GHCommit;
+import org.kohsuke.github.GHIssue;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.samples.gitvision.commit.stats.CommitsByPerson;
+import org.springframework.samples.gitvision.commit.model.Commit;
+import org.springframework.samples.gitvision.commit.model.CommitsByPerson;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,5 +32,21 @@ public class CommitService {
             return this.commitRepository.getNumCommitsByUserAfterThat(startDate);
         else
             return this.commitRepository.getNumCommitsByUser();
+    }
+
+    @Transactional
+    public void saveCommit(GHCommit ghCommit){
+        Commit commit = new Commit();
+        try {
+            commit.setMessage(ghCommit.getCommitShortInfo().getMessage());
+            // commit.setAuthor(ghCommit.getAuthor());
+            commit.setDate(LocalDateTime.ofInstant(ghCommit.getCommitDate().toInstant(),null));
+            commit.setAdditions(ghCommit.getLinesAdded());
+            commit.setDeletions(ghCommit.getLinesDeleted());
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
     }
 }

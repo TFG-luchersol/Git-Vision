@@ -1,9 +1,9 @@
-package org.springframework.samples.gitvision.model.repository;
+package org.springframework.samples.gitvision.model;
 
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.NoRepositoryBean;
 
 @NoRepositoryBean
-public interface ClockifyRepository<T> extends CrudRepository<T, String> {
+public interface BaseRepository<T> extends CrudRepository<T, Long>{
     
 }
