@@ -1,11 +1,9 @@
-package org.springframework.samples.gitVision.commit.stats;
+package org.springframework.samples.gitvision.commit.stats;
 
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
-import io.jsonwebtoken.lang.Collections;
 import lombok.Getter;
 import lombok.Setter;
 

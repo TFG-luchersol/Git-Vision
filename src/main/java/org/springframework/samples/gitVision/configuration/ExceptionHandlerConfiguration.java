@@ -1,4 +1,4 @@
-package org.springframework.samples.gitVision.configuration;
+package org.springframework.samples.gitvision.configuration;
 
 import jakarta.servlet.http.HttpServletRequest;
 

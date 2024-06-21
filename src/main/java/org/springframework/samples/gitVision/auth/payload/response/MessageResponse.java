@@ -1,4 +1,4 @@
-package org.springframework.samples.gitVision.auth.payload.response;
+package org.springframework.samples.gitvision.auth.payload.response;
 
 import lombok.Getter;
 import lombok.Setter;

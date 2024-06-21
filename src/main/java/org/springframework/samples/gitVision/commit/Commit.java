@@ -1,9 +1,9 @@
-package org.springframework.samples.gitVision.commit;
+package org.springframework.samples.gitvision.commit;
 
 import java.time.LocalDateTime;
 
-import org.springframework.samples.gitVision.model.BaseEntity;
-import org.springframework.samples.gitVision.user.User;
+import org.springframework.samples.gitvision.model.entity.GithubEntity;
+import org.springframework.samples.gitvision.user.User;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
@@ -17,7 +17,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Table(name = "commits")
-public class Commit extends BaseEntity{
+public class Commit extends GithubEntity {
     
     String description;
 

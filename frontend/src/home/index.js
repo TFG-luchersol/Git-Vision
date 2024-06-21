@@ -1,10 +1,11 @@
 import React, {useState} from 'react';
 import '../App.css';
 import '../static/css/home/home.css';
-import { Alert, Button, ButtonGroup, Container, Form, FormGroup, Input, Label } from 'reactstrap';
+import { Alert, Button, Form, FormGroup, Input, Label } from 'reactstrap';
 import tokenService from "../services/token.service.js";
 import "../static/css/auth/authButton.css";
 import { Link } from 'react-router-dom';
+import { IoPersonCircleOutline } from "react-icons/io5";
 import "./home.css"
 
 export default function Home() {

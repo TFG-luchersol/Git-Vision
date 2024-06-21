@@ -1,4 +1,4 @@
-package org.springframework.samples.gitVision.configuration;
+package org.springframework.samples.gitvision.configuration;
 import org.springframework.context.annotation.Configuration;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;

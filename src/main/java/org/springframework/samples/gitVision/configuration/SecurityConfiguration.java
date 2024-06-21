@@ -1,4 +1,4 @@
-package org.springframework.samples.gitVision.configuration;
+package org.springframework.samples.gitvision.configuration;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 /*
@@ -13,9 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.samples.gitVision.configuration.jwt.AuthEntryPointJwt;
-import org.springframework.samples.gitVision.configuration.jwt.AuthTokenFilter;
-import org.springframework.samples.gitVision.configuration.services.UserDetailsServiceImpl;
+import org.springframework.samples.gitvision.configuration.jwt.AuthEntryPointJwt;
+import org.springframework.samples.gitvision.configuration.jwt.AuthTokenFilter;
+import org.springframework.samples.gitvision.configuration.services.UserDetailsServiceImpl;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;

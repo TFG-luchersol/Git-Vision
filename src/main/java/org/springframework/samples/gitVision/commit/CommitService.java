@@ -1,10 +1,10 @@
-package org.springframework.samples.gitVision.commit;
+package org.springframework.samples.gitvision.commit;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.samples.gitVision.commit.stats.CommitsByPerson;
+import org.springframework.samples.gitvision.commit.stats.CommitsByPerson;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

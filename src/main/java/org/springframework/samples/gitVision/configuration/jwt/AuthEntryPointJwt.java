@@ -1,4 +1,4 @@
-package org.springframework.samples.gitVision.configuration.jwt;
+package org.springframework.samples.gitvision.configuration.jwt;
 
 import java.io.IOException;
 import java.util.HashMap;

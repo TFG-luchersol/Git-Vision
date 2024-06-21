@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package org.springframework.samples.gitVision.util;
+package org.springframework.samples.gitvision.util;
 
 import java.util.Collection;
 import java.util.Objects;
 
 import org.springframework.orm.ObjectRetrievalFailureException;
-import org.springframework.samples.gitVision.model.BaseEntity;
+import org.springframework.samples.gitvision.model.entity.BaseEntity;
 
 /**
  * Utility methods for handling entities. Separate from the BaseEntity class mainly
@@ -28,7 +28,7 @@ import org.springframework.samples.gitVision.model.BaseEntity;
  *
  * @author Juergen Hoeller
  * @author Sam Brannen
- * @see org.springframework.samples.gitVision.model.BaseEntity
+ * @see org.springframework.samples.gitvision.model.entity.BaseEntity
  * @since 29.10.2003
  */
 public abstract class EntityUtils {
@@ -41,7 +41,7 @@ public abstract class EntityUtils {
 	 * @return the found entity
 	 * @throws ObjectRetrievalFailureException if the entity was not found
 	 */
-	public static <T extends BaseEntity> T getById(Collection<T> entities, Class<T> entityClass, String entityId)
+	public static <T extends BaseEntity<?>> T getById(Collection<T> entities, Class<T> entityClass, String entityId)
 			throws ObjectRetrievalFailureException {
 		for (T entity : entities) {
 			if (Objects.equals(entity.getId(), entityId) && entityClass.isInstance(entity)) {

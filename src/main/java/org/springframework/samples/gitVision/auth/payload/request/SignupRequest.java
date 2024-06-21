@@ -1,4 +1,4 @@
-package org.springframework.samples.gitVision.auth.payload.request;
+package org.springframework.samples.gitvision.auth.payload.request;
 
 import jakarta.validation.constraints.NotBlank;
 

@@ -1,4 +1,4 @@
-package org.springframework.samples.gitVision.auth;
+package org.springframework.samples.gitvision.auth;
 
 import jakarta.transaction.Transactional;
 
@@ -6,8 +6,8 @@ import java.io.IOException;
 
 import org.kohsuke.github.GHUser;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.samples.gitVision.user.User;
-import org.springframework.samples.gitVision.user.UserService;
+import org.springframework.samples.gitvision.user.User;
+import org.springframework.samples.gitvision.user.UserService;
 import org.springframework.stereotype.Service;
 
 @Service

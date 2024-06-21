@@ -1,8 +1,8 @@
-package org.springframework.samples.gitVision.configuration.services;
+package org.springframework.samples.gitvision.configuration.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.samples.gitVision.user.User;
-import org.springframework.samples.gitVision.user.UserRepository;
+import org.springframework.samples.gitvision.user.User;
+import org.springframework.samples.gitvision.user.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

@@ -1,6 +1,6 @@
-package org.springframework.samples.gitVision.util;
+package org.springframework.samples.gitvision.util;
 
-import org.springframework.samples.gitVision.exceptions.ResourceNotFoundException;
+import org.springframework.samples.gitvision.exceptions.ResourceNotFoundException;
 
 public final class RestPreconditions {
 	

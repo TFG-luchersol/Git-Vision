@@ -1,16 +1,16 @@
-package org.springframework.samples.gitVision.commit;
+package org.springframework.samples.gitvision.commit;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.samples.gitVision.commit.stats.CommitsByPerson;
-import org.springframework.samples.gitVision.model.BaseRepository;
+import org.springframework.samples.gitvision.commit.stats.CommitsByPerson;
+import org.springframework.samples.gitvision.model.repository.GithubRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface CommitRepository extends BaseRepository<Commit> {
+public interface CommitRepository extends GithubRepository<Commit> {
     
     @Query("select new org.springframework.samples.gitVision.commit.stats.CommitsByPerson(u.username, u.avatarUrl, (select count(c) from Commit c where c.author = u and c.date >= :startDate and c.date <= :endDate)) from User u")
     List<CommitsByPerson> getNumCommitsByUserOnDate(@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);

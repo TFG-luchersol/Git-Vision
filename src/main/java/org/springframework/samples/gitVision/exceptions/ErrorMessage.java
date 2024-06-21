@@ -1,4 +1,4 @@
-package org.springframework.samples.gitVision.exceptions;
+package org.springframework.samples.gitvision.exceptions;
 
 import java.util.Date;
 

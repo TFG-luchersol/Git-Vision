@@ -1,4 +1,4 @@
-package org.springframework.samples.gitVision.auth;
+package org.springframework.samples.gitvision.auth;
 
 import java.io.IOException;
 import java.util.List;
@@ -12,13 +12,13 @@ import org.kohsuke.github.GHUser;
 import org.kohsuke.github.GitHub;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.samples.gitVision.auth.payload.request.LoginRequest;
-import org.springframework.samples.gitVision.auth.payload.request.SignupRequest;
-import org.springframework.samples.gitVision.auth.payload.response.JwtResponse;
-import org.springframework.samples.gitVision.auth.payload.response.MessageResponse;
-import org.springframework.samples.gitVision.configuration.jwt.JwtUtils;
-import org.springframework.samples.gitVision.configuration.services.UserDetailsImpl;
-import org.springframework.samples.gitVision.user.UserService;
+import org.springframework.samples.gitvision.auth.payload.request.LoginRequest;
+import org.springframework.samples.gitvision.auth.payload.request.SignupRequest;
+import org.springframework.samples.gitvision.auth.payload.response.JwtResponse;
+import org.springframework.samples.gitvision.auth.payload.response.MessageResponse;
+import org.springframework.samples.gitvision.configuration.jwt.JwtUtils;
+import org.springframework.samples.gitvision.configuration.services.UserDetailsImpl;
+import org.springframework.samples.gitvision.user.UserService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;

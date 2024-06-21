@@ -1,4 +1,4 @@
-package org.springframework.samples.gitVision.exceptions;
+package org.springframework.samples.gitvision.exceptions;
 
 //@ResponseStatus(HttpStatus.FORBIDDEN)
 //public class TokenRefreshException extends RuntimeException {

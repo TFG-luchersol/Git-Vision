@@ -1,10 +1,10 @@
-package org.springframework.samples.gitVision.user;
+package org.springframework.samples.gitvision.user;
 
 import java.util.Optional;
 
-import org.springframework.samples.gitVision.model.BaseRepository;
+import org.springframework.samples.gitvision.model.repository.GithubRepository;
 
-public interface UserRepository extends BaseRepository<User>{
+public interface UserRepository extends GithubRepository<User>{
 
 	Optional<User> findByUsername(String username);
 
