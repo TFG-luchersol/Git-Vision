@@ -16,16 +16,16 @@
 
 package org.springframework.samples.gitvision.util;
 
-import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Objects;
 
 import org.springframework.orm.ObjectRetrievalFailureException;
-import org.springframework.samples.gitvision.model.BaseEntity;
+import org.springframework.samples.gitvision.model.entity.BaseEntity;
 
 /**
  * Utility methods for handling entities. Separate from the BaseEntity class mainly
@@ -33,7 +33,7 @@ import org.springframework.samples.gitvision.model.BaseEntity;
  *
  * @author Juergen Hoeller
  * @author Sam Brannen
- * @see org.springframework.samples.gitvision.model.BaseEntity
+ * @see org.springframework.samples.gitvision.model.entity.BaseEntity
  * @since 29.10.2003
  */
 public abstract class EntityUtils {
@@ -46,7 +46,7 @@ public abstract class EntityUtils {
 	 * @return the found entity
 	 * @throws ObjectRetrievalFailureException if the entity was not found
 	 */
-	public static <T extends BaseEntity> T getById(Collection<T> entities, Class<T> entityClass, Long entityId)
+	public static <T extends BaseEntity<?>> T getById(Collection<T> entities, Class<T> entityClass, Long entityId)
 			throws ObjectRetrievalFailureException {
 		for (T entity : entities) {
 			if (entity.getId() == entityId && entityClass.isInstance(entity)) {

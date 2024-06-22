@@ -7,22 +7,22 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.samples.gitvision.commit.model.Commit;
 import org.springframework.samples.gitvision.commit.model.CommitsByPerson;
-import org.springframework.samples.gitvision.model.BaseRepository;
+import org.springframework.samples.gitvision.model.repository.BaseRepositoryIdString;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface CommitRepository extends BaseRepository<Commit> {
+public interface CommitRepository extends BaseRepositoryIdString<Commit> {
     
-    @Query("select new org.springframework.samples.gitVision.commit.stats.CommitsByPerson(u.username, u.avatarUrl, (select count(c) from Commit c where c.author = u and c.date >= :startDate and c.date <= :endDate)) from User u")
+    @Query("select new org.springframework.samples.gitvision.commit.model.CommitsByPerson(u.username, u.avatarUrl, (select count(c) from Commit c where c.author = u and c.date >= :startDate and c.date <= :endDate)) from User u")
     List<CommitsByPerson> getNumCommitsByUserOnDate(@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
 
-    @Query("select new org.springframework.samples.gitVision.commit.stats.CommitsByPerson(u.username, u.avatarUrl, (select count(c) from Commit c where c.author = u and c.date >= :startDate)) from User u")
+    @Query("select new org.springframework.samples.gitvision.commit.model.CommitsByPerson(u.username, u.avatarUrl, (select count(c) from Commit c where c.author = u and c.date >= :startDate)) from User u")
     List<CommitsByPerson> getNumCommitsByUserAfterThat(@Param("startDate") LocalDateTime startDate);
 
-    @Query("select new org.springframework.samples.gitVision.commit.stats.CommitsByPerson(u.username, u.avatarUrl, (select count(c) from Commit c where c.author = u and c.date <= :endDate)) from User u")
+    @Query("select new org.springframework.samples.gitvision.commit.model.CommitsByPerson(u.username, u.avatarUrl, (select count(c) from Commit c where c.author = u and c.date <= :endDate)) from User u")
     List<CommitsByPerson> getNumCommitsByUserBeforeThat(@Param("endDate") LocalDateTime endDate);
 
-    @Query("select new org.springframework.samples.gitVision.commit.stats.CommitsByPerson(u.username, u.avatarUrl, (select count(c) from Commit c where c.author = u)) from User u")
+    @Query("select new org.springframework.samples.gitvision.commit.model.CommitsByPerson(u.username, u.avatarUrl, (select count(c) from Commit c where c.author = u)) from User u")
     List<CommitsByPerson> getNumCommitsByUser();
 
 }

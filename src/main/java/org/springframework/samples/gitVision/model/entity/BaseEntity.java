@@ -13,15 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.samples.gitvision.model;
+package org.springframework.samples.gitvision.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
-import jakarta.persistence.SequenceGenerator;
 
 /**
  * Simple JavaBean domain object with an id property. Used as a base class for objects
@@ -31,20 +28,16 @@ import jakarta.persistence.SequenceGenerator;
  * @author Juergen Hoeller
  */
 @MappedSuperclass
-public class BaseEntity{
+public class BaseEntity<T>{
 
 	@Id
-	@SequenceGenerator(name = "entity_seq", 
-		sequenceName = "entity_sequence", 
-		initialValue = 100)
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "entity_seq")
-	protected Long id;
+	protected T id;
 
-	public Long getId() {
+	public T getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(T id) {
 		this.id = id;
 	}
 

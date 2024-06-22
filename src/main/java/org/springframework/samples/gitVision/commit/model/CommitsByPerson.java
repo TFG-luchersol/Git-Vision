@@ -27,22 +27,4 @@ public class CommitsByPerson {
         );
     }
 
-    // public static CommitsByPerson parse(Object[] array){
-    //     String username = String.valueOf(array[0]),
-    //             avatarUrl = String.valueOf(array[1]);
-    //     Long numCommits = (long) array[2];
-    //     return new CommitsByPerson(username, avatarUrl, numCommits);
-    // }
-    
-    // public static List<CommitsByPerson> parse(List<Object[]> array){
-    //     return array.stream().map(CommitsByPerson::parse).collect(Collectors.toList());
-    // }
-
-    // public static Map<String, Long> parseNumCommitsByUsername(List<Object[]> array){
-    //     return array.stream().collect(Collectors.toMap(
-    //         obj -> String.valueOf(obj[0]), 
-    //         obj -> (long) obj[2]
-    //         )
-    //         );
-    // }
 }

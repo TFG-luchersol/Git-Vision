@@ -9,6 +9,7 @@ import org.kohsuke.github.GHIssue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.gitvision.commit.model.Commit;
 import org.springframework.samples.gitvision.commit.model.CommitsByPerson;
+import org.springframework.samples.gitvision.util.EntityUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,7 +41,7 @@ public class CommitService {
         try {
             commit.setMessage(ghCommit.getCommitShortInfo().getMessage());
             // commit.setAuthor(ghCommit.getAuthor());
-            commit.setDate(LocalDateTime.ofInstant(ghCommit.getCommitDate().toInstant(),null));
+            commit.setDate(EntityUtils.parseDateToLocalDateTimeUTC(ghCommit.getCommitDate()));
             commit.setAdditions(ghCommit.getLinesAdded());
             commit.setDeletions(ghCommit.getLinesDeleted());
         } catch (IOException e) {
