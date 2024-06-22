@@ -29,11 +29,12 @@ public class AuthService {
 			user.setEmail(request.getEmail());
 			user.setAvatarUrl(request.getAvatarUrl());
 			user.setGithubToken(token);
+
+			userService.saveUser(user);
 		} catch (IOException e) {
-			System.out.println("Error: Error: User instantiation failed");
+			System.out.println("Error: Failed getting email");
 		}
 		
-		userService.saveUser(user);
 	}
 
 }

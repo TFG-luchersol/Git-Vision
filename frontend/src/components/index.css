@@ -1,0 +1,23 @@
+.user-information {
+    background-color: white;
+    border-radius: 20px;
+    border-color: black;
+    border-width: 1px;
+    border-style: solid;
+    display: flex;
+    flex-direction: column;
+    width: max-content;
+    height: max-content;
+    padding: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    position: relative;
+    top: 5px;
+    right: 5px;
+}
+
+.custom-link{
+    margin: 3px;
+    text-decoration: none;
+    color: inherit;
+}

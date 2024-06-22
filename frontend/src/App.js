@@ -25,7 +25,7 @@ function App() {
 
   let userRoutes = <></>;
   let publicRoutes = <></>;
-
+  console.log(tokenService.getUser())
   if (!jwt) {
     publicRoutes = (
       <>        

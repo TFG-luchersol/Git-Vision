@@ -12,7 +12,7 @@ export default function Home() {
     const [message, setMessage] = useState(null)
     const [values, setValues] = useState({username: null, token: null})
 
-    async function handleSubmit({ values }) {
+    async function handleSubmit() {
 
         const reqBody = values;
         setMessage(null);
@@ -22,12 +22,15 @@ export default function Home() {
             body: JSON.stringify(reqBody),
         })
             .then(function (response) {
+                console.log(response);
                 if (response.status === 200) return response.json();
                 else return Promise.reject("Invalid login attempt");
             })
             .then(function (data) {
+                console.log('1' + data)
                 tokenService.setUser(data);
-                tokenService.updateLocalAccessToken(data.token);
+                console.log('2' + data)
+                // tokenService.updateLocalAccessToken(data.token);
                 window.location.href = "/dashboard";
             })
             .catch((error) => {
@@ -46,7 +49,7 @@ export default function Home() {
     return (
         <div className="home-page-container">
             {message &&
-                <Alert color="primary">{message}</Alert>
+                <Alert color="primary" style={{position:'absolute', zIndex:'2', top:'30px'}}>{message}</Alert>
                 }
             
                 <Form onSubmit={handleSubmit} className='auth-form-container'>

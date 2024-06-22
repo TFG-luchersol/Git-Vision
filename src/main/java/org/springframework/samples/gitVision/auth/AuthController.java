@@ -1,28 +1,19 @@
 package org.springframework.samples.gitvision.auth;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import jakarta.validation.Valid;
 
-import org.kohsuke.github.GHCommit;
-import org.kohsuke.github.GHIssue;
 import org.kohsuke.github.GHUser;
 import org.kohsuke.github.GitHub;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.samples.gitvision.auth.payload.request.LoginRequest;
 import org.springframework.samples.gitvision.auth.payload.request.SignupRequest;
-import org.springframework.samples.gitvision.auth.payload.response.JwtResponse;
 import org.springframework.samples.gitvision.auth.payload.response.MessageResponse;
 import org.springframework.samples.gitvision.configuration.jwt.JwtUtils;
-import org.springframework.samples.gitvision.configuration.services.UserDetailsImpl;
 import org.springframework.samples.gitvision.user.UserService;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -57,15 +48,18 @@ public class AuthController {
 	@PostMapping("/signin")
 	public ResponseEntity authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 		try{
-			Authentication authentication = authenticationManager.authenticate(
-				new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getGithubToken()));
+			// Authentication authentication = authenticationManager.authenticate(
+			// 	new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getGithubToken()));
 
-			SecurityContextHolder.getContext().setAuthentication(authentication);
-			String jwt = jwtUtils.generateJwtToken(authentication);
+			// SecurityContextHolder.getContext().setAuthentication(authentication);
+			// String jwt = jwtUtils.generateJwtToken(authentication);
 
-			UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+			// UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
-			return ResponseEntity.ok().body(new JwtResponse(jwt, userDetails.getId(), userDetails.getUsername()));
+			// return ResponseEntity.ok().body(new JwtResponse(jwt, userDetails.getId(), userDetails.getUsername()));
+			if(!userService.existsUserByUsername(loginRequest.getUsername()))
+				return ResponseEntity.badRequest().body("Not exists user in local database");
+			return ResponseEntity.ok().body(loginRequest.getUsername());
 		}catch(BadCredentialsException exception){
 			return ResponseEntity.badRequest().body("Bad Credentials!");
 		}

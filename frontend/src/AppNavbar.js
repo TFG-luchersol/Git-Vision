@@ -3,13 +3,16 @@ import { Navbar, NavbarBrand, NavLink, NavItem, Nav, NavbarText, NavbarToggler, 
 import { Link } from 'react-router-dom';
 import tokenService from './services/token.service';
 import jwt_decode from "jwt-decode";
-import logo from "../src/static/images/logo.png";
 import { SiSwagger, SiGoogledocs } from "react-icons/si";
+import { IoPersonCircleOutline } from "react-icons/io5";
+import { IconBase } from 'react-icons/lib';
+import UserInformation from './components/UserInformation';
 
 function AppNavbar() {
     const [username, setUsername] = useState("");
     const jwt = tokenService.getLocalAccessToken();
     const [collapsed, setCollapsed] = useState(true);
+    const [visible, setVisible] = useState(true);
 
     const toggleNavbar = () => setCollapsed(!collapsed);
 
@@ -36,22 +39,35 @@ function AppNavbar() {
             </>
         )
 
+    function showInformation(){
+        setVisible(state => !state)
+    }
+
+    let userLogin = (
+        <>
+            <NavItem>
+                <IoPersonCircleOutline onClick={showInformation} style={{fontSize:60}}/>
+            </NavItem>
+        </>
+    )
     
 
     return (
         <div>
             <Navbar expand="md" style={{ backgroundColor:"#0000001c"}}>
                 <NavbarBrand href="/">
-                {/*/logo1-recortado.png  */}
-                    <img alt="logo" src={logo} style={{ height: 40, width: 140 }} />
+                    <img alt="logo" src='/logo.png' style={{ height: 40, width: 140 }} />
                 </NavbarBrand>
                 <NavbarToggler onClick={toggleNavbar} className="ms-2" />
                 <Collapse isOpen={!collapsed} navbar>
                     <Nav className="ms-auto mb-2 mb-lg-0" navbar>
                         {user}
+                        {tokenService.getUser()?.username}
+                        {userLogin}
                     </Nav>
                 </Collapse>
             </Navbar>
+            <UserInformation visibility={visible}/>
         </div>
     );
 }
