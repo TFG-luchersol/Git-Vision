@@ -1,0 +1,10 @@
+.information {
+    display: flex;
+    flex-direction: column;
+}
+
+.information a {
+    margin: 3px;
+    text-decoration: none;
+    color: inherit;
+}

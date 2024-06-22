@@ -11,18 +11,21 @@ public class JwtResponse {
 
 	private String token;
 	private String type = "Bearer";
-	private Integer id;
+	private Long id;
 	private String username;
+	private String password;
 
-	public JwtResponse(String accessToken, Integer id, String username) {
+	public JwtResponse(String accessToken, Long id, String username, String password) {
 		this.token = accessToken;
 		this.id = id;
 		this.username = username;
+		this.password = password;
 	}
 
 	@Override
 	public String toString() {
-		return "JwtResponse [token=" + token + ", type=" + type + ", id=" + id + ", username=" + username + "]";
+		return "JwtResponse [token=" + token + ", type=" + type + ", id=" + id + ", username=" + username + 
+		", password=" + password + "]";
 	}
 
 }

@@ -1,18 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import { Navbar, NavbarBrand, NavLink, NavItem, Nav, NavbarText, NavbarToggler, Collapse } from 'reactstrap';
+import React, { useState, useEffect, useRef } from 'react';
+import { Navbar, NavbarBrand, NavLink, NavItem, Nav, NavbarText, NavbarToggler, Collapse, Popover, PopoverBody } from 'reactstrap';
 import { Link } from 'react-router-dom';
-import tokenService from './services/token.service';
+import tokenService from '../services/token.service';
 import jwt_decode from "jwt-decode";
 import { SiSwagger, SiGoogledocs } from "react-icons/si";
-import { IoPersonCircleOutline } from "react-icons/io5";
 import { IconBase } from 'react-icons/lib';
-import UserInformation from './components/UserInformation';
+import UserInformation from './UserInformation.js';
 
-function AppNavbar() {
+export default function AppNavbar() {
     const [username, setUsername] = useState("");
-    const jwt = tokenService.getLocalAccessToken();
+    const jwt = null; // tokenService.getLocalAccessToken();
     const [collapsed, setCollapsed] = useState(true);
-    const [visible, setVisible] = useState(true);
 
     const toggleNavbar = () => setCollapsed(!collapsed);
 
@@ -39,14 +37,11 @@ function AppNavbar() {
             </>
         )
 
-    function showInformation(){
-        setVisible(state => !state)
-    }
 
     let userLogin = (
         <>
             <NavItem>
-                <IoPersonCircleOutline onClick={showInformation} style={{fontSize:60}}/>
+                <UserInformation/>
             </NavItem>
         </>
     )
@@ -67,9 +62,7 @@ function AppNavbar() {
                     </Nav>
                 </Collapse>
             </Navbar>
-            <UserInformation visibility={visible}/>
+            
         </div>
     );
 }
-
-export default AppNavbar;

@@ -34,3 +34,34 @@
 .hero-div h3{
     text-align: center;
 }
+
+.button-group{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-direction: column;
+}
+
+.button-group Button{
+    margin: 10px;
+    border-radius: 10px;
+    width: 90%;
+    background-color: blueviolet;
+    text-decoration-color: whitesmoke;
+}
+
+.button-group Button:hover{
+    background-color: rgb(104, 36, 169);
+}
+
+.center-title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 15px;
+}
+
+.custom-link {
+    text-decoration: none;
+    color: inherit;
+}

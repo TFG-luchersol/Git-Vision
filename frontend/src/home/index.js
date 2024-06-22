@@ -5,37 +5,35 @@ import { Alert, Button, Form, FormGroup, Input, Label } from 'reactstrap';
 import tokenService from "../services/token.service.js";
 import "../static/css/auth/authButton.css";
 import { Link } from 'react-router-dom';
-import { IoPersonCircleOutline } from "react-icons/io5";
-import "./home.css"
 
 export default function Home() {
     const [message, setMessage] = useState(null)
-    const [values, setValues] = useState({username: null, token: null})
+    const [values, setValues] = useState({username: null, githubToken: null})
 
     async function handleSubmit() {
 
         const reqBody = values;
         setMessage(null);
-        await fetch("/api/v1/auth/signin", {
-            headers: { "Content-Type": "application/json" },
-            method: "POST",
-            body: JSON.stringify(reqBody),
-        })
-            .then(function (response) {
-                console.log(response);
-                if (response.status === 200) return response.json();
-                else return Promise.reject("Invalid login attempt");
-            })
-            .then(function (data) {
-                console.log('1' + data)
+        try {
+            console.log(1)
+            const response = await fetch("/api/v1/auth/signin", {
+                headers: { "Content-Type": "application/json" },
+                method: "POST",
+                body: JSON.stringify(reqBody),
+            });
+            console.log(2)
+            console.log(response)
+            if (response.status === 200) {
+                const data = await response.json();
                 tokenService.setUser(data);
-                console.log('2' + data)
                 // tokenService.updateLocalAccessToken(data.token);
                 window.location.href = "/dashboard";
-            })
-            .catch((error) => {
-                setMessage(error);
-            });
+            } else {
+                throw new Error("Invalid login attempt");
+            }
+        } catch (error) {
+            setMessage(error.message);
+        }
     }
 
     function handleChange(event) {
@@ -57,11 +55,15 @@ export default function Home() {
                         <title className='center-title'>
                             <h1>Login</h1>
                         </title>
-                        
 
                         <FormGroup>
                             <Label>Username:</Label>
                             <Input type='text' name='username' value={values.username || ""} onChange={handleChange}/>
+                        </FormGroup>
+
+                        <FormGroup>
+                            <Label>Github Token:</Label>
+                            <Input type='text' name='githubToken' value={values.githubToken || ""} onChange={handleChange}/>
                         </FormGroup>
 
                         <div className='button-group'>

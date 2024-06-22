@@ -15,7 +15,7 @@ public class UserDetailsImpl implements UserDetails {
 
 	private static final long serialVersionUID = 1L;
 
-	private Integer id;
+	private Long id;
 
 	private String username;
 
@@ -24,12 +24,14 @@ public class UserDetailsImpl implements UserDetails {
 
 	private Collection<? extends GrantedAuthority> authorities;
 
-	public UserDetailsImpl(Integer id, String username, String password,
-			Collection<? extends GrantedAuthority> authorities) {
+	public UserDetailsImpl(Long id, String username, String password) {
 		this.id = id;
 		this.username = username;
 		this.password = password;
-		this.authorities = authorities;
+	}
+
+	public static UserDetailsImpl build(User user) {
+		return new UserDetailsImpl(user.getId(), user.getUsername(), user.getGithubToken());
 	}
 
 
@@ -39,7 +41,7 @@ public class UserDetailsImpl implements UserDetails {
 	}
 
 
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
