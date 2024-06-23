@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Navbar, NavbarBrand, NavLink, NavItem, Nav, NavbarText, NavbarToggler, Collapse, Popover, PopoverBody } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import tokenService from '../services/token.service';
@@ -57,7 +57,6 @@ export default function AppNavbar() {
                 <Collapse isOpen={!collapsed} navbar>
                     <Nav className="ms-auto mb-2 mb-lg-0" navbar>
                         {user}
-                        {tokenService.getUser()?.username}
                         {userLogin}
                     </Nav>
                 </Collapse>

@@ -1,6 +1,7 @@
 package org.springframework.samples.gitvision.auth;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import jakarta.validation.Valid;
 
@@ -14,6 +15,8 @@ import org.springframework.samples.gitvision.auth.payload.response.JwtResponse;
 import org.springframework.samples.gitvision.auth.payload.response.MessageResponse;
 import org.springframework.samples.gitvision.configuration.jwt.JwtUtils;
 import org.springframework.samples.gitvision.configuration.services.UserDetailsImpl;
+import org.springframework.samples.gitvision.exceptions.ResourceNotFoundException;
+import org.springframework.samples.gitvision.user.User;
 import org.springframework.samples.gitvision.user.UserService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -53,11 +56,9 @@ public class AuthController {
 	@PostMapping("/signin")
 	public ResponseEntity authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 		try{
-			if(!this.userService.existsUserByUsername(loginRequest.getUsername())){
-				return ResponseEntity.badRequest().body("Bad");
-			}
-			return ResponseEntity.ok().body(loginRequest);
-		}catch(BadCredentialsException exception){
+			User user = userService.findUserByUsername(loginRequest.getUsername());
+			return ResponseEntity.ok().body(user);
+		}catch(ResourceNotFoundException exception){
 			return ResponseEntity.badRequest().body("Bad Credentials!");
 		}
 	}

@@ -9,25 +9,23 @@ import { Link } from 'react-router-dom';
 export default function Home() {
     const [message, setMessage] = useState(null)
     const [values, setValues] = useState({username: null, githubToken: null})
-
+    console.log(tokenService.getUser())
     async function handleSubmit() {
 
         const reqBody = values;
         setMessage(null);
         try {
-            console.log(1)
             const response = await fetch("/api/v1/auth/signin", {
                 headers: { "Content-Type": "application/json" },
                 method: "POST",
                 body: JSON.stringify(reqBody),
             });
-            console.log(2)
-            console.log(response)
+
             if (response.status === 200) {
                 const data = await response.json();
                 tokenService.setUser(data);
                 // tokenService.updateLocalAccessToken(data.token);
-                window.location.href = "/dashboard";
+                window.location.href = "/";
             } else {
                 throw new Error("Invalid login attempt");
             }
