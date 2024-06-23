@@ -3,13 +3,12 @@ import { Route, Routes } from "react-router-dom";
 import jwt_decode from "jwt-decode";
 import { ErrorBoundary } from "react-error-boundary";
 
-import Home from "./home";
-import Register from "./auth/register";
-import Login from "./auth/login";
-import Logout from "./auth/logout";
+import Login from "./login";
+import Register from "./register";
 import tokenService from "./services/token.service";
 import SwaggerDocs from "./public/swagger";
 import AppNavbar from "./appNavbar/AppNavbar.js";
+import Home from "./home/index.js";
 
 function ErrorFallback({ error, resetErrorBoundary }) {
   return (
@@ -28,16 +27,14 @@ function App() {
   let publicRoutes = <></>;
   // console.log(tokenService.getUser())
   if (!jwt) {
-    publicRoutes = (
-      <>        
+    publicRoutes = (<>
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
-      </>
-    )
+      </>);
   } else {
     userRoutes = (
       <>
-        <Route path="/logout" element={<Logout />} />
+        <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
       </>
     )

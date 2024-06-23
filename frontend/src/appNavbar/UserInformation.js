@@ -12,27 +12,25 @@ export default function UserInformation() {
   const togglePopover = () => setPopoverOpen(!popoverOpen);
 
   const user = tokenService.getUser();
+
   function sendLogoutRequest() {
-    if (user || typeof user === "undefined") {
+    const user = tokenService.getUser();
+    if (user !== null) {
       tokenService.removeUser();
+      console.log(tokenService.getUser());
       window.location.href = "/";
     } else {
       alert("There is no user logged in");
     }
   }
   
-  
+
   let logo = user ? <img
-      className='circular-img'
-      src={'https://avatars.githubusercontent.com/u/93008812?v=4'}
-      alt='User Avatar'
-      id='avatarPopover' /> :
-    <IoPersonCircleOutline
-      style={{ fontSize: 60 }}
-      alt='User Avatar'
-      id='avatarPopover'
-    />
-    ;
+    className='circular-img'
+    src={'https://avatars.githubusercontent.com/u/93008812?v=4'}
+    alt={<IoPersonCircleOutline id='avatarPopover' title='Avatar Error' style={{ color:'red', fontSize: 60 }} />}
+    id='avatarPopover' 
+  /> : <IoPersonCircleOutline id='avatarPopover' style={{ fontSize: 60, position: 'relative', bottom: 5 }} />;
 
   return (<>
     {logo}
@@ -45,7 +43,7 @@ export default function UserInformation() {
       <PopoverBody>
         <div className='information'>
           <Link to={'/details'} >Información de usuario</Link>
-          <Link to={'/registrer'}>Añadir cuenta</Link>
+          <Link to={'/register'}>Añadir cuenta</Link>
           <hr/>
           <Link onClick={sendLogoutRequest} >Cerrar sesión</Link>
         </div>

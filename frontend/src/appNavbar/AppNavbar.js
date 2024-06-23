@@ -1,26 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import { Navbar, NavbarBrand, NavLink, NavItem, Nav, NavbarText, NavbarToggler, Collapse, Popover, PopoverBody } from 'reactstrap';
+import React, { useState } from 'react';
+import { Navbar, NavbarBrand, NavLink, NavItem, Nav, NavbarToggler, Collapse} from 'reactstrap';
 import { Link } from 'react-router-dom';
-import tokenService from '../services/token.service';
-import jwt_decode from "jwt-decode";
 import { SiSwagger, SiGoogledocs } from "react-icons/si";
-import { IconBase } from 'react-icons/lib';
 import UserInformation from './UserInformation.js';
+import tokenService from '../services/token.service.js';
 
 export default function AppNavbar() {
-    const [username, setUsername] = useState("");
-    const jwt = null; // tokenService.getLocalAccessToken();
-    const [collapsed, setCollapsed] = useState(true);
 
+    const [collapsed, setCollapsed] = useState(true);
     const toggleNavbar = () => setCollapsed(!collapsed);
 
-    useEffect(() => {
-        if (jwt) {
-            setUsername(jwt_decode(jwt).sub);
-        }
-    }, [jwt])
-    
-   
     let user = (
             <>
                 <NavItem>
@@ -33,7 +22,6 @@ export default function AppNavbar() {
                         <SiSwagger title='Swagger' style={{fontSize:50}}/>
                     </NavLink>
                 </NavItem>
-                <NavbarText className="justify-content-end">{username}</NavbarText>
             </>
         )
 
@@ -41,7 +29,9 @@ export default function AppNavbar() {
     let userLogin = (
         <>
             <NavItem>
-                <UserInformation/>
+                <NavLink>
+                    <UserInformation/>
+                </NavLink>
             </NavItem>
         </>
     )

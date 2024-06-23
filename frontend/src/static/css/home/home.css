@@ -46,12 +46,13 @@
     margin: 10px;
     border-radius: 10px;
     width: 90%;
-    background-color: blueviolet;
+    background-color: #2e2e92;
     text-decoration-color: whitesmoke;
 }
 
+
 .button-group Button:hover{
-    background-color: rgb(104, 36, 169);
+    background-color: rgb(46, 76, 146);
 }
 
 .center-title {
