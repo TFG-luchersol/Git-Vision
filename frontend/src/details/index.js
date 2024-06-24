@@ -1,12 +1,32 @@
-import React, { useState } from 'react';
-import './details.css';
+import React, { useEffect, useState } from 'react';
+import { FaGithub, FaRegUserCircle } from "react-icons/fa";
 import { IoPersonCircleOutline } from 'react-icons/io5';
+import { MdOutlineEmail } from "react-icons/md";
+import { SiClockify } from "react-icons/si";
+import { Button } from 'reactstrap';
+import InputWithIcon from '../components/InputWithIcon';
+import './details.css';
+
 
 export default function Details() {
+  const userIcon = <FaRegUserCircle />
+  const githubIcon = <FaGithub />
+  const clockifyIcon = <SiClockify />
+  const emailIcon = <MdOutlineEmail />
+  const saveTokenGithubButton = <Button className='save-button' onClick={() => handleSave('github')}>Guardar</Button>;
+  const saveTokenClockifyButton = <Button className='save-button' onClick={() => handleSave('clockify')}>Guardar</Button>;
+
   const [githubToken, setGithubToken] = useState('');
   const [clockifyToken, setClockifyToken] = useState('');
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
+
+  useEffect(() => {
+    // const {username, email, githubToken} = tokenService.getUser();
+    // setUsername(username);
+    // setEmail(email);
+    // setGithubToken(githubToken);
+  }, []);
 
   const handleGithubTokenChange = (e) => setGithubToken(e.target.value);
   const handleClockifyTokenChange = (e) => setClockifyToken(e.target.value);
@@ -27,59 +47,58 @@ export default function Details() {
     <div className="App">
       <div className="profile-container">
         <div className="profile-image">
-        <img
+          <img
             className='placeholder-image-url'
             style={{ height: 350, width: 350 }}
             src={'https://avatars.githubusercontent.com/u/93008812?v=4'}
-            alt={<IoPersonCircleOutline id='avatar' title='Avatar Error' style={{ color:'red', fontSize: 60 }} />}
-            id='avatar' 
-        />
+            alt={<IoPersonCircleOutline id='avatar' title='Avatar Error' style={{ color: 'red', fontSize: 60 }} />}
+            id='avatar'
+          />
         </div>
         <div className="profile-info">
-          <div className="input-group">
-            <label htmlFor="username">Username</label>
-            <input
-              type="text"
-              id="username"
-              value={username}
-            />
-          </div>
-          <div className="input-group">
-            <label htmlFor="email">Email</label>
-            <input
-              type="email"
-              id="email"
-              value={email}
-            />
-          </div>
-          <button className="delete-account" onClick={handleDeleteAccount}>
-            Eliminar cuenta
-          </button>
+          <InputWithIcon
+            icon={userIcon}
+            label={"Username:"}
+            type="text"
+            id="username"
+            value={username}
+            readOnly
+          />
+          <InputWithIcon
+            icon={emailIcon}
+            label={"Email:"}
+            type="email"
+            id="email"
+            value={email}
+            readOnly
+          />
+          <Button className="delete-button" onClick={handleDeleteAccount}>Eliminar cuenta</Button>
         </div>
       </div>
       <div className="token-container">
-        <div className="input-group">
-          <label htmlFor="github-token">Token Github *</label>
-          <input
-            type="text"
-            id="github-token"
-            value={githubToken}
-            onChange={handleGithubTokenChange}
-          />
-          <button onClick={() => handleSave('github')}>Guardar</button>
-        </div>
-        <div className="input-group">
-          <label htmlFor="clockify-token">Token Clockify</label>
-          <input
-            type="text"
-            id="clockify-token"
-            value={clockifyToken}
-            onChange={handleClockifyTokenChange}
-          />
-          <button onClick={() => handleSave('clockify')}>Guardar</button>
-        </div>
+        <InputWithIcon
+          icon={githubIcon}
+          label={"Github Token*:"}
+          type="text"
+          id="github-token"
+          value={githubToken}
+          onChange={handleGithubTokenChange}
+          button={saveTokenGithubButton}
+        />
+        <InputWithIcon
+          icon={clockifyIcon}
+          label={"Clockify Token:"}
+          type="text"
+          id="clockify-token"
+          value={clockifyToken}
+          onChange={handleClockifyTokenChange}
+          button={saveTokenClockifyButton}
+        />
         <p className="note">
-          Nota: Estos tokens serán utiliza por defecto a las horas de realizar las peticiones en Github o Clockify en caso de que los repositorios o espacios de trabajo respectivos no tengan un token predefinido asociado. A su vez, la existencia de un token en Github será presentada de forma obligatoria, mientras que el token de Clockify se presentará como opcional, siendo la única inconveniencia la inaccesibilidad a ciertas funciones.
+          Nota: Estos tokens serán utiliza por defecto a las horas de realizar las peticiones en Github o Clockify
+          en caso de que los repositorios o espacios de trabajo respectivos no tengan un token predefinido asociado.
+          A su vez, la existencia de un token en Github será presentada de forma obligatoria, mientras que el token de
+          Clockify se presentará como opcional, siendo la única inconveniencia la inaccesibilidad a ciertas funciones.
         </p>
       </div>
     </div>

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import '../App.css';
 import '../static/css/home/home.css';
 import { Alert, Button, Form, FormGroup } from 'reactstrap';
@@ -10,12 +10,11 @@ import { FaRegUserCircle, FaGithub } from "react-icons/fa";
 
 export default function Register() {
 
-    const userIcon = <FaRegUserCircle className='icon'/>
-    const githubIcon = <FaGithub className='icon'/>
+    const userIcon = <FaRegUserCircle />
+    const githubIcon = <FaGithub />
 
     const [message, setMessage] = useState(null)
-    const [values, setValues] = useState({username: null, githubToken: null})
-    console.log(tokenService.getUser())
+    const [values, setValues] = useState({ username: null, githubToken: null })
 
     async function handleSubmit() {
         const reqBody = values;
@@ -42,7 +41,7 @@ export default function Register() {
 
     function handleChange(event) {
         const target = event.target;
-        const {name, value} = target;
+        const { name, value } = target;
         let newValues = { ...values };
         newValues[name] = value;
         setValues(newValues)
@@ -51,13 +50,13 @@ export default function Register() {
     return (
         <div className="home-page-container">
             {message &&
-                <Alert color="primary" style={{position:'absolute', right:30, top:30}}>{message}</Alert>
-                }
-            
-                <Form onSubmit={handleSubmit} className='auth-form-container'>
-                    <div style={{margin: "30px"}}>
-                        <title className='center-title'><h1>Register</h1></title>
-                        <FormGroup>
+                <Alert color="primary" style={{ position: 'absolute', right: 30, top: 30 }}>{message}</Alert>
+            }
+
+            <Form onSubmit={handleSubmit} className='auth-form-container'>
+                <div style={{ margin: "30px" }}>
+                    <title className='center-title'><h1>Register</h1></title>
+                    <FormGroup>
                         <InputWithIcon
                             icon={userIcon}
                             label={"Username:"}
@@ -66,27 +65,27 @@ export default function Register() {
                             value={values.username || ""}
                             onChange={handleChange}
                         />
-                        </FormGroup>
-                        <FormGroup>
-                            <InputWithIcon
-                                icon={githubIcon}
-                                label={"Github Token:"}
-                                type='text' 
-                                name='githubToken' 
-                                value={values.githubToken || ""} 
-                                onChange={handleChange}
-                            />
-                        </FormGroup>
-                        <div className='button-group'>
-                            <Button type='submit'>Registrer</Button> 
-                            <Button type='button'>
-                                <Link className='custom-link' to={"/"}>Cancelar</Link>
-                            </Button> 
-                        </div>
+                    </FormGroup>
+                    <FormGroup>
+                        <InputWithIcon
+                            icon={githubIcon}
+                            label={"Github Token:"}
+                            type='text'
+                            name='githubToken'
+                            value={values.githubToken || ""}
+                            onChange={handleChange}
+                        />
+                    </FormGroup>
+                    <div className='button-group'>
+                        <Button type='submit'>Registrer</Button>
+                        <Button type='button'>
+                            <Link className='custom-link' to={"/"}>Cancelar</Link>
+                        </Button>
                     </div>
-                </Form>
-                
-            
+                </div>
+            </Form>
+
+
         </div>
     );
 }

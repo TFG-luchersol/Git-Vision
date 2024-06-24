@@ -9,8 +9,8 @@ import InputWithIcon from '../components/InputWithIcon.js';
 import { FaRegUserCircle, FaGithub } from "react-icons/fa";
 
 export default function Login() {
-    const userIcon = <FaRegUserCircle className='icon'/>
-    const githubIcon = <FaGithub className='icon'/>
+    const userIcon = <FaRegUserCircle />
+    const githubIcon = <FaGithub />
 
     const [message, setMessage] = useState(null)
     const [values, setValues] = useState({username: null, githubToken: null})
