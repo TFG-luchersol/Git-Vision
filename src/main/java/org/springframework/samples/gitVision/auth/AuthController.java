@@ -84,7 +84,7 @@ public class AuthController {
 	public ResponseEntity<MessageResponse> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
 		try {
             String username = signUpRequest.getUsername();
-			String token = signUpRequest.getToken();
+			String token = signUpRequest.getGithubToken();
             GitHub gitHub = GitHub.connect(username, token);
             GHUser user = gitHub.getMyself();	
 			

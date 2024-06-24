@@ -12,6 +12,6 @@ public class SignupRequest {
 	@NotBlank
 	private String username;
 
-	private String token;
+	private String githubToken;
 
 }

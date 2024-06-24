@@ -15,6 +15,7 @@ export default function Register() {
         const reqBody = values;
         setMessage(null);
         try {
+            console.log(reqBody)
             const response = await fetch("/api/v1/auth/signup", {
                 headers: { "Content-Type": "application/json" },
                 method: "POST",
