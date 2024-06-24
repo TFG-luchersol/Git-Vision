@@ -1,12 +1,21 @@
-import React, {useState} from 'react';
-import { Alert, Button, Form, FormGroup, Input, Label } from 'reactstrap';
-
-export default function InputWithIcon({icon, input}) {
-
+import React from 'react';
+import "./input.css";
+import { Input, Label } from 'reactstrap';
+export default function InputWithIcon({ icon, type, name, placeholder, value, onChange, label }) {
     return (
-        <div>
-            <div>{icon}</div>
-            {input}
-        </div>
+        <>
+            <Label>{label}</Label>
+            <div className="icon-input-container">
+                
+                <span className="icon">{icon}</span>
+                <Input 
+                type={type} 
+                name={name}
+                placeholder={placeholder} 
+                value={value} 
+                onChange={onChange} 
+                />
+            </div>
+        </>
     );
-}
+  };

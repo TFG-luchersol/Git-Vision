@@ -9,6 +9,7 @@ import tokenService from "./services/token.service";
 import SwaggerDocs from "./public/swagger";
 import AppNavbar from "./appNavbar/AppNavbar.js";
 import Home from "./home/index.js";
+import Details from "./details/index.js";
 
 function ErrorFallback({ error, resetErrorBoundary }) {
   return (
@@ -26,19 +27,13 @@ function App() {
   let userRoutes = <></>;
   let publicRoutes = <></>;
   // console.log(tokenService.getUser())
-  if (!jwt) {
-    publicRoutes = (<>
-        <Route path="/register" element={<Register />} />
-        <Route path="/login" element={<Login />} />
-      </>);
-  } else {
-    userRoutes = (
+  userRoutes = (
       <>
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/details" element={<Details />}/>
       </>
     )
-  }
 
   return (
     <div>

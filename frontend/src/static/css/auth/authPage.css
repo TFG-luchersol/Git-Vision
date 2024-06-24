@@ -22,6 +22,11 @@
   font-size: 5em;
 }
 
+.icon {
+  size: 30;
+  margin: 4px;
+}
+
 .options-row {
   display: flex;
   justify-content: space-evenly;

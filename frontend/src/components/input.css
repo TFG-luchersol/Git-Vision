@@ -1,0 +1,21 @@
+.icon-input-container {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 12px;
+    padding: 3px;
+    background-color: #fff;
+  }
+  
+  .icon {
+    font-size: 1.2em;
+    color: #666666;
+  }
+  
+  .icon-input-container input {
+    border: none;
+    outline: none;
+    flex-grow: 1;
+    font-size: 1em;
+  }
+  

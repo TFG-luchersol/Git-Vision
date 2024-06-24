@@ -1,12 +1,18 @@
 import React, {useState} from 'react';
 import '../App.css';
 import '../static/css/home/home.css';
-import { Alert, Button, Form, FormGroup, Input, Label } from 'reactstrap';
+import { Alert, Button, Form, FormGroup } from 'reactstrap';
 import tokenService from "../services/token.service.js";
 import '../static/css/auth/authPage.css'
 import { Link } from 'react-router-dom';
+import InputWithIcon from '../components/InputWithIcon.js';
+import { FaRegUserCircle, FaGithub } from "react-icons/fa";
 
 export default function Register() {
+
+    const userIcon = <FaRegUserCircle className='icon'/>
+    const githubIcon = <FaGithub className='icon'/>
+
     const [message, setMessage] = useState(null)
     const [values, setValues] = useState({username: null, githubToken: null})
     console.log(tokenService.getUser())
@@ -50,20 +56,27 @@ export default function Register() {
             
                 <Form onSubmit={handleSubmit} className='auth-form-container'>
                     <div style={{margin: "30px"}}>
-                        <title className='center-title'>
-                            <h1>Register</h1>
-                        </title>
-
+                        <title className='center-title'><h1>Register</h1></title>
                         <FormGroup>
-                            <Label>Username:</Label>
-                            <Input type='text' name='username' value={values.username || ""} onChange={handleChange}/>
+                        <InputWithIcon
+                            icon={userIcon}
+                            label={"Username:"}
+                            type='text'
+                            name='username'
+                            value={values.username || ""}
+                            onChange={handleChange}
+                        />
                         </FormGroup>
-
                         <FormGroup>
-                            <Label>Github Token:</Label>
-                            <Input type='text' name='githubToken' value={values.githubToken || ""} onChange={handleChange}/>
+                            <InputWithIcon
+                                icon={githubIcon}
+                                label={"Github Token:"}
+                                type='text' 
+                                name='githubToken' 
+                                value={values.githubToken || ""} 
+                                onChange={handleChange}
+                            />
                         </FormGroup>
-
                         <div className='button-group'>
                             <Button type='submit'>Registrer</Button> 
                             <Button type='button'>
