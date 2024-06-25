@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import '../App.css';
 import '../static/css/home/home.css';
-import { Alert, Button, Form, FormGroup, Input, Label } from 'reactstrap';
+import { Alert, Button, Form, FormGroup, Input, Label, Modal } from 'reactstrap';
 import tokenService from "../services/token.service.js";
 import "../static/css/auth/authPage.css";
 import { Link } from 'react-router-dom';
@@ -13,16 +13,18 @@ export default function Login() {
     const githubIcon = <FaGithub />
 
     const [message, setMessage] = useState(null)
-    const [values, setValues] = useState({username: null, githubToken: null})
+    const [values, setValues] = useState({username: "", githubToken: ""})
 
-    async function handleSubmit() {
-        const reqBody = values;
+    async function handleSubmit(event) {
+        event.preventDefault()
+        const reqBody = JSON.stringify(values);
+        console.log(reqBody)
         setMessage(null);
         try {
             const response = await fetch("/api/v1/auth/signin", {
                 headers: { "Content-Type": "application/json" },
                 method: "POST",
-                body: JSON.stringify(reqBody),
+                body: reqBody,
             });
 
             if (response.status === 200) {
@@ -30,7 +32,8 @@ export default function Login() {
                 tokenService.setUser(data);
                 window.location.href = "/";
             } else {
-                throw new Error("Invalid login attempt");
+                const error = await response.json();
+                setMessage(error.message)
             }
         } catch (error) {
             setMessage(error.message);
@@ -47,13 +50,9 @@ export default function Login() {
 
     return (
         <div className="home-page-container">
-            {message &&
-                <>
-                {alert("Error message")}
-                <Alert color="primary" style={{position:'absolute', zIndex:'2', top:'30px'}}>{message}</Alert></>
-                }
-            
-                <Form onSubmit={handleSubmit} className='auth-form-container'>
+                <Alert isOpen={message} color="danger" style={{position:'absolute', top:'30px'}}>{message}</Alert>
+                
+                <Form onSubmit={handleSubmit} className='auth-form-container' >
                     <div style={{margin: "30px"}}>
                         <title className='center-title'>
                             <h1>Login</h1>

@@ -54,12 +54,14 @@ public class AuthController {
 	}
 
 	@PostMapping("/signin")
-	public ResponseEntity authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+	public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 		try{
 			User user = userService.findUserByUsername(loginRequest.getUsername());
+			if(!user.getGithubToken().equals(loginRequest.getGithubToken()))
+				return ResponseEntity.badRequest().body(MessageResponse.of("Incorrect Token"));
 			return ResponseEntity.ok().body(user);
 		}catch(ResourceNotFoundException exception){
-			return ResponseEntity.badRequest().body("Bad Credentials!");
+			return ResponseEntity.badRequest().body(MessageResponse.of("Bad Credentials"));
 		}
 	}
 

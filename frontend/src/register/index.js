@@ -16,15 +16,16 @@ export default function Register() {
     const [message, setMessage] = useState(null)
     const [values, setValues] = useState({ username: null, githubToken: null })
 
-    async function handleSubmit() {
-        const reqBody = values;
+    async function handleSubmit(event) {
+        event.preventDefault()
+        const reqBody = JSON.stringify(values);
         setMessage(null);
         try {
             console.log(reqBody)
             const response = await fetch("/api/v1/auth/signup", {
                 headers: { "Content-Type": "application/json" },
                 method: "POST",
-                body: JSON.stringify(reqBody),
+                body: reqBody,
             });
 
             if (response.status === 200) {
@@ -32,7 +33,8 @@ export default function Register() {
                 tokenService.setUser(data);
                 window.location.href = "/";
             } else {
-                throw new Error("Invalid login attempt");
+                const error = await response.json();
+                setMessage(error.message);
             }
         } catch (error) {
             setMessage(error.message);
@@ -49,10 +51,7 @@ export default function Register() {
 
     return (
         <div className="home-page-container">
-            {message &&
-                <Alert color="primary" style={{ position: 'absolute', right: 30, top: 30 }}>{message}</Alert>
-            }
-
+            <Alert isOpen={message} color="danger" style={{position:'absolute', top:'30px'}}>{message}</Alert>            
             <Form onSubmit={handleSubmit} className='auth-form-container'>
                 <div style={{ margin: "30px" }}>
                     <title className='center-title'><h1>Register</h1></title>
@@ -77,7 +76,7 @@ export default function Register() {
                         />
                     </FormGroup>
                     <div className='button-group'>
-                        <Button type='submit'>Registrer</Button>
+                        <Button type='submit'>Register</Button>
                         <Button type='button'>
                             <Link className='custom-link' to={"/"}>Cancelar</Link>
                         </Button>
