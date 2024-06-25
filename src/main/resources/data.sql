@@ -1,11 +1,11 @@
 
 INSERT INTO users(id,username,github_token,clockify_token,email,avatar_url) VALUES 
-                 (1,'user_1','git_token_1','clockify_token_1','email_1','avatar_url_1'),
-                 (2,'user_2','git_token_2','clockify_token_2','email_2','avatar_url_2'),
-                 (3,'user_3','git_token_3','clockify_token_3','email_3','avatar_url_3'),
-                 (4,'user_4','git_token_4','clockify_token_4','email_4','avatar_url_4'),
-                 (5,'user_5','git_token_5','clockify_token_5','email_5','avatar_url_5'),
-                 (6,'user_6','git_token_6','clockify_token_6','email_6','avatar_url_6');
+                 (1,'user_1','git_token_1','clockify_token_1','email_1','https://avatars.githubusercontent.com/u/1'),
+                 (2,'user_2','git_token_2','clockify_token_2','email_2','https://avatars.githubusercontent.com/u/2'),
+                 (3,'user_3','git_token_3','clockify_token_3','email_3','https://avatars.githubusercontent.com/u/3'),
+                 (4,'user_4','git_token_4','clockify_token_4','email_4','https://avatars.githubusercontent.com/u/4'),
+                 (5,'user_5','git_token_5','clockify_token_5','email_5','https://avatars.githubusercontent.com/u/5'),
+                 (6,'user_6','git_token_6','clockify_token_6','email_6','https://avatars.githubusercontent.com/u/6');
 
 INSERT INTO commits(id,message,date,additions,deletions,author_id) VALUES 
                    (1,'message_1','2003-01-01 16:00:49',10,2,1),

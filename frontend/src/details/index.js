@@ -5,6 +5,7 @@ import { MdOutlineEmail } from "react-icons/md";
 import { SiClockify } from "react-icons/si";
 import { Button } from 'reactstrap';
 import InputWithIcon from '../components/InputWithIcon';
+import tokenService from '../services/token.service.js'
 import './details.css';
 
 
@@ -22,10 +23,10 @@ export default function Details() {
   const [email, setEmail] = useState('');
 
   useEffect(() => {
-    // const {username, email, githubToken} = tokenService.getUser();
-    // setUsername(username);
-    // setEmail(email);
-    // setGithubToken(githubToken);
+    const user = tokenService.getUser();
+    setUsername(user?.username);
+    setEmail(user?.email);
+    setGithubToken(user?.githubToken);
   }, []);
 
   const handleGithubTokenChange = (e) => setGithubToken(e.target.value);
@@ -98,7 +99,7 @@ export default function Details() {
           Nota: Estos tokens serán utiliza por defecto a las horas de realizar las peticiones en Github o Clockify
           en caso de que los repositorios o espacios de trabajo respectivos no tengan un token predefinido asociado.
           A su vez, la existencia de un token en Github será presentada de forma obligatoria, mientras que el token de
-          Clockify se presentará como opcional, siendo la única inconveniencia la inaccesibilidad a ciertas funciones.
+          Clockify será opcional, siendo la única inconveniencia la inaccesibilidad a ciertas funciones.
         </p>
       </div>
     </div>
