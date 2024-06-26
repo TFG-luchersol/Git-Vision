@@ -27,6 +27,7 @@ export default function Details() {
     setUsername(user?.username);
     setEmail(user?.email);
     setGithubToken(user?.githubToken);
+    setClockifyToken(user?.clockifyToken)
   }, []);
 
   const handleGithubTokenChange = (e) => setGithubToken(e.target.value);
