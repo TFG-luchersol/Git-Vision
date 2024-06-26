@@ -25,6 +25,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.samples.gitvision.auth.payload.response.MessageResponse;
 import org.springframework.samples.gitvision.exceptions.AccessDeniedException;
+import org.springframework.samples.gitvision.util.Data;
 import org.springframework.samples.gitvision.util.RestPreconditions;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,21 +34,22 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
+// @SecurityRequirement(name = "bearerAuth")
 @RestController
 @RequestMapping("/api/v1/users")
-@SecurityRequirement(name = "bearerAuth")
-class UserRestController {
+@Tag(name = "User")
+public class UserController {
 
 	private final UserService userService;
 
 	@Autowired
-	public UserRestController(UserService userService) {
+	public UserController(UserService userService) {
 		this.userService = userService;
 	}
 
@@ -57,7 +59,7 @@ class UserRestController {
 		return new ResponseEntity<>(res, HttpStatus.OK);
 	}
 
-	@GetMapping(value = "{id}")
+	@GetMapping("/{id}")
 	public ResponseEntity<User> findById(@PathVariable("id") Long id) {
 		return new ResponseEntity<>(userService.findUserById(id), HttpStatus.OK);
 	}
@@ -69,20 +71,42 @@ class UserRestController {
 		return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
 	}
 
-	@PutMapping(value = "{userId}")
+	@PutMapping("/{userId}")
 	@ResponseStatus(HttpStatus.OK)
 	public ResponseEntity<User> update(@PathVariable("userId") Long id, @RequestBody @Valid User user) {
 		RestPreconditions.checkNotNull(userService.findUserById(id), "User", "ID", id);
-		return new ResponseEntity<>(this.userService.updateUser(user, id), HttpStatus.OK);
+		return ResponseEntity.ok(this.userService.updateUser(user, id));
 	}
 
-	@DeleteMapping(value = "{userId}")
+	@PutMapping("/user/{username}/token/github")
+	public ResponseEntity<MessageResponse> updateGithubToken(@PathVariable String username, @RequestBody String githubToken) {
+		try {
+			User user = userService.updateGithubToken(username, githubToken);
+			Data customMap = Data.empty().put("githubToken", githubToken);
+			return ResponseEntity.ok(MessageResponse.of("Github Token has been updated", customMap));
+		} catch (Exception e) {
+			return ResponseEntity.badRequest().body(MessageResponse.of("Failed!"));
+		}
+	}
+
+	@PutMapping("/user/{username}/token/clockify")
+	public ResponseEntity<MessageResponse> updateClockifyToken(@PathVariable String username, @RequestBody String clockifyToken) {
+		try {
+			User user = userService.updateClockifyToken(username, clockifyToken);
+			Data customMap = Data.empty().put("clockifyToken", clockifyToken);
+			return ResponseEntity.ok(MessageResponse.of("Github Token has been updated"));
+		} catch (Exception e) {
+			return ResponseEntity.badRequest().body(MessageResponse.of("Failed!"));
+		}
+	}
+
+	@DeleteMapping("/{userId}")
 	@ResponseStatus(HttpStatus.OK)
 	public ResponseEntity<MessageResponse> delete(@PathVariable("userId") Long id) {
 		RestPreconditions.checkNotNull(userService.findUserById(id), "User", "ID", id);
 		if (!Objects.equals(userService.findCurrentUser().getId(), id)) {
 			userService.deleteUserById(id);
-			return new ResponseEntity<>(new MessageResponse("User deleted!"), HttpStatus.OK);
+			return ResponseEntity.ok(new MessageResponse("User deleted!"));
 		} else
 			throw new AccessDeniedException("You can't delete yourself!");
 	}

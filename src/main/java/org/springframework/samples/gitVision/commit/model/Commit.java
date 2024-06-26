@@ -4,12 +4,15 @@ import java.time.LocalDateTime;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.springframework.samples.gitvision.colaborator.Collaborator;
 import org.springframework.samples.gitvision.model.entity.BaseEntity;
 import org.springframework.samples.gitvision.model.entity.EntityIdString;
+import org.springframework.samples.gitvision.repository.Repository;
 import org.springframework.samples.gitvision.user.User;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotNull;
@@ -28,14 +31,17 @@ public class Commit extends EntityIdString {
     @NotNull
     LocalDateTime date;
 
-    @ManyToOne
-    User author;
-
     @PositiveOrZero
     int additions;
 
     @PositiveOrZero
     int deletions;
+    
+    @ManyToOne
+    Collaborator author;
+
+    @ManyToOne
+    Repository repository;
     
     @Transient
     public CommitType getCommitType() {

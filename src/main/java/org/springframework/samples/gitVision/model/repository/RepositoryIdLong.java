@@ -4,6 +4,6 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.NoRepositoryBean;
 
 @NoRepositoryBean
-public interface BaseRepositoryIdString<T> extends CrudRepository<T,String> {
- 
+public interface RepositoryIdLong<T> extends CrudRepository<T, Long>{
+    
 }

@@ -24,15 +24,15 @@ public class CommitService {
     }
 
     @Transactional(readOnly = true)
-    public List<CommitsByPerson> getNumCommitsByUserInPeriod(LocalDateTime startDate, LocalDateTime endDate){
+    public List<CommitsByPerson> getNumCommitsByUserInPeriod(Long repositoryId, LocalDateTime startDate, LocalDateTime endDate){
         if(startDate == null && endDate == null)
-            return this.commitRepository.getNumCommitsByUser();
+            return this.commitRepository.getNumCommitsByUserOnDate(repositoryId, startDate, endDate);
         else if(startDate == null)
-            return this.commitRepository.getNumCommitsByUserBeforeThat(endDate);
+            return this.commitRepository.getNumCommitsByUserBeforeThat(repositoryId, endDate);
         else if(endDate == null)
-            return this.commitRepository.getNumCommitsByUserAfterThat(startDate);
+            return this.commitRepository.getNumCommitsByUserAfterThat(repositoryId, startDate);
         else
-            return this.commitRepository.getNumCommitsByUser();
+            return this.commitRepository.getNumCommitsByUser(repositoryId);
     }
 
     @Transactional

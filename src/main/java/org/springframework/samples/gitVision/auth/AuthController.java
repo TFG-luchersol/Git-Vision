@@ -36,7 +36,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 @RestController
 @RequestMapping("/api/v1/auth")
-@Tag(name = "Authentication", description = "The Authentication API based on JWT")
+@Tag(name = "Authentication")
 public class AuthController {
 
 	private final AuthenticationManager authenticationManager;

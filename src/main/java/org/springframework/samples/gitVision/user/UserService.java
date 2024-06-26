@@ -72,9 +72,23 @@ public class UserService {
 		User toUpdate = findUserById(idToUpdate);
 		BeanUtils.copyProperties(user, toUpdate, "id");
 		userRepository.save(toUpdate);
-
 		return toUpdate;
 	}
+
+	@Transactional 
+	public User updateGithubToken(String username, String githubToken){
+		User user = findUserByUsername(username);
+		user.setGithubToken(githubToken);
+		return user;
+	}
+
+	@Transactional 
+	public User updateClockifyToken(String username, String clockifyToken){
+		User user = findUserByUsername(username);
+		user.setClockifyToken(clockifyToken);
+		return user;
+	}
+
 
 	@Transactional
 	public User saveUser(User user) throws DataAccessException {
