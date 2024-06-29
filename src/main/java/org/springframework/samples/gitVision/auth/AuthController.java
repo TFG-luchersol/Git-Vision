@@ -1,7 +1,9 @@
 package org.springframework.samples.gitvision.auth;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import jakarta.validation.Valid;
 
@@ -32,6 +34,8 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 
 @RestController
@@ -53,27 +57,41 @@ public class AuthController {
 		this.authService = authService;
 	}
 
+	// @PostMapping("/signin")
+	// public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+	// 	try{
+	// 		User user = userService.findUserByUsername(loginRequest.getUsername());
+	// 		if(!user.getGithubToken().equals(loginRequest.getGithubToken()))
+	// 			return ResponseEntity.badRequest().body(MessageResponse.of("Incorrect Token"));
+	// 		return ResponseEntity.ok().body(user);
+	// 	}catch(ResourceNotFoundException exception){
+	// 		return ResponseEntity.badRequest().body(MessageResponse.of("Bad Credentials"));
+	// 	}
+	// }
+
 	@PostMapping("/signin")
-	public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
-		try{
-			User user = userService.findUserByUsername(loginRequest.getUsername());
-			if(!user.getGithubToken().equals(loginRequest.getGithubToken()))
-				return ResponseEntity.badRequest().body(MessageResponse.of("Incorrect Token"));
-			return ResponseEntity.ok().body(user);
-		}catch(ResourceNotFoundException exception){
-			return ResponseEntity.badRequest().body(MessageResponse.of("Bad Credentials"));
-		}
-	}
-
-	// Authentication authentication = authenticationManager.authenticate(
-			// 	new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getGithubToken()));
-
-			// SecurityContextHolder.getContext().setAuthentication(authentication);
-			// String jwt = jwtUtils.generateJwtToken(authentication);
-
-			// UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+	public ResponseEntity authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+		try {
+			String username = loginRequest.getUsername();
+			String githubToken = loginRequest.getGithubToken();
+			if(!userService.existsUserByUsername(username)){
+				throw new ResourceNotFoundException("User", "username", username);
+			}
 			
-			// return ResponseEntity.ok().body(new JwtResponse(jwt, userDetails.getId(), userDetails.getUsername(), userDetails.getPassword()));
+			UsernamePasswordAuthenticationToken authenticationToken =
+				new UsernamePasswordAuthenticationToken(username, githubToken);
+			
+			Authentication authentication = authenticationManager.authenticate(authenticationToken);
+			SecurityContextHolder.getContext().setAuthentication(authentication);
+			String jwt = jwtUtils.generateJwtToken(authentication);
+
+			UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+			User user = userService.findUserById(userDetails.getId());
+			return ResponseEntity.ok().body(new JwtResponse(jwt, user));
+		} catch(Exception exception) {
+			return ResponseEntity.badRequest().body(MessageResponse.of("Bad Credentials!"));
+		} 
+	}
 
 	@GetMapping("/validate")
 	public ResponseEntity<Boolean> validateToken(@RequestParam String token) {
@@ -89,16 +107,17 @@ public class AuthController {
 			String token = signUpRequest.getGithubToken();
             GitHub gitHub = GitHub.connect(username, token);
             GHUser user = gitHub.getMyself();	
-			
+			if(user == null || !user.getLogin().equals(signUpRequest.getUsername()))
+				return ResponseEntity.badRequest().body(MessageResponse.of("Error: Username or token is incorrect"));
 			if (userService.existsUserByUsername(username)) 
-				return ResponseEntity.badRequest().body(new MessageResponse("Error: Username is already taken!"));
+				return ResponseEntity.badRequest().body(MessageResponse.of("Error: Username is already taken!"));
 
 
 			authService.createUser(user, token);
-			return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+			return ResponseEntity.ok(MessageResponse.of("User registered successfully!"));
 
 		} catch (IOException e) {
-			return ResponseEntity.badRequest().body(new MessageResponse("Error: The username or token can be incorrect"));
+			return ResponseEntity.badRequest().body(MessageResponse.of("Error: Connection to github failed"));
 		}
 		
 	}

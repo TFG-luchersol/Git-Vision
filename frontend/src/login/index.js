@@ -29,7 +29,8 @@ export default function Login() {
 
             if (response.status === 200) {
                 const data = await response.json();
-                tokenService.setUser(data);
+                tokenService.setLocalAccessToken(data.token)
+                tokenService.setUser(data.user);
                 window.location.href = "/";
             } else {
                 const error = await response.json();

@@ -17,6 +17,7 @@ import org.springframework.samples.gitvision.configuration.jwt.AuthEntryPointJwt
 import org.springframework.samples.gitvision.configuration.jwt.AuthTokenFilter;
 import org.springframework.samples.gitvision.configuration.services.UserDetailsServiceImpl;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -41,10 +42,6 @@ public class SecurityConfiguration {
 	@Autowired
 	DataSource dataSource;
 
-	private static final String ADMIN = "ADMIN";
-	private static final String CLINIC_OWNER = "CLINIC_OWNER";
-	
-
 	@Bean
 	protected SecurityFilterChain configure(HttpSecurity http) throws Exception {
 		
@@ -59,8 +56,8 @@ public class SecurityConfiguration {
 			.requestMatchers("/resources/**", "/webjars/**", "/static/**", "/swagger-resources/**").permitAll()			
 			.requestMatchers( "/", "/oups","/api/v1/auth/**","/v3/api-docs/**","/swagger-ui.html","/swagger-ui/**").permitAll()												
 			.requestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**")).permitAll()
-			.anyRequest().authenticated());
-			// .addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);		
+			.anyRequest().permitAll())
+			.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);		
 		return http.build();
 	}
 

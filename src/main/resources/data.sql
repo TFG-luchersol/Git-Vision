@@ -1,6 +1,7 @@
+-- git_token_1 -> "$2a$10$qZbZlKF8x6PvuFir3lNU8u2ZbA/x64BZLmTyS1D7LBnyHmKaESMTS"
 
 INSERT INTO users(id,username,github_token,clockify_token,email,avatar_url) VALUES 
-                 (1,'username_1','git_token_1','clockify_token_1','email_1@gmail.com','https://avatars.githubusercontent.com/u/1'),
+                 (1,'username_1','$2a$10$qZbZlKF8x6PvuFir3lNU8u2ZbA/x64BZLmTyS1D7LBnyHmKaESMTS','clockify_token_1','email_1@gmail.com','https://avatars.githubusercontent.com/u/1'),
                  (2,'username_2','git_token_2','clockify_token_2','email_2@gmail.com','https://avatars.githubusercontent.com/u/2'),
                  (3,'username_3','git_token_3','clockify_token_3','email_3@gmail.com','https://avatars.githubusercontent.com/u/3'),
                  (4,'username_4','git_token_4','clockify_token_4','email_4@gmail.com','https://avatars.githubusercontent.com/u/4'),

@@ -22,19 +22,29 @@ export default function Register() {
         setMessage(null);
         try {
             console.log(reqBody)
-            const response = await fetch("/api/v1/auth/signup", {
+            const dataRegister = await fetch("/api/v1/auth/signup", {
                 headers: { "Content-Type": "application/json" },
                 method: "POST",
                 body: reqBody,
-            });
-
-            if (response.status === 200) {
-                const data = await response.json();
-                tokenService.setUser(data);
-                window.location.href = "/";
+            }).then(response => response.json());
+            if(dataRegister.status !== 200){
+                setMessage(dataRegister.message);
             } else {
-                const error = await response.json();
-                setMessage(error.message);
+                await fetch("/api/v1/auth/signin", {
+                    headers: { "Content-Type": "application/json" },
+                    method: "POST",
+                    body: reqBody,
+                })
+                    .then(response => response.json())
+                    .then(function (data) {
+                        if (data.status !== "200") {
+                            setMessage(data.message);
+                        } else {
+                            tokenService.setUser(data.user);
+                            tokenService.updateLocalAccessToken(data.token);
+                            window.location.href = "/";
+                        }
+                    })
             }
         } catch (error) {
             setMessage(error.message);
@@ -51,7 +61,7 @@ export default function Register() {
 
     return (
         <div className="home-page-container">
-            <Alert isOpen={message} color="danger" style={{position:'absolute', top:'30px'}}>{message}</Alert>            
+            <Alert isOpen={message} color="danger" style={{ position: 'absolute', top: '30px' }}>{message}</Alert>
             <Form onSubmit={handleSubmit} className='auth-form-container'>
                 <div style={{ margin: "30px" }}>
                     <title className='center-title'><h1>Register</h1></title>

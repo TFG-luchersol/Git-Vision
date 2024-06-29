@@ -9,6 +9,10 @@ class TokenService {
         return jwt ? jwt : null;
     }
 
+    setLocalAccessToken(jwt) {
+        window.localStorage.setItem("jwt", JSON.stringify(jwt));
+    }
+
     updateLocalAccessToken(token) {
         window.localStorage.setItem("jwt", JSON.stringify(token));
     }
@@ -23,7 +27,7 @@ class TokenService {
 
     removeUser() {
         window.localStorage.removeItem("user");
-        // window.localStorage.removeItem("jwt");
+        window.localStorage.removeItem("jwt");
     }
 
 }

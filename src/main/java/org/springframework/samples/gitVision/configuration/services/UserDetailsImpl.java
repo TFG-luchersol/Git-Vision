@@ -1,5 +1,6 @@
 package org.springframework.samples.gitvision.configuration.services;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -11,6 +12,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor
 public class UserDetailsImpl implements UserDetails {
 
 	private static final long serialVersionUID = 1L;
@@ -20,7 +24,9 @@ public class UserDetailsImpl implements UserDetails {
 	private String username;
 
 	@JsonIgnore
-	private String password;
+	private String password, clockfiyToken, avatarUrl, email;
+
+
 
 	private Collection<? extends GrantedAuthority> authorities;
 
@@ -28,6 +34,7 @@ public class UserDetailsImpl implements UserDetails {
 		this.id = id;
 		this.username = username;
 		this.password = password;
+		this.authorities = List.of();
 	}
 
 	public static UserDetailsImpl build(User user) {

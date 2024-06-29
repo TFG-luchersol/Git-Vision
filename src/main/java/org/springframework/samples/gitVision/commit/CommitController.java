@@ -25,7 +25,7 @@ public class CommitController {
         this.commitService = commitService;
     }
 
-    @GetMapping("/byCollaborator?startDate={startDate}&endDate={endDate}")
+    @GetMapping("/byCollaborator")
     public List<CommitsByPerson> getNumCommitsByUserInPeriod(@RequestParam Long repositoryId,
                                                              @RequestParam(required = false) LocalDateTime startDate, 
                                                              @RequestParam(required = false) LocalDateTime endDate){

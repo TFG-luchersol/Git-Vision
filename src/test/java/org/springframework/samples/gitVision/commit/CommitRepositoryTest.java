@@ -1,4 +1,4 @@
-package org.springframework.samples.gitVision.commit;
+package org.springframework.samples.gitvision.commit;
 
 import static org.junit.Assert.assertEquals;
 
