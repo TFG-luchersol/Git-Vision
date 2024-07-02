@@ -68,5 +68,25 @@ public class CommitRepositoryTest {
         assertEquals(0, count.get(USERNAME_3).intValue());
     }
 
+    @Test
+    void testGetNumCommitsByHour() {
+        List<Object[]> res = commitRepository.getNumCommitsByHour(ID_REPOSITORY);
+    }
+
+    @Test
+    void testGetNumCommitsByDayOfWeek() {
+        List<Object[]> res = commitRepository.getNumCommitsByDayOfWeek(ID_REPOSITORY);
+    }
+
+    @Test
+    void testGetNumCommitsByMonth() {
+        List<Object[]> res = commitRepository.getNumCommitsByMonth(ID_REPOSITORY);
+    }
+
+    @Test
+    void testGetNumCommitsByUser2() {
+        List<Object[]> res = commitRepository.getNumCommitsByYear(ID_REPOSITORY);
+    }
+
 
 }
