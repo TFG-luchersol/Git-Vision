@@ -7,11 +7,14 @@ import java.util.List;
 import java.util.Map;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.samples.gitvision.commit.CommitRepository;
 import org.springframework.samples.gitvision.commit.model.CommitsByPerson;
+import org.springframework.samples.gitvision.commit.model.CommitsByTimePeriod;
+import org.springframework.samples.gitvision.commit.model.TimePeriod;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
@@ -27,8 +30,9 @@ public class CommitRepositoryTest {
 
     @Test
     void testGetNumCommitsByUser() {
-        List<CommitsByPerson> query = this.commitRepository.getNumCommitsByUser(ID_REPOSITORY);
-        Map<String, Long> count = CommitsByPerson.parseNumCommitsByUsername(query);
+        List<Object[]> query = this.commitRepository.getNumCommitsByUser(ID_REPOSITORY);
+        CommitsByPerson commitsByPerson = CommitsByPerson.of(query);
+        Map<String, Long> count = commitsByPerson.parseNumCommitsByUsername();
         assertEquals(6, count.get(USERNAME_1).intValue());
         assertEquals(5, count.get(USERNAME_2).intValue());
         assertEquals(1, count.get(USERNAME_3).intValue());
@@ -38,8 +42,9 @@ public class CommitRepositoryTest {
     void testGetNumCommitsByUserBeforeThat() {
         // <--  2004-02-01 23:00:00 
         LocalDateTime endDateTime = LocalDateTime.of(2004, 2, 1, 23, 0, 0);
-        List<CommitsByPerson> query = this.commitRepository.getNumCommitsByUserBeforeThat(ID_REPOSITORY, endDateTime);
-        Map<String, Long> count = CommitsByPerson.parseNumCommitsByUsername(query);
+        List<Object[]> query = this.commitRepository.getNumCommitsByUserBeforeThat(ID_REPOSITORY, endDateTime);
+        CommitsByPerson commitsByPerson = CommitsByPerson.of(query);
+        Map<String, Long> count = commitsByPerson.parseNumCommitsByUsername();
         assertEquals(6, count.get(USERNAME_1).intValue());
         assertEquals(4, count.get(USERNAME_2).intValue());
         assertEquals(0, count.get(USERNAME_3).intValue());
@@ -49,8 +54,9 @@ public class CommitRepositoryTest {
     void testGetNumCommitsByUserAfterThat() {
         // 2003-02-01 23:00:00  -->
         LocalDateTime starDateTime = LocalDateTime.of(2003, 2, 1, 23, 0, 0);
-        List<CommitsByPerson> query = this.commitRepository.getNumCommitsByUserAfterThat(ID_REPOSITORY, starDateTime);
-        Map<String, Long> count = CommitsByPerson.parseNumCommitsByUsername(query);
+        List<Object[]> query = this.commitRepository.getNumCommitsByUserAfterThat(ID_REPOSITORY, starDateTime);
+        CommitsByPerson commitsByPerson = CommitsByPerson.of(query);
+        Map<String, Long> count = commitsByPerson.parseNumCommitsByUsername();
         assertEquals(count.get(USERNAME_1).intValue(), 2);
         assertEquals(count.get(USERNAME_2).intValue(), 3);
         assertEquals(count.get(USERNAME_3).intValue(), 1);
@@ -61,31 +67,44 @@ public class CommitRepositoryTest {
         // 2003-02-01 23:00:00  --  2004-02-01 23:00:00
         LocalDateTime starDateTime = LocalDateTime.of(2003, 2, 1, 23, 0, 0),
                 endDateTime = LocalDateTime.of(2004, 2, 1, 23, 0, 0);
-        List<CommitsByPerson> query = this.commitRepository.getNumCommitsByUserOnDate(ID_REPOSITORY, starDateTime, endDateTime);
-        Map<String, Long> count = CommitsByPerson.parseNumCommitsByUsername(query);
+        List<Object[]> query = this.commitRepository.getNumCommitsByUserOnDate(ID_REPOSITORY, starDateTime, endDateTime);
+        CommitsByPerson commitsByPerson = CommitsByPerson.of(query);
+        Map<String, Long> count = commitsByPerson.parseNumCommitsByUsername();
         assertEquals(2, count.get(USERNAME_1).intValue());
         assertEquals(2, count.get(USERNAME_2).intValue());
         assertEquals(0, count.get(USERNAME_3).intValue());
     }
 
-    @Test
-    void testGetNumCommitsByHour() {
-        List<Object[]> res = commitRepository.getNumCommitsByHour(ID_REPOSITORY);
+    @ParameterizedTest
+    @CsvSource({"16,7", "17,1", "18,1", "19,2", "23,1"})
+    void testGetNumCommitsByHour(Integer hour, Integer cont) {
+        List<Integer[]> ls = commitRepository.getNumCommitsByHour(ID_REPOSITORY);
+        CommitsByTimePeriod commitsByTimePeriod = CommitsByTimePeriod.of(ls, TimePeriod.HOUR);
+        assertEquals(cont, commitsByTimePeriod.get(hour));
     }
 
-    @Test
-    void testGetNumCommitsByDayOfWeek() {
-        List<Object[]> res = commitRepository.getNumCommitsByDayOfWeek(ID_REPOSITORY);
+    @ParameterizedTest
+    @CsvSource({"1,1", "2,0", "3,4", "4,1", "5,1", "6,2", "7,3"})
+    void testGetNumCommitsByDayOfWeek(Integer dayOfWeek, Integer cont) {
+        List<Integer[]> ls = commitRepository.getNumCommitsByDayOfWeek(ID_REPOSITORY);
+        CommitsByTimePeriod commitsByTimePeriod = CommitsByTimePeriod.of(ls, TimePeriod.DAY_OF_WEEK);
+        assertEquals(cont, commitsByTimePeriod.get(dayOfWeek));
     }
 
-    @Test
-    void testGetNumCommitsByMonth() {
-        List<Object[]> res = commitRepository.getNumCommitsByMonth(ID_REPOSITORY);
+    @ParameterizedTest
+    @CsvSource({"1,7", "2,3", "3,2"})
+    void testGetNumCommitsByMonth(Integer month, Integer cont) {
+        List<Integer[]> ls = commitRepository.getNumCommitsByMonth(ID_REPOSITORY);
+        CommitsByTimePeriod commitsByTimePeriod = CommitsByTimePeriod.of(ls, TimePeriod.MONTH);
+        assertEquals(cont, commitsByTimePeriod.get(month));
     }
 
-    @Test
-    void testGetNumCommitsByUser2() {
-        List<Object[]> res = commitRepository.getNumCommitsByYear(ID_REPOSITORY);
+    @ParameterizedTest
+    @CsvSource({"2003,9", "2004,3"})
+    void testGetNumCommitsByYear(Integer year, Integer cont) {
+        List<Integer[]> ls = commitRepository.getNumCommitsByYear(ID_REPOSITORY);
+        CommitsByTimePeriod commitsByTimePeriod = CommitsByTimePeriod.of(ls, TimePeriod.YEAR);
+        assertEquals(cont, commitsByTimePeriod.get(year));
     }
 
 

@@ -25,20 +25,23 @@ public class CommitService {
     }
 
     @Transactional(readOnly = true)
-    public List<CommitsByPerson> getNumCommitsByUserInPeriod(Long repositoryId, LocalDateTime startDate,
+    public CommitsByPerson getNumCommitsByUserInPeriod(Long repositoryId, LocalDateTime startDate,
             LocalDateTime endDate) {
+        List<Object[]> res = null;
         if (startDate == null && endDate == null)
-            return this.commitRepository.getNumCommitsByUserOnDate(repositoryId, startDate, endDate);
+            res = this.commitRepository.getNumCommitsByUserOnDate(repositoryId, startDate, endDate);
         else if (startDate == null)
-            return this.commitRepository.getNumCommitsByUserBeforeThat(repositoryId, endDate);
+            res = this.commitRepository.getNumCommitsByUserBeforeThat(repositoryId, endDate);
         else if (endDate == null)
-            return this.commitRepository.getNumCommitsByUserAfterThat(repositoryId, startDate);
+            res = this.commitRepository.getNumCommitsByUserAfterThat(repositoryId, startDate);
         else
-            return this.commitRepository.getNumCommitsByUser(repositoryId);
+            res = this.commitRepository.getNumCommitsByUser(repositoryId);
+
+        return CommitsByPerson.of(res);
     }
 
     @Transactional(readOnly = true)
-    public List<CommitsByTimePeriod> getNumCommitsGroupByTime(Long repositoryId, TimePeriod timePeriod) {
+    public CommitsByTimePeriod getNumCommitsGroupByTime(Long repositoryId, TimePeriod timePeriod) {
         List<Integer[]> res = switch (timePeriod) {
             case HOUR -> commitRepository.getNumCommitsByHour(repositoryId);
             case DAY_OF_WEEK -> commitRepository.getNumCommitsByDayOfWeek(repositoryId);
@@ -48,19 +51,18 @@ public class CommitService {
         return CommitsByTimePeriod.of(res, timePeriod);
     }
 
-    @Transactional
-    public void saveCommit(GHCommit ghCommit) {
-        Commit commit = new Commit();
-        try {
-            commit.setMessage(ghCommit.getCommitShortInfo().getMessage());
-            // commit.setAuthor(ghCommit.getAuthor());
-            commit.setDate(EntityUtils.parseDateToLocalDateTimeUTC(ghCommit.getCommitDate()));
-            commit.setAdditions(ghCommit.getLinesAdded());
-            commit.setDeletions(ghCommit.getLinesDeleted());
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+    // @Transactional
+    // public void saveCommit(GHCommit ghCommit) {
+    //     Commit commit = new Commit();
+    //     try {
+    //         commit.setMessage(ghCommit.getCommitShortInfo().getMessage());
+    //         // commit.setAuthor(ghCommit.getAuthor());
+    //         commit.setDate(EntityUtils.parseDateToLocalDateTimeUTC(ghCommit.getCommitDate()));
+    //         commit.setAdditions(ghCommit.getLinesAdded());
+    //         commit.setDeletions(ghCommit.getLinesDeleted());
+    //     } catch (IOException e) {
+    //         e.printStackTrace();
+    //     }
+    // }
 
-    }
 }
