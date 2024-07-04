@@ -24,6 +24,12 @@ public class MessageResponse {
 		return messageResponse;
 	}
 
+	public static MessageResponse of(Data data){
+		MessageResponse messageResponse = MessageResponse.empty();
+		messageResponse.setData(data);
+		return messageResponse;
+	}
+
 	public static MessageResponse of(String message, Data data){
 		MessageResponse messageResponse = of(message);
 		messageResponse.setData(data);

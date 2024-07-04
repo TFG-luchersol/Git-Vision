@@ -52,6 +52,18 @@ INSERT INTO commits(id,message,date,additions,deletions,author_id,repository_id)
                    (17,'message_17','2004-02-04 17:00:49',23,45,5,4),
                    (18,'message_18','2004-02-05 16:00:49',56,2,6,4);
 
+INSERT INTO files(id,path,extension,repository_id) VALUES  
+                 (1,'src/main/java/claseJava.java','java',1),
+                 (2,'src/main/java/claseJava2.java','java',1),
+                 (3,'src/main/python/clasePython.py','py',1),
+                 (4,'src/main/c/claseC.c','c',1),
+                 (5,'src/main/cpp/claseCpp.cpp','cpp',1),
+                 (6,'src/main/cpp/claseCpp.c++','c++',1),
+                 (7,'README.md','md',1),
+                 (8,'SinExtension',null,1),
+                 (9,'README.md','md',2);
+                 
+
 -- INSERT INTO organizations(id,name) VALUES ();
 -- INSERT INTO issues(id,message) VALUES ();
 -- INSERT INTO files(id,route,name) VALUES ();

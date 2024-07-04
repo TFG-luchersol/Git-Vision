@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 
@@ -36,8 +35,8 @@ public class CommitController {
     }    
 
     @GetMapping("/byTime")
-    public CommitsByTimePeriod getNumCommitsGroupByTime(@RequestParam Long repositoryId, @RequestBody String tp){
-        TimePeriod timePeriod = TimePeriod.valueOf(tp.trim());
+    public CommitsByTimePeriod getNumCommitsGroupByTime(@RequestParam Long repositoryId, 
+                                                        @RequestParam TimePeriod timePeriod){
         return this.commitService.getNumCommitsGroupByTime(repositoryId, timePeriod);
     } 
 
