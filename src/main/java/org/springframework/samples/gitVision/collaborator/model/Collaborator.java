@@ -1,4 +1,4 @@
-package org.springframework.samples.gitvision.colaborator;
+package org.springframework.samples.gitvision.collaborator.model;
 
 import org.springframework.samples.gitvision.model.entity.Person;
 

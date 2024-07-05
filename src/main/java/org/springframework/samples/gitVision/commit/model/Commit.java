@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.springframework.samples.gitvision.colaborator.Collaborator;
+import org.springframework.samples.gitvision.collaborator.model.Collaborator;
 import org.springframework.samples.gitvision.model.entity.BaseEntity;
 import org.springframework.samples.gitvision.model.entity.EntityIdString;
 import org.springframework.samples.gitvision.repository.Repository;

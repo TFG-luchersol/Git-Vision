@@ -1,6 +1,6 @@
 package org.springframework.samples.gitvision.relations.repositoryCollaborator;
 
-import org.springframework.samples.gitvision.colaborator.Collaborator;
+import org.springframework.samples.gitvision.collaborator.model.Collaborator;
 import org.springframework.samples.gitvision.model.entity.EntityIdLong;
 import org.springframework.samples.gitvision.repository.Repository;
 
