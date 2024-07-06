@@ -11,7 +11,7 @@ import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.SequenceGenerator;
 
 @MappedSuperclass
-public class EntitySequentialId {
+public class EntityIdSequential {
     
     @Id
 	@SequenceGenerator(name = "entity_seq", 

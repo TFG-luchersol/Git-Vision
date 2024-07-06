@@ -5,22 +5,26 @@ import java.util.Map;
 
 public class PercentageLanguages {
     
-    Map<String, Integer> percentages;
+    Map<String, Double> percentages;
+    int cont;
+    boolean isDraftMode;
     
     public PercentageLanguages(){
         this.percentages = new HashMap<>();
+        this.isDraftMode = true;
+        this.cont = 0;
     }
 
     public static PercentageLanguages empty(){
         return new PercentageLanguages();
     }
 
-    public int get(String language) {
-        return this.percentages.getOrDefault(language, 0);
+    public double get(String language) {
+        return this.percentages.getOrDefault(language, 0.);
     }
 
-    public int getUnknown(){
-        return this.percentages.getOrDefault("Unknown", 0);
+    public double getUnknown(){
+        return this.percentages.getOrDefault("Unknown", 0.);
     }
 
     public boolean contains(String language) {
@@ -28,7 +32,13 @@ public class PercentageLanguages {
     }
 
     public void add(String language) {
-        Integer newValue = get(language) + 1;
+        double newValue = get(language) + 1;
         this.percentages.put(language, newValue);
+        this.cont++;
+    }
+
+    public void calc(){
+        this.percentages.replaceAll((key, value) -> value/this.cont);
+        this.isDraftMode = false;
     }
 }

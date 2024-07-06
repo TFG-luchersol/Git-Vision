@@ -1,6 +1,6 @@
 package org.springframework.samples.gitvision.file;
 
-import org.springframework.samples.gitvision.model.entity.EntitySequentialId;
+import org.springframework.samples.gitvision.model.entity.EntityIdSequential;
 import org.springframework.samples.gitvision.repository.Repository;
 
 import jakarta.persistence.Entity;
@@ -12,7 +12,7 @@ import lombok.Getter;
 @Entity
 @Getter
 @Table(name = "files")
-public class File extends EntitySequentialId {
+public class File extends EntityIdSequential {
 
     String path;
 
