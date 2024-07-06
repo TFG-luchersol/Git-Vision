@@ -22,4 +22,8 @@ public class Data {
         this.data.put(key, value);
         return this;
     }
+
+    public static Data create(String key, Object value){
+        return empty().put(key, value);
+    }
 }

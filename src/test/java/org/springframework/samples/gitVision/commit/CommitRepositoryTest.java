@@ -12,9 +12,9 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.samples.gitvision.commit.model.CommitsByPerson;
-import org.springframework.samples.gitvision.commit.model.CommitsByTimePeriod;
-import org.springframework.samples.gitvision.commit.model.TimePeriod;
+import org.springframework.samples.gitvision.commit.model.commitsByPerson.CommitsByPerson;
+import org.springframework.samples.gitvision.commit.model.commitsByTimePeriod.CommitsByTimePeriod;
+import org.springframework.samples.gitvision.commit.model.commitsByTimePeriod.TimePeriod;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)

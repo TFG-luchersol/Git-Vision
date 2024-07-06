@@ -1,4 +1,4 @@
-package org.springframework.samples.gitvision.commit.model;
+package org.springframework.samples.gitvision.commit.model.commitsByTimePeriod;
 
 import java.util.Comparator;
 import java.util.List;

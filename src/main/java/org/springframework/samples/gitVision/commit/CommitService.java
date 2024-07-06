@@ -1,16 +1,12 @@
 package org.springframework.samples.gitvision.commit;
 
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import org.kohsuke.github.GHCommit;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.samples.gitvision.commit.model.Commit;
-import org.springframework.samples.gitvision.commit.model.CommitsByPerson;
-import org.springframework.samples.gitvision.commit.model.CommitsByTimePeriod;
-import org.springframework.samples.gitvision.commit.model.TimePeriod;
-import org.springframework.samples.gitvision.util.EntityUtils;
+import org.springframework.samples.gitvision.commit.model.commitsByPerson.CommitsByPerson;
+import org.springframework.samples.gitvision.commit.model.commitsByTimePeriod.CommitsByTimePeriod;
+import org.springframework.samples.gitvision.commit.model.commitsByTimePeriod.TimePeriod;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

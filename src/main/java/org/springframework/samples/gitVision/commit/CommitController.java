@@ -1,12 +1,11 @@
 package org.springframework.samples.gitvision.commit;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.samples.gitvision.commit.model.CommitsByPerson;
-import org.springframework.samples.gitvision.commit.model.CommitsByTimePeriod;
-import org.springframework.samples.gitvision.commit.model.TimePeriod;
+import org.springframework.samples.gitvision.commit.model.commitsByPerson.CommitsByPerson;
+import org.springframework.samples.gitvision.commit.model.commitsByTimePeriod.CommitsByTimePeriod;
+import org.springframework.samples.gitvision.commit.model.commitsByTimePeriod.TimePeriod;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
