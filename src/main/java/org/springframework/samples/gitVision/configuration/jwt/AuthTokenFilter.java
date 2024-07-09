@@ -1,4 +1,4 @@
-package org.springframework.samples.gitVision.configuration.jwt;
+package org.springframework.samples.gitvision.configuration.jwt;
 
 import java.io.IOException;
 
@@ -8,7 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.samples.gitVision.configuration.services.UserDetailsServiceImpl;
+import org.springframework.samples.gitvision.configuration.services.UserDetailsServiceImpl;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;

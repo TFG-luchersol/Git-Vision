@@ -1,12 +1,10 @@
-package org.springframework.samples.gitVision.user;
+package org.springframework.samples.gitvision.user;
 
-import jakarta.persistence.Column;
+import org.springframework.samples.gitvision.model.entity.Person;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
-
-import org.springframework.samples.gitVision.model.BaseEntity;
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,14 +12,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "users")
-public class User extends BaseEntity {
-
-	@Column(unique = true)
-	String username;
-	
-	String email;
-
-	String avatarUrl;
+public class User extends Person {
 
 	@NotBlank
 	String githubToken;

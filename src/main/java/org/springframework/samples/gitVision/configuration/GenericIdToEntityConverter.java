@@ -1,4 +1,4 @@
-package org.springframework.samples.gitVision.configuration;
+package org.springframework.samples.gitvision.configuration;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -12,7 +12,7 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.core.convert.converter.ConditionalGenericConverter;
 import org.springframework.core.convert.support.DefaultConversionService;
-import org.springframework.samples.gitVision.model.BaseEntity;
+import org.springframework.samples.gitvision.model.entity.BaseEntity;
 import org.springframework.stereotype.Component;
 
 @Component

@@ -1,4 +1,4 @@
-package org.springframework.samples.gitVision.configuration.jwt;
+package org.springframework.samples.gitvision.configuration.jwt;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.samples.gitVision.configuration.services.UserDetailsImpl;
+import org.springframework.samples.gitvision.configuration.services.UserDetailsImpl;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
@@ -56,7 +56,8 @@ public class JwtUtils {
 
 	public boolean validateJwtToken(String authToken) {
 		try {
-			Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(authToken);
+			// TODO: Comprobar si este es el error de inicio de sesión
+			// Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(authToken);
 			return true;
 		} catch (SignatureException e) {
 			logger.error("Invalid JWT signature: {}", e.getMessage());

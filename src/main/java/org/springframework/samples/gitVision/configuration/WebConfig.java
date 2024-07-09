@@ -1,4 +1,4 @@
-package org.springframework.samples.gitVision.configuration;
+package org.springframework.samples.gitvision.configuration;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.FormatterRegistry;

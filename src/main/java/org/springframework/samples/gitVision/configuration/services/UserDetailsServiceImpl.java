@@ -1,8 +1,8 @@
-package org.springframework.samples.gitVision.configuration.services;
+package org.springframework.samples.gitvision.configuration.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.samples.gitVision.user.User;
-import org.springframework.samples.gitVision.user.UserRepository;
+import org.springframework.samples.gitvision.user.User;
+import org.springframework.samples.gitvision.user.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -19,8 +19,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		User user = userRepository.findByUsername(username)
 				.orElseThrow(() -> new UsernameNotFoundException("User Not Found with username: " + username));
-
-		return null;
+		return UserDetailsImpl.build(user);
 	}
 
 }

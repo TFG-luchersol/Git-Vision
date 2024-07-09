@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.samples.gitVision.user;
+package org.springframework.samples.gitvision.user;
 
 import jakarta.validation.Valid;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
-import org.springframework.samples.gitVision.exceptions.ResourceNotFoundException;
+import org.springframework.samples.gitvision.exceptions.ResourceNotFoundException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -72,9 +72,23 @@ public class UserService {
 		User toUpdate = findUserById(idToUpdate);
 		BeanUtils.copyProperties(user, toUpdate, "id");
 		userRepository.save(toUpdate);
-
 		return toUpdate;
 	}
+
+	@Transactional 
+	public User updateGithubToken(String username, String githubToken){
+		User user = findUserByUsername(username);
+		user.setGithubToken(githubToken);
+		return user;
+	}
+
+	@Transactional 
+	public User updateClockifyToken(String username, String clockifyToken){
+		User user = findUserByUsername(username);
+		user.setClockifyToken(clockifyToken);
+		return user;
+	}
+
 
 	@Transactional
 	public User saveUser(User user) throws DataAccessException {

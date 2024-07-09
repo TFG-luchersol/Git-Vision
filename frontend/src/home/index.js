@@ -1,15 +1,15 @@
 import React from 'react';
 import '../App.css';
-import '../static/css/home/home.css'; 
+import '../static/css/home/home.css';
+import tokenService from "../services/token.service.js";
+import "../static/css/auth/authButton.css";
+import Login from '../login/index.js';
 
-export default function Home(){
-    return(
+export default function Home() {
+
+    return (
+        !tokenService.getUser() ? <Login/> :
         <div className="home-page-container">
-            <div className="hero-div">
-                <h1>Petclinic</h1>
-                <h3>---</h3>
-                <h3>Find the best vet for your pet</h3>                
-            </div>
-        </div>
+        </div> 
     );
 }

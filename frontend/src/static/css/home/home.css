@@ -5,7 +5,7 @@
     right: 0;
     bottom: 0;
     z-index: -1;
-    background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url('../../images/home_background.jpg');
+    background-color: gainsboro;
     background-size: cover;
     display: flex;
     justify-content: center;
@@ -33,4 +33,36 @@
 
 .hero-div h3{
     text-align: center;
+}
+
+.button-group{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-direction: column;
+}
+
+.button-group Button{
+    margin: 10px;
+    border-radius: 10px;
+    width: 90%;
+    background-color: #2e2e92;
+    text-decoration-color: whitesmoke;
+}
+
+
+.button-group Button:hover{
+    background-color: rgb(46, 76, 146);
+}
+
+.center-title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 15px;
+}
+
+.custom-link {
+    text-decoration: none;
+    color: inherit;
 }

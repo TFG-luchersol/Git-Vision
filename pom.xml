@@ -70,22 +70,19 @@
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
 		</dependency>
-		<!--dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
-			<version>XXXX</version>
+		<!-- TODO: Mirar como hacer que h2 se aplique en test y mariadb en ejecución de forma correcta -->
+		<dependency>
+			<groupId>org.mariadb.jdbc</groupId>
+			<artifactId>mariadb-java-client</artifactId>
+			<version>3.0.7</version>
 			<scope>runtime</scope>
-		</dependency-->
+		</dependency>
 		<!-- caching -->
 		<dependency>
 			<groupId>javax.cache</groupId>
 			<artifactId>cache-api</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>org.mariadb.jdbc</groupId>
-			<artifactId>mariadb-java-client</artifactId>
-			<version>3.0.7</version>
-		</dependency>
+		
 
 		<!-- Testing -->
 		<dependency>

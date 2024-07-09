@@ -1,35 +1,44 @@
-package org.springframework.samples.gitVision.configuration.services;
+package org.springframework.samples.gitvision.configuration.services;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
-import org.springframework.samples.gitVision.user.User;
+import org.springframework.samples.gitvision.user.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor
 public class UserDetailsImpl implements UserDetails {
 
 	private static final long serialVersionUID = 1L;
 
-	private Integer id;
+	private Long id;
 
 	private String username;
 
 	@JsonIgnore
-	private String password;
+	private String password, clockfiyToken, avatarUrl, email;
+
+
 
 	private Collection<? extends GrantedAuthority> authorities;
 
-	public UserDetailsImpl(Integer id, String username, String password,
-			Collection<? extends GrantedAuthority> authorities) {
+	public UserDetailsImpl(Long id, String username, String password) {
 		this.id = id;
 		this.username = username;
 		this.password = password;
-		this.authorities = authorities;
+		this.authorities = List.of();
+	}
+
+	public static UserDetailsImpl build(User user) {
+		return new UserDetailsImpl(user.getId(), user.getUsername(), user.getGithubToken());
 	}
 
 
@@ -39,7 +48,7 @@ public class UserDetailsImpl implements UserDetails {
 	}
 
 
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
