@@ -40,7 +40,7 @@ additions: int {PositiveOrZero}
 deletions: int {PositiveOrZero}</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>72</x><y>639</y><w>135</w><h>81</h></coordinates><panel_attributes>Repository
 --
 name: String {NotBlank}
-token: String</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLPackage</id><coordinates><x>63</x><y>387</y><w>576</w><h>504</h></coordinates><panel_attributes>Github
+token: String</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLPackage</id><coordinates><x>63</x><y>405</y><w>576</w><h>468</h></coordinates><panel_attributes>Github
 --
 </panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLPackage</id><coordinates><x>657</x><y>135</y><w>207</w><h>234</h></coordinates><panel_attributes>Clockify
 --
@@ -85,6 +85,16 @@ m1=*
 m2=*</panel_attributes><additional_attributes>10;170;10;120;300;120;300;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>225</x><y>522</y><w>135</w><h>36</h></coordinates><panel_attributes>RepositoryCollaborator
 --
 </panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>288</x><y>549</y><w>27</w><h>63</h></coordinates><panel_attributes>lt=.
-</panel_attributes><additional_attributes>10;50;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>207</x><y>675</y><w>261</w><h>36</h></coordinates><panel_attributes>lt=-
+</panel_attributes><additional_attributes>10;50;10;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>252</x><y>702</y><w>135</w><h>54</h></coordinates><panel_attributes>Issue
+--
+title: String {NotBlank}
+number: Integer {NotNull}</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>378</x><y>720</y><w>180</w><h>54</h></coordinates><panel_attributes>lt=-
 m1=*
-m2=1</panel_attributes><additional_attributes>270;10;10;10</additional_attributes></element></diagram>
+m2=*
+group=group-0</panel_attributes><additional_attributes>170;10;170;30;10;30</additional_attributes></element><element><id>Relation</id><coordinates><x>180</x><y>711</y><w>90</w><h>63</h></coordinates><panel_attributes>lt=-
+m1=*
+m2=1
+group=group-2</panel_attributes><additional_attributes>80;40;10;40;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>459</x><y>738</y><w>27</w><h>54</h></coordinates><panel_attributes>lt=.
+</panel_attributes><additional_attributes>10;40;10;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>405</x><y>774</y><w>135</w><h>36</h></coordinates><panel_attributes>IssueCommit
+--
+</panel_attributes><additional_attributes></additional_attributes></element></diagram>
