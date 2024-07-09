@@ -1,5 +1,6 @@
 package org.springframework.samples.gitvision.file;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,11 +20,11 @@ public class PercentageLanguages {
         return new PercentageLanguages();
     }
 
-    public double get(String language) {
+    public Double get(String language) {
         return this.percentages.getOrDefault(language, 0.);
     }
 
-    public double getUnknown(){
+    public Double getUnknown(){
         return this.percentages.getOrDefault("Unknown", 0.);
     }
 
@@ -32,13 +33,22 @@ public class PercentageLanguages {
     }
 
     public void add(String language) {
-        double newValue = get(language) + 1;
-        this.percentages.put(language, newValue);
-        this.cont++;
+        if(this.isDraftMode){
+            double newValue = get(language) + 1;
+            this.percentages.put(language, newValue);
+            this.cont++;
+        }
+    }
+
+    public void addAll(Collection<String> languages){
+        for (String language : languages)
+            add(language);
     }
 
     public void calc(){
-        this.percentages.replaceAll((key, value) -> value/this.cont);
-        this.isDraftMode = false;
+        if(this.isDraftMode){
+            this.percentages.replaceAll((key, value) -> value/this.cont);
+            this.isDraftMode = false;
+        }
     }
 }

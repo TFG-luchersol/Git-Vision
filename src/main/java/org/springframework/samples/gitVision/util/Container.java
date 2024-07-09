@@ -32,7 +32,7 @@ public abstract class Container<T extends ContainerItem> {
                 List<T> container = collection.stream().map(elem -> {
                     try {
                         @SuppressWarnings("unchecked")
-                        T mappedElem = (T) method.newInstance(elem);
+                        T mappedElem = (T) method.newInstance((Object) elem);
                         return mappedElem;
                     } catch (Exception e) {
                         throw new RuntimeException(e);

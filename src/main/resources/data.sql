@@ -52,6 +52,28 @@ INSERT INTO commits(id,message,date,additions,deletions,author_id,repository_id)
                    (17,'message_17','2004-02-04 17:00:49',23,45,5,4),
                    (18,'message_18','2004-02-05 16:00:49',56,2,6,4);
 
+INSERT INTO issues(id,title,number,repository_id) VALUES
+                  (1,'issue_1',1,1),
+                  (2,'issue_2',2,1),
+                  (3,'issue_3',3,1),
+                  (4,'issue_4',4,1),
+                  (5,'issue_5',5,1),
+                  (6,'issue_6',6,1),
+                  (7,'issue_7',1,2),
+                  (8,'issue_8',2,2),
+                  (9,'issue_9',3,2),
+                  (10,'issue_10',1,3),
+                  (11,'issue_11',2,3);
+
+INSERT INTO issues_commits(id,issue_id,commit_id) VALUES
+                          (1,1,1),
+                          (2,1,2),
+                          (3,2,1),
+                          (4,2,3),
+                          (5,3,4),
+                          (6,3,5),
+                          (7,4,5);
+
 INSERT INTO files(id,path,extension,repository_id) VALUES  
                  (1,'src/main/java/claseJava.java','java',1),
                  (2,'src/main/java/claseJava2.java','java',1),

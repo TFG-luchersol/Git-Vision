@@ -43,7 +43,6 @@ public class Commit extends EntityIdString {
     @ManyToOne
     Repository repository;
     
-    @Transient
     public CommitType getCommitType() {
         String regex = "^\\s*\\[\\s*(\\w+)\\s*\\]";
         Pattern pattern = Pattern.compile(regex);
