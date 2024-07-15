@@ -8,19 +8,19 @@ INSERT INTO users(id,username,github_token,clockify_token,email,avatar_url) VALU
                  (5,'username_5','git_token_5','clockify_token_5','email_5@gmail.com','https://avatars.githubusercontent.com/u/5'),
                  (6,'username_6','git_token_6','clockify_token_6','email_6@gmail.com','https://avatars.githubusercontent.com/u/6');
 
-INSERT INTO collaborators(id,username,email,avatar_url) VALUES 
-                         (1,'username_1','email_1@gmail.com','https://avatars.githubusercontent.com/u/1'),
-                         (2,'username_2','email_2@gmail.com','https://avatars.githubusercontent.com/u/2'),
-                         (3,'username_3','email_3@gmail.com','https://avatars.githubusercontent.com/u/3'),
-                         (4,'username_4','email_4@gmail.com','https://avatars.githubusercontent.com/u/4'),
-                         (5,'username_5','email_5@gmail.com','https://avatars.githubusercontent.com/u/5'),
-                         (6,'username_6','email_6@gmail.com','https://avatars.githubusercontent.com/u/6');
+INSERT INTO github_users(id,username,email,avatar_url) VALUES 
+                        (1,'username_1','email_1@gmail.com','https://avatars.githubusercontent.com/u/1'),
+                        (2,'username_2','email_2@gmail.com','https://avatars.githubusercontent.com/u/2'),
+                        (3,'username_3','email_3@gmail.com','https://avatars.githubusercontent.com/u/3'),
+                        (4,'username_4','email_4@gmail.com','https://avatars.githubusercontent.com/u/4'),
+                        (5,'username_5','email_5@gmail.com','https://avatars.githubusercontent.com/u/5'),
+                        (6,'username_6','email_6@gmail.com','https://avatars.githubusercontent.com/u/6');
 
-INSERT INTO repositories(id,name) VALUES 
-                        (1,'repo_1'),
-                        (2,'repo_2'),
-                        (3,'repo_3'),
-                        (4,'repo_4');
+INSERT INTO repositories(id,name,update_date) VALUES 
+                        (1,'repo_1','2024-01-01 00:00:00'),
+                        (2,'repo_2','2024-01-01 00:00:00'),
+                        (3,'repo_3','2024-01-01 00:00:00'),
+                        (4,'repo_4','2024-01-01 00:00:00');
 
 INSERT INTO repositories_collaborators(id,repository_id,collaborator_id) VALUES
                                       (1,1,1),

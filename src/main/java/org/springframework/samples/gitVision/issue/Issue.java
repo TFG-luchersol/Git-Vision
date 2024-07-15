@@ -1,5 +1,8 @@
 package org.springframework.samples.gitvision.issue;
 
+import java.util.Objects;
+
+import org.springframework.samples.gitvision.githubUser.model.GithubUser;
 import org.springframework.samples.gitvision.model.entity.EntityIdLong;
 import org.springframework.samples.gitvision.repository.Repository;
 
@@ -21,5 +24,17 @@ public class Issue extends EntityIdLong {
 
     @ManyToOne(optional = false)
     Repository repository;
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Issue other = (Issue) obj;
+        return this.id != null && Objects.equals(other.id, this.id);
+    }
 
 }

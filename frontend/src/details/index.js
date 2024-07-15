@@ -8,7 +8,6 @@ import InputWithIcon from '../components/InputWithIcon';
 import tokenService from '../services/token.service.js'
 import './details.css';
 
-
 export default function Details() {
   const userIcon = <FaRegUserCircle />
   const githubIcon = <FaGithub />

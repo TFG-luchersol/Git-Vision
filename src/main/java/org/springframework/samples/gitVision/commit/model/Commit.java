@@ -1,20 +1,19 @@
 package org.springframework.samples.gitvision.commit.model;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.springframework.samples.gitvision.collaborator.model.Collaborator;
-import org.springframework.samples.gitvision.model.entity.BaseEntity;
+import org.springframework.samples.gitvision.githubUser.model.GithubUser;
 import org.springframework.samples.gitvision.model.entity.EntityIdString;
 import org.springframework.samples.gitvision.repository.Repository;
-import org.springframework.samples.gitvision.user.User;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Getter;
@@ -38,7 +37,7 @@ public class Commit extends EntityIdString {
     int deletions;
     
     @ManyToOne
-    Collaborator author;
+    GithubUser author;
 
     @ManyToOne
     Repository repository;
@@ -57,5 +56,29 @@ public class Commit extends EntityIdString {
         } 
         return null;
     }
+
+    public List<Integer> getIssueNumbers() {
+        List<Integer> ls = new ArrayList<>();
+        Pattern pattern = Pattern.compile("\\s*#(\\d+)\\s*");
+        Matcher matcher = pattern.matcher(getMessage());
+        while (matcher.find()) {
+            Integer number = Integer.valueOf(matcher.group(1));
+            ls.add(number);
+        }
+        return ls;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Commit other = (Commit) obj;
+        return this.id != null && Objects.equals(other.id, this.id);
+    }
+    
 
 }

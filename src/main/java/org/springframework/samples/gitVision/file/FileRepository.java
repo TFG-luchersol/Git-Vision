@@ -15,4 +15,7 @@ public interface FileRepository extends RepositoryIdLong<File>{
     @Query("select distinct(f.extension) from File f where f.repository.id = :repositoryId")
     List<String> getDistinctFilesExtensionsByRepositoryId(Long repositoryId);
 
+    @Query("select f from File f where f.path = :path")
+    File getFileByPath(String path);
+    
 }

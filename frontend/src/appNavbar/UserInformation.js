@@ -32,7 +32,7 @@ export default function UserInformation() {
     id='avatarPopover' 
   /> : <IoPersonCircleOutline id='avatarPopover' style={{ fontSize: 60, position: 'relative', bottom: 5 }} />;
 
-  return (<>
+  return (user && <>
     {logo}
     <Popover
       placement="bottom"

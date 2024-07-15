@@ -64,4 +64,12 @@ public abstract class EntityUtils {
 		return LocalDate.ofInstant(date.toInstant(), ZoneOffset.UTC);
 	}
 
+	public static Date parseLocalDateTimeUTCToDate(LocalDateTime localDateTime){
+		return Date.from(localDateTime.atZone(ZoneOffset.UTC).toInstant());
+	}
+
+	public static Date parseLocalDateUTCToDate(LocalDate localDate){
+		return Date.from(localDate.atStartOfDay().atZone(ZoneOffset.UTC).toInstant());
+	}
+
 }

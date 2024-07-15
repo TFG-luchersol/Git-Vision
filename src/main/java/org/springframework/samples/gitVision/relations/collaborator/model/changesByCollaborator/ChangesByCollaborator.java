@@ -1,4 +1,4 @@
-package org.springframework.samples.gitvision.collaborator.model.changesByCollaborator;
+package org.springframework.samples.gitvision.relations.collaborator.model.changesByCollaborator;
 
 import java.util.Collection;
 

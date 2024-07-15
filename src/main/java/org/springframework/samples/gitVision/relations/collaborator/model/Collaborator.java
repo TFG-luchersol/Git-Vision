@@ -1,6 +1,6 @@
-package org.springframework.samples.gitvision.relations.repositoryCollaborator;
+package org.springframework.samples.gitvision.relations.collaborator.model;
 
-import org.springframework.samples.gitvision.collaborator.model.Collaborator;
+import org.springframework.samples.gitvision.githubUser.model.GithubUser;
 import org.springframework.samples.gitvision.model.entity.EntityIdLong;
 import org.springframework.samples.gitvision.repository.Repository;
 
@@ -13,11 +13,11 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "repositories_collaborators")
-public class RepositoryCollaborator extends EntityIdLong {
+@Table(name = "collaborators")
+public class Collaborator extends EntityIdLong {
     
     @ManyToOne
-    private Collaborator collaborator;
+    private GithubUser collaborator;
 
     @ManyToOne
     private Repository repository;

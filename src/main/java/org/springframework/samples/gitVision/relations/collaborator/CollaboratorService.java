@@ -1,10 +1,10 @@
-package org.springframework.samples.gitvision.collaborator;
+package org.springframework.samples.gitvision.relations.collaborator;
 
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.samples.gitvision.collaborator.model.Collaborator;
-import org.springframework.samples.gitvision.collaborator.model.changesByCollaborator.ChangesByCollaborator;
+import org.springframework.samples.gitvision.githubUser.model.GithubUser;
+import org.springframework.samples.gitvision.relations.collaborator.model.changesByCollaborator.ChangesByCollaborator;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -17,7 +17,7 @@ public class CollaboratorService {
         this.collaboratorRepository = collaboratorRepository;
     }
 
-    public List<Collaborator> getAllCollaboratorsByRepositoryId(Long repositoryId) {
+    public List<GithubUser> getAllCollaboratorsByRepositoryId(Long repositoryId) {
         return this.collaboratorRepository.getAllCollaboratorsByRepositoryId(repositoryId);
     }
 
