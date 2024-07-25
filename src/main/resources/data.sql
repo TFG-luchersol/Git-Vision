@@ -22,15 +22,15 @@ INSERT INTO repositories(id,name,update_date) VALUES
                         (3,'repo_3','2024-01-01 00:00:00'),
                         (4,'repo_4','2024-01-01 00:00:00');
 
-INSERT INTO repositories_collaborators(id,repository_id,collaborator_id) VALUES
-                                      (1,1,1),
-                                      (2,1,2),
-                                      (3,1,3),
-                                      (4,2,3),
-                                      (5,2,4),
-                                      (6,2,5),
-                                      (7,3,5),
-                                      (8,4,6);
+INSERT INTO collaborators(id,repository_id,collaborator_id) VALUES
+                         (1,1,1),
+                         (2,1,2),
+                         (3,1,3),
+                         (4,2,3),
+                         (5,2,4),
+                         (6,2,5),
+                         (7,3,5),
+                         (8,4,6);
 
 INSERT INTO commits(id,message,date,additions,deletions,author_id,repository_id) VALUES 
                    (1,'message_1','2003-01-01 16:00:49',10,2,1,1),

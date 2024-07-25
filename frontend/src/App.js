@@ -1,15 +1,15 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
-import jwt_decode from "jwt-decode";
 import { ErrorBoundary } from "react-error-boundary";
 
 import Login from "./login";
 import Register from "./register";
-import tokenService from "./services/token.service";
 import SwaggerDocs from "./public/swagger";
 import AppNavbar from "./appNavbar/AppNavbar.js";
 import Home from "./home/index.js";
 import Details from "./details/index.js";
+import Repositories from "./repositories/index.js";
+import Repository from "./repositories/repository/index.js";
 
 function ErrorFallback({ error, resetErrorBoundary }) {
   return (
@@ -32,6 +32,8 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/details" element={<Details />}/>
+        <Route path="/repositories" element={<Repositories/>}/>
+        <Route path="/repository/1" element={<Repository/>}/>
       </>
     )
 

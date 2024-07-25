@@ -2,6 +2,7 @@ package org.springframework.samples.gitvision.relations.collaborator.model;
 
 import org.springframework.samples.gitvision.githubUser.model.GithubUser;
 import org.springframework.samples.gitvision.model.entity.EntityIdLong;
+import org.springframework.samples.gitvision.model.entity.EntityIdSequential;
 import org.springframework.samples.gitvision.repository.Repository;
 
 import jakarta.persistence.Entity;
@@ -14,7 +15,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "collaborators")
-public class Collaborator extends EntityIdLong {
+public class Collaborator extends EntityIdSequential {
     
     @ManyToOne
     private GithubUser collaborator;

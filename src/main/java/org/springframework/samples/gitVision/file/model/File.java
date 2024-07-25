@@ -1,4 +1,4 @@
-package org.springframework.samples.gitvision.file;
+package org.springframework.samples.gitvision.file.model;
 
 import java.util.Objects;
 
@@ -18,7 +18,6 @@ import lombok.Setter;
 @Table(name = "files")
 public class File extends EntityIdSequential {
 
-    @Column(unique = true)
     String path;
 
     String extension;

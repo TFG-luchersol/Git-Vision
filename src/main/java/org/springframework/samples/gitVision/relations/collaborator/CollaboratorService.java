@@ -18,7 +18,7 @@ public class CollaboratorService {
     }
 
     public List<GithubUser> getAllCollaboratorsByRepositoryId(Long repositoryId) {
-        return this.collaboratorRepository.getAllCollaboratorsByRepositoryId(repositoryId);
+        return this.collaboratorRepository.getAllCollaboratorGithubUserByRepositoryId(repositoryId);
     }
 
     public ChangesByCollaborator getNumChangesByCollaborator(Long repositoryId) {

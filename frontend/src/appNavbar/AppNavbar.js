@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { SiSwagger, SiGoogledocs } from "react-icons/si";
 import UserInformation from './UserInformation.js';
 import tokenService from '../services/token.service.js';
+import Repositories from '../repositories/index.js';
 
 export default function AppNavbar() {
 
@@ -28,6 +29,12 @@ export default function AppNavbar() {
 
     let userLogin = (
         <>
+            <NavItem>
+                <NavLink>
+                    
+                    <Link to={"/repositories"}>REPOSITORIES</Link>
+                </NavLink>
+            </NavItem>
             <NavItem>
                 <NavLink>
                     <UserInformation/>

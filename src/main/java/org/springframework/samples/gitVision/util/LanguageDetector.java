@@ -3,7 +3,7 @@ package org.springframework.samples.gitvision.util;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.springframework.samples.gitvision.file.File;
+import org.springframework.samples.gitvision.file.model.File;
 
 public class LanguageDetector {
 

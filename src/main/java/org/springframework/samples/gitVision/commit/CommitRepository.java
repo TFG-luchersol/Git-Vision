@@ -15,16 +15,16 @@ public interface CommitRepository extends RepositoryIdString<Commit>{
 
     // Contador de commits por usuario entre unas fechas
     
-    @Query("select co.username, co.avatarUrl, (select count(c) from Commit c where c.repository.id = :repositoryId and c.author = co and c.date >= :startDate and c.date <= :endDate) from RepositoryCollaborator rc join rc.collaborator co on rc.collaborator = co where rc.repository.id = :repositoryId")
+    @Query("select co.username, co.avatarUrl, (select count(c) from Commit c where c.repository.id = :repositoryId and c.author = co and c.date >= :startDate and c.date <= :endDate) from Collaborator rc join rc.collaborator co on rc.collaborator = co where rc.repository.id = :repositoryId")
     List<Object[]> getNumCommitsByUserOnDate(Long repositoryId, @Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
 
-    @Query("select co.username, co.avatarUrl, (select count(c) from Commit c where c.repository.id = :repositoryId and c.author = co and c.date >= :startDate) from RepositoryCollaborator rc join rc.collaborator co on rc.collaborator = co where rc.repository.id = :repositoryId")
+    @Query("select co.username, co.avatarUrl, (select count(c) from Commit c where c.repository.id = :repositoryId and c.author = co and c.date >= :startDate) from Collaborator rc join rc.collaborator co on rc.collaborator = co where rc.repository.id = :repositoryId")
     List<Object[]> getNumCommitsByUserAfterThat(Long repositoryId, @Param("startDate") LocalDateTime startDate);
 
-    @Query("select co.username, co.avatarUrl, (select count(c) from Commit c where c.repository.id = :repositoryId and c.author = co and c.date <= :endDate) from RepositoryCollaborator rc join rc.collaborator co on rc.collaborator = co where rc.repository.id = :repositoryId")
+    @Query("select co.username, co.avatarUrl, (select count(c) from Commit c where c.repository.id = :repositoryId and c.author = co and c.date <= :endDate) from Collaborator rc join rc.collaborator co on rc.collaborator = co where rc.repository.id = :repositoryId")
     List<Object[]> getNumCommitsByUserBeforeThat(Long repositoryId, @Param("endDate") LocalDateTime endDate);
 
-    @Query("select co.username, co.avatarUrl, (select count(c) from Commit c where c.repository.id = :repositoryId and c.author = co) from RepositoryCollaborator rc join rc.collaborator co where rc.repository.id = :repositoryId")
+    @Query("select co.username, co.avatarUrl, (select count(c) from Commit c where c.repository.id = :repositoryId and c.author = co) from Collaborator rc join rc.collaborator co where rc.repository.id = :repositoryId")
     List<Object[]> getNumCommitsByUser(Long repositoryId);
 
     // Contador de commits en un repositorio agrupando por un tipo de tiempo

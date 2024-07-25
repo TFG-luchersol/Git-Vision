@@ -3,6 +3,7 @@ package org.springframework.samples.gitvision.file;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.samples.gitvision.file.model.File;
 import org.springframework.samples.gitvision.model.repository.RepositoryIdLong;
 import org.springframework.stereotype.Repository;
 
