@@ -2,6 +2,7 @@ package org.springframework.samples.gitvision.file.model;
 
 import java.util.Objects;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.samples.gitvision.model.entity.EntityIdSequential;
 import org.springframework.samples.gitvision.repository.Repository;
 
