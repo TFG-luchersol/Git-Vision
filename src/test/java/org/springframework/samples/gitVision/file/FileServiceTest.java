@@ -18,11 +18,11 @@ public class FileServiceTest {
     @Test
     void testGetPercentageExtensionsByRespositoryId() {
         PercentageLanguages percentageLanguages = fileService.getPercentageExtensionsByRespositoryId(ID_REPOSITORY);
-        assertEquals(2, percentageLanguages.get("Java"));
-        assertEquals(1, percentageLanguages.get("Python"));
-        assertEquals(1, percentageLanguages.get("C"));
-        assertEquals(2, percentageLanguages.get("C++"));
+        assertEquals(0.25, percentageLanguages.get("Java"));
+        assertEquals(0.125, percentageLanguages.get("Python"));
+        assertEquals(0.125, percentageLanguages.get("C"));
+        assertEquals(0.25, percentageLanguages.get("C++"));
         assertEquals(0, percentageLanguages.get("CSS"));
-        assertEquals(1, percentageLanguages.getUnknown());
+        assertEquals(0.125, percentageLanguages.getUnknown());
     }
 }

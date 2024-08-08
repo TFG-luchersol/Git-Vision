@@ -1,4 +1,4 @@
-package org.springframework.samples.gitvision.dataExtraction;
+package org.springframework.samples.gitvision.data_extraction;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -76,9 +76,8 @@ public class GithubDataExtractionService {
                 repoRepository.save(repository);
             } else {
                 String tokenRepository = repository.getToken();
-                if (tokenRepository != null) {
+                if (tokenRepository != null) 
                     token = tokenRepository;
-                }
                 updateDate = repository.getUpdateDate();
                 if(updateDate != null)
                     sinceDate = EntityUtils.parseLocalDateTimeUTCToDate(updateDate);

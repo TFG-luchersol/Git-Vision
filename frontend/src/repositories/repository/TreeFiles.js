@@ -8,10 +8,7 @@ export default function TreeFiles({root}) {
             (<AccordionItem title={node.name}>
                 {node.children?.map(child => showTree(child))}
             </AccordionItem>);
-
     }
-
-
 
     return (
         <div style={{marginLeft: '40px', marginTop: '20px'}}>

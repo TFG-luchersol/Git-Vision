@@ -6,9 +6,13 @@ import java.util.Map;
 
 import org.springframework.samples.gitvision.util.LanguageDetector;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class PercentageLanguages {
     
-    Map<String, Double> percentages;
+    @JsonProperty
+    private Map<String, Double> percentages;
     
     public PercentageLanguages(){
         this.percentages = new HashMap<>();
@@ -26,6 +30,7 @@ public class PercentageLanguages {
         return this.percentages.getOrDefault(language, 0.);
     }
 
+    @JsonIgnore
     public Double getUnknown(){
         return this.percentages.getOrDefault("Unknown", 0.);
     }
