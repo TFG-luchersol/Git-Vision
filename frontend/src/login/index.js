@@ -49,9 +49,14 @@ export default function Login() {
         setValues(newValues)
     }
 
+    async function testDownload() {
+        await fetch('/api/v1/github/TFG-luchersol/Git-Vision', {method: "POST"}).then(e => alert(`${e.status}`))
+    }
+
     return (
         <div className="home-page-container">
-                <Alert isOpen={message} color="danger" style={{position:'absolute', top:'30px'}}>{message}</Alert>
+            <button onClick={() => testDownload()} >DESCARGA DE PRUEBA</button>
+                {/* <Alert isOpen={message} color="danger" style={{position:'absolute', top:'30px'}}>{message}</Alert>
                 
                 <Form onSubmit={handleSubmit} className='auth-form-container' >
                     <div style={{margin: "30px"}}>
@@ -87,7 +92,7 @@ export default function Login() {
                             </Button> 
                         </div>
                     </div>
-                </Form>
+                </Form> */}
                 
             
         </div>

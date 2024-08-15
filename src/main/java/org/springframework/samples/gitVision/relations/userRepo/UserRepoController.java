@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.gitvision.auth.payload.response.MessageResponse;
-import org.springframework.samples.gitvision.util.Data;
+import org.springframework.samples.gitvision.util.Information;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -28,8 +28,8 @@ public class UserRepoController {
     @GetMapping("/repositories")
     public MessageResponse getAllRepositories(@RequestParam Long userId) {
         Map<String, List<String>> owner_repositories = this.userRepoService.getAllRepositories(userId);
-        Data data = Data.create("repositories", owner_repositories);
-        return MessageResponse.of(data);
+        Information information = Information.create("repositories", owner_repositories);
+        return MessageResponse.of(information);
     }
 
 }

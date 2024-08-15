@@ -32,6 +32,7 @@ import org.springframework.samples.gitvision.repository.Repository;
 import org.springframework.samples.gitvision.util.EntityUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
 @Service
 public class GithubDataExtractionService {
@@ -84,7 +85,7 @@ public class GithubDataExtractionService {
             }
 
             extractIssues(ghRepository, repository, sinceDate);
-            // extractCommits(ghRepository, repository, sinceDate);
+            extractCommits(ghRepository, repository, sinceDate);
             // extractCollaborators(ghRepository, repository);
         } catch (IOException e) {
             e.printStackTrace();
@@ -96,16 +97,14 @@ public class GithubDataExtractionService {
         try {
             List<GHIssue> ghIssues = sinceDate == null ? ghRepository.getIssues(GHIssueState.ALL)
                     : ghRepository.queryIssues().since(sinceDate).list().toList();
-            List<Issue> issues = new ArrayList<>();
             for (GHIssue ghIssue : ghIssues) {
                 Issue issue = new Issue();
                 issue.setId(ghIssue.getId());
                 issue.setNumber(ghIssue.getNumber());
                 issue.setTitle(ghIssue.getTitle());
                 issue.setRepository(repository);
-                issues.add(issue);
+                issueRepository.save(issue);
             }
-            issueRepository.saveAll(issues);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -117,18 +116,31 @@ public class GithubDataExtractionService {
         try {
             List<GHCommit> ghCommits = sinceDate == null ? ghRepository.listCommits().toList()
                     : ghRepository.queryCommits().since(sinceDate).list().toList();
-            List<Commit> commits = new ArrayList<>();
             for (int i = ghCommits.size() - 1; i >= 0; i--) {
-                GHCommit ghCommit = ghCommits.get(i);
                 Commit commit = new Commit();
+                GHCommit ghCommit = ghCommits.get(i);
                 GHCommit.ShortInfo shortInfo = ghCommit.getCommitShortInfo();
-                commit.setId(shortInfo.getNodeId());
+                String id = repository.getName() + "/" + ghCommit.getSHA1();
+                String usernameAuthor = shortInfo.getAuthor().getUsername();
+                Optional<GithubUser> author = githubUserRepository.findByUsername(usernameAuthor);
+                commit.setId(id);
                 commit.setMessage(shortInfo.getMessage());
                 commit.setDate(EntityUtils.parseDateToLocalDateTimeUTC(shortInfo.getCommitDate()));
                 commit.setAdditions(ghCommit.getLinesAdded());
                 commit.setDeletions(ghCommit.getLinesDeleted());
-                commit.setAuthor(null);
                 commit.setRepository(repository);
+                if(author.isPresent()){
+                    commit.setAuthor(author.get());
+                } else {
+                    GithubUser githubUser = new GithubUser();
+                    GHUser ghAuthor = ghCommit.getAuthor();
+                    githubUser.setId(ghAuthor.getId());
+                    githubUser.setUsername(ghAuthor.getLogin());
+                    githubUser.setAvatarUrl(ghAuthor.getAvatarUrl());
+                    githubUser.setEmail(ghAuthor.getEmail());
+                    githubUserRepository.save(githubUser);
+                    commit.setAuthor(githubUser);
+                }
                 for (Integer number : commit.getIssueNumbers()) {
                     Optional<Issue> issue = issueRepository.getIssueByNumberAndRepositoryId(number, repository.getId());
                     if(issue.isPresent()){
@@ -138,14 +150,14 @@ public class GithubDataExtractionService {
                         issueCommitRepository.save(issueCommit);
                     }
                 } 
-                extractFiles(ghCommit);
-                commits.add(commit);
+                // extractFiles(ghCommit);
+                commitRepository.save(commit);
             }
-            commitRepository.saveAll(commits);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
 
     @Transactional
     private void extractFiles(GHCommit ghCommit) {

@@ -17,7 +17,7 @@ export default function Repository() {
         try {
             let newFiles = await fetch(`/api/v1/files/repository/1`)
             const json = await newFiles.json()
-            setFiles(json.data.data.tree)
+            setFiles(json.data.information.tree)
         } catch (e) {
             alert(e)
         }
@@ -27,7 +27,7 @@ export default function Repository() {
         try {
             let newPercentajeLanguajes = await fetch(`/api/v1/files/languajes/repository/1`)
             const json = await newPercentajeLanguajes.json()
-            setPercentajeLanguajes(json.data.data.percentageLanguages.percentages)
+            setPercentajeLanguajes(json.data.information.percentageLanguages.percentages)
         } catch (e) {
             alert(e)
         }

@@ -12,17 +12,25 @@ import org.springframework.samples.gitvision.model.entity.EntityIdString;
 import org.springframework.samples.gitvision.repository.Repository;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Getter
 @Setter
 @Table(name = "commits")
+@AllArgsConstructor
+@NoArgsConstructor
 public class Commit extends EntityIdString {
     
     String message;
@@ -35,26 +43,32 @@ public class Commit extends EntityIdString {
 
     @PositiveOrZero
     int deletions;
+
+    @Enumerated(EnumType.STRING)
+    CommitType commitType;
     
     @ManyToOne
     GithubUser author;
 
     @ManyToOne
     Repository repository;
-    
-    public CommitType getCommitType() {
+
+    @PrePersist
+    @PreUpdate
+    public void calcCommitType() {
         String regex = "^\\s*\\[\\s*(\\w+)\\s*\\]";
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(getMessage());
         if(matcher.find()) {
             String type = matcher.group(1).trim().toUpperCase();
             try {
-                return CommitType.valueOf(type);
+                this.commitType = CommitType.valueOf(type);
             } catch (Exception e) {
-                return null;
+                this.commitType = null;
             }
-        } 
-        return null;
+        } else {
+            this.commitType = null;
+        }
     }
 
     public List<Integer> getIssueNumbers() {

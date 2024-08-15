@@ -25,7 +25,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.samples.gitvision.auth.payload.response.MessageResponse;
 import org.springframework.samples.gitvision.exceptions.AccessDeniedException;
-import org.springframework.samples.gitvision.util.Data;
+import org.springframework.samples.gitvision.util.Information;
 import org.springframework.samples.gitvision.util.RestPreconditions;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -82,7 +82,7 @@ public class UserController {
 	public ResponseEntity<MessageResponse> updateGithubToken(@PathVariable String username, @RequestBody String githubToken) {
 		try {
 			User user = userService.updateGithubToken(username, githubToken);
-			Data customMap = Data.empty().put("githubToken", githubToken);
+			Information customMap = Information.empty().put("githubToken", githubToken);
 			return ResponseEntity.ok(MessageResponse.of("Github Token has been updated", customMap));
 		} catch (Exception e) {
 			return ResponseEntity.badRequest().body(MessageResponse.of("Failed!"));
@@ -93,7 +93,7 @@ public class UserController {
 	public ResponseEntity<MessageResponse> updateClockifyToken(@PathVariable String username, @RequestBody String clockifyToken) {
 		try {
 			User user = userService.updateClockifyToken(username, clockifyToken);
-			Data customMap = Data.empty().put("clockifyToken", clockifyToken);
+			Information customMap = Information.empty().put("clockifyToken", clockifyToken);
 			return ResponseEntity.ok(MessageResponse.of("Github Token has been updated"));
 		} catch (Exception e) {
 			return ResponseEntity.badRequest().body(MessageResponse.of("Failed!"));

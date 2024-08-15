@@ -21,7 +21,7 @@ export default function Repositories() {
         try {
             let newRepositories = await fetch(`/api/v1/relation/user_repository/repositories?userId=${1}`)
             const json = await newRepositories.json()
-            const repositories = json.data.data.repositories
+            const repositories = json.data.information.repositories
             setRepositories(repositories)
         } catch (e) {
             alert(e)

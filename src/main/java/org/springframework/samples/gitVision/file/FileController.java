@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.gitvision.auth.payload.response.MessageResponse;
 import org.springframework.samples.gitvision.file.model.PercentageLanguages;
 import org.springframework.samples.gitvision.file.model.TreeFiles.TreeNode;
-import org.springframework.samples.gitvision.util.Data;
+import org.springframework.samples.gitvision.util.Information;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,8 +26,8 @@ public class FileController {
     public MessageResponse getFileTreeByRepositoryId(@PathVariable Long repositoryId){
         try {
             TreeNode treeNode = this.fileService.getFileTreeByRepositoryId(repositoryId);
-            Data data = Data.create("tree", treeNode);
-            return MessageResponse.of(data);
+            Information information = Information.create("tree", treeNode);
+            return MessageResponse.of(information);
         } catch (Exception e) {
             return MessageResponse.of(e.getMessage());
         }
@@ -38,8 +38,8 @@ public class FileController {
     public MessageResponse getPercentageExtensionsByRespositoryId(@PathVariable Long repositoryId){
         try {
             PercentageLanguages percentageLanguages = this.fileService.getPercentageExtensionsByRespositoryId(repositoryId);
-            Data data = Data.create("percentageLanguages", percentageLanguages);
-            return MessageResponse.of(data);
+            Information information = Information.create("percentageLanguages", percentageLanguages);
+            return MessageResponse.of(information);
         } catch (Exception e) {
             return MessageResponse.of(e.getMessage());
         }
