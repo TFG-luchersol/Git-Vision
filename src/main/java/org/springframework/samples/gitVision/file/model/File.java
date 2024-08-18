@@ -1,14 +1,17 @@
 package org.springframework.samples.gitvision.file.model;
 
+import java.util.List;
 import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.samples.gitvision.change.model.Change;
 import org.springframework.samples.gitvision.model.entity.EntityIdSequential;
 import org.springframework.samples.gitvision.repository.Repository;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,10 +28,23 @@ public class File extends EntityIdSequential {
 
     @ManyToOne
     Repository repository;
+
+    public void setPath(String path){
+        this.path = path;
+        this.calcExtension();
+    }
     
-    public String calculeExtension(){
-        int dotIndex = this.path.lastIndexOf(".");
-        return dotIndex == -1 || dotIndex == this.path.length() - 1 ? "Unknown" : path.substring(dotIndex + 1);
+    private void calcExtension(){
+        if(this.path == null) {
+            this.extension = null;
+        } else {
+            int dotIndex = this.path.lastIndexOf(".");
+            if(dotIndex == -1 || dotIndex == this.path.length() - 1)
+                this.extension = "Unknown";
+            else
+                this.extension = this.path.substring(dotIndex + 1);
+        }
+        
     }
 
     public String getFileName(){

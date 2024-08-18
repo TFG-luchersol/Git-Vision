@@ -2,8 +2,10 @@ package org.springframework.samples.gitvision.commit.model;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -15,8 +17,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
@@ -53,33 +53,40 @@ public class Commit extends EntityIdString {
     @ManyToOne
     Repository repository;
 
-    @PrePersist
-    @PreUpdate
-    public void calcCommitType() {
-        String regex = "^\\s*\\[\\s*(\\w+)\\s*\\]";
-        Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(getMessage());
-        if(matcher.find()) {
-            String type = matcher.group(1).trim().toUpperCase();
-            try {
-                this.commitType = CommitType.valueOf(type);
-            } catch (Exception e) {
+    public void setMessage(String message) {
+        this.message = message;
+        this.calcCommitType();
+    }
+
+    private void calcCommitType() {
+        if(this.message != null){
+            this.commitType = null;
+        } else {
+            String regex = "^\\s*\\[\\s*(\\w+)\\s*\\]";
+            Pattern pattern = Pattern.compile(regex);
+            Matcher matcher = pattern.matcher(getMessage());
+            if(matcher.find()) {
+                String type = matcher.group(1).trim().toUpperCase();
+                try {
+                    this.commitType = CommitType.valueOf(type);
+                } catch (Exception e) {
+                    this.commitType = null;
+                }
+            } else {
                 this.commitType = null;
             }
-        } else {
-            this.commitType = null;
         }
     }
 
-    public List<Integer> getIssueNumbers() {
-        List<Integer> ls = new ArrayList<>();
+    public Set<Integer> getIssueNumbers() {
+        Set<Integer> set = new HashSet<>();
         Pattern pattern = Pattern.compile("\\s*#(\\d+)\\s*");
         Matcher matcher = pattern.matcher(getMessage());
         while (matcher.find()) {
             Integer number = Integer.valueOf(matcher.group(1));
-            ls.add(number);
+            set.add(number);
         }
-        return ls;
+        return set;
     }
 
     @Override

@@ -8,7 +8,7 @@ public interface UserRepository extends RepositoryIdLong<User>{
 
 	Optional<User> findByUsername(String username);
 
-	Boolean existsByUsername(String username);
+	boolean existsByUsername(String username);
 
 	Optional<User> findById(Long id);
 	

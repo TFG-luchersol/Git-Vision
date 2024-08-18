@@ -25,7 +25,7 @@ public class IssueService {
     public List<Commit> getAllCommitsByIssueNumberAndRepositoryId(Integer issueNumber, Long repositoryId){
         if(!repoRepository.existsById(repositoryId))
             throw new ResourceNotFoundException("Repository", "ID", repositoryId);
-        return issueRepository.getAllCommitsByIssueNumberAndRepositoryId(issueNumber, repositoryId);
+        return issueRepository.findAllCommitByIssue_NumberAndRepository_Id(issueNumber, repositoryId);
     }
 
 }

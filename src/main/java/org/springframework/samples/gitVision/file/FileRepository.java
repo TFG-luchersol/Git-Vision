@@ -11,12 +11,12 @@ import org.springframework.stereotype.Repository;
 public interface FileRepository extends RepositoryIdLong<File>{
     
     @Query("select f from File f where f.repository.id = :repositoryId")
-    List<File> getAllFilesByRepositoryId(Long repositoryId);
+    List<File> findAllFilesByRepository_Id(Long repositoryId);
 
     @Query("select distinct(f.extension) from File f where f.repository.id = :repositoryId")
-    List<String> getDistinctFilesExtensionsByRepositoryId(Long repositoryId);
+    List<String> findDistinctFilesExtensionsByRepository_Id(Long repositoryId);
 
     @Query("select f from File f where f.path = :path")
-    File getFileByPath(String path);
+    File findByPath(String path);
     
 }

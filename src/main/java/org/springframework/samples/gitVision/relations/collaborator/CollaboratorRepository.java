@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 public interface CollaboratorRepository extends RepositoryIdLong<Collaborator> {
     
     @Query("select rc.collaborator from Collaborator rc where rc.repository.id = :repositoryId")
-    List<GithubUser> getAllCollaboratorGithubUserByRepositoryId(Long repositoryId);
+    List<GithubUser> findAllCollaboratorByRepository_Id(Long repositoryId);
 
     @Query("select c.author.username, c.author.avatarUrl, c.additions, c.deletions from Commit c where c.repository.id = :repositoryId")
     List<Object[]> getNumChangesByCollaborator(Long repositoryId);

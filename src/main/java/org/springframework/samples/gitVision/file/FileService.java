@@ -16,12 +16,12 @@ public class FileService {
     FileRepository fileRepository;
 
     public PercentageLanguages getPercentageExtensionsByRespositoryId(Long repositoryId){
-        List<File> files = fileRepository.getAllFilesByRepositoryId(repositoryId);
+        List<File> files = fileRepository.findAllFilesByRepository_Id(repositoryId);
         return PercentageLanguages.of(files);
     }
 
     public TreeNode getFileTreeByRepositoryId(Long repositoryId){
-        List<File> files = fileRepository.getAllFilesByRepositoryId(repositoryId);
+        List<File> files = fileRepository.findAllFilesByRepository_Id(repositoryId);
         return TreeFiles.buildTreeFromFilesWithCollapse(files);
     }
 }

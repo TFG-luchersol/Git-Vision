@@ -19,7 +19,7 @@ public class UserRepoService {
     }
 
     public Map<String, List<String>> getAllRepositories(Long userId) {
-        List<String> nameRepositories = this.userRepoRepository.getAllRepositoriesByUserId(userId);
+        List<String> nameRepositories = this.userRepoRepository.findAllRepository_NameByUser_Id(userId);
         Map<String, List<String>> dict = new HashMap<>();
         for (String name : nameRepositories) {
             String[] pieces = name.split("/");

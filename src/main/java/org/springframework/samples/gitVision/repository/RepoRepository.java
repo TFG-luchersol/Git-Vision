@@ -6,6 +6,6 @@ import org.springframework.samples.gitvision.model.repository.RepositoryIdLong;
 public interface RepoRepository extends RepositoryIdLong<Repository> {
 
     @Query("select r from Repository r where r.name = :name")
-    Repository getRepositoryByName(String name);
+    Repository findByName(String name);
     
 }

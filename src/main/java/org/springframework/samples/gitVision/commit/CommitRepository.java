@@ -33,10 +33,10 @@ public interface CommitRepository extends RepositoryIdString<Commit>{
     List<Integer[]> getNumCommitsByHour(Long repositoryId);
 
     @Query("select c.date from Commit c where c.repository.id = :repositoryId")
-    List<LocalDateTime> getDateByRepositoryId(Long repositoryId);
+    List<LocalDateTime> findDateByRepository_Id(Long repositoryId);
 
     default List<Integer[]> getNumCommitsByDayOfWeek(Long repositoryId) {
-        List<LocalDateTime> dates = getDateByRepositoryId(repositoryId);
+        List<LocalDateTime> dates = findDateByRepository_Id(repositoryId);
         return dates.stream().collect(Collectors.groupingBy(date -> date.getDayOfWeek().getValue(), 
                                         Collectors.collectingAndThen(Collectors.counting(), Long::intValue)))
                              .entrySet().stream()

@@ -2,12 +2,13 @@ package org.springframework.samples.gitvision.data_extraction;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 import org.kohsuke.github.GHCommit;
 import org.kohsuke.github.GHIssue;
@@ -16,6 +17,8 @@ import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GHUser;
 import org.kohsuke.github.GitHub;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.samples.gitvision.change.ChangesRepository;
+import org.springframework.samples.gitvision.change.model.Change;
 import org.springframework.samples.gitvision.commit.CommitRepository;
 import org.springframework.samples.gitvision.commit.model.Commit;
 import org.springframework.samples.gitvision.file.FileRepository;
@@ -32,7 +35,6 @@ import org.springframework.samples.gitvision.repository.Repository;
 import org.springframework.samples.gitvision.util.EntityUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestTemplate;
 
 @Service
 public class GithubDataExtractionService {
@@ -44,12 +46,13 @@ public class GithubDataExtractionService {
     CollaboratorRepository collaboratorRepository;
     GithubUserRepository githubUserRepository;
     IssueCommitRepository issueCommitRepository;
+    ChangesRepository changesRepository;
 
     @Autowired
     public GithubDataExtractionService(RepoRepository repoRepository, CommitRepository commitRepository,
             IssueRepository issueRepository, FileRepository fileRepository,
             CollaboratorRepository collaboratorRepository, GithubUserRepository githubUserRepository,
-            IssueCommitRepository issueCommitRepository) {
+            IssueCommitRepository issueCommitRepository, ChangesRepository changesRepository) {
         this.repoRepository = repoRepository;
         this.commitRepository = commitRepository;
         this.issueRepository = issueRepository;
@@ -57,6 +60,7 @@ public class GithubDataExtractionService {
         this.collaboratorRepository = collaboratorRepository;
         this.githubUserRepository = githubUserRepository;
         this.issueCommitRepository = issueCommitRepository;
+        this.changesRepository = changesRepository;
     }
 
     @Transactional
@@ -65,7 +69,7 @@ public class GithubDataExtractionService {
         try {
             GitHub gitHub = GitHub.connect(login, token);
             GHRepository ghRepository = gitHub.getRepository(name);
-            Repository repository = repoRepository.getRepositoryByName(name);
+            Repository repository = repoRepository.findByName(name);
             LocalDateTime updateDate = null;
             Date sinceDate = null;
             if (repository == null) {
@@ -77,16 +81,17 @@ public class GithubDataExtractionService {
                 repoRepository.save(repository);
             } else {
                 String tokenRepository = repository.getToken();
-                if (tokenRepository != null) 
+                if (tokenRepository != null)
                     token = tokenRepository;
                 updateDate = repository.getUpdateDate();
-                if(updateDate != null)
+                if (updateDate != null)
                     sinceDate = EntityUtils.parseLocalDateTimeUTCToDate(updateDate);
             }
 
             extractIssues(ghRepository, repository, sinceDate);
             extractCommits(ghRepository, repository, sinceDate);
             // extractCollaborators(ghRepository, repository);
+            // repoRepository.save(repository);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -117,77 +122,100 @@ public class GithubDataExtractionService {
             List<GHCommit> ghCommits = sinceDate == null ? ghRepository.listCommits().toList()
                     : ghRepository.queryCommits().since(sinceDate).list().toList();
             for (int i = ghCommits.size() - 1; i >= 0; i--) {
+                if(i == 35){
+                    int problema = 0;
+                }
                 Commit commit = new Commit();
+                GithubUser author;
                 GHCommit ghCommit = ghCommits.get(i);
-                GHCommit.ShortInfo shortInfo = ghCommit.getCommitShortInfo();
                 String id = repository.getName() + "/" + ghCommit.getSHA1();
-                String usernameAuthor = shortInfo.getAuthor().getUsername();
-                Optional<GithubUser> author = githubUserRepository.findByUsername(usernameAuthor);
+                String usernameAuthor = ghCommit.getAuthor().getLogin();
+                Optional<GithubUser> optionalAuthor = githubUserRepository.findByUsername(usernameAuthor);
                 commit.setId(id);
-                commit.setMessage(shortInfo.getMessage());
-                commit.setDate(EntityUtils.parseDateToLocalDateTimeUTC(shortInfo.getCommitDate()));
+                commit.setMessage(ghCommit.getCommitShortInfo().getMessage());
+                commit.setDate(EntityUtils.parseDateToLocalDateTimeUTC(ghCommit.getCommitDate()));
                 commit.setAdditions(ghCommit.getLinesAdded());
                 commit.setDeletions(ghCommit.getLinesDeleted());
                 commit.setRepository(repository);
-                if(author.isPresent()){
-                    commit.setAuthor(author.get());
+                if (optionalAuthor.isPresent()) {
+                    author = optionalAuthor.get();
                 } else {
-                    GithubUser githubUser = new GithubUser();
+                    author = new GithubUser();
                     GHUser ghAuthor = ghCommit.getAuthor();
-                    githubUser.setId(ghAuthor.getId());
-                    githubUser.setUsername(ghAuthor.getLogin());
-                    githubUser.setAvatarUrl(ghAuthor.getAvatarUrl());
-                    githubUser.setEmail(ghAuthor.getEmail());
-                    githubUserRepository.save(githubUser);
-                    commit.setAuthor(githubUser);
+                    author.setId(ghAuthor.getId());
+                    author.setUsername(ghAuthor.getLogin());
+                    author.setAvatarUrl(ghAuthor.getAvatarUrl());
+                    author.setEmail(ghAuthor.getEmail());
+                    githubUserRepository.save(author);
                 }
+                commit.setAuthor(author);
+                commitRepository.save(commit);
                 for (Integer number : commit.getIssueNumbers()) {
-                    Optional<Issue> issue = issueRepository.getIssueByNumberAndRepositoryId(number, repository.getId());
-                    if(issue.isPresent()){
+                    Optional<Issue> issue = issueRepository.findIssueByNumberAndRepository_Id(number, repository.getId());
+                    if (issue.isPresent()) {
                         IssueCommit issueCommit = new IssueCommit();
                         issueCommit.setCommit(commit);
                         issueCommit.setIssue(issue.get());
                         issueCommitRepository.save(issueCommit);
                     }
-                } 
-                // extractFiles(ghCommit);
-                commitRepository.save(commit);
+                }
+                // extractFiles(ghCommit, author);
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-
     @Transactional
-    private void extractFiles(GHCommit ghCommit) {
+    private void extractFiles(GHCommit ghCommit, GithubUser author, Repository repository) {
         try {
-            Map<String, GHCommit.File> addedFiles = new HashMap<>();
-            Map<String, GHCommit.File> removedFiles = new HashMap<>();
-
+            // Obtenemos todos los archivos
             List<GHCommit.File> files = ghCommit.listFiles().toList();
 
+            // Según el status guardamos los archivos añadidos o borrados,
+            // mientras que los renombrados y modificados se tratan de forma directa.
+            // En caso de tratarse de un estado diferente saltará una excepción.
             for (GHCommit.File file : files) {
+                String path = file.getFileName();
                 String status = file.getStatus();
-                if ("added".equals(status))
-                    addedFiles.put(file.getFileName(), file);
-                if ("removed".equals(status))
-                    removedFiles.put(file.getFileName(), file);
-            }
-
-            for (Map.Entry<String, GHCommit.File> addedEntry : addedFiles.entrySet()) {
-                String addedFilename = addedEntry.getKey();
-                GHCommit.File addedFile = addedEntry.getValue();
-
-                for (Map.Entry<String, GHCommit.File> removedEntry : removedFiles.entrySet()) {
-                    String removedFilename = removedEntry.getKey();
-                    GHCommit.File removedFile = removedEntry.getValue();
-
-                    if (addedFile.getSha().equals(removedFile.getSha())) {
-                        File file = fileRepository.getFileByPath(removedFilename);
-                        file.setPath(addedFilename);
-                        fileRepository.save(file);
+                switch (status) {
+                    case "added" -> { 
+                        File newFile = new File();
+                        newFile.setPath(file.getPatch());
+                        newFile.setRepository(repository);
                     }
+                    case "removed" -> {
+                        File deletedFile = fileRepository.findByPath(path);
+                        fileRepository.delete(deletedFile);
+                    }
+                    case "modified" -> {
+                        File updatedFile = fileRepository.findByPath(path);
+                        Change change = new Change();
+                        change.setAuthor(author);
+                        change.setFile(updatedFile);
+                        change.setAdditions(file.getLinesAdded());
+                        change.setDeletions(file.getLinesDeleted());
+                        updatedFile.setPath(file.getFileName());
+                        changesRepository.save(change);
+                        fileRepository.save(updatedFile);
+                    }
+                    case "renamed" -> {
+                        String previousPath = file.getPreviousFilename();
+                        File updatedFile = fileRepository.findByPath(previousPath);
+                        updatedFile.setPath(file.getFileName());
+                        // Aunque sea marcado como renombrado también está la posibilidad de que haya
+                        // sido modificado. Antes de seguir construyendo 
+                        Change change = new Change();
+                        change.setAdditions(file.getLinesAdded());
+                        change.setDeletions(file.getLinesDeleted());
+                        if (change.withChanges()) {
+                            change.setAuthor(author);
+                            change.setFile(updatedFile);
+                            changesRepository.save(change);
+                        }
+                        fileRepository.save(updatedFile);
+                    }
+                    default -> throw new Error("Not found status:" + status);
                 }
             }
 
@@ -199,21 +227,22 @@ public class GithubDataExtractionService {
     @Transactional
     private void extractCollaborators(GHRepository ghRepository, Repository repository) {
         try {
-            List<GithubUser> oldCollaborators = collaboratorRepository.getAllCollaboratorGithubUserByRepositoryId(ghRepository.getId());
-            
+            List<GithubUser> oldCollaborators = collaboratorRepository
+                    .findAllCollaboratorByRepository_Id(ghRepository.getId());
+
             for (GHUser ghCollaborator : ghRepository.getCollaborators()) {
                 GithubUser collaborator = new GithubUser();
                 collaborator.setId(ghCollaborator.getId());
                 collaborator.setUsername(ghCollaborator.getLogin());
                 collaborator.setAvatarUrl(ghCollaborator.getAvatarUrl());
                 collaborator.setEmail(ghCollaborator.getEmail());
-                if(!oldCollaborators.contains(collaborator)){
+                if (!oldCollaborators.contains(collaborator)) {
 
                 }
                 oldCollaborators.remove(collaborator);
-                
+
             }
-            
+
             // Logica para eliminar a todos los que ya no están relacionados
         } catch (IOException e) {
             e.printStackTrace();
