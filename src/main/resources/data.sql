@@ -1,113 +1,91 @@
--- One admin user, named admin1 with passwor 4dm1n and authority admin
-INSERT INTO authorities(id,authority) VALUES (1,'ADMIN');
-INSERT INTO appusers(id,username,password,authority) VALUES (1,'admin1','$2a$10$nMmTWAhPTqXqLDJTag3prumFrAJpsYtroxf0ojesFYq0k4PmcbWUS',1);
+-- git_token_1 -> "$2a$10$qZbZlKF8x6PvuFir3lNU8u2ZbA/x64BZLmTyS1D7LBnyHmKaESMTS"
 
--- Three clinic owners, with password "clinic_owner"
-INSERT INTO authorities(id,authority) VALUES (2,'CLINIC_OWNER');
-INSERT INTO appusers(id,username,password,authority) VALUES (2,'clinicOwner1','$2a$10$t.I/C4cjUdUWzqlFlSddLeh9SbZ6d8wR7mdbeIRghT355/KRKZPAi',2);
-INSERT INTO appusers(id,username,password,authority) VALUES (3,'clinicOwner2','$2a$10$t.I/C4cjUdUWzqlFlSddLeh9SbZ6d8wR7mdbeIRghT355/KRKZPAi',2);
+INSERT INTO users(id,username,github_token,clockify_token,email,avatar_url) VALUES 
+                 (1,'username_1','$2a$10$qZbZlKF8x6PvuFir3lNU8u2ZbA/x64BZLmTyS1D7LBnyHmKaESMTS','clockify_token_1','email_1@gmail.com','https://avatars.githubusercontent.com/u/1'),
+                 (2,'username_2','git_token_2','clockify_token_2','email_2@gmail.com','https://avatars.githubusercontent.com/u/2'),
+                 (3,'username_3','git_token_3','clockify_token_3','email_3@gmail.com','https://avatars.githubusercontent.com/u/3'),
+                 (4,'username_4','git_token_4','clockify_token_4','email_4@gmail.com','https://avatars.githubusercontent.com/u/4'),
+                 (5,'username_5','git_token_5','clockify_token_5','email_5@gmail.com','https://avatars.githubusercontent.com/u/5'),
+                 (6,'username_6','git_token_6','clockify_token_6','email_6@gmail.com','https://avatars.githubusercontent.com/u/6');
 
-INSERT INTO clinic_owners(id,first_name,last_name,user_id) VALUES (1, 'John', 'Doe', 2);
-INSERT INTO clinic_owners(id,first_name,last_name,user_id) VALUES (2, 'Jane', 'Doe', 3);
+INSERT INTO github_users(id,username,email,avatar_url) VALUES 
+                        (1,'username_1','email_1@gmail.com','https://avatars.githubusercontent.com/u/1'),
+                        (2,'username_2','email_2@gmail.com','https://avatars.githubusercontent.com/u/2'),
+                        (3,'username_3','email_3@gmail.com','https://avatars.githubusercontent.com/u/3'),
+                        (4,'username_4','email_4@gmail.com','https://avatars.githubusercontent.com/u/4'),
+                        (5,'username_5','email_5@gmail.com','https://avatars.githubusercontent.com/u/5'),
+                        (6,'username_6','email_6@gmail.com','https://avatars.githubusercontent.com/u/6');
 
-INSERT INTO clinics(id, name, address, telephone, plan, clinic_owner) VALUES (1, 'Clinic 1', 'Av. Palmera, 26', '955684230', 'PLATINUM', 1);
-INSERT INTO clinics(id, name, address, telephone, plan, clinic_owner) VALUES (2, 'Clinic 2', 'Av. Torneo, 52', '955634232', 'GOLD', 2);
-INSERT INTO clinics(id, name, address, telephone, plan, clinic_owner) VALUES (3, 'Clinic 3', 'Av. Reina Mercedes, 70', '955382238', 'BASIC', 2);
+INSERT INTO repositories(id,name,update_date) VALUES 
+                        (1,'repo_1','2024-01-01 00:00:00'),
+                        (2,'repo_2','2024-01-01 00:00:00'),
+                        (3,'repo_3','2024-01-01 00:00:00'),
+                        (4,'repo_4','2024-01-01 00:00:00');
 
--- Ten owner user, named owner1 with passwor 0wn3r
-INSERT INTO authorities(id,authority) VALUES (3,'OWNER');
-INSERT INTO appusers(id,username,password,authority) VALUES (4,'owner1','$2a$10$DaS6KIEfF5CRTFrxIoGc7emY3BpZZ0.fVjwA3NiJ.BjpGNmocaS3e',3);
-INSERT INTO appusers(id,username,password,authority) VALUES (5,'owner2','$2a$10$DaS6KIEfF5CRTFrxIoGc7emY3BpZZ0.fVjwA3NiJ.BjpGNmocaS3e',3);
-INSERT INTO appusers(id,username,password,authority) VALUES (6,'owner3','$2a$10$DaS6KIEfF5CRTFrxIoGc7emY3BpZZ0.fVjwA3NiJ.BjpGNmocaS3e',3);
-INSERT INTO appusers(id,username,password,authority) VALUES (7,'owner4','$2a$10$DaS6KIEfF5CRTFrxIoGc7emY3BpZZ0.fVjwA3NiJ.BjpGNmocaS3e',3);
-INSERT INTO appusers(id,username,password,authority) VALUES (8,'owner5','$2a$10$DaS6KIEfF5CRTFrxIoGc7emY3BpZZ0.fVjwA3NiJ.BjpGNmocaS3e',3);
-INSERT INTO appusers(id,username,password,authority) VALUES (9,'owner6','$2a$10$DaS6KIEfF5CRTFrxIoGc7emY3BpZZ0.fVjwA3NiJ.BjpGNmocaS3e',3);
-INSERT INTO appusers(id,username,password,authority) VALUES (10,'owner7','$2a$10$DaS6KIEfF5CRTFrxIoGc7emY3BpZZ0.fVjwA3NiJ.BjpGNmocaS3e',3);
-INSERT INTO appusers(id,username,password,authority) VALUES (11,'owner8','$2a$10$DaS6KIEfF5CRTFrxIoGc7emY3BpZZ0.fVjwA3NiJ.BjpGNmocaS3e',3);
-INSERT INTO appusers(id,username,password,authority) VALUES (12,'owner9','$2a$10$DaS6KIEfF5CRTFrxIoGc7emY3BpZZ0.fVjwA3NiJ.BjpGNmocaS3e',3);
-INSERT INTO appusers(id,username,password,authority) VALUES (13,'owner10','$2a$10$DaS6KIEfF5CRTFrxIoGc7emY3BpZZ0.fVjwA3NiJ.BjpGNmocaS3e',3);
--- One vet user, named vet1 with passwor v3t
-/*INSERT INTO users(username,password,enabled) VALUES ('vet1','v3t',TRUE);
-INSERT INTO authorities(id,username,authority) VALUES (12,'vet1','veterinarian');*/
-INSERT INTO authorities(id,authority) VALUES (4,'VET');
-INSERT INTO appusers(id,username,password,authority) VALUES (14,'vet1','$2a$10$aeypcHWSf4YEkDAF0d.vjOLu94aS40MBUb4rOtDncFxZdo2wpkt8.',4);
-INSERT INTO appusers(id,username,password,authority) VALUES (15,'vet2','$2a$10$aeypcHWSf4YEkDAF0d.vjOLu94aS40MBUb4rOtDncFxZdo2wpkt8.',4);
-INSERT INTO appusers(id,username,password,authority) VALUES (16,'vet3','$2a$10$aeypcHWSf4YEkDAF0d.vjOLu94aS40MBUb4rOtDncFxZdo2wpkt8.',4);
-INSERT INTO appusers(id,username,password,authority) VALUES (17,'vet4','$2a$10$aeypcHWSf4YEkDAF0d.vjOLu94aS40MBUb4rOtDncFxZdo2wpkt8.',4);
-INSERT INTO appusers(id,username,password,authority) VALUES (18,'vet5','$2a$10$aeypcHWSf4YEkDAF0d.vjOLu94aS40MBUb4rOtDncFxZdo2wpkt8.',4);
-INSERT INTO appusers(id,username,password,authority) VALUES (19,'vet6','$2a$10$aeypcHWSf4YEkDAF0d.vjOLu94aS40MBUb4rOtDncFxZdo2wpkt8.',4);
+INSERT INTO collaborators(id,repository_id,collaborator_id) VALUES
+                         (1,1,1),
+                         (2,1,2),
+                         (3,1,3),
+                         (4,2,3),
+                         (5,2,4),
+                         (6,2,5),
+                         (7,3,5),
+                         (8,4,6);
 
-INSERT INTO vets(id, first_name,last_name,city, clinic, user_id) VALUES (1, 'James', 'Carter','Sevilla', 1, 14);
-INSERT INTO vets(id, first_name,last_name,city, clinic, user_id) VALUES (2, 'Helen', 'Leary','Sevilla', 1, 15);
-INSERT INTO vets(id, first_name,last_name,city, clinic, user_id) VALUES (3, 'Linda', 'Douglas','Sevilla', 2, 16);
-INSERT INTO vets(id, first_name,last_name,city, clinic, user_id) VALUES (4, 'Rafael', 'Ortega','Badajoz', 2, 17);
-INSERT INTO vets(id, first_name,last_name,city, clinic, user_id) VALUES (5, 'Henry', 'Stevens','Badajoz', 3, 18);
-INSERT INTO vets(id, first_name,last_name,city, clinic, user_id) VALUES (6, 'Sharon', 'Jenkins','Cádiz', 3, 19);
+INSERT INTO commits(id,commit_type,message,date,additions,deletions,author_id,repository_id) VALUES 
+                   (1,'CHORE','[CHORE]: message_1','2003-01-01 16:00:49',10,2,1,1),
+                   (2,'STYLE','[STYLE]: message_2','2003-01-01 17:00:49',0,1,1,1),
+                   (3,'FEAT','[FEAT]: message_3','2003-01-01 18:00:49',23,4,1,1),
+                   (4,'FEAT','[FEAT]: message_4','2003-01-01 19:00:49',5,2,1,1),
+                   (5,'FIX','[FIX]: message_5','2003-02-02 19:30:49',1,1,1,1),
+                   (6,'DOCS','[DOCS]: message_6','2003-03-01 16:00:49',1,0,1,1),
+                   (7,null,'message_7','2003-03-01 16:00:49',0,1,2,1),
+                   (8,null,'message_8','2003-01-02 16:00:49',0,0,2,1),
+                   (9,null,'message_9','2003-01-03 16:00:49',14,5,2,1),
+                   (10,null,'message_10','2004-01-04 16:00:49',12,2,2,1),
+                   (11,null,'message_11','2004-02-01 23:00:49',4,54,2,1),
+                   (12,null,'message_12','2004-02-02 16:00:49',23,44,3,1),
+                   (13,null,'message_13','2004-02-02 16:00:49',65,90,4,2),
+                   (14,null,'message_14','2004-02-02 16:00:49',1,23,4,2),
+                   (15,null,'message_15','2004-02-03 16:00:49',43,5,5,3),
+                   (16,null,'message_16','2004-02-04 16:00:49',12,34,5,3),
+                   (17,null,'message_17','2004-02-04 17:00:49',23,45,5,4),
+                   (18,null,'message_18','2004-02-05 16:00:49',56,2,6,4);
 
-INSERT INTO specialties(id,name) VALUES (1, 'radiology');
-INSERT INTO specialties(id,name) VALUES (2, 'surgery');
-INSERT INTO specialties(id,name) VALUES (3, 'dentistry');
+INSERT INTO issues(id,title,number,repository_id) VALUES
+                  (1,'issue_1',1,1),
+                  (2,'issue_2',2,1),
+                  (3,'issue_3',3,1),
+                  (4,'issue_4',4,1),
+                  (5,'issue_5',5,1),
+                  (6,'issue_6',6,1),
+                  (7,'issue_7',1,2),
+                  (8,'issue_8',2,2),
+                  (9,'issue_9',3,2),
+                  (10,'issue_10',1,3),
+                  (11,'issue_11',2,3);
 
-INSERT INTO vet_specialties(vet_id,specialty_id) VALUES (2, 1);
-INSERT INTO vet_specialties(vet_id,specialty_id) VALUES (3, 2);
-INSERT INTO vet_specialties(vet_id,specialty_id) VALUES (3, 3);
-INSERT INTO vet_specialties(vet_id,specialty_id) VALUES (4, 2);
-INSERT INTO vet_specialties(vet_id,specialty_id) VALUES (5, 1);
+INSERT INTO issues_commits(id,issue_id,commit_id) VALUES
+                          (1,1,1),
+                          (2,1,2),
+                          (3,2,1),
+                          (4,2,3),
+                          (5,3,4),
+                          (6,3,5),
+                          (7,4,5);
 
-INSERT INTO types(id,name)  VALUES (1, 'cat');
-INSERT INTO types(id,name)  VALUES (2, 'dog');
-INSERT INTO types(id,name)  VALUES (3, 'lizard');
-INSERT INTO types(id,name)  VALUES (4, 'snake');
-INSERT INTO types(id,name)  VALUES (5, 'bird');
-INSERT INTO types(id,name)  VALUES (6, 'hamster');
-INSERT INTO types(id,name)  VALUES (7, 'turtle');
+INSERT INTO files(id,path,extension,repository_id) VALUES  
+                 (1,'src/main/java/claseJava.java','java',1),
+                 (2,'src/main/java/claseJava2.java','java',1),
+                 (3,'src/main/python/clasePython.py','py',1),
+                 (4,'src/main/c/claseC.c','c',1),
+                 (5,'src/main/cpp/claseCpp.cpp','cpp',1),
+                 (6,'src/main/cpp/claseCpp.c++','c++',1),
+                 (7,'README.md','md',1),
+                 (8,'SinExtension',null,1),
+                 (9,'README.md','md',2);
+                 
 
-INSERT INTO	owners(id, first_name, last_name, address, city, telephone, user_id, clinic) VALUES (1, 'George', 'Franklin', '110 W. Liberty St.', 'Sevilla', '608555103', 4, 1);
-INSERT INTO owners(id, first_name, last_name, address, city, telephone, user_id, clinic) VALUES (2, 'Betty', 'Davis', '638 Cardinal Ave.', 'Sevilla', '608555174', 5, 1);
-INSERT INTO owners(id, first_name, last_name, address, city, telephone, user_id, clinic) VALUES (3, 'Eduardo', 'Rodriquez', '2693 Commerce St.', 'Sevilla', '608558763', 6, 1);
-INSERT INTO owners(id, first_name, last_name, address, city, telephone, user_id, clinic) VALUES (4, 'Harold', 'Davis', '563 Friendly St.', 'Sevilla', '608555319', 7, 2);
-INSERT INTO owners(id, first_name, last_name, address, city, telephone, user_id, clinic) VALUES (5, 'Peter', 'McTavish', '2387 S. Fair Way', 'Sevilla', '608555765', 8, 2);
-INSERT INTO owners(id, first_name, last_name, address, city, telephone, user_id, clinic) VALUES (6, 'Jean', 'Coleman', '105 N. Lake St.', 'Badajoz', '608555264', 9, 2);
-INSERT INTO owners(id, first_name, last_name, address, city, telephone, user_id, clinic) VALUES (7, 'Jeff', 'Black', '1450 Oak Blvd.', 'Badajoz', '608555538', 10, 3);
-INSERT INTO owners(id, first_name, last_name, address, city, telephone, user_id, clinic) VALUES (8, 'Maria', 'Escobito', '345 Maple St.', 'Badajoz', '608557683', 11, 3);
-INSERT INTO owners(id, first_name, last_name, address, city, telephone, user_id, clinic) VALUES (9, 'David', 'Schroeder', '2749 Blackhawk Trail','Cádiz', '685559435', 12, 3);
-INSERT INTO owners(id, first_name, last_name, address, city, telephone, user_id, clinic) VALUES (10, 'Carlos', 'Estaban', '2335 Independence La.', 'Cádiz', '685555487', 13, 1);
-
-INSERT INTO pets(id,name,birth_date,type_id,owner_id) VALUES (1, 'Leo', '2010-09-07', 1, 1);
-INSERT INTO pets(id,name,birth_date,type_id,owner_id) VALUES (2, 'Basil', '2012-08-06', 6, 2);
-INSERT INTO pets(id,name,birth_date,type_id,owner_id) VALUES (3, 'Rosy', '2011-04-17', 2, 3);
-INSERT INTO pets(id,name,birth_date,type_id,owner_id) VALUES (4, 'Jewel', '2010-03-07', 2, 3);
-INSERT INTO pets(id,name,birth_date,type_id,owner_id) VALUES (5, 'Iggy', '2010-11-30', 3, 4);
-INSERT INTO pets(id,name,birth_date,type_id,owner_id) VALUES (6, 'George', '2010-01-20', 4, 5);
-INSERT INTO pets(id,name,birth_date,type_id,owner_id) VALUES (7, 'Samantha', '2012-09-04', 1, 6);
-INSERT INTO pets(id,name,birth_date,type_id,owner_id) VALUES (8, 'Max', '2012-09-04', 1, 6);
-INSERT INTO pets(id,name,birth_date,type_id,owner_id) VALUES (9, 'Lucky', '2011-08-06', 5, 7);
-INSERT INTO pets(id,name,birth_date,type_id,owner_id) VALUES (10, 'Mulligan', '2007-02-24', 2, 8);
-INSERT INTO pets(id,name,birth_date,type_id,owner_id) VALUES (11, 'Freddy', '2010-03-09', 5, 9);
-INSERT INTO pets(id,name,birth_date,type_id,owner_id) VALUES (12, 'Lucky', '2010-06-24', 2, 10);
-INSERT INTO pets(id,name,birth_date,type_id,owner_id) VALUES (13, 'Sly', '2012-06-08', 1, 10);
-
-INSERT INTO visits(id,pet_id,visit_date_time,description,vet_id) VALUES (1, 7, '2013-01-01 13:00', 'rabies shot', 4);
-INSERT INTO visits(id,pet_id,visit_date_time,description,vet_id) VALUES (2, 8, '2013-01-02 15:30', 'rabies shot', 5);
-INSERT INTO visits(id,pet_id,visit_date_time,description,vet_id) VALUES (3, 8, '2013-01-03 9:45', 'neutered', 5);
-INSERT INTO visits(id,pet_id,visit_date_time,description,vet_id) VALUES (4, 7, '2013-01-04 17:30', 'spayed', 4);
-INSERT INTO visits(id,pet_id,visit_date_time,description,vet_id) VALUES (5, 1, '2013-01-01 13:00', 'rabies shot', 1);
-INSERT INTO visits(id,pet_id,visit_date_time,description,vet_id) VALUES (6, 1, '2020-01-02 15:30', 'rabies shot', 1);
-INSERT INTO visits(id,pet_id,visit_date_time,description,vet_id) VALUES (7, 1, '2020-01-02 15:30', 'rabies shot', 1);
-INSERT INTO visits(id,pet_id,visit_date_time,description,vet_id) VALUES (8, 2, '2013-01-03 9:45', 'neutered', 2);
-INSERT INTO visits(id,pet_id,visit_date_time,description,vet_id) VALUES (9, 3, '2013-01-04 17:30', 'spayed', 3);
-
-INSERT INTO consultations(id,title, is_clinic_comment,status,owner_id,pet_id,creation_date) VALUES (1, 'Consultation about vaccines', 0, 'ANSWERED', 1, 1, '2023-01-04 17:30');
-INSERT INTO consultations(id,title, is_clinic_comment,status,owner_id,pet_id,creation_date) VALUES (2, 'My dog gets really nervous', 0, 'PENDING', 1, 1, '2022-01-02 19:30');
-INSERT INTO consultations(id,title, is_clinic_comment,status,owner_id,pet_id,creation_date) VALUES (3, 'My cat does not eat', 0, 'PENDING', 2, 2, '2023-04-11 11:20');
-INSERT INTO consultations(id,title, is_clinic_comment,status,owner_id,pet_id,creation_date) VALUES (4, 'My lovebird does not sing', 0, 'CLOSED', 2, 2, '2023-02-24 10:30');
-INSERT INTO consultations(id,title, is_clinic_comment,status,owner_id,pet_id,creation_date) VALUES (5, 'My snake has layed eggs', 0, 'PENDING', 10, 12, '2023-04-11 11:20');
-
-INSERT INTO consultation_tickets(id,description,creation_date, user_id, consultation_id) VALUES (1, 'What vaccine should my dog receive?', '2023-01-04 17:32', 4, 1);
-INSERT INTO consultation_tickets(id,description,creation_date, user_id, consultation_id) VALUES (2, 'Rabies'' one.', '2023-01-04 17:36', 14, 1);
-INSERT INTO consultation_tickets(id,description,creation_date, user_id, consultation_id) VALUES (3, 'My dog gets really nervous during football matches. What should I do?', '2022-01-02 19:31', 4, 2);
-INSERT INTO consultation_tickets(id,description,creation_date, user_id, consultation_id) VALUES (4, 'It also happens with tennis matches.', '2022-01-02 19:33', 4, 2);
-INSERT INTO consultation_tickets(id,description,creation_date, user_id, consultation_id) VALUES (5, 'My cat han''t been eating his fodder.', '2023-04-11 11:30', 5, 3);
-INSERT INTO consultation_tickets(id,description,creation_date, user_id, consultation_id) VALUES (6, 'Try to give him some tuna to check if he eats that.', '2023-04-11 15:20', 15, 3);
-INSERT INTO consultation_tickets(id,description,creation_date, user_id, consultation_id) VALUES (7, 'My lovebird doesn''t sing as my neighbour''s one.', '2023-02-24 12:30', 5, 4);
-INSERT INTO consultation_tickets(id,description,creation_date, user_id, consultation_id) VALUES (8, 'Lovebirds do not sing.', '2023-02-24 18:30', 16, 4);
+-- INSERT INTO organizations(id,name) VALUES ();
+-- INSERT INTO issues(id,message) VALUES ();
+-- INSERT INTO files(id,route,name) VALUES ();

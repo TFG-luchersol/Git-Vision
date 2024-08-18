@@ -1,0 +1,13 @@
+.button-group {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.button-group Button{
+    margin: 10px;
+    border-radius: 10px;
+    width: 90%;
+    background-color: #2e2e92;
+    text-decoration-color: whitesmoke;
+}
