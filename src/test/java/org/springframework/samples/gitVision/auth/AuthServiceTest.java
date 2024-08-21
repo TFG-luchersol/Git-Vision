@@ -6,6 +6,7 @@ import static org.junit.Assert.fail;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.samples.gitvision.auth.AuthController;
 import org.springframework.samples.gitvision.auth.payload.request.LoginRequest;
 import org.springframework.samples.gitvision.user.User;
 import org.springframework.samples.gitvision.user.UserRepository;

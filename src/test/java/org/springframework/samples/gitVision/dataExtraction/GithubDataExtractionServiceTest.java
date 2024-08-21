@@ -1,10 +1,10 @@
-package org.springframework.samples.gitvision.data_extraction;
+package org.springframework.samples.gitvision.dataExtraction;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.samples.gitvision.data_extraction.GithubDataExtractionService;
+import org.springframework.samples.gitvision.dataExtraction.GithubDataExtractionService;
 
 @SpringBootTest
 public class GithubDataExtractionServiceTest {

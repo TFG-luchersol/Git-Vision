@@ -1,4 +1,4 @@
-package org.springframework.samples.gitvision.data_extraction;
+package org.springframework.samples.gitvision.dataExtraction;
 
 import org.springframework.stereotype.Service;
 

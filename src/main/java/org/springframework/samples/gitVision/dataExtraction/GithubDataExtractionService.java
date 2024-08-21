@@ -1,4 +1,4 @@
-package org.springframework.samples.gitvision.data_extraction;
+package org.springframework.samples.gitvision.dataExtraction;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -128,10 +128,10 @@ public class GithubDataExtractionService {
                 Commit commit = new Commit();
                 GithubUser author;
                 GHCommit ghCommit = ghCommits.get(i);
-                String id = repository.getName() + "/" + ghCommit.getSHA1();
+                String commitId = repository.getName() + "/" + ghCommit.getSHA1();
                 String usernameAuthor = ghCommit.getAuthor().getLogin();
                 Optional<GithubUser> optionalAuthor = githubUserRepository.findByUsername(usernameAuthor);
-                commit.setId(id);
+                commit.setId(commitId);
                 commit.setMessage(ghCommit.getCommitShortInfo().getMessage());
                 commit.setDate(EntityUtils.parseDateToLocalDateTimeUTC(ghCommit.getCommitDate()));
                 commit.setAdditions(ghCommit.getLinesAdded());
@@ -153,8 +153,9 @@ public class GithubDataExtractionService {
                 for (Integer number : commit.getIssueNumbers()) {
                     Optional<Issue> issue = issueRepository.findIssueByNumberAndRepository_Id(number, repository.getId());
                     if (issue.isPresent()) {
+                        Commit savedCommit = commitRepository.findById(commitId).get();
                         IssueCommit issueCommit = new IssueCommit();
-                        issueCommit.setCommit(commit);
+                        issueCommit.setCommit(savedCommit);
                         issueCommit.setIssue(issue.get());
                         issueCommitRepository.save(issueCommit);
                     }

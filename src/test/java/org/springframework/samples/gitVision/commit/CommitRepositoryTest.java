@@ -12,6 +12,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.samples.gitvision.commit.CommitRepository;
 import org.springframework.samples.gitvision.commit.model.commitsByPerson.CommitsByPerson;
 import org.springframework.samples.gitvision.commit.model.commitsByTimePeriod.CommitsByTimePeriod;
 import org.springframework.samples.gitvision.commit.model.commitsByTimePeriod.TimePeriod;
