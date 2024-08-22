@@ -3,12 +3,8 @@ package org.springframework.samples.gitvision.dataExtraction;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 
 import org.kohsuke.github.GHCommit;
 import org.kohsuke.github.GHIssue;
@@ -122,9 +118,6 @@ public class GithubDataExtractionService {
             List<GHCommit> ghCommits = sinceDate == null ? ghRepository.listCommits().toList()
                     : ghRepository.queryCommits().since(sinceDate).list().toList();
             for (int i = ghCommits.size() - 1; i >= 0; i--) {
-                if(i == 35){
-                    int problema = 0;
-                }
                 Commit commit = new Commit();
                 GithubUser author;
                 GHCommit ghCommit = ghCommits.get(i);
@@ -160,61 +153,80 @@ public class GithubDataExtractionService {
                         issueCommitRepository.save(issueCommit);
                     }
                 }
-                // extractFiles(ghCommit, author);
+                extractFiles(ghCommit, author.getId(), repository.getId(), i);
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+
     @Transactional
-    private void extractFiles(GHCommit ghCommit, GithubUser author, Repository repository) {
+    private void extractFiles(GHCommit ghCommit, Long authorId, Long repositoryId, int i2) {
         try {
             // Obtenemos todos los archivos
+            Repository repository = repoRepository.findById(repositoryId).get();
+            GithubUser author = githubUserRepository.findById(authorId).get();
             List<GHCommit.File> files = ghCommit.listFiles().toList();
 
             // Según el status guardamos los archivos añadidos o borrados,
-            // mientras que los renombrados y modificados se tratan de forma directa.
+            // mientras que los renombrados y modificados se tratan de forma directan .
             // En caso de tratarse de un estado diferente saltará una excepción.
-            for (GHCommit.File file : files) {
+            for (int i = 0; i < files.size(); i++) {
+                GHCommit.File file = files.get(i);
                 String path = file.getFileName();
                 String status = file.getStatus();
+
                 switch (status) {
                     case "added" -> { 
+                        // En ocasiones puede ocurrir que el mismo archivo se introduzca en diferentes commits.
+                        // En ese caso, pasamos al siguiente archivo.
+                        if(fileRepository.existsByPathAndRepository_Id(path, repositoryId))
+                            continue;
                         File newFile = new File();
-                        newFile.setPath(file.getPatch());
+                        newFile.setPath(path);
                         newFile.setRepository(repository);
+                        fileRepository.save(newFile);
                     }
                     case "removed" -> {
-                        File deletedFile = fileRepository.findByPath(path);
-                        fileRepository.delete(deletedFile);
+                        Optional<File> deletedFile = fileRepository.findByPathAndRepository_Id(path, repositoryId);
+                        if(deletedFile.isPresent()){
+                            fileRepository.delete(deletedFile.get());
+                        }
                     }
                     case "modified" -> {
-                        File updatedFile = fileRepository.findByPath(path);
-                        Change change = new Change();
-                        change.setAuthor(author);
-                        change.setFile(updatedFile);
-                        change.setAdditions(file.getLinesAdded());
-                        change.setDeletions(file.getLinesDeleted());
-                        updatedFile.setPath(file.getFileName());
-                        changesRepository.save(change);
-                        fileRepository.save(updatedFile);
+                        Optional<File> optionalUpdatedFile = fileRepository.findByPathAndRepository_Id(path, repositoryId);
+                        if(optionalUpdatedFile.isPresent()){
+                            File updatedFile = optionalUpdatedFile.get();
+                            Change change = new Change();
+                            change.setAuthor(author);
+                            change.setFile(updatedFile);
+                            change.setAdditions(file.getLinesAdded());
+                            change.setDeletions(file.getLinesDeleted());
+                            updatedFile.setPath(file.getFileName());
+                            changesRepository.save(change);
+                            fileRepository.save(updatedFile);
+                        }
                     }
                     case "renamed" -> {
                         String previousPath = file.getPreviousFilename();
-                        File updatedFile = fileRepository.findByPath(previousPath);
-                        updatedFile.setPath(file.getFileName());
-                        // Aunque sea marcado como renombrado también está la posibilidad de que haya
-                        // sido modificado. Antes de seguir construyendo 
-                        Change change = new Change();
-                        change.setAdditions(file.getLinesAdded());
-                        change.setDeletions(file.getLinesDeleted());
-                        if (change.withChanges()) {
-                            change.setAuthor(author);
-                            change.setFile(updatedFile);
-                            changesRepository.save(change);
+                        Optional<File> optionalUpdatedFile = fileRepository.findByPathAndRepository_Id(previousPath, repositoryId);
+                        if(optionalUpdatedFile.isPresent()){
+                            File updatedFile = optionalUpdatedFile.get();
+                            updatedFile.setPath(file.getFileName());
+                            // Aunque sea marcado como renombrado también está la posibilidad de que haya
+                            // sido modificado. Antes de seguir construyendo 
+                            Change change = new Change();
+                            change.setAdditions(file.getLinesAdded());
+                            change.setDeletions(file.getLinesDeleted());
+                            if (change.withChanges()) {
+                                change.setAuthor(author);
+                                change.setFile(updatedFile);
+                                changesRepository.save(change);
+                            }
+                            fileRepository.save(updatedFile);
                         }
-                        fileRepository.save(updatedFile);
+                        
                     }
                     default -> throw new Error("Not found status:" + status);
                 }

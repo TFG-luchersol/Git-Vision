@@ -24,6 +24,7 @@ public class TreeFiles {
         private static final String NAME_ROOT = "/";
 
         private String name;
+        
         private List<TreeNode> children;
 
         @JsonProperty

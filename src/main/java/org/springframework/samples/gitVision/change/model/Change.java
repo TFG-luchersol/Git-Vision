@@ -1,5 +1,7 @@
 package org.springframework.samples.gitvision.change.model;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.samples.gitvision.file.model.File;
 import org.springframework.samples.gitvision.githubUser.model.GithubUser;
 import org.springframework.samples.gitvision.model.entity.EntityIdSequential;
@@ -22,9 +24,10 @@ import lombok.Setter;
 public class Change extends EntityIdSequential {
 
     @ManyToOne
+    @OnDelete(action = OnDeleteAction.SET_NULL)
     File file;
  
-    @OneToOne
+    @ManyToOne
     GithubUser author;
 
     @PositiveOrZero
