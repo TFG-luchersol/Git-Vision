@@ -5,7 +5,7 @@ import { ErrorBoundary } from "react-error-boundary";
 import Login from "./login";
 import Register from "./register";
 import SwaggerDocs from "./public/swagger";
-import AppNavbar from "./appNavbar/AppNavbar.js";
+import AppNavbar from "./appNavbar";
 import Home from "./home/index.js";
 import Details from "./details/index.js";
 import Repositories from "./repositories/index.js";

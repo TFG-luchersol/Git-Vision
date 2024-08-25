@@ -8,7 +8,7 @@ import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.samples.gitvision.change.model.Change;
 import org.springframework.samples.gitvision.model.entity.EntityIdSequential;
-import org.springframework.samples.gitvision.repository.Repository;
+import org.springframework.samples.gitvision.repository.model.Repository;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;

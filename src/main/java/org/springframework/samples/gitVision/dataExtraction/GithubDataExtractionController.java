@@ -27,5 +27,6 @@ public class GithubDataExtractionController {
         //        repo = "Git-Vision",
         String login = "luchersol",
                token = this.github_token;
-        githubDataExtractionService.extractRepository(owner, repo, login, token);    }
+        githubDataExtractionService.extractRepository(owner, repo, login, token);    
+    }
 }

@@ -18,11 +18,9 @@ package org.springframework.samples.gitvision.util;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.util.Collection;
 import java.util.Date;
-import java.util.Objects;
 
 import org.springframework.orm.ObjectRetrievalFailureException;
 import org.springframework.samples.gitvision.model.entity.BaseEntity;

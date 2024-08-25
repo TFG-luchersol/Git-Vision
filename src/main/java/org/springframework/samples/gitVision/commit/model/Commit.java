@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 
 import org.springframework.samples.gitvision.githubUser.model.GithubUser;
 import org.springframework.samples.gitvision.model.entity.EntityIdString;
-import org.springframework.samples.gitvision.repository.Repository;
+import org.springframework.samples.gitvision.repository.model.Repository;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

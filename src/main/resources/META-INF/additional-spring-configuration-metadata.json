@@ -18,5 +18,10 @@
     "name": "tokens.github",
     "type": "java.lang.String",
     "description": "A description for 'tokens.github'"
+  },
+  {
+    "name": "tokens.clockify",
+    "type": "java.lang.String",
+    "description": "A description for 'tokens.clockify'"
   }
 ]}

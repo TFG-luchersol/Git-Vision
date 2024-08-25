@@ -27,7 +27,7 @@ import org.springframework.samples.gitvision.relations.collaborator.Collaborator
 import org.springframework.samples.gitvision.relations.issueCommit.IssueCommit;
 import org.springframework.samples.gitvision.relations.issueCommit.IssueCommitRepository;
 import org.springframework.samples.gitvision.repository.RepoRepository;
-import org.springframework.samples.gitvision.repository.Repository;
+import org.springframework.samples.gitvision.repository.model.Repository;
 import org.springframework.samples.gitvision.util.EntityUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

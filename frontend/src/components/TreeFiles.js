@@ -1,5 +1,5 @@
 import React from 'react';
-import AccordionItem from '../AccordionItem.js';
+import AccordionItem from './AccordionItem.js';
 
 export default function TreeFiles({ root }) {
 

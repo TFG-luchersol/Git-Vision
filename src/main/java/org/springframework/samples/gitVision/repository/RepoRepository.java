@@ -2,6 +2,7 @@ package org.springframework.samples.gitvision.repository;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.samples.gitvision.model.repository.RepositoryIdLong;
+import org.springframework.samples.gitvision.repository.model.Repository;
 
 public interface RepoRepository extends RepositoryIdLong<Repository> {
 

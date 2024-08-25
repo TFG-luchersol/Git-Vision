@@ -5,7 +5,7 @@ import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.samples.gitvision.file.model.File;
 import org.springframework.samples.gitvision.githubUser.model.GithubUser;
 import org.springframework.samples.gitvision.model.entity.EntityIdSequential;
-import org.springframework.samples.gitvision.repository.Repository;
+import org.springframework.samples.gitvision.repository.model.Repository;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;

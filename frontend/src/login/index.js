@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import '../App.css';
 import '../static/css/home/home.css';
 import { Alert, Button, Form, FormGroup, Input, Label, Modal } from 'reactstrap';
@@ -13,7 +13,7 @@ export default function Login() {
     const githubIcon = <FaGithub />
 
     const [message, setMessage] = useState(null)
-    const [values, setValues] = useState({username: "", githubToken: ""})
+    const [values, setValues] = useState({ username: "", githubToken: "" })
 
     async function handleSubmit(event) {
         event.preventDefault()
@@ -43,20 +43,28 @@ export default function Login() {
 
     function handleChange(event) {
         const target = event.target;
-        const {name, value} = target;
+        const { name, value } = target;
         let newValues = { ...values };
         newValues[name] = value;
         setValues(newValues)
     }
 
-    async function testDownload() {
-        await fetch('/api/v1/github/TFG-luchersol/Git-Vision', {method: "POST"}).then(e => alert(`${e.status}`))
+    async function testDownloadGithub() {
+        await fetch('/api/v1/github/TFG-luchersol/Git-Vision', { method: "POST" }).then(e => alert(`GITHUB: ${e.status}`))
+    }
+
+    async function testDownloadClockify() {
+        await fetch('/api/v1/clockify/workspaces/664b1bcbfae74255cbb0abc9', { method: "POST", body:"workspace_test_TFG"}).then(e => alert(`CLOCKIFY: ${e.status}`))
     }
 
     return (
         <div className="home-page-container">
-            <button onClick={() => testDownload()} >DESCARGA DE PRUEBA</button>
-                {/* <Alert isOpen={message} color="danger" style={{position:'absolute', top:'30px'}}>{message}</Alert>
+            <div style={{display:'flex', flexDirection:'column'}}>
+                <button onClick={() => testDownloadGithub()} >DESCARGA DE PRUEBA GITHUB</button>
+                <button onClick={() => testDownloadClockify()} >DESCARGA DE PRUEBA CLOCKIFY</button>
+            </div>
+            
+            {/* <Alert isOpen={message} color="danger" style={{position:'absolute', top:'30px'}}>{message}</Alert>
                 
                 <Form onSubmit={handleSubmit} className='auth-form-container' >
                     <div style={{margin: "30px"}}>
@@ -93,8 +101,8 @@ export default function Login() {
                         </div>
                     </div>
                 </Form> */}
-                
-            
+
+
         </div>
     );
 }
