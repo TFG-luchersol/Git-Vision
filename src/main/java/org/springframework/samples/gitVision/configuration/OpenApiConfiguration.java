@@ -15,7 +15,7 @@ import io.swagger.v3.oas.annotations.servers.Server;
     title = "Git Vision APIs",
     version = "v1.0",
     contact = @Contact(
-      name = "Git Vision" //, email = "psg2-2324-gx-xy@gmail.com", url = "https://psg2-2324-gx-xy.ew.r.appspot.com/"
+      name = "Git Vision" //, url = "https://psg2-2324-gx-xy.ew.r.appspot.com/"
     ),
     license = @License(
       name = "Apache 2.0", url = "https://www.apache.org/licenses/LICENSE-2.0"

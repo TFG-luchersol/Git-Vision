@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequestMapping("/api/v1/clockify")
@@ -23,7 +24,7 @@ public class ClockifyDataExtractionController {
     }
 
     @PostMapping("/workspaces/{workspaceId}")
-    public void extractClockifyWorkspace(@PathVariable String workspaceId, @RequestBody String name){
+    public void extractClockifyWorkspace(@PathVariable String workspaceId, @RequestParam String name){
         // owner = "TFG-luchersol",
         //        repo = "Git-Vision",
         String token = this.clockify_token;
