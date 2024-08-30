@@ -4,7 +4,7 @@ import '../static/css/home/home.css';
 import tokenService from "../services/token.service.js";
 import { Button } from 'reactstrap';
 import '../static/css/auth/authPage.css'
-import AccordionItem from './AccordionItem.js';
+import AccordionItem from '../components/AccordionItem.js'
 import './repositories.css'
 
 export default function Repositories() {
@@ -71,11 +71,8 @@ export default function Repositories() {
             </div>
 
             <div className='button-group'>
-                <Button onClick={() => alert('Añadir organización')}>
-                    Añadir organización
-                </Button>
-                <Button onClick={() => alert('Añadir proyecto')}>
-                    Añadir proyecto
+                <Button onClick={() => alert('Añadir repositorio')}>
+                    Añadir repositorio
                 </Button>
                 <Button onClick={() => alert('Añadir workspace')} >
                     Añadir workspace

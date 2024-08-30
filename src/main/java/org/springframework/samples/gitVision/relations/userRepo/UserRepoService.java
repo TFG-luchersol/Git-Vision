@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.samples.gitvision.githubUser.GithubUserRepository;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -33,6 +34,12 @@ public class UserRepoService {
             }
         }
         return dict;
+    }
+
+    public List<String> getAllOwnersByUserId(Long userId) {
+        List<String> nameRepositories = this.userRepoRepository.findAllRepository_NameByUser_Id(userId);
+        List<String> owners = nameRepositories.stream().map(i -> i.split("/")[0]).toList();
+        return owners;
     }
 
 }

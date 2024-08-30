@@ -26,8 +26,12 @@ import org.springframework.samples.gitvision.issue.IssueRepository;
 import org.springframework.samples.gitvision.relations.collaborator.CollaboratorRepository;
 import org.springframework.samples.gitvision.relations.issueCommit.IssueCommit;
 import org.springframework.samples.gitvision.relations.issueCommit.IssueCommitRepository;
+import org.springframework.samples.gitvision.relations.userRepo.UserRepoRepository;
+import org.springframework.samples.gitvision.relations.userRepo.model.UserRepo;
 import org.springframework.samples.gitvision.repository.RepoRepository;
 import org.springframework.samples.gitvision.repository.model.Repository;
+import org.springframework.samples.gitvision.user.User;
+import org.springframework.samples.gitvision.user.UserRepository;
 import org.springframework.samples.gitvision.util.EntityUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,12 +47,15 @@ public class GithubDataExtractionService {
     GithubUserRepository githubUserRepository;
     IssueCommitRepository issueCommitRepository;
     ChangesRepository changesRepository;
+    UserRepoRepository userRepoRepository;
+    UserRepository userRepository;
 
     @Autowired
     public GithubDataExtractionService(RepoRepository repoRepository, CommitRepository commitRepository,
             IssueRepository issueRepository, FileRepository fileRepository,
             CollaboratorRepository collaboratorRepository, GithubUserRepository githubUserRepository,
-            IssueCommitRepository issueCommitRepository, ChangesRepository changesRepository) {
+            IssueCommitRepository issueCommitRepository, ChangesRepository changesRepository,
+            UserRepoRepository userRepoRepository, UserRepository userRepository) {
         this.repoRepository = repoRepository;
         this.commitRepository = commitRepository;
         this.issueRepository = issueRepository;
@@ -57,6 +64,8 @@ public class GithubDataExtractionService {
         this.githubUserRepository = githubUserRepository;
         this.issueCommitRepository = issueCommitRepository;
         this.changesRepository = changesRepository;
+        this.userRepoRepository = userRepoRepository;
+        this.userRepository = userRepository;
     }
 
     @Transactional
@@ -260,6 +269,16 @@ public class GithubDataExtractionService {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @Transactional
+    private void linkRepositoryToUser(Long repositoryId, Long userId){
+        UserRepo userRepo = new UserRepo();
+        User user = userRepository.findById(userId).get();
+        Repository repository = repoRepository.findById(repositoryId).get();
+        userRepo.setUser(user);
+        userRepo.setRepository(repository);
+        userRepoRepository.save(userRepo);
     }
 
 }

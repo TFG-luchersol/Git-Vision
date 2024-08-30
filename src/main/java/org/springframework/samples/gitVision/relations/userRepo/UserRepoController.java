@@ -26,9 +26,16 @@ public class UserRepoController {
     }
 
     @GetMapping("/repositories")
-    public MessageResponse getAllRepositories(@RequestParam Long userId) {
+    public MessageResponse getAllRepositoriesByUserId(@RequestParam Long userId) {
         Map<String, List<String>> owner_repositories = this.userRepoService.getAllRepositories(userId);
         Information information = Information.create("repositories", owner_repositories);
+        return MessageResponse.of(information);
+    }
+
+    @GetMapping("/owners")
+    public MessageResponse getAllOwnersByUserId(@RequestParam Long userId) {
+        List<String> owners = this.userRepoService.getAllOwnersByUserId(userId);
+        Information information = Information.create("owners", owners);
         return MessageResponse.of(information);
     }
 

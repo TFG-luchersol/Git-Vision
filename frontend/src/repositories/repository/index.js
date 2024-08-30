@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import TreeFiles from './TreeFiles.js';
-import PieChart from './PieChart.js';
+import TreeFiles from '../../components/TreeFiles.js'
+import PieChart from '../../components/PieChart.js';
 
 export default function Repository() {
 

@@ -2,14 +2,18 @@ import React from "react";
 import { Route, Routes } from "react-router-dom";
 import { ErrorBoundary } from "react-error-boundary";
 
-import Login from "./login";
-import Register from "./register";
+import Login from "./auth/login"
+import Register from "./auth/register";
 import SwaggerDocs from "./public/swagger";
 import AppNavbar from "./appNavbar";
-import Home from "./home/index.js";
-import Details from "./details/index.js";
-import Repositories from "./repositories/index.js";
-import Repository from "./repositories/repository/index.js";
+import Home from "./home";
+import Details from "./details";
+import Repositories from "./repositories";
+import Repository from "./repositories/repository";
+import WorkspaceDownload from "./extraction/workspaceDownload";
+import RepositoryDownload from "./extraction/repositoryDownload";
+import RepositoryWorkspaceLinker from "./extraction/repositoryWorkspaceLinker";
+
 
 function ErrorFallback({ error, resetErrorBoundary }) {
   return (
@@ -34,6 +38,9 @@ function App() {
         <Route path="/details" element={<Details />}/>
         <Route path="/repositories" element={<Repositories/>}/>
         <Route path="/repository/1" element={<Repository/>}/>
+        <Route path="/workspace/download" element={<WorkspaceDownload/>}/>
+        <Route path="/repository/download" element={<RepositoryDownload/>}/>
+        <Route path="/repository/workspace/linker" element={<RepositoryWorkspaceLinker/>}/>
       </>
     )
 

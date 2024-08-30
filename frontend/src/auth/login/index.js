@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import '../App.css';
-import '../static/css/home/home.css';
+import '../../App.css';
+import '../../static/css/home/home.css';
 import { Alert, Button, Form, FormGroup, Input, Label, Modal } from 'reactstrap';
 import tokenService from "../../services/token.service.js";
-import "../static/css/auth/authPage.css";
+import "../../static/css/auth/authPage.css";
 import { Link } from 'react-router-dom';
-import InputWithIcon from '../../components/InputWithIcon.js';
+import CustomInput from '../../components/CustomInput.js';
 import { FaRegUserCircle, FaGithub } from "react-icons/fa";
 
 export default function Login() {
@@ -73,7 +73,7 @@ export default function Login() {
                         </title>
 
                         <FormGroup>
-                        <InputWithIcon
+                        <CustomInput
                             icon={userIcon}
                             label={"Username:"}
                             type='text'
@@ -83,7 +83,7 @@ export default function Login() {
                         />
                         </FormGroup>
                         <FormGroup>
-                            <InputWithIcon
+                            <CustomInput
                                 icon={githubIcon}
                                 label={"Github Token:"}
                                 type='text' 

@@ -25,9 +25,12 @@ public class ClockifyDataExtractionController {
 
     @PostMapping("/workspaces/{workspaceId}")
     public void extractClockifyWorkspace(@PathVariable String workspaceId, @RequestParam String name){
-        // owner = "TFG-luchersol",
-        //        repo = "Git-Vision",
-        String token = this.clockify_token;
-        clockifyDataExtractionService.extractWorkspace(workspaceId, name, token);  
+        try {
+            String token = this.clockify_token;
+            clockifyDataExtractionService.extractWorkspace(workspaceId, name, token); 
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
+         
     }
 }

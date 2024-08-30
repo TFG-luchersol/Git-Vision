@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Navbar, NavbarBrand, NavLink, NavItem, Nav, NavbarToggler, Collapse} from 'reactstrap';
 import { Link } from 'react-router-dom';
 import { SiSwagger, SiGoogledocs } from "react-icons/si";
-import UserInformation from './userInformation.js';
+import UserInformation from './UserInformation.js';
 
 export default function AppNavbar() {
 

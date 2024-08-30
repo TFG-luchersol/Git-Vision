@@ -4,7 +4,7 @@ import { IoPersonCircleOutline } from 'react-icons/io5';
 import { MdOutlineEmail } from "react-icons/md";
 import { SiClockify } from "react-icons/si";
 import { Button } from 'reactstrap';
-import InputWithIcon from '../components/InputWithIcon';
+import CustomInput from '../components/CustomInput.js';
 import tokenService from '../services/token.service.js'
 import './details.css';
 
@@ -57,7 +57,7 @@ export default function Details() {
           />
         </div>
         <div className="profile-info">
-          <InputWithIcon
+          <CustomInput
             icon={userIcon}
             label={"Username:"}
             type="text"
@@ -65,7 +65,7 @@ export default function Details() {
             value={username}
             readOnly
           />
-          <InputWithIcon
+          <CustomInput
             icon={emailIcon}
             label={"Email:"}
             type="email"
@@ -77,7 +77,7 @@ export default function Details() {
         </div>
       </div>
       <div className="token-container">
-        <InputWithIcon
+        <CustomInput
           icon={githubIcon}
           label={"Github Token*:"}
           type="text"
@@ -86,7 +86,7 @@ export default function Details() {
           onChange={handleGithubTokenChange}
           button={saveTokenGithubButton}
         />
-        <InputWithIcon
+        <CustomInput
           icon={clockifyIcon}
           label={"Clockify Token:"}
           type="text"

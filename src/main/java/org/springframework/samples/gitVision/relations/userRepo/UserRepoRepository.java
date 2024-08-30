@@ -13,4 +13,6 @@ public interface UserRepoRepository extends RepositoryIdLong<UserRepo> {
     @Query("select ur.repository.name from UserRepo ur where ur.user.id = :userId")
     List<String> findAllRepository_NameByUser_Id(Long userId);
 
+    
+
 }

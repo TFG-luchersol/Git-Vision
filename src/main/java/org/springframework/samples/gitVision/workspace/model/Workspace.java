@@ -13,5 +13,4 @@ import lombok.Setter;
 @Table(name = "workspaces")
 public class Workspace extends EntityIdString {
     
-    private String name;
 }

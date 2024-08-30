@@ -9,8 +9,14 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.samples.gitvision.project.ProjectRepository;
 import org.springframework.samples.gitvision.project.model.Project;
+import org.springframework.samples.gitvision.relations.userRepo.model.UserRepo;
+import org.springframework.samples.gitvision.relations.userWorkspace.UserWorkspaceRepository;
+import org.springframework.samples.gitvision.relations.userWorkspace.model.UserWorkspace;
+import org.springframework.samples.gitvision.repository.model.Repository;
 import org.springframework.samples.gitvision.task.TaskRepository;
 import org.springframework.samples.gitvision.task.model.Task;
+import org.springframework.samples.gitvision.user.User;
+import org.springframework.samples.gitvision.user.UserRepository;
 import org.springframework.samples.gitvision.workspace.WorkspaceRepository;
 import org.springframework.samples.gitvision.workspace.model.Workspace;
 import org.springframework.stereotype.Service;
@@ -26,13 +32,18 @@ public class ClockifyDataExtractionService {
     WorkspaceRepository workspaceRepository;
     ProjectRepository projectRepository;
     TaskRepository taskRepository;
+    UserRepository userRepository;
+    UserWorkspaceRepository userWorkspaceRepository;
 
     @Autowired
     public ClockifyDataExtractionService(WorkspaceRepository workspaceRepository,
-            ProjectRepository projectRepository, TaskRepository taskRepository) {
+            ProjectRepository projectRepository, TaskRepository taskRepository,
+            UserRepository userRepository, UserWorkspaceRepository userWorkspaceRepository) {
         this.workspaceRepository = workspaceRepository;
         this.projectRepository = projectRepository;
         this.taskRepository = taskRepository;
+        this.userRepository = userRepository;
+        this.workspaceRepository = workspaceRepository;
     }
 
     private <T> T requestClockify(String url, String clockifyToken, Class<T> clazz) {
@@ -48,21 +59,10 @@ public class ClockifyDataExtractionService {
         return response.getBody();
     }
 
-    /*
-     * Para la extracción de las task se debe de extraer
-     * todos los proyectos creados en el workspace
-     * 
-     * https://api.clockify.me/api/v1/workspaces/{WORKSPACE_ID}
-     * https://api.clockify.me/api/v1/workspaces/{WORKSPACE_ID}/projects
-     * https://api.clockify.me/api/v1/workspaces/{WORKSPACE_ID}/projects/{
-     * project_id}/tasks
-     */
-
     @Transactional
     public void extractWorkspace(String workspaceId, String name, String clockifyToken) {
         String url = String.format("/v1/workspaces/%s", workspaceId);
         Workspace clWorkspace = requestClockify(url, clockifyToken, Workspace.class);
-        clWorkspace.setName(name);
         workspaceRepository.save(clWorkspace);
         extractProject(workspaceId, clockifyToken);
     }
@@ -93,5 +93,16 @@ public class ClockifyDataExtractionService {
             clTask.setWorkspace(workspace.get());
             taskRepository.save(clTask);
         }
+    }
+
+    @Transactional
+    private void linkWorkspaceToUser(String workspaceId, Long userId, String name){
+        UserWorkspace userWorkspace = new UserWorkspace();
+        User user = userRepository.findById(userId).get();
+        Workspace workspace = workspaceRepository.findById(workspaceId).get();
+        userWorkspace.setUser(user);
+        userWorkspace.setWorkspace(workspace);
+        userWorkspace.setName(name);
+        userWorkspaceRepository.save(userWorkspace);
     }
 }

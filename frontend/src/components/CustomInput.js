@@ -1,7 +1,8 @@
 import React from 'react';
 import "./input.css";
 import { Input, Label } from 'reactstrap';
-export default function InputWithIcon({ icon, type, readOnly, name, placeholder, value, onChange, label, button }) {
+
+export default function CustomInput({ icon, type, readOnly, name, placeholder, value, onChange, label, button, min, max }) {
     return (
         <>
             <Label style={{ textAlign: 'left' }}>{label}</Label>
@@ -15,6 +16,8 @@ export default function InputWithIcon({ icon, type, readOnly, name, placeholder,
                     value={value}
                     readOnly={readOnly}
                     onChange={onChange}
+                    min={min}
+                    max={max}
                 />
                 {button}
 

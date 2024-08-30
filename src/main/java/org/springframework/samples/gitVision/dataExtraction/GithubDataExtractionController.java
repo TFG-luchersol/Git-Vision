@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequestMapping("/api/v1/github")
@@ -22,11 +23,10 @@ public class GithubDataExtractionController {
     }
 
     @PostMapping("/{owner}/{repo}")
-    public void extractGithubRepository(@PathVariable String owner, @PathVariable String repo){
+    public void extractGithubRepository(@PathVariable String owner, @PathVariable String repo, @RequestParam String token){
         // owner = "TFG-luchersol",
         //        repo = "Git-Vision",
-        String login = "luchersol",
-               token = this.github_token;
+        String login = "luchersol";
         githubDataExtractionService.extractRepository(owner, repo, login, token);    
     }
 }
