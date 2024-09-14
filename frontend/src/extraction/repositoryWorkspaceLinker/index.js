@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import '../../App.css';
 import '../../static/css/home/home.css';
+import './repositoryWorkspaceLinker.css'
 import { Alert, Button, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Form, FormGroup, Input, Label } from 'reactstrap';
 import tokenService from "../../services/token.service.js";
 import "../../static/css/auth/authPage.css";
@@ -11,27 +12,48 @@ export default function RepositoryWorkspaceLinker() {
 
     const [message, setMessage] = useState(null);
     const [values, setValues] = useState({ repository: "", workspace: "" });
-    const [repositories, setRepositories] = useState([]);
+    const [repositories, setRepositories] = useState({});
+    const [owner, setOwner] = useState("");
+    const [workspaces, setWorkspaces] = useState([]);
     const [dropdownOwnerOpen, setDropdownOwnerOpen] = useState(false);
     const [dropdownRepositoryOpen, setDropdownRepositoryOpen] = useState(false);
+    const [dropdownWorkspaceOpen, setDropdownWorkspaceOpen] = useState(false);
 
     const toggleOwner = () => setDropdownOwnerOpen(prevState => !prevState);
     const toggleRepository = () => setDropdownRepositoryOpen(prevState => !prevState);
+    const toggleWorkspace = () => setDropdownWorkspaceOpen(prevState => !prevState);
 
     useEffect(() => {
         const loadRepositories = async () => {
-            await fetch()
+            const response = await fetch(`/api/v1/relation/user_repository/repositories?userId=1`)
+            if (response.status === 200) {
+                const json = await response.json()
+                setRepositories(json.information.information.repositories)
+            } else {
+                const error = await response.json();
+                setMessage(error.message)
+            }
         };
-        const loadWorkspace = async () => {
-            await fetch()
+        const loadWorkspaces = async () => {
+            const response = await fetch(`/api/v1/relation/user_workspace/workspaces?userId=1`)
+            if (response.status === 200) {
+                const json = await response.json()
+                setWorkspaces(json.information.information.workspaces)
+            } else {
+                const error = await response.json();
+                setMessage(error.message)
+            }
         };
+        loadRepositories();
+        loadWorkspaces();
+
     }, [])
 
     async function handleSubmit(event) {
         event.preventDefault()
         setMessage(null);
         try {
-            const response = await fetch("/api/v1/linker", {
+            const response = await fetch(`/api/v1/linker?repositoryName=${values.repository}&workspaceId=${values.workspace.id}&userId=1`, {
                 method: "POST",
             });
 
@@ -46,11 +68,10 @@ export default function RepositoryWorkspaceLinker() {
         }
     }
 
-    function handleChange(event) {
-        const target = event.target;
-        const { name, value } = target;
+    function handleChange(property, value) {
         let newValues = { ...values };
-        newValues[name] = value;
+        newValues[property] = value;
+        console.log(newValues);
         setValues(newValues)
     }
 
@@ -60,42 +81,42 @@ export default function RepositoryWorkspaceLinker() {
             <Alert isOpen={message} color="danger" style={{ position: 'absolute', top: '30px' }}>{message}</Alert>
 
             <Form onSubmit={handleSubmit} className='auth-form-container' >
-                <div style={{ margin: "30px" }}>
+                <div className='flex-container'>
                     <title className='center-title'>
                         <h1>Link Github/Clockify</h1>
                     </title>
-                    <FormGroup style={{ display: 'flex', flexDirection: 'row' }}>
-                        <Dropdown isOpen={dropdownOwnerOpen} toggle={toggleOwner} style={{marginRight: 10}}>
+                    <FormGroup>
+                        <Dropdown isOpen={dropdownOwnerOpen} toggle={toggleOwner} style={{ marginRight: 10 }}>
                             <DropdownToggle caret>
                                 Owner
                             </DropdownToggle>
                             <DropdownMenu>
-                                <DropdownItem>Action 1</DropdownItem>
-                                <DropdownItem>Action 2</DropdownItem>
-                                <DropdownItem>Action 3</DropdownItem>
+                                {Object.keys(repositories).map(owner => <DropdownItem onClick={() => setOwner(owner)}>{owner}</DropdownItem>)}
                             </DropdownMenu>
                         </Dropdown>
-                        <Input value="asdf"></Input>
+                        <Input value={owner} readOnly/>
+                    </FormGroup>
+                    <FormGroup>
                         <Dropdown isOpen={dropdownRepositoryOpen} toggle={toggleRepository}>
                             <DropdownToggle caret>
                                 Repository
                             </DropdownToggle>
                             <DropdownMenu>
-                                <DropdownItem>Action 1</DropdownItem>
-                                <DropdownItem>Action 2</DropdownItem>
-                                <DropdownItem>Action 3</DropdownItem>
+                                {repositories[owner]?.map(repo => <DropdownItem id={repo} onClick={(event) => handleChange("repository", repo)}>{repo}</DropdownItem>)}
                             </DropdownMenu>
                         </Dropdown>
-                        <Input value="asdf"></Input>
+                        <Input value={values.repository || "Select a Repository"} readOnly/>
                     </FormGroup>
                     <FormGroup>
-                        <CustomInput
-                            label={"Workspace:"}
-                            type='text'
-                            name='workspace'
-                            value={values.workspace}
-                            onChange={handleChange}
-                        />
+                        <Dropdown isOpen={dropdownWorkspaceOpen} toggle={toggleWorkspace}>
+                            <DropdownToggle caret>
+                                Workspace
+                            </DropdownToggle>
+                            <DropdownMenu>
+                                {workspaces.map(ws => <DropdownItem onClick={(event) => handleChange("workspace", ws)}>{ws.name}</DropdownItem>)}
+                            </DropdownMenu>
+                        </Dropdown>
+                        <Input value={values.workspace.name || "Select a Workspace"} readOnly/>
                     </FormGroup>
 
                     <div className='button-group'>

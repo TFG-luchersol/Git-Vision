@@ -11,6 +11,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -22,14 +23,12 @@ public class Repository extends EntityIdLong {
 
     @NotBlank
     @Column(unique = true)
+    @Pattern(regexp = "^\\w+/\\w+$")
     private String name;
 
     private String token;
 
     private LocalDateTime updateDate;
-
-    @OneToOne
-    private Workspace workspace;
 
     public boolean haveToken(){
         return token != null;

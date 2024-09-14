@@ -10,6 +10,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserWorkspaceRepository extends RepositoryIdLong<UserWorkspace> {
     
-    List<Workspace> findAllWorkspacesByUser_Id(Long userId);
+    List<UserWorkspace> findAllUserWorkspacesByUser_Id(Long userId);
 
 }

@@ -3,6 +3,7 @@ package org.springframework.samples.gitvision.relations.userWorkspace;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.samples.gitvision.relations.userWorkspace.model.UserWorkspace;
 import org.springframework.samples.gitvision.workspace.model.Workspace;
 import org.springframework.stereotype.Service;
 
@@ -16,9 +17,9 @@ public class UserWorkspaceService {
         this.userWorkspaceRepository = userWorkspaceRepository;
     }
 
-    public List<Workspace> getAllWorkspaceByUserId(Long userId) {
-        List<Workspace> workspaces = this.userWorkspaceRepository.findAllWorkspacesByUser_Id(userId);
-        return workspaces;
+    public List<UserWorkspace> getAllWorkspaceByUserId(Long userId) {
+        List<UserWorkspace> userWorkspaces = this.userWorkspaceRepository.findAllUserWorkspacesByUser_Id(userId);
+        return userWorkspaces;
     }
 
 }

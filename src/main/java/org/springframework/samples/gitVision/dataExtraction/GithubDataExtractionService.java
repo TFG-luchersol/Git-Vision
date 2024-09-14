@@ -74,7 +74,7 @@ public class GithubDataExtractionService {
         try {
             GitHub gitHub = GitHub.connect(login, token);
             GHRepository ghRepository = gitHub.getRepository(name);
-            Repository repository = repoRepository.findByName(name);
+            Repository repository = repoRepository.findByName(name).orElse(null);
             LocalDateTime updateDate = null;
             Date sinceDate = null;
             if (repository == null) {

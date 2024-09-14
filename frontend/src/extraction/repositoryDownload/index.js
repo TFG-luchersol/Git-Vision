@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import '../../App.css';
-import '../../static/css/home/home.css';
-import { Alert, Button, Form, FormGroup, Input, Label } from 'reactstrap';
-import "../../static/css/auth/authPage.css";
+import React, { useState } from 'react';
+import { FaGithub, FaRegUserCircle } from "react-icons/fa";
 import { Link } from 'react-router-dom';
+import { Alert, Button, Form, FormGroup, Input, Label } from 'reactstrap';
+import '../../App.css';
 import CustomInput from '../../components/CustomInput.js';
-import { FaRegUserCircle, FaGithub } from "react-icons/fa";
+import "../../static/css/auth/authPage.css";
+import '../../static/css/home/home.css';
 import Preconditions from '../../util/check.js';
 
 export default function RepositoryDownload() {
@@ -25,8 +25,10 @@ export default function RepositoryDownload() {
             Preconditions.checkNotBlank(values.owner, "Owner");
             Preconditions.checkNotBlank(values.repo, "Repository");
             Preconditions.if(values.validOtherToken).checkNotBlank(values.token, "Token");
-
-            const response = await fetch(`/api/v1/github/${values.owner}/${values.repo}?token=${values.token}`, {
+            let url = `/api/v1/github/${values.owner}/${values.repo}`
+            if(values.validOtherToken) url += `?token=${values.token}`;
+            
+            const response = await fetch(url, {
                 method: "POST",
             });
 
@@ -65,7 +67,7 @@ export default function RepositoryDownload() {
                             icon={userIcon}
                             label={"Owner:"}
                             type='text'
-                            name='repo'
+                            name='owner'
                             value={values.owner}
                             onChange={handleChange}
                         />
@@ -82,7 +84,7 @@ export default function RepositoryDownload() {
                             icon={githubIcon}
                             label={"Github Token:"}
                             type='text'
-                            name='githubToken'
+                            name='token'
                             value={values.token}
                             onChange={handleChange}
                         />
