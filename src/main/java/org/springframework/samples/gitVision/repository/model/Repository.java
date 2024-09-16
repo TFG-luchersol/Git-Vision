@@ -23,7 +23,7 @@ public class Repository extends EntityIdLong {
 
     @NotBlank
     @Column(unique = true)
-    @Pattern(regexp = "^\\w+/\\w+$")
+    @Pattern(regexp = "^[a-zA-Z0-9](?:[a-zA-Z0-9_-]{0,38})/[a-zA-Z0-9_-]{1,100}$")
     private String name;
 
     private String token;

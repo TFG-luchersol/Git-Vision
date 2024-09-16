@@ -74,16 +74,16 @@ INSERT INTO issues_commits(id,issue_id,commit_id) VALUES
                           (6,3,5),
                           (7,4,5);
 
--- INSERT INTO files(id,path,extension,repository_id) VALUES  
---                  (1,'src/main/java/claseJava.java','java',1),
---                  (2,'src/main/java/claseJava2.java','java',1),
---                  (3,'src/main/python/clasePython.py','py',1),
---                  (4,'src/main/c/claseC.c','c',1),
---                  (5,'src/main/cpp/claseCpp.cpp','cpp',1),
---                  (6,'src/main/cpp/claseCpp.c++','c++',1),
---                  (7,'README.md','md',1),
---                  (8,'SinExtension',null,1),
---                  (9,'README.md','md',2);
+INSERT INTO files(id,path,extension,repository_id) VALUES  
+                 (1,'src/main/java/claseJava.java','java',1),
+                 (2,'src/main/java/claseJava2.java','java',1),
+                 (3,'src/main/python/clasePython.py','py',1),
+                 (4,'src/main/c/claseC.c','c',1),
+                 (5,'src/main/cpp/claseCpp.cpp','cpp',1),
+                 (6,'src/main/cpp/claseCpp.c++','c++',1),
+                 (7,'README.md','md',1),
+                 (8,'SinExtension',null,1),
+                 (9,'README.md','md',2);
                  
 INSERT INTO user_repository(id,user_id,repository_id) VALUES
                            (1,1,1);
@@ -96,4 +96,3 @@ INSERT INTO user_workspace(id,user_id,workspace_id,name) VALUES
 
 -- -- INSERT INTO organizations(id,name) VALUES ();
 -- -- INSERT INTO issues(id,message) VALUES ();
--- -- INSERT INTO files(id,route,name) VALUES ();

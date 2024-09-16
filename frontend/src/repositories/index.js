@@ -6,6 +6,7 @@ import { Button } from 'reactstrap';
 import '../static/css/auth/authPage.css'
 import AccordionItem from '../components/AccordionItem.js'
 import './repositories.css'
+import { Link } from 'react-router-dom';
 
 export default function Repositories() {
 
@@ -71,14 +72,14 @@ export default function Repositories() {
             </div>
 
             <div className='button-group'>
-                <Button onClick={() => alert('Añadir repositorio')}>
-                    Añadir repositorio
+                <Button >
+                    <Link className='custom-link' to={"/repository/download"}>Añadir repositorio</Link>
                 </Button>
-                <Button onClick={() => alert('Añadir workspace')} >
-                    Añadir workspace
+                <Button >
+                    <Link className='custom-link' to={"/workspace/download"}>Añadir workspace</Link>
                 </Button>
-                <Button style={{ marginTop: 10 }} onClick={() => alert('Enlazar proyecto con workspace')} >
-                    Enlazar proyecto con workspace
+                <Button style={{ marginTop: 10 }} >                  
+                    <Link className='custom-link' to={"/repository/workspace/linker"}>Enlazar proyecto con workspace</Link>
                 </Button>
             </div>
 

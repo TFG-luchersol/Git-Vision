@@ -21,7 +21,7 @@ export default function WorkspaceDownload(){
             Preconditions.checkNotBlank(values.id, "Id")
             Preconditions.checkNotBlank(values.name, "Name")
             setIsLoading(true);
-            const response = await fetch(`/api/v1/clockify/${values.id}?name=${values.name}`, {
+            const response = await fetch(`/api/v1/clockify/workspaces/${values.id}?name=${values.name}`, {
                 method: "POST"
             });
             if (response.status === 200) {

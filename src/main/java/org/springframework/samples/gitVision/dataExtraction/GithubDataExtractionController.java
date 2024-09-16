@@ -26,7 +26,7 @@ public class GithubDataExtractionController {
     }
 
     @PostMapping("/{owner}/{repo}")
-    public ResponseEntity<?> extractGithubRepository(@PathVariable String owner, @PathVariable String repo, @RequestParam String token){
+    public ResponseEntity<?> extractGithubRepository(@PathVariable String owner, @PathVariable String repo, @RequestParam(required = false) String token){
         // owner = "TFG-luchersol",
         //        repo = "Git-Vision",
         try {

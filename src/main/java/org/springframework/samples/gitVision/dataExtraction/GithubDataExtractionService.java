@@ -1,6 +1,5 @@
 package org.springframework.samples.gitvision.dataExtraction;
 
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
@@ -17,6 +16,8 @@ import org.springframework.samples.gitvision.change.ChangesRepository;
 import org.springframework.samples.gitvision.change.model.Change;
 import org.springframework.samples.gitvision.commit.CommitRepository;
 import org.springframework.samples.gitvision.commit.model.Commit;
+import org.springframework.samples.gitvision.exceptions.ExtractionException;
+import org.springframework.samples.gitvision.exceptions.ExtractionException.TypeExtraction;
 import org.springframework.samples.gitvision.file.FileRepository;
 import org.springframework.samples.gitvision.file.model.File;
 import org.springframework.samples.gitvision.githubUser.GithubUserRepository;
@@ -68,8 +69,8 @@ public class GithubDataExtractionService {
         this.userRepository = userRepository;
     }
 
-    @Transactional
-    public void extractRepository(String owner, String repo, String login, String token) {
+    @Transactional(rollbackFor = Exception.class)
+    public void extractRepository(String owner, String repo, String login, String token) throws Exception{
         String name = String.format("%s/%s", owner, repo);
         try {
             GitHub gitHub = GitHub.connect(login, token);
@@ -97,13 +98,15 @@ public class GithubDataExtractionService {
             extractCommits(ghRepository, repository, sinceDate);
             // extractCollaborators(ghRepository, repository);
             // repoRepository.save(repository);
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            if(e instanceof ExtractionException)
+                throw e;
+            throw new ExtractionException(TypeExtraction.GITHUB, "REPOSITORY");
         }
     }
 
-    @Transactional
-    private void extractIssues(GHRepository ghRepository, Repository repository, Date sinceDate) {
+    @Transactional(rollbackFor = Exception.class)
+    private void extractIssues(GHRepository ghRepository, Repository repository, Date sinceDate) throws Exception {
         try {
             List<GHIssue> ghIssues = sinceDate == null ? ghRepository.getIssues(GHIssueState.ALL)
                     : ghRepository.queryIssues().since(sinceDate).list().toList();
@@ -115,14 +118,16 @@ public class GithubDataExtractionService {
                 issue.setRepository(repository);
                 issueRepository.save(issue);
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            if(e instanceof ExtractionException)
+                throw e;
+            throw new ExtractionException(TypeExtraction.GITHUB, "ISSUE");
         }
 
     }
 
-    @Transactional
-    private void extractCommits(GHRepository ghRepository, Repository repository, Date sinceDate) {
+    @Transactional(rollbackFor = Exception.class)
+    private void extractCommits(GHRepository ghRepository, Repository repository, Date sinceDate) throws Exception {
         try {
             List<GHCommit> ghCommits = sinceDate == null ? ghRepository.listCommits().toList()
                     : ghRepository.queryCommits().since(sinceDate).list().toList();
@@ -164,14 +169,16 @@ public class GithubDataExtractionService {
                 }
                 extractFiles(ghCommit, author.getId(), repository.getId(), i);
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            if(e instanceof ExtractionException)
+                throw e;
+            throw new ExtractionException(TypeExtraction.GITHUB, "COMMIT");
         }
     }
 
 
-    @Transactional
-    private void extractFiles(GHCommit ghCommit, Long authorId, Long repositoryId, int i2) {
+    @Transactional(rollbackFor = Exception.class)
+    private void extractFiles(GHCommit ghCommit, Long authorId, Long repositoryId, int i2) throws Exception {
         try {
             // Obtenemos todos los archivos
             Repository repository = repoRepository.findById(repositoryId).get();
@@ -181,6 +188,9 @@ public class GithubDataExtractionService {
             // Según el status guardamos los archivos añadidos o borrados,
             // mientras que los renombrados y modificados se tratan de forma directan .
             // En caso de tratarse de un estado diferente saltará una excepción.
+            if(i2 == 47){
+                int b = 3;
+            }
             for (int i = 0; i < files.size(); i++) {
                 GHCommit.File file = files.get(i);
                 String path = file.getFileName();
@@ -241,13 +251,15 @@ public class GithubDataExtractionService {
                 }
             }
 
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            if(e instanceof ExtractionException)
+            throw e;
+            throw new ExtractionException(TypeExtraction.GITHUB, "FILE of commit "+i2);
         }
     }
 
-    @Transactional
-    private void extractCollaborators(GHRepository ghRepository, Repository repository) {
+    @Transactional(rollbackFor = Exception.class)
+    private void extractCollaborators(GHRepository ghRepository, Repository repository) throws Exception {
         try {
             List<GithubUser> oldCollaborators = collaboratorRepository
                     .findAllCollaboratorByRepository_Id(ghRepository.getId());
@@ -266,12 +278,14 @@ public class GithubDataExtractionService {
             }
 
             // Logica para eliminar a todos los que ya no están relacionados
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            if(e instanceof ExtractionException)
+            throw e;
+            throw new ExtractionException(TypeExtraction.GITHUB, "COLLABORATOR");
         }
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     private void linkRepositoryToUser(Long repositoryId, Long userId){
         UserRepo userRepo = new UserRepo();
         User user = userRepository.findById(userId).get();

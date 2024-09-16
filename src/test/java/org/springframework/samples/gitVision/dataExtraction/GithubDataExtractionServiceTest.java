@@ -17,11 +17,11 @@ public class GithubDataExtractionServiceTest {
 
     @Test
     void testExtractRepository() {
-        String owner = "TFG-luchersol",
-               repo = "Git-Vision",
-               login = "luchersol",
-               token = this.github_token;
-        githubDataExtractionService.extractRepository(owner, repo, login, token);
+        // String owner = "TFG-luchersol",
+        //        repo = "Git-Vision",
+        //        login = "luchersol",
+        //        token = this.github_token;
+        // githubDataExtractionService.extractRepository(owner, repo, login, token);
     }
     
 

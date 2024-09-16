@@ -7,6 +7,7 @@ import CustomInput from '../../components/CustomInput.js';
 import "../../static/css/auth/authPage.css";
 import '../../static/css/home/home.css';
 import Preconditions from '../../util/check.js';
+import LoadingModal from '../../components/LoadingModal.js';
 
 export default function RepositoryDownload() {
     const userIcon = <FaRegUserCircle />
@@ -15,6 +16,7 @@ export default function RepositoryDownload() {
     const [message, setMessage] = useState(null);
     const [values, setValues] = useState({owner: "", repo: "", token: "" });
     const [validateToken, setValidateToken] = useState(false);
+    const [isLoading, setIsLoading] = useState(false)
 
     async function handleSubmit(event) {
         event.preventDefault()
@@ -24,10 +26,11 @@ export default function RepositoryDownload() {
         try {
             Preconditions.checkNotBlank(values.owner, "Owner");
             Preconditions.checkNotBlank(values.repo, "Repository");
-            Preconditions.if(values.validOtherToken).checkNotBlank(values.token, "Token");
+            Preconditions.if(validateToken).checkNotBlank(values.token, "Token");
             let url = `/api/v1/github/${values.owner}/${values.repo}`
             if(values.validOtherToken) url += `?token=${values.token}`;
             
+            setIsLoading(true);
             const response = await fetch(url, {
                 method: "POST",
             });
@@ -40,6 +43,8 @@ export default function RepositoryDownload() {
             }
         } catch (error) {
             setMessage(error.message);
+        } finally {
+            setIsLoading(false);
         }
     }
 
@@ -53,7 +58,7 @@ export default function RepositoryDownload() {
 
     return (
         <div className="home-page-container">
-
+            <LoadingModal isLoading={isLoading} />
             <Alert isOpen={message} color="danger" style={{ position: 'absolute', top: '30px' }}>{message}</Alert>
 
             <Form onSubmit={handleSubmit} className='auth-form-container' style={{ position: 'relative', top: 35}} >
