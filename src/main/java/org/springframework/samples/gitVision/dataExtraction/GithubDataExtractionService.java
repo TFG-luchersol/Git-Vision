@@ -2,15 +2,19 @@ package org.springframework.samples.gitvision.dataExtraction;
 
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
+import org.h2.util.Utils;
 import org.kohsuke.github.GHCommit;
 import org.kohsuke.github.GHIssue;
 import org.kohsuke.github.GHIssueState;
 import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GHUser;
 import org.kohsuke.github.GitHub;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.gitvision.change.ChangesRepository;
 import org.springframework.samples.gitvision.change.model.Change;
@@ -25,6 +29,7 @@ import org.springframework.samples.gitvision.githubUser.model.GithubUser;
 import org.springframework.samples.gitvision.issue.Issue;
 import org.springframework.samples.gitvision.issue.IssueRepository;
 import org.springframework.samples.gitvision.relations.collaborator.CollaboratorRepository;
+import org.springframework.samples.gitvision.relations.collaborator.model.Collaborator;
 import org.springframework.samples.gitvision.relations.issueCommit.IssueCommit;
 import org.springframework.samples.gitvision.relations.issueCommit.IssueCommitRepository;
 import org.springframework.samples.gitvision.relations.userRepo.UserRepoRepository;
@@ -37,7 +42,10 @@ import org.springframework.samples.gitvision.util.EntityUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+// @RequiredArgsConstructor
 public class GithubDataExtractionService {
 
     RepoRepository repoRepository;
@@ -51,6 +59,7 @@ public class GithubDataExtractionService {
     UserRepoRepository userRepoRepository;
     UserRepository userRepository;
 
+    
     @Autowired
     public GithubDataExtractionService(RepoRepository repoRepository, CommitRepository commitRepository,
             IssueRepository issueRepository, FileRepository fileRepository,
@@ -83,8 +92,6 @@ public class GithubDataExtractionService {
                 repository.setId(ghRepository.getId());
                 repository.setName(name);
                 repository.setToken(token);
-                repository.setUpdateDate(LocalDateTime.now());
-                repoRepository.save(repository);
             } else {
                 String tokenRepository = repository.getToken();
                 if (tokenRepository != null)
@@ -94,10 +101,12 @@ public class GithubDataExtractionService {
                     sinceDate = EntityUtils.parseLocalDateTimeUTCToDate(updateDate);
             }
 
+            repository.setUpdateDate(LocalDateTime.now());
+            repoRepository.save(repository);
+
             extractIssues(ghRepository, repository, sinceDate);
             extractCommits(ghRepository, repository, sinceDate);
             // extractCollaborators(ghRepository, repository);
-            // repoRepository.save(repository);
         } catch (Exception e) {
             if(e instanceof ExtractionException)
                 throw e;
@@ -138,8 +147,11 @@ public class GithubDataExtractionService {
                 String commitId = repository.getName() + "/" + ghCommit.getSHA1();
                 String usernameAuthor = ghCommit.getAuthor().getLogin();
                 Optional<GithubUser> optionalAuthor = githubUserRepository.findByUsername(usernameAuthor);
+                String message = ghCommit.getCommitShortInfo().getMessage();
+                if(message.length() > 255)
+                    message = message.substring(0, 252) + "...";
                 commit.setId(commitId);
-                commit.setMessage(ghCommit.getCommitShortInfo().getMessage());
+                commit.setMessage(message);
                 commit.setDate(EntityUtils.parseDateToLocalDateTimeUTC(ghCommit.getCommitDate()));
                 commit.setAdditions(ghCommit.getLinesAdded());
                 commit.setDeletions(ghCommit.getLinesDeleted());
@@ -167,7 +179,7 @@ public class GithubDataExtractionService {
                         issueCommitRepository.save(issueCommit);
                     }
                 }
-                extractFiles(ghCommit, author.getId(), repository.getId(), i);
+                // extractFiles(ghCommit, author.getId(), repository.getId(), i);
             }
         } catch (Exception e) {
             if(e instanceof ExtractionException)
@@ -195,12 +207,14 @@ public class GithubDataExtractionService {
                 GHCommit.File file = files.get(i);
                 String path = file.getFileName();
                 String status = file.getStatus();
-
+                if(i2 == 592){
+                    int b = 4;
+                }
                 switch (status) {
                     case "added" -> { 
                         // En ocasiones puede ocurrir que el mismo archivo se introduzca en diferentes commits.
                         // En ese caso, pasamos al siguiente archivo.
-                        if(fileRepository.existsByPathAndRepository_Id(path, repositoryId))
+                        if(fileRepository.findByPathAndRepository_Id(path, repositoryId).isPresent())
                             continue;
                         File newFile = new File();
                         newFile.setPath(path);
@@ -253,7 +267,7 @@ public class GithubDataExtractionService {
 
         } catch (Exception e) {
             if(e instanceof ExtractionException)
-            throw e;
+                throw e;
             throw new ExtractionException(TypeExtraction.GITHUB, "FILE of commit "+i2);
         }
     }
@@ -261,26 +275,43 @@ public class GithubDataExtractionService {
     @Transactional(rollbackFor = Exception.class)
     private void extractCollaborators(GHRepository ghRepository, Repository repository) throws Exception {
         try {
-            List<GithubUser> oldCollaborators = collaboratorRepository
-                    .findAllCollaboratorByRepository_Id(ghRepository.getId());
+            Set<GithubUser> oldCollaborators = new HashSet<>(collaboratorRepository
+                    .findAllCollaboratorByRepository_Id(repository.getId()));
 
+            Set<GithubUser> newCollaborators = new HashSet<>();
+            
             for (GHUser ghCollaborator : ghRepository.getCollaborators()) {
                 GithubUser collaborator = new GithubUser();
                 collaborator.setId(ghCollaborator.getId());
                 collaborator.setUsername(ghCollaborator.getLogin());
                 collaborator.setAvatarUrl(ghCollaborator.getAvatarUrl());
                 collaborator.setEmail(ghCollaborator.getEmail());
-                if (!oldCollaborators.contains(collaborator)) {
-
-                }
-                oldCollaborators.remove(collaborator);
-
+                newCollaborators.add(collaborator);
             }
 
-            // Logica para eliminar a todos los que ya no están relacionados
+            for (GithubUser githubUser : newCollaborators) {
+                Optional<GithubUser> optUpdatedGithubUser = githubUserRepository.findById(githubUser.getId());
+                if(optUpdatedGithubUser.isPresent()){
+                    GithubUser updatedGithubUser = optUpdatedGithubUser.get();
+                    BeanUtils.copyProperties(githubUser, updatedGithubUser);
+                    githubUserRepository.save(updatedGithubUser);
+                }
+            }
+
+            // Los usuarios que sean removidos del repositorio se borrarán sus relaciones a este
+            Set<GithubUser> removedUser = new HashSet<>(oldCollaborators);
+            removedUser.removeAll(newCollaborators);
+
+            // Eliminamos la relación de colaboración entre githubUser y repository
+            for (GithubUser githubUser : removedUser) {
+                Optional<Collaborator> collaborator = collaboratorRepository.findByCollaborator_IdAndRepository_Id(githubUser.getId(), repository.getId());
+                if(collaborator.isPresent())
+                    collaboratorRepository.delete(collaborator.get());
+            }
+        
         } catch (Exception e) {
             if(e instanceof ExtractionException)
-            throw e;
+                throw e;
             throw new ExtractionException(TypeExtraction.GITHUB, "COLLABORATOR");
         }
     }
