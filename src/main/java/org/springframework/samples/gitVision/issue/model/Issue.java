@@ -1,8 +1,7 @@
-package org.springframework.samples.gitvision.issue;
+package org.springframework.samples.gitvision.issue.model;
 
 import java.util.Objects;
 
-import org.springframework.samples.gitvision.githubUser.model.GithubUser;
 import org.springframework.samples.gitvision.model.entity.EntityIdLong;
 import org.springframework.samples.gitvision.repository.model.Repository;
 

@@ -1,5 +1,6 @@
 package org.springframework.samples.gitvision.commit.model;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Objects;
@@ -7,19 +8,13 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.kohsuke.github.GHCommit;
 import org.springframework.samples.gitvision.githubUser.model.GithubUser;
 import org.springframework.samples.gitvision.model.entity.EntityIdString;
-import org.springframework.samples.gitvision.repository.model.Repository;
+import org.springframework.samples.gitvision.util.EntityUtils;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.Lob;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PositiveOrZero;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -35,23 +30,15 @@ public class Commit extends EntityIdString {
     
     String message;
 
-    @NotNull
     LocalDateTime date;
 
-    @PositiveOrZero
     int additions;
 
-    @PositiveOrZero
     int deletions;
 
-    @Enumerated(EnumType.STRING)
     CommitType commitType;
-    
-    @ManyToOne
-    GithubUser author;
 
-    @ManyToOne
-    Repository repository;
+    GithubUser author;
 
     public void setMessage(String message) {
         this.message = message;
@@ -76,6 +63,18 @@ public class Commit extends EntityIdString {
                 this.commitType = null;
             }
         }
+    }
+
+    public static Commit parse(GHCommit ghCommit){
+        GithubUser githubUser = new GithubUser();
+        Commit commit = null;
+        try {
+            commit = new Commit(ghCommit.getCommitShortInfo().getMessage(), EntityUtils.parseDateToLocalDateTimeUTC(ghCommit.getCommitDate()) , ghCommit.getLinesAdded(), ghCommit.getLinesDeleted(), null, githubUser);
+            commit.calcCommitType();
+        } catch (IOException e) {
+            return null;
+        }
+        return commit;
     }
 
     public Set<Integer> getIssueNumbers() {

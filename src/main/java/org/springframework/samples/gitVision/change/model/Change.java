@@ -21,24 +21,16 @@ import lombok.Setter;
 @Table(name = "changes")
 public class Change extends EntityIdSequential {
 
-    @ManyToOne
-    @OnDelete(action = OnDeleteAction.SET_NULL)
     File file;
  
-    @ManyToOne
     GithubUser author;
 
-    @PositiveOrZero
     int additions;
 
-    @PositiveOrZero
     int deletions;
 
-    @PositiveOrZero
     int totalChanges;
 
-    @PrePersist
-    @PreUpdate
     public void calcTotalChanges(){
         this.totalChanges = this.additions + this.deletions;
     }

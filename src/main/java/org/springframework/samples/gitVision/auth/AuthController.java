@@ -100,6 +100,7 @@ public class AuthController {
             String username = signUpRequest.getUsername();
 			String token = signUpRequest.getGithubToken();
             GitHub gitHub = GitHub.connect(username, token);
+			gitHub.getRepository(username).getStatistics();
             GHUser user = gitHub.getMyself();	
 			if(user == null || !user.getLogin().equals(signUpRequest.getUsername()))
 				return ResponseEntity.badRequest().body(MessageResponse.of("Error: Username or token is incorrect"));
