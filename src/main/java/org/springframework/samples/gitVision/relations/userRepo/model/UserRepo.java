@@ -1,13 +1,16 @@
 package org.springframework.samples.gitvision.relations.userRepo.model;
 
 import org.springframework.samples.gitvision.model.entity.EntityIdSequential;
-import org.springframework.samples.gitvision.repository.model.Repository;
 import org.springframework.samples.gitvision.user.User;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -20,9 +23,17 @@ import lombok.Setter;
 public class UserRepo extends EntityIdSequential {
     
     @ManyToOne
-    User user;
+    private User user;
 
-    @ManyToOne
-    Repository repository;
+    @NotBlank
+    @Column(unique = true)
+    @Pattern(regexp = "^[a-zA-Z0-9](?:[a-zA-Z0-9_-]{0,38})/[a-zA-Z0-9_-]{1,100}$")
+    private String name;
+
+    private String token;
+
+    public boolean haveToken(){
+        return token != null;
+    }
 
 }

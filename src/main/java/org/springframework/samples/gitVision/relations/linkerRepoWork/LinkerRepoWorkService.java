@@ -1,43 +1,41 @@
 package org.springframework.samples.gitvision.relations.linkerRepoWork;
 
+import org.kohsuke.github.GitHub;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.gitvision.exceptions.ResourceNotFoundException;
 import org.springframework.samples.gitvision.relations.linkerRepoWork.model.LinkerRepoWork;
-import org.springframework.samples.gitvision.repository.RepoRepository;
-import org.springframework.samples.gitvision.repository.model.Repository;
 import org.springframework.samples.gitvision.user.User;
 import org.springframework.samples.gitvision.user.UserRepository;
+import org.springframework.samples.gitvision.util.ClockifyApi;
 import org.springframework.samples.gitvision.workspace.WorkspaceRepository;
-import org.springframework.samples.gitvision.workspace.model.Workspace;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class LinkerRepoWorkService {
     
-    private RepoRepository repoRepository;
-    private WorkspaceRepository workspaceRepository;
+    @Autowired
     private UserRepository userRepository;
+    
+    @Autowired
     private LinkerRepoWorkRepository linkerRepoWorkRepository;
 
-    @Autowired
-    public LinkerRepoWorkService(RepoRepository repoRepository, WorkspaceRepository workspaceRepository,
-            UserRepository userRepository, LinkerRepoWorkRepository linkerRepoWorkRepository) {
-        this.repoRepository = repoRepository;
-        this.workspaceRepository = workspaceRepository;
-        this.userRepository = userRepository;
-        this.linkerRepoWorkRepository = linkerRepoWorkRepository;
-    }
-
     @Transactional
-    public void linkRepositoryWithWorkspace(String repositoryName, String workspaceId, Long userId){
-        Repository repository = repoRepository.findByName(repositoryName).orElseThrow(() -> new ResourceNotFoundException("Repository", "ID", repositoryName));
-        Workspace workspace = workspaceRepository.findById(workspaceId).orElseThrow(() -> new ResourceNotFoundException("Workspace", "ID", workspaceId));
+    public void linkRepositoryWithWorkspace(Long repositoryId, String workspaceId, Long userId) throws Exception{
         User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User", "ID", userId));
-        LinkerRepoWork linkerRepoWork = new LinkerRepoWork();
-        linkerRepoWork.setRepository(repository);
-        linkerRepoWork.setWorkspace(workspace);
-        linkerRepoWork.setUser(user);
+        if (linkerRepoWorkRepository.existsByRepository_idAndWorkspace_idAndUser(repositoryId, workspaceId, user)) 
+            throw new Exception();
+        try {
+            GitHub.connect().getRepositoryById(repositoryId);
+        } catch (Exception e) {
+            throw new Exception();
+        }
+        try {
+            ClockifyApi.getWorkspace(workspaceId, user.getClockifyToken());
+        } catch (Exception e) {
+            throw new Exception();
+        }
+        LinkerRepoWork linkerRepoWork = new LinkerRepoWork(repositoryId, workspaceId, user);
         linkerRepoWorkRepository.save(linkerRepoWork);
     }
 }

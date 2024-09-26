@@ -4,6 +4,7 @@ import org.springframework.samples.gitvision.model.entity.EntityIdSequential;
 import org.springframework.samples.gitvision.user.User;
 import org.springframework.samples.gitvision.workspace.model.Workspace;
 
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -22,8 +23,7 @@ public class UserWorkspace extends EntityIdSequential {
     @ManyToOne
     private User user;
 
-    @ManyToOne
-    private Workspace workspace;
+    private String workspace_id;
 
-    String name;
+    private String name;
 }

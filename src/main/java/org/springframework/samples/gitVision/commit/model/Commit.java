@@ -3,30 +3,24 @@ package org.springframework.samples.gitvision.commit.model;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.kohsuke.github.GHCommit;
 import org.springframework.samples.gitvision.githubUser.model.GithubUser;
-import org.springframework.samples.gitvision.model.entity.EntityIdString;
 import org.springframework.samples.gitvision.util.EntityUtils;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Entity
 @Getter
 @Setter
-@Table(name = "commits")
 @AllArgsConstructor
 @NoArgsConstructor
-public class Commit extends EntityIdString {
+public class Commit {
     
     String message;
 
@@ -87,18 +81,5 @@ public class Commit extends EntityIdString {
         }
         return set;
     }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        Commit other = (Commit) obj;
-        return this.id != null && Objects.equals(other.id, this.id);
-    }
-    
 
 }

@@ -33,4 +33,5 @@ public class FileService {
         List<File> files = ghTree.getTree().stream().map(entry -> new File(entry.getPath())).toList();
         return TreeFiles.buildTreeFromFilesWithCollapse(files);
     }
+
 }
