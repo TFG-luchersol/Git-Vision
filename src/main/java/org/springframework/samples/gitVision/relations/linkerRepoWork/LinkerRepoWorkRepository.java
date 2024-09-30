@@ -11,5 +11,5 @@ import org.springframework.samples.gitvision.user.User;
 @Repository
 public interface LinkerRepoWorkRepository extends RepositoryIdLong<LinkerRepoWork> {
     
-    boolean existsByRepository_idAndWorkspace_idAndUser(Long repository_id, String workspace_id, User user);
+    boolean existsByRepositoryIdAndWorkspaceIdAndUser(Long repositoryId, String workspaceId, User user);
 }

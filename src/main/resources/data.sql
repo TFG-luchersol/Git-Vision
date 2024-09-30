@@ -8,8 +8,11 @@ INSERT INTO users(id,username,github_token,clockify_token,email,avatar_url) VALU
                  (5,'username_5','git_token_5','clockify_token_5','email_5@gmail.com','https://avatars.githubusercontent.com/u/5'),
                  (6,'username_6','git_token_6','clockify_token_6','email_6@gmail.com','https://avatars.githubusercontent.com/u/6');
 
-INSERT INTO user_repository(id,user_id,repository_id,repository_name) VALUES
-                           (1,1,1);
+INSERT INTO user_repository(id,user_id,repository_id,name,token) VALUES
+                           (1,1,1,"owner_1/repo_1","token_1");
 
 INSERT INTO user_workspace(id,user_id,workspace_id,name) VALUES
                           (1,1,'1','User_1_Workspace_1');
+
+INSERT INTO linker_repo_work(id,repository_id,workspace_id,user_id) VALUES
+                            (1,1,1,1);

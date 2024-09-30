@@ -6,6 +6,7 @@ import java.io.IOException;
 
 import org.kohsuke.github.GHUser;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.samples.gitvision.auth.payload.request.SignupRequest;
 import org.springframework.samples.gitvision.user.User;
 import org.springframework.samples.gitvision.user.UserService;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -24,20 +25,15 @@ public class AuthService {
 	}
 
 	@Transactional
-	public void createUser(GHUser request, String token) {
+	public void createUser(GHUser request, SignupRequest signupRequest) {
 		User user = new User();
-		try {
-			user.setId(request.getId());
-			user.setUsername(request.getLogin());
-			user.setEmail(request.getEmail());
-			user.setAvatarUrl(request.getAvatarUrl());
-			user.setGithubToken(encoder.encode(token));
-
-			userService.saveUser(user);
-		} catch (IOException e) {
-			System.out.println("Error: Failed getting email");
-		}
-		
+		user.setId(request.getId());
+		user.setUsername(request.getLogin());
+		user.setEmail(signupRequest.getEmail());
+		user.setAvatarUrl(request.getAvatarUrl());
+		user.setPassword(encoder.encode(signupRequest.getPassword()));
+		user.setGithubToken(encoder.encode(signupRequest.getGithubToken()));
+		userService.saveUser(user);
 	}
 
 }

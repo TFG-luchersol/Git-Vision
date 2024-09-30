@@ -11,8 +11,6 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@Entity
-@Table(name = "github_users")
 public class GithubUser extends Person {
     
     @Override

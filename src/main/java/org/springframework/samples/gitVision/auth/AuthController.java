@@ -1,12 +1,16 @@
 package org.springframework.samples.gitvision.auth;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import jakarta.validation.Valid;
 
 import org.kohsuke.github.GHUser;
 import org.kohsuke.github.GitHub;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.samples.gitvision.auth.payload.request.LoginRequest;
 import org.springframework.samples.gitvision.auth.payload.request.SignupRequest;
@@ -30,6 +34,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 
 
 @RestController
@@ -67,13 +73,13 @@ public class AuthController {
 	public ResponseEntity authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 		try {
 			String username = loginRequest.getUsername();
-			String githubToken = loginRequest.getGithubToken();
+			String password = loginRequest.getPassword();
 			if(!userService.existsUserByUsername(username)){
 				throw new ResourceNotFoundException("User", "username", username);
 			}
 			
 			UsernamePasswordAuthenticationToken authenticationToken =
-				new UsernamePasswordAuthenticationToken(username, githubToken);
+				new UsernamePasswordAuthenticationToken(username, password);
 			
 			Authentication authentication = authenticationManager.authenticate(authenticationToken);
 			SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -95,20 +101,23 @@ public class AuthController {
 
 	
 	@PostMapping("/signup")	
-	public ResponseEntity<MessageResponse> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
+	public ResponseEntity<MessageResponse> registerUser(@Valid @RequestBody SignupRequest signUpRequest, BindingResult result) {
 		try {
-            String username = signUpRequest.getUsername();
+			if (result.hasErrors()) {
+				List<FieldError> fieldErrors = result.getFieldErrors();
+				return ResponseEntity.badRequest().body(MessageResponse.of(fieldErrors.get(0).getDefaultMessage()));
+			}
+			String username = signUpRequest.getUsername();
 			String token = signUpRequest.getGithubToken();
             GitHub gitHub = GitHub.connect(username, token);
-			gitHub.getRepository(username).getStatistics();
-            GHUser user = gitHub.getMyself();	
-			if(user == null || !user.getLogin().equals(signUpRequest.getUsername()))
+            GHUser user = gitHub.getMyself();
+			if(user == null || !user.getLogin().equals(username))
 				return ResponseEntity.badRequest().body(MessageResponse.of("Error: Username or token is incorrect"));
 			if (userService.existsUserByUsername(username)) 
 				return ResponseEntity.badRequest().body(MessageResponse.of("Error: Username is already taken!"));
 
 
-			authService.createUser(user, token);
+			authService.createUser(user, signUpRequest);
 			return ResponseEntity.ok(MessageResponse.of("User registered successfully!"));
 
 		} catch (IOException e) {

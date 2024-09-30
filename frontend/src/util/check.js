@@ -40,6 +40,14 @@ export default class Preconditions {
         this.check(obj !== undefined, `${variableName} can't be undefined`)
     }
 
+    static checkValidEmail(obj, variableName = "Object", regex = /.*/){
+        this.check(regex === "" || regex.test(obj), `${variableName} isn't valid email. Must have regex: ${regex}`)
+    }
+
+    static checkValidPassword(obj, variableName = "Object", regex = /.*/){
+        this.check(regex === "" || regex.test(obj), `${variableName} isn't valid password. Must have regex: ${regex}`)
+    }
+
 }
 
 class PreconditionsNotCheck extends Preconditions {

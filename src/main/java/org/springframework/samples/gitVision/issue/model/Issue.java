@@ -7,8 +7,7 @@ import lombok.Setter;
 @Setter
 public class Issue {
     
-    String title;
-
-    Integer number;
+    private String title;
+    private Integer number;
 
 }

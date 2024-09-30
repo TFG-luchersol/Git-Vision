@@ -7,6 +7,7 @@ import org.springframework.samples.gitvision.model.entity.Person;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,6 +16,10 @@ import lombok.Setter;
 @Entity
 @Table(name = "users")
 public class User extends Person {
+
+    @NotBlank(message = "Password musn't be blank")
+    @Pattern(regexp = "d")
+    String password;
 
 	@NotBlank
 	String githubToken;

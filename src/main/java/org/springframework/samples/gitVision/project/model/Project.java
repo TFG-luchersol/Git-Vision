@@ -15,9 +15,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@Entity
-@Table(name = "projects")
-public class Project extends EntityIdString {
+public class Project {
  
     private String name;
 

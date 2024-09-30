@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Navbar, NavbarBrand, NavLink, NavItem, Nav, NavbarToggler, Collapse} from 'reactstrap';
 import { Link } from 'react-router-dom';
 import { SiSwagger, SiGoogledocs } from "react-icons/si";
-import UserInformation from './UserInformation.js';
+import UserInformation from './userInformation.js';
 
 export default function AppNavbar() {
 
@@ -44,7 +44,7 @@ export default function AppNavbar() {
 
     return (
         <div>
-            <Navbar expand="md" style={{ backgroundColor:"#0000001c"}}>
+            <Navbar expand="md" style={{ backgroundColor:"#D7D0D0"}}>
                 <NavbarBrand href="/">
                     <img alt="logo" src='/logo.png' style={{ height: 40, width: 140 }} />
                 </NavbarBrand>

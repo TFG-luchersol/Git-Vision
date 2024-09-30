@@ -7,7 +7,6 @@ import org.springframework.samples.gitvision.relations.linkerRepoWork.model.Link
 import org.springframework.samples.gitvision.user.User;
 import org.springframework.samples.gitvision.user.UserRepository;
 import org.springframework.samples.gitvision.util.ClockifyApi;
-import org.springframework.samples.gitvision.workspace.WorkspaceRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,7 +22,7 @@ public class LinkerRepoWorkService {
     @Transactional
     public void linkRepositoryWithWorkspace(Long repositoryId, String workspaceId, Long userId) throws Exception{
         User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User", "ID", userId));
-        if (linkerRepoWorkRepository.existsByRepository_idAndWorkspace_idAndUser(repositoryId, workspaceId, user)) 
+        if (linkerRepoWorkRepository.existsByRepositoryIdAndWorkspaceIdAndUser(repositoryId, workspaceId, user)) 
             throw new Exception();
         try {
             GitHub.connect().getRepositoryById(repositoryId);

@@ -59,20 +59,20 @@ export default function Login() {
 
     return (
         <div className="home-page-container">
-            <div style={{display:'flex', flexDirection:'column'}}>
+            {/* <div style={{display:'flex', flexDirection:'column'}}>
                 <button onClick={() => testDownloadGithub()} >DESCARGA DE PRUEBA GITHUB</button>
                 <button onClick={() => testDownloadClockify()} >DESCARGA DE PRUEBA CLOCKIFY</button>
-            </div>
+            </div> */}
             
-            {/* <Alert isOpen={message} color="danger" style={{position:'absolute', top:'30px'}}>{message}</Alert>
-                
-                <Form onSubmit={handleSubmit} className='auth-form-container' >
-                    <div style={{margin: "30px"}}>
-                        <title className='center-title'>
-                            <h1>Login</h1>
-                        </title>
+            <Alert isOpen={message} color="danger" style={{ position: 'fixed', top: '15%' }}>{message}</Alert>
 
-                        <FormGroup>
+            <Form onSubmit={handleSubmit} className='auth-form-container' >
+                <div style={{ margin: "30px" }}>
+                    <title className='center-title'>
+                        <h1>Login</h1>
+                    </title>
+
+                    <FormGroup>
                         <CustomInput
                             icon={userIcon}
                             label={"Username:"}
@@ -81,27 +81,26 @@ export default function Login() {
                             value={values.username || ""}
                             onChange={handleChange}
                         />
-                        </FormGroup>
-                        <FormGroup>
-                            <CustomInput
-                                icon={githubIcon}
-                                label={"Github Token:"}
-                                type='text' 
-                                name='githubToken' 
-                                value={values.githubToken || ""} 
-                                onChange={handleChange}
-                            />
-                        </FormGroup>
+                    </FormGroup>
+                    <FormGroup>
+                        <CustomInput
+                            icon={githubIcon}
+                            label={"Github Token:"}
+                            type='text'
+                            name='githubToken'
+                            value={values.githubToken || ""}
+                            onChange={handleChange}
+                        />
+                    </FormGroup>
 
-                        <div className='button-group'>
-                            <Button type='submit'>Login</Button> 
-                            <Button type='button'>
-                                <Link className='custom-link' to={"/register"}>Registrer</Link>
-                            </Button> 
-                        </div>
+                    <div className='button-group'>
+                        <Button type='submit'>Login</Button>
+                        <Button type='button'>
+                            <Link className='custom-link' to={"/register"}>Registrer</Link>
+                        </Button>
                     </div>
-                </Form> */}
-
+                </div>
+            </Form>
 
         </div>
     );
