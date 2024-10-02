@@ -19,14 +19,14 @@ export default function Repositories() {
     }, [])
 
     const getRepositories = async () => {
-        try {
-            let newRepositories = await fetch(`/api/v1/relation/user_repository/repositories?userId=${1}`)
-            const json = await newRepositories.json()
-            const repositories = json.data.information.repositories
-            setRepositories(repositories)
-        } catch (e) {
-            alert(e)
-        }
+        // try {
+        //     let newRepositories = await fetch(`/api/v1/relation/user_repository/repositories?userId=${1}`)
+        //     const json = await newRepositories.json()
+        //     const repositories = json.data.information.repositories
+        //     setRepositories(repositories)
+        // } catch (e) {
+        //     alert(e)
+        // }
     }
 
     const getWorkspaces = async () => {
@@ -41,7 +41,8 @@ export default function Repositories() {
 
 
     return (
-        <div style={{ display: 'flex', justifyContent: 'center', height: '100%' }}>
+        <div className='grey-cover'>
+        <div style={{zIndex:200, display: 'flex', justifyContent: 'center', height: '100%' }}>
 
             <div>
                 <h1>Repositorios 📂</h1>
@@ -83,6 +84,6 @@ export default function Repositories() {
                 </Button>
             </div>
 
-        </div>
+        </div></div>
     );
 }

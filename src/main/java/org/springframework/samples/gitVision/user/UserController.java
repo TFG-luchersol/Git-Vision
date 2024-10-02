@@ -37,7 +37,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 // @SecurityRequirement(name = "bearerAuth")
@@ -81,20 +80,20 @@ public class UserController {
 	@PutMapping("/user/{username}/token/github")
 	public ResponseEntity<MessageResponse> updateGithubToken(@PathVariable String username, @RequestBody String githubToken) {
 		try {
-			User user = userService.updateGithubToken(username, githubToken);
+			userService.updateGithubToken(username, githubToken);
 			Information customMap = Information.empty().put("githubToken", githubToken);
 			return ResponseEntity.ok(MessageResponse.of("Github Token has been updated", customMap));
 		} catch (Exception e) {
-			return ResponseEntity.badRequest().body(MessageResponse.of("Failed!"));
+			return ResponseEntity.badRequest().body(MessageResponse.of(e.getMessage()));
 		}
 	}
 
 	@PutMapping("/user/{username}/token/clockify")
 	public ResponseEntity<MessageResponse> updateClockifyToken(@PathVariable String username, @RequestBody String clockifyToken) {
 		try {
-			User user = userService.updateClockifyToken(username, clockifyToken);
+			userService.updateClockifyToken(username, clockifyToken);
 			Information customMap = Information.empty().put("clockifyToken", clockifyToken);
-			return ResponseEntity.ok(MessageResponse.of("Github Token has been updated"));
+			return ResponseEntity.ok(MessageResponse.of("Github Token has been updated", customMap));
 		} catch (Exception e) {
 			return ResponseEntity.badRequest().body(MessageResponse.of("Failed!"));
 		}

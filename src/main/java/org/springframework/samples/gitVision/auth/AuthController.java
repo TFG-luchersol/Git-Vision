@@ -1,16 +1,12 @@
 package org.springframework.samples.gitvision.auth;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import jakarta.validation.Valid;
 
 import org.kohsuke.github.GHUser;
 import org.kohsuke.github.GitHub;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.samples.gitvision.auth.payload.request.LoginRequest;
 import org.springframework.samples.gitvision.auth.payload.request.SignupRequest;
@@ -57,25 +53,13 @@ public class AuthController {
 		this.authService = authService;
 	}
 
-	// @PostMapping("/signin")
-	// public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
-	// 	try{
-	// 		User user = userService.findUserByUsername(loginRequest.getUsername());
-	// 		if(!user.getGithubToken().equals(loginRequest.getGithubToken()))
-	// 			return ResponseEntity.badRequest().body(MessageResponse.of("Incorrect Token"));
-	// 		return ResponseEntity.ok().body(user);
-	// 	}catch(ResourceNotFoundException exception){
-	// 		return ResponseEntity.badRequest().body(MessageResponse.of("Bad Credentials"));
-	// 	}
-	// }
-
 	@PostMapping("/signin")
 	public ResponseEntity authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 		try {
 			String username = loginRequest.getUsername();
 			String password = loginRequest.getPassword();
 			if(!userService.existsUserByUsername(username)){
-				throw new ResourceNotFoundException("User", "username", username);
+				 new ResourceNotFoundException("User", "username", username);
 			}
 			
 			UsernamePasswordAuthenticationToken authenticationToken =
@@ -87,7 +71,10 @@ public class AuthController {
 
 			UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 			User user = userService.findUserById(userDetails.getId());
+			
 			return ResponseEntity.ok().body(new JwtResponse(jwt, user));
+		} catch(ResourceNotFoundException exception) {
+			return ResponseEntity.badRequest().body(MessageResponse.of(exception.getMessage()));
 		} catch(Exception exception) {
 			return ResponseEntity.badRequest().body(MessageResponse.of("Bad Credentials!"));
 		} 
@@ -104,8 +91,12 @@ public class AuthController {
 	public ResponseEntity<MessageResponse> registerUser(@Valid @RequestBody SignupRequest signUpRequest, BindingResult result) {
 		try {
 			if (result.hasErrors()) {
-				List<FieldError> fieldErrors = result.getFieldErrors();
-				return ResponseEntity.badRequest().body(MessageResponse.of(fieldErrors.get(0).getDefaultMessage()));
+				FieldError firstError = result.getFieldErrors().get(0);
+				String field = firstError.getField().substring(0, 1).toUpperCase() + 
+							   firstError.getField().substring(1).toLowerCase(),
+					   defaultMessage = firstError.getDefaultMessage(),
+				       message = field + " " + defaultMessage;
+				return ResponseEntity.badRequest().body(MessageResponse.of(message));
 			}
 			String username = signUpRequest.getUsername();
 			String token = signUpRequest.getGithubToken();

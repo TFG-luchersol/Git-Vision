@@ -1,7 +1,5 @@
 package org.springframework.samples.gitvision.auth;
 
-import jakarta.transaction.Transactional;
-
 import java.io.IOException;
 
 import org.kohsuke.github.GHUser;
@@ -11,6 +9,7 @@ import org.springframework.samples.gitvision.user.User;
 import org.springframework.samples.gitvision.user.UserService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class AuthService {
@@ -31,8 +30,8 @@ public class AuthService {
 		user.setUsername(request.getLogin());
 		user.setEmail(signupRequest.getEmail());
 		user.setAvatarUrl(request.getAvatarUrl());
+		user.setGithubToken(signupRequest.getGithubToken());
 		user.setPassword(encoder.encode(signupRequest.getPassword()));
-		user.setGithubToken(encoder.encode(signupRequest.getGithubToken()));
 		userService.saveUser(user);
 	}
 

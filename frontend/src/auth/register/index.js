@@ -23,40 +23,37 @@ export default function Register() {
 
     async function handleSubmit(event) {
         event.preventDefault()
-        const reqBody = JSON.stringify(values);
+        const reqBodySignup = JSON.stringify(values);
+        const reqBodySignin = JSON.stringify({username: values.username, password: values.password});
         setMessage(null);
         try {
             const dataRegister = await fetch("/api/v1/auth/signup", {
                 headers: { "Content-Type": "application/json" },
                 method: "POST",
-                body: reqBody,
-            }).then(response => response.json());
+                body: reqBodySignup,
+            });
             if(dataRegister.status !== 200) { 
-                // console.log(dataRegister)
-                // if(dataRegister.errors && dataRegister.errors?.length !== 0){
-                //     const firstError = dataRegister.errors[0]
-                //     const {field, defaultMessage} = firstError
-                //     throw Error(`${field.charAt(0).toUpperCase() + field.slice(1)} ${defaultMessage}`);
-                // }
-                throw Error(dataRegister.message)
+                const {message} = await dataRegister.json()
+                throw Error(message)
             } else {
-                await fetch("/api/v1/auth/signin", {
+                const dataSignin = await fetch("/api/v1/auth/signin", {
                     headers: { "Content-Type": "application/json" },
                     method: "POST",
-                    body: reqBody,
-                })
-                    .then(response => response.json())
-                    .then(function (data) {
-                        if (data.status !== "200") {
-                            setMessage(data.message);
-                        } else {
-                            tokenService.setUser(data.user);
-                            tokenService.updateLocalAccessToken(data.token);
-                            window.location.href = "/";
-                        }
-                    })
+                    body: reqBodySignin,
+                });
+                if (dataSignin.status !== 200) {
+                    const {message} = await dataSignin.json()
+                    throw Error(message)
+                } else {
+                    console.log(2.4)
+                    const response = await dataSignin.json()
+                    tokenService.setUser(response.user);
+                    tokenService.updateLocalAccessToken(response.token);
+                    window.location.href = "/";
+                }
             }
         } catch (error) {
+            console.log(3)
             setMessage(error.message);
         }
     }

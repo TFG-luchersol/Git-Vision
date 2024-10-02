@@ -32,20 +32,21 @@ export default function Details() {
   const handleGithubTokenChange = (e) => setGithubToken(e.target.value);
   const handleClockifyTokenChange = (e) => setClockifyToken(e.target.value);
 
-  const handleSave = (tokenType) => {
+  const handleSave = async (tokenType) => {
     if (tokenType === 'github') {
-      console.log('Saving Github Token:', githubToken);
+      await fetch(``); 
     } else if (tokenType === 'clockify') {
-      console.log('Saving Clockify Token:', clockifyToken);
+      await fetch(``);
     }
   };
 
-  const handleDeleteAccount = () => {
-    console.log('Account deleted');
+  const handleDeleteAccount = async () => {
+    await fetch(`api`)
   };
 
   return (
-    <div className="App">
+    <div className="home-page-container">
+    <div className="details-container">
       <div className="profile-container">
         <div className="profile-image">
           <img
@@ -102,6 +103,7 @@ export default function Details() {
           Clockify será opcional, siendo la única inconveniencia la inaccesibilidad a ciertas funciones.
         </p>
       </div>
+    </div>
     </div>
   );
 }

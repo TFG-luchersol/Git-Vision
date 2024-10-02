@@ -1,8 +1,10 @@
 package org.springframework.samples.gitvision.util;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
+import org.hibernate.mapping.Map;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -31,6 +33,11 @@ public class ClockifyApi {
         ResponseEntity<T> response = restTemplate.exchange(url_template, HttpMethod.GET, request, clazz);
 
         return response.getBody();
+    }
+
+    public static void getCurrentUser(String clockifyToken){
+        String url = "/v1/user";
+        requestClockify(url, clockifyToken, HashMap.class);
     }
 
     public static Workspace getWorkspace(String workspaceId, String clockifyToken) {

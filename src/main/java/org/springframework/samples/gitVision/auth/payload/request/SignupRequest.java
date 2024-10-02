@@ -2,7 +2,7 @@ package org.springframework.samples.gitvision.auth.payload.request;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-
+import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,6 +18,7 @@ public class SignupRequest {
 	private String email;
 
 	@NotBlank
+	@Pattern(regexp = "^[a-zA-Z]{4,}$")
 	private String password;
 	
 	@NotBlank

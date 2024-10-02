@@ -6,14 +6,17 @@ import tokenService from "../../services/token.service.js";
 import "../../static/css/auth/authPage.css";
 import { Link } from 'react-router-dom';
 import CustomInput from '../../components/CustomInput.js';
-import { FaRegUserCircle, FaGithub } from "react-icons/fa";
+import { FaRegUserCircle, FaGithub, FaLock, FaUnlock } from "react-icons/fa";
 
 export default function Login() {
     const userIcon = <FaRegUserCircle />
-    const githubIcon = <FaGithub />
+    const passwordLockIcon = <FaLock onClick={() => setShowPassword(prev => !prev)} />;
+    const passwordUnlockIcon = <FaUnlock onClick={() => setShowPassword(prev => !prev)} />;
 
     const [message, setMessage] = useState(null)
-    const [values, setValues] = useState({ username: "", githubToken: "" })
+    const [values, setValues] = useState({ username: "", password: "" })
+    const [showPassword, setShowPassword] = useState(false);
+
 
     async function handleSubmit(event) {
         event.preventDefault()
@@ -54,7 +57,7 @@ export default function Login() {
     }
 
     async function testDownloadClockify() {
-        await fetch('/api/v1/clockify/workspaces/664b1bcbfae74255cbb0abc9?name=workspace_test_TFG', { method: "POST"}).then(e => alert(`CLOCKIFY: ${e.status}`))
+        await fetch('/api/v1/clockify/workspaces/664b1bcbfae74255cbb0abc9?name=workspace_test_TFG', { method: "POST" }).then(e => alert(`CLOCKIFY: ${e.status}`))
     }
 
     return (
@@ -63,7 +66,7 @@ export default function Login() {
                 <button onClick={() => testDownloadGithub()} >DESCARGA DE PRUEBA GITHUB</button>
                 <button onClick={() => testDownloadClockify()} >DESCARGA DE PRUEBA CLOCKIFY</button>
             </div> */}
-            
+
             <Alert isOpen={message} color="danger" style={{ position: 'fixed', top: '15%' }}>{message}</Alert>
 
             <Form onSubmit={handleSubmit} className='auth-form-container' >
@@ -84,11 +87,11 @@ export default function Login() {
                     </FormGroup>
                     <FormGroup>
                         <CustomInput
-                            icon={githubIcon}
-                            label={"Github Token:"}
-                            type='text'
-                            name='githubToken'
-                            value={values.githubToken || ""}
+                            icon={showPassword ? passwordUnlockIcon : passwordLockIcon}
+                            label={"Password:"}
+                            type={showPassword ? 'text' : 'password'}
+                            name='password'
+                            value={values.password || ""}
                             onChange={handleChange}
                         />
                     </FormGroup>
@@ -101,7 +104,7 @@ export default function Login() {
                     </div>
                 </div>
             </Form>
-
         </div>
+
     );
 }

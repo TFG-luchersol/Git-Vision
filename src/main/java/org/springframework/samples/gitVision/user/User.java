@@ -17,8 +17,7 @@ import lombok.Setter;
 @Table(name = "users")
 public class User extends Person {
 
-    @NotBlank(message = "Password musn't be blank")
-    @Pattern(regexp = "d")
+    // @Pattern(regexp = "^[a-zA-Z]{4,}$")
     String password;
 
 	@NotBlank
