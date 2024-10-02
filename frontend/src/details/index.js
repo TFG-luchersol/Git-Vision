@@ -18,15 +18,15 @@ export default function Details() {
 
   const [githubToken, setGithubToken] = useState('');
   const [clockifyToken, setClockifyToken] = useState('');
-  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
+  const [username, setUsername] = useState({});
 
   useEffect(() => {
     const user = tokenService.getUser();
     setUsername(user?.username);
     setEmail(user?.email);
     setGithubToken(user?.githubToken);
-    setClockifyToken(user?.clockifyToken)
+    setClockifyToken(user?.clockifyToken);
   }, []);
 
   const handleGithubTokenChange = (e) => setGithubToken(e.target.value);
@@ -34,9 +34,9 @@ export default function Details() {
 
   const handleSave = async (tokenType) => {
     if (tokenType === 'github') {
-      await fetch(``); 
+      await fetch(`/api/v1/users/user/${username}/token/github`, {method: "PUT", body: githubToken}); 
     } else if (tokenType === 'clockify') {
-      await fetch(``);
+      await fetch(`/api/v1/users/user/${username}/token/clockify`, {method: "PUT", body: clockifyToken});
     }
   };
 

@@ -33,12 +33,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class UserService {
 
-	private UserRepository userRepository;
-
 	@Autowired
-	public UserService(UserRepository userRepository) {
-		this.userRepository = userRepository;
-	}
+	private UserRepository userRepository;
 
 	@Transactional(readOnly = true)
 	public User findUserByUsername(String username) {
@@ -82,6 +78,7 @@ public class UserService {
 	@Transactional 
 	public void updateGithubToken(String username, String githubToken) throws IOException{
 		GitHub gitHub = GitHub.connect(username, githubToken);
+	
 		if(gitHub.getMyself() == null)
 			throw new IllegalAccessError("Error: fail to connect Github with new token");
 		User user = findUserByUsername(username);
@@ -91,10 +88,13 @@ public class UserService {
 
 	@Transactional 
 	public void updateClockifyToken(String username, String clockifyToken){
-		ClockifyApi d = new ClockifyApi();
 		
-		if(d.getCurrentUser(clockifyToken))
+		try {
+			ClockifyApi.getCurrentUser(clockifyToken);
+		} catch (Exception e) {
 			throw new IllegalAccessError("Error en conexión a clockify con token");
+		}
+			
 		User user = findUserByUsername(username);
 		user.setClockifyToken(clockifyToken);
 		userRepository.save(user);
@@ -113,6 +113,5 @@ public class UserService {
 		this.userRepository.delete(toDelete);
 	}
 
-	
 
 }

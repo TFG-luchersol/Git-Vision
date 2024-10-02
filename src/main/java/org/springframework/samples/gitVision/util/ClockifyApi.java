@@ -3,8 +3,8 @@ package org.springframework.samples.gitvision.util;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import org.hibernate.mapping.Map;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -35,9 +35,10 @@ public class ClockifyApi {
         return response.getBody();
     }
 
-    public static void getCurrentUser(String clockifyToken){
+    public static Map<String, String> getCurrentUser(String clockifyToken){
         String url = "/v1/user";
-        requestClockify(url, clockifyToken, HashMap.class);
+        Map<String, String> map = requestClockify(url, clockifyToken, HashMap.class);
+        return map;
     }
 
     public static Workspace getWorkspace(String workspaceId, String clockifyToken) {
