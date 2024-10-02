@@ -3,7 +3,7 @@ import { FaGithub, FaRegUserCircle } from "react-icons/fa";
 import { IoPersonCircleOutline } from 'react-icons/io5';
 import { MdOutlineEmail } from "react-icons/md";
 import { SiClockify } from "react-icons/si";
-import { Button } from 'reactstrap';
+import { Button, Modal, ModalBody, ModalHeader } from 'reactstrap';
 import CustomInput from '../components/CustomInput.js';
 import tokenService from '../services/token.service.js'
 import './details.css';
@@ -20,9 +20,12 @@ export default function Details() {
   const [clockifyToken, setClockifyToken] = useState('');
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState({});
+  const [deleteModal, setDeleteModal] = useState(false);
+  const [userId, setUserId] = useState(null);
 
   useEffect(() => {
     const user = tokenService.getUser();
+    setUserId(user?.id)
     setUsername(user?.username);
     setEmail(user?.email);
     setGithubToken(user?.githubToken);
@@ -41,13 +44,29 @@ export default function Details() {
   };
 
   const handleDeleteAccount = async () => {
-    await fetch(`api`)
+    await fetch(`/api/v1/users/${userId}`, {method: "DELETE"})
+              .then(response => {
+                setDeleteModal(false)
+                if(response.status === 200) {
+                  tokenService.removeUser()
+                  window.location.href = "/"
+                } else {
+                  alert("Error en borrado de usuario")
+                }
+              })
   };
 
   return (
     <div className="home-page-container">
     <div className="details-container">
       <div className="profile-container">
+        <Modal style={{position:'absolute', top: "50%", left: "50%", transform: "translate(-50%, -50%)", padding: "20px"}} isOpen={deleteModal}>
+          <ModalHeader>¿Quieres borrar tu cuenta?</ModalHeader>
+          <ModalBody style={{display: "flex", justifyContent: "space-around"}}>
+            <Button color="primary" onClick={handleDeleteAccount}>SI</Button>
+            <Button color="danger" onClick={() => setDeleteModal(false)}>NO</Button>
+          </ModalBody>
+        </Modal>
         <div className="profile-image">
           <img
             className='placeholder-image-url'
@@ -74,7 +93,7 @@ export default function Details() {
             value={email}
             readOnly
           />
-          <Button className="delete-button" onClick={handleDeleteAccount}>Eliminar cuenta</Button>
+          <Button className="delete-button" onClick={() => setDeleteModal(true)}>Eliminar cuenta</Button>
         </div>
       </div>
       <div className="token-container">

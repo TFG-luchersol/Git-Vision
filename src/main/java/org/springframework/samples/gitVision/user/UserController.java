@@ -103,11 +103,8 @@ public class UserController {
 	@ResponseStatus(HttpStatus.OK)
 	public ResponseEntity<MessageResponse> delete(@PathVariable("userId") Long id) {
 		RestPreconditions.checkNotNull(userService.findUserById(id), "User", "ID", id);
-		if (!Objects.equals(userService.findCurrentUser().getId(), id)) {
-			userService.deleteUserById(id);
-			return ResponseEntity.ok(new MessageResponse("User deleted!"));
-		} else
-			throw new AccessDeniedException("You can't delete yourself!");
+		userService.deleteUserById(id);
+		return ResponseEntity.ok(new MessageResponse("User deleted!"));
 	}
 
 }
