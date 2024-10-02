@@ -19,14 +19,20 @@ package org.springframework.samples.gitvision.util;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.Base64;
 import java.util.Collection;
 import java.util.Date;
+
+import javax.crypto.Cipher;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
 
 import org.springframework.orm.ObjectRetrievalFailureException;
 import org.springframework.samples.gitvision.model.entity.BaseEntity;
 
 /**
- * Utility methods for handling entities. Separate from the BaseEntity class mainly
+ * Utility methods for handling entities. Separate from the BaseEntity class
+ * mainly
  * because of dependency on the ORM-associated ObjectRetrievalFailureException.
  *
  * @author Juergen Hoeller
@@ -37,10 +43,12 @@ import org.springframework.samples.gitvision.model.entity.BaseEntity;
 public abstract class EntityUtils {
 
 	/**
-	 * Look up the entity of the given class with the given id in the given collection.
-	 * @param entities the collection to search
+	 * Look up the entity of the given class with the given id in the given
+	 * collection.
+	 * 
+	 * @param entities    the collection to search
 	 * @param entityClass the entity class to look up
-	 * @param entityId the entity id to look up
+	 * @param entityId    the entity id to look up
 	 * @return the found entity
 	 * @throws ObjectRetrievalFailureException if the entity was not found
 	 */
@@ -54,20 +62,20 @@ public abstract class EntityUtils {
 		throw new ObjectRetrievalFailureException(entityClass, entityId);
 	}
 
-	public static LocalDateTime parseDateToLocalDateTimeUTC(Date date){
+	public static LocalDateTime parseDateToLocalDateTimeUTC(Date date) {
 		return LocalDateTime.ofInstant(date.toInstant(), ZoneOffset.UTC);
 	}
 
-	public static LocalDate parseDateToLocalDateUTC(Date date){
+	public static LocalDate parseDateToLocalDateUTC(Date date) {
 		return LocalDate.ofInstant(date.toInstant(), ZoneOffset.UTC);
 	}
 
-	public static Date parseLocalDateTimeUTCToDate(LocalDateTime localDateTime){
+	public static Date parseLocalDateTimeUTCToDate(LocalDateTime localDateTime) {
 		return Date.from(localDateTime.atZone(ZoneOffset.UTC).toInstant());
 	}
 
-	public static Date parseLocalDateUTCToDate(LocalDate localDate){
+	public static Date parseLocalDateUTCToDate(LocalDate localDate) {
 		return Date.from(localDate.atStartOfDay().atZone(ZoneOffset.UTC).toInstant());
 	}
-
+	
 }

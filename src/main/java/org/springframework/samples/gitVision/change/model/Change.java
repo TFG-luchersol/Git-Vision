@@ -10,10 +10,6 @@ import lombok.Setter;
 @Setter
 public class Change {
 
-    File file;
- 
-    GithubUser author;
-
     int additions;
 
     int deletions;
@@ -27,8 +23,20 @@ public class Change {
     public boolean withChanges(){
         return this.additions > 0 || this.deletions > 0;
     }
-    
-    public boolean isDeletedFileChange(){
-        return this.file == null;
+
+    public static Change of(int additions, int deletions){
+        Change change = new Change();
+        change.setAdditions(additions);
+        change.setDeletions(deletions);
+        change.calcTotalChanges();
+        return change;
+    }
+
+    public static Change merge(Change change1, Change change2) {
+        Change change = new Change();
+        change.setAdditions(change1.additions + change2.additions);
+        change.setDeletions(change1.deletions + change2.deletions);
+        change.calcTotalChanges();
+        return change;
     }
 }

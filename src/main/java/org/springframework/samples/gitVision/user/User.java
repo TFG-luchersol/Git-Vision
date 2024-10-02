@@ -17,7 +17,7 @@ import lombok.Setter;
 @Table(name = "users")
 public class User extends Person {
 
-    // @Pattern(regexp = "^[a-zA-Z]{4,}$")
+    @Pattern(regexp = ".+")
     String password;
 
 	@NotBlank

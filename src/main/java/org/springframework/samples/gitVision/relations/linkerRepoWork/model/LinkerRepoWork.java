@@ -24,11 +24,9 @@ import lombok.Setter;
 public class LinkerRepoWork extends EntityIdSequential {
 
     @NotNull
-    @Column(name = "repositoryId")
     Long repositoryId;
 
     @NotBlank
-    @Column(name = "workspaceId")
     String workspaceId;
 
     @ManyToOne

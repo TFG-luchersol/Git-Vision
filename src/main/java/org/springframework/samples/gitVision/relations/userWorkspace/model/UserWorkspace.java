@@ -23,7 +23,6 @@ import lombok.Setter;
 public class UserWorkspace extends EntityIdSequential {
 
     @NotBlank
-    @Column(name = "workspaceId")
     private String workspaceId;
 
     @NotBlank

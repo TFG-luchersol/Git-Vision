@@ -26,7 +26,6 @@ public class UserRepo extends EntityIdSequential {
     private User user;
 
     @NotNull
-    @Column(name = "repositoryId")
     private Long repositoryId;
 
     @NotBlank
