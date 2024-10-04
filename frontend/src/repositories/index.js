@@ -7,6 +7,8 @@ import '../static/css/auth/authPage.css'
 import AccordionItem from '../components/AccordionItem.js'
 import './repositories.css'
 import { Link } from 'react-router-dom';
+import { SiClockify } from "react-icons/si";
+import { RiGitRepositoryLine } from "react-icons/ri";
 
 export default function Repositories() {
 
@@ -19,14 +21,15 @@ export default function Repositories() {
     }, [])
 
     const getRepositories = async () => {
-        // try {
-        //     let newRepositories = await fetch(`/api/v1/relation/user_repository/repositories?userId=${1}`)
-        //     const json = await newRepositories.json()
-        //     const repositories = json.data.information.repositories
-        //     setRepositories(repositories)
-        // } catch (e) {
-        //     alert(e)
-        // }
+        try {
+            let newRepositories = await fetch(`/api/v1/relation/user_repository/repositories?userId=${tokenService.getUser().id}`)
+            const json = await newRepositories.json()
+            console.log(json)
+            const repositories = json.information.information.repositories
+            setRepositories(repositories)
+        } catch (e) {
+            alert(e)
+        }
     }
 
     const getWorkspaces = async () => {
@@ -42,10 +45,10 @@ export default function Repositories() {
 
     return (
         <div className='grey-cover'>
-        <div style={{zIndex:200, display: 'flex', justifyContent: 'center', height: '100%' }}>
+        <div style={{zIndex:200, display: 'flex', justifyContent: 'space-around', height: '100%' }}>
 
-            <div>
-                <h1>Repositorios 📂</h1>
+            <div style={{position: 'relative', top: "100px"}}>
+                <h1>Repositorios <RiGitRepositoryLine/></h1>
                 {Object.keys(repositories).length > 0 ?
                     Object.keys(repositories).map(owner =>
                         <AccordionItem title={owner}>
@@ -58,8 +61,7 @@ export default function Repositories() {
                         </AccordionItem>
                     ) : <h6>NO HAY REPOSITORIOS DESCARGADOS</h6>
 }
-
-                <h2>Workspace ⏲️</h2>
+                <h1 style={{marginTop: 10}}>Workspace <SiClockify color='blue'/></h1>
                 {workspaces.size > 0 ?
                     workspaces.keys().map(owner => {
                         return (<AccordionItem title={owner}>
@@ -72,7 +74,7 @@ export default function Repositories() {
                     }) : <h6>NO HAY REPOSITORIOS DESCARGADOS</h6>}
             </div>
 
-            <div className='button-group'>
+            <div className='button-group' style={{justifyContent: "center"}}>
                 <Button >
                     <Link className='custom-link' to={"/repository/download"}>Añadir repositorio</Link>
                 </Button>

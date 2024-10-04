@@ -47,10 +47,11 @@ public class UserRepoController {
 
     @PostMapping
     public void linkUserWithRepository(@RequestBody Credential credential, 
-                                       @RequestParam String repositoryName, 
-                                       @RequestParam String token) {
-        User user = this.userService.findCurrentUser();
-        this.userRepoService.linkUserWithRepository(credential, repositoryName, token, user);
+                                       @RequestParam String repo, 
+                                       @RequestParam String owner,
+                                       @RequestParam(required = false) String token) {
+        String repositoryName = owner + "/" + repo; 
+        this.userRepoService.linkUserWithRepository(credential, repositoryName, token);
     }
     
 

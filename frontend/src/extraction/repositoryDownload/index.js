@@ -8,11 +8,12 @@ import "../../static/css/auth/authPage.css";
 import '../../static/css/home/home.css';
 import Preconditions from '../../util/check.js';
 import LoadingModal from '../../components/LoadingModal.js';
+import tokenService from '../../services/token.service.js';
 
 export default function RepositoryDownload() {
     const userIcon = <FaRegUserCircle />
     const githubIcon = <FaGithub />
-
+    
     const [message, setMessage] = useState(null);
     const [values, setValues] = useState({owner: "", repo: "", token: "" });
     const [validateToken, setValidateToken] = useState(false);
@@ -27,14 +28,23 @@ export default function RepositoryDownload() {
             Preconditions.checkNotBlank(values.owner, "Owner");
             Preconditions.checkNotBlank(values.repo, "Repository");
             Preconditions.if(validateToken).checkNotBlank(values.token, "Token");
-            let url = `/api/v1/github/${values.owner}/${values.repo}`
-            if(values.validOtherToken) url += `?token=${values.token}`;
+            let url = `/api/v1/relation/user_repository?repo=${values.repo}&owner=${values.owner}`
+            if(values.validOtherToken) 
+                url += `&token=${values.token}`;
             
             setIsLoading(true);
+            const {username, githubToken} = tokenService.getUser()
             const response = await fetch(url, {
                 method: "POST",
+                headers: { 
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ 
+                    login: username,
+                    oauthAccessToken: githubToken
+                })
             });
-
+            console.log(response)
             if (response.status === 200) {
                 window.location.href = "/";
             } else {

@@ -1,15 +1,18 @@
 package org.springframework.samples.gitvision.relations.userRepo;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GitHub;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.gitvision.relations.userRepo.model.UserRepo;
 import org.springframework.samples.gitvision.user.User;
+import org.springframework.samples.gitvision.user.UserRepository;
 import org.springframework.samples.gitvision.util.Credential;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +22,9 @@ public class UserRepoService {
     
     @Autowired
     UserRepoRepository userRepoRepository;
+
+    @Autowired
+    UserRepository userRepository;
 
     @Transactional(readOnly = true)
     public Map<String, List<String>> getAllRepositories(Long userId) {
@@ -46,17 +52,19 @@ public class UserRepoService {
     }
 
     @Transactional
-    public void linkUserWithRepository(Credential credential, String repositoryName, String token, User user){
+    public void linkUserWithRepository(Credential credential, String repositoryName, String token){
         try {
             GitHub gitHub = GitHub.connect(credential.getLogin(), credential.getOauthAccessToken());
             GHRepository ghRepository = gitHub.getRepository(repositoryName);
+            User user = this.userRepository.findByUsername(credential.getLogin()).get();
+            token = Objects.requireNonNullElse(token, user.getGithubToken());
             UserRepo userRepo = new UserRepo();
             userRepo.setName(repositoryName);
             userRepo.setRepositoryId(ghRepository.getId());
             userRepo.setToken(token);
             userRepo.setUser(user);
             userRepoRepository.save(userRepo);
-        } catch (Exception e) {
+        } catch (IOException e) {
             
         }
         
