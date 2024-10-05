@@ -4,7 +4,7 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-export default function PieChart({numFiles=0, labels=[], data=[], size=300, showPercentaje}) {
+export default function PieChart({numBytes=0, labels=[], data=[], size=300, showPercentaje}) {
 
     const [backgroundColor, setBackgroundColor] = useState([])
 
@@ -67,11 +67,9 @@ export default function PieChart({numFiles=0, labels=[], data=[], size=300, show
       tooltip: {
         callbacks: {
           label: function (tooltipItem) {
-            console.log(numFiles)
-            console.log(tooltipItem.raw)
             return showPercentaje ?
                  `${tooltipItem.label}: ${(100 * tooltipItem.raw).toFixed(2) } %`:
-                 `${tooltipItem.label}: ${(numFiles * tooltipItem.raw).toFixed(0)} bytes`;
+                 `${tooltipItem.label}: ${(numBytes * tooltipItem.raw).toFixed(0)} bytes`;
           },
         },
       },

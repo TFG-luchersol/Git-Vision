@@ -14,24 +14,22 @@
     overflow: auto;
 }
 
-
-/* Diferentes colores para los archivos */
-.archivo-1 {
-    background-color: #3498db; /* Azul */
+.extension-table {
+    border-collapse: collapse;
+    max-height: 200px; 
+    overflow-y: auto;
+    border: 1px solid black
 }
 
-.archivo-2 {
-    background-color: #e74c3c; /* Rojo */
+.extension-table th {
+    border: 1px solid black;
+    background-color: rgb(153, 207, 209);
+    padding: 10px;
 }
 
-.archivo-3 {
-    background-color: #2ecc71; /* Verde */
-}
-
-.archivo-4 {
-    background-color: #f1c40f; /* Amarillo */
-}
-
-.archivo-5 {
-    background-color: #9b59b6; /* Púrpura */
+.extension-table tr {
+    border: 1px solid black;
+    background-color: whitesmoke;
+    padding: 10px;
+    text-align: center;
 }

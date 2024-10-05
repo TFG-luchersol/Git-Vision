@@ -1,5 +1,7 @@
 package org.springframework.samples.gitvision.file;
 
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.gitvision.auth.payload.response.MessageResponse;
 import org.springframework.samples.gitvision.file.model.PercentageLanguages;
@@ -26,6 +28,20 @@ public class FileController {
         try {
             TreeNode treeNode = this.fileService.getFileTreeByRepositoryName(owner + "/" + repo, login);
             Information information = Information.create("tree", treeNode);
+            return MessageResponse.of(information);
+        } catch (Exception e) {
+            return MessageResponse.of(e.getMessage());
+        }
+        
+    }
+
+    @GetMapping("/repository/{owner}/{repo}/extension_counter")
+    public MessageResponse getExtensionCounterByRepositoryId(@PathVariable String owner, 
+                                                             @PathVariable String repo,
+                                                             @RequestParam String login){
+        try {
+            Map<String, Long> extensionCounter = this.fileService.getExtensionCounterByRepositoryId(owner + "/" + repo, login);
+            Information information = Information.create("extensionCounter", extensionCounter);
             return MessageResponse.of(information);
         } catch (Exception e) {
             return MessageResponse.of(e.getMessage());

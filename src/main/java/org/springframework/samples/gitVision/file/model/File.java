@@ -7,6 +7,8 @@ import lombok.Setter;
 @Setter
 public class File {
 
+    private static String UNKNOWN_EXTENSION = "Unknown";
+
     public File(String path){
         this.path = path;
         this.calcExtension();
@@ -17,19 +19,19 @@ public class File {
     String extension;
 
     public void setPath(String path) {
-        this.path = path;
+        this.path = path.trim();
         this.calcExtension();
     }
 
     private void calcExtension() {
         if (this.path == null) {
-            this.extension = null;
+            this.extension = UNKNOWN_EXTENSION;
         } else {
-            int dotIndex = this.path.lastIndexOf(".");
-            if (dotIndex <= 0 || dotIndex == this.path.length() - 1)
-                this.extension = null;
+            int dotIndex = this.getFileName().lastIndexOf(".");
+            if (dotIndex <= 1 || dotIndex == this.getFileName().length() - 1)
+                this.extension = UNKNOWN_EXTENSION;
             else
-                this.extension = this.path.substring(dotIndex + 1);
+                this.extension = this.getFileName().substring(dotIndex + 1);
         }
 
     }
