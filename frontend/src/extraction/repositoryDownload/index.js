@@ -33,18 +33,13 @@ export default function RepositoryDownload() {
                 url += `&token=${values.token}`;
             
             setIsLoading(true);
-            const {username, githubToken} = tokenService.getUser()
             const response = await fetch(url, {
                 method: "POST",
                 headers: { 
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify({ 
-                    login: username,
-                    oauthAccessToken: githubToken
-                })
-            });
-            console.log(response)
+                body: tokenService.getUser().username}
+            );
             if (response.status === 200) {
                 window.location.href = "/";
             } else {

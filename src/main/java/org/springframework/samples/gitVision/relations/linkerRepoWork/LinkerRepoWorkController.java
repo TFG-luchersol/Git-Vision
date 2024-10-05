@@ -14,10 +14,11 @@ public class LinkerRepoWorkController {
     LinkerRepoWorkService linkerRepoWorkService;
 
     @PostMapping
-    public void linkRepositoryWithWorkspace(@RequestParam Long repositoryId, @RequestParam String workspaceId, @RequestParam
-     Long userId) {
+    public void linkRepositoryWithWorkspace(@RequestParam String repositoryName, 
+                                            @RequestParam String workspaceName, 
+                                            @RequestParam Long userId) {
         try {
-            this.linkerRepoWorkService.linkRepositoryWithWorkspace(repositoryId, workspaceId, userId);
+            this.linkerRepoWorkService.linkRepositoryWithWorkspace(repositoryName, workspaceName, userId);
         } catch (Exception e) {
             
         }

@@ -24,7 +24,6 @@ export default function Repositories() {
         try {
             let newRepositories = await fetch(`/api/v1/relation/user_repository/repositories?userId=${tokenService.getUser().id}`)
             const json = await newRepositories.json()
-            console.log(json)
             const repositories = json.information.information.repositories
             setRepositories(repositories)
         } catch (e) {
@@ -33,13 +32,14 @@ export default function Repositories() {
     }
 
     const getWorkspaces = async () => {
-        // try {
-        //     let newWorkspaces = await fetch(`/api/v1/relation/user_repository/repositories?userId=${1}`)
-        //     newWorkspaces = await newWorkspaces.json()
-        //     setWorkspaces(newWorkspaces)
-        // } catch(e) {
-        //     alert(e)
-        // }
+        try {
+            let newWorkspaces = await fetch(`/api/v1/relation/user_workspace/workspaces?userId=${tokenService.getUser().id}`)
+            const json = await newWorkspaces.json()
+            const workspaces = json.information.information.workspaces
+            setWorkspaces(workspaces)
+        } catch(e) {
+            alert(e)
+        }
     }
 
 
@@ -62,16 +62,9 @@ export default function Repositories() {
                     ) : <h6>NO HAY REPOSITORIOS DESCARGADOS</h6>
 }
                 <h1 style={{marginTop: 10}}>Workspace <SiClockify color='blue'/></h1>
-                {workspaces.size > 0 ?
-                    workspaces.keys().map(owner => {
-                        return (<AccordionItem title={owner}>
-                            {workspaces.get(owner).map(repo =>
-                                <AccordionItem title={repo} leaf>
-                                    <span>📄</span> <span>📋</span>
-                                </AccordionItem>)
-                            }
-                        </AccordionItem>);
-                    }) : <h6>NO HAY REPOSITORIOS DESCARGADOS</h6>}
+                {workspaces.length > 0 ?
+                    workspaces.map(workspace => <AccordionItem leaf title={workspace.name}/>) : 
+                    <h6>NO HAY REPOSITORIOS DESCARGADOS</h6>}
             </div>
 
             <div className='button-group' style={{justifyContent: "center"}}>

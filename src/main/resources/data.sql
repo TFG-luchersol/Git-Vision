@@ -11,5 +11,5 @@
 -- INSERT INTO user_workspace(id,user_id,workspace_id,name) VALUES
 --                           (1,1,'1','User_1_Workspace_1');
 
--- INSERT INTO linker_repo_work(id,repository_id,workspace_id,user_id) VALUES
---                             (1,1,1,1);
+-- INSERT INTO linker_repo_work(id,user_repo_id,user_workspace_id) VALUES
+--                             (1,1,1);

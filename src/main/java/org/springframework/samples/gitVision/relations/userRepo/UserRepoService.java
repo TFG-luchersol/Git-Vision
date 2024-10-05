@@ -52,12 +52,12 @@ public class UserRepoService {
     }
 
     @Transactional
-    public void linkUserWithRepository(Credential credential, String repositoryName, String token){
+    public void linkUserWithRepository(String login, String repositoryName, String token){
         try {
-            GitHub gitHub = GitHub.connect(credential.getLogin(), credential.getOauthAccessToken());
-            GHRepository ghRepository = gitHub.getRepository(repositoryName);
-            User user = this.userRepository.findByUsername(credential.getLogin()).get();
+            User user = this.userRepository.findByUsername(login).get();
             token = Objects.requireNonNullElse(token, user.getGithubToken());
+            GitHub gitHub = GitHub.connect(login, token);
+            GHRepository ghRepository = gitHub.getRepository(repositoryName);
             UserRepo userRepo = new UserRepo();
             userRepo.setName(repositoryName);
             userRepo.setRepositoryId(ghRepository.getId());

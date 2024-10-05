@@ -9,6 +9,9 @@ import org.springframework.samples.gitvision.relations.userWorkspace.model.UserW
 import org.springframework.samples.gitvision.util.Information;
 import org.springframework.samples.gitvision.workspace.model.Workspace;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,6 +35,18 @@ public class UserWorkspaceController {
         List<UserWorkspace> userWorkspaces = this.userWorkspaceService.getAllWorkspaceByUserId(userId);
         Information information = Information.create("workspaces", userWorkspaces);
         return MessageResponse.of(information);
+    }
+
+    @PostMapping
+    public void linkUserWithWorkspace(@RequestBody String login,
+                                      @RequestParam String workspaceId, 
+                                      @RequestParam String name){
+        try {
+            userWorkspaceService.linkUserWithWorkspace(workspaceId, name, login);
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
+         
     }
 
 }

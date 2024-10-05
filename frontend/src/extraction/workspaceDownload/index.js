@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 import CustomInput from '../../components/CustomInput.js';
 import Preconditions from '../../util/check.js';
 import LoadingModal from '../../components/LoadingModal.js';
+import tokenService from '../../services/token.service.js';
 
 export default function WorkspaceDownload(){
 
@@ -21,17 +22,19 @@ export default function WorkspaceDownload(){
             Preconditions.checkNotBlank(values.id, "Id")
             Preconditions.checkNotBlank(values.name, "Name")
             setIsLoading(true);
-            const response = await fetch(`/api/v1/clockify/workspaces/${values.id}?name=${values.name}`, {
-                method: "POST"
+            const response = await fetch(`/api/v1/relation/user_workspace?workspaceId=${values.id}&name=${values.name}`, {
+                method: "POST",
+                body: tokenService.getUser().username
             });
             if (response.status === 200) {
-                // window.location.href = "/";
+                window.location.href = "/";
             } else {
                 const error = await response.json();
                 setMessage(error.message)
             }
         } catch (error) {
-            setMessage(error.message);
+            alert(error)
+            // setMessage(error.message);
         } finally {
             setIsLoading(false);
         }
