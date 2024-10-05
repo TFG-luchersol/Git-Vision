@@ -4,44 +4,46 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-export default function PieChart({labels=[], data=[], size=300}) {
+export default function PieChart({numFiles=0, labels=[], data=[], size=300, showPercentaje}) {
 
     const [backgroundColor, setBackgroundColor] = useState([])
-    const [borderColor, setBorderColor] = useState([])
 
     useEffect(() => {
         const colors = labels.map(key => stringToColor(key));
-        const lineColor = colors.map(key => darkenHexColor(key));
         setBackgroundColor(colors);
-        setBorderColor(lineColor);
     }, [labels])
 
     function stringToColor(str) {
-        let hash = 0;
-        for (let i = 0; i < str.length; i++) {
-            hash = str.charCodeAt(i) + ((hash << 5) - hash);
-        }
-        let color = '#'+((hash & 0x00FFFFFF).toString(16).padStart(6, '0')).toUpperCase();
-        return color;
-    }
-
-    function darkenHexColor(hex, percent=0.1) {
-        // Asegurarse de que el formato hexadecimal tenga el prefijo "#"
-        hex = hex.replace(/^#/, '');
-    
-        // Convertir los valores de color a números enteros
-        let r = parseInt(hex.substring(0, 2), 16);
-        let g = parseInt(hex.substring(2, 4), 16);
-        let b = parseInt(hex.substring(4, 6), 16);
-    
-        // Reducir el brillo del color
-        r = Math.max(0, Math.min(255, r * (1 - percent / 100)));
-        g = Math.max(0, Math.min(255, g * (1 - percent / 100)));
-        b = Math.max(0, Math.min(255, b * (1 - percent / 100)));
-    
-        // Convertir los valores de color de vuelta a formato hexadecimal
-        return `#${Math.round(r).toString(16).padStart(2, '0')}${Math.round(g).toString(16).padStart(2, '0')}${Math.round(b).toString(16).padStart(2, '0')}`;
-    }
+      let hash = 0;
+      for (let i = 0; i < str.length; i++) {
+          hash = str.charCodeAt(i) + ((hash << 5) - hash);
+      }
+  
+      // Extraer los componentes RGB
+      let r = (hash >> 16) & 0xFF;
+      let g = (hash >> 8) & 0xFF;
+      let b = hash & 0xFF;
+  
+      // Aumentar la saturación y la intensidad
+      r = (r * 2) % 256; // Multiplica por 2
+      g = (g * 2) % 256; // Multiplica por 2
+      b = (b * 2) % 256; // Multiplica por 2
+  
+      // Asegurar que los valores sean altos
+      r = Math.min(255, r + 50); // Aumentar un poco
+      g = Math.min(255, g + 50);
+      b = Math.min(255, b + 50);
+  
+      // Forzar un mínimo en los valores de color para mejorar la intensidad
+      r = Math.max(128, r); // Mantener el mínimo en 128
+      g = Math.max(128, g);
+      b = Math.max(128, b);
+  
+      // Convertir a formato hexadecimal
+      let color = '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase();
+  
+      return color;
+  }
     
     const data_ = {
     labels,
@@ -50,7 +52,7 @@ export default function PieChart({labels=[], data=[], size=300}) {
         label: 'Languajes',
         data,
         backgroundColor,
-        borderColor,
+        borderColor: "#585863",
         borderWidth: 1,
       },
     ],
@@ -65,7 +67,11 @@ export default function PieChart({labels=[], data=[], size=300}) {
       tooltip: {
         callbacks: {
           label: function (tooltipItem) {
-            return `${tooltipItem.label}: ${tooltipItem.raw}`;
+            console.log(numFiles)
+            console.log(tooltipItem.raw)
+            return showPercentaje ?
+                 `${tooltipItem.label}: ${(100 * tooltipItem.raw).toFixed(2) } %`:
+                 `${tooltipItem.label}: ${(numFiles * tooltipItem.raw).toFixed(0)} bytes`;
           },
         },
       },

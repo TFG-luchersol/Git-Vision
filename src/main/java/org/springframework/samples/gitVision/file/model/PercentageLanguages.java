@@ -10,18 +10,22 @@ public class PercentageLanguages {
     
     @JsonProperty
     private Map<String, Double> percentages;
+
+    @JsonProperty
+    private long numFiles;
     
     public PercentageLanguages(){
         this.percentages = new HashMap<>();
     }
 
-    public PercentageLanguages(Map<String, Double> percentages){
+    public PercentageLanguages(Map<String, Double> percentages, long numFiles){
         this.percentages = percentages;
+        this.numFiles = numFiles;
     }
 
     public static PercentageLanguages of(Map<String, Long> files){
         long cont = files.values().stream().mapToLong(Long::valueOf).sum();
         Map<String, Double> percentajes = files.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, entry -> 1.* entry.getValue() / cont));
-        return new PercentageLanguages(percentajes);
+        return new PercentageLanguages(percentajes, cont);
     }
 }

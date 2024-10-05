@@ -18,4 +18,6 @@ public interface UserRepoRepository extends RepositoryIdLong<UserRepo> {
 
     Optional<UserRepo> findByNameAndUser_Id(String repositoryName, Long userId);
 
+    Optional<UserRepo> findByNameAndUser_Username(String repositoryName, String username);
+
 }

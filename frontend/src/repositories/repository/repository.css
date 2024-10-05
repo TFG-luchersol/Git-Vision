@@ -1,0 +1,37 @@
+/* Estilo para el contenedor principal que simula el contenedor de archivos */
+.contenedor-archivos {
+    width: 50%;
+    height: 550px;
+    border: 2px solid #333;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    background-color: #f4f4f4;
+    padding: 10px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    overflow: auto;
+}
+
+
+/* Diferentes colores para los archivos */
+.archivo-1 {
+    background-color: #3498db; /* Azul */
+}
+
+.archivo-2 {
+    background-color: #e74c3c; /* Rojo */
+}
+
+.archivo-3 {
+    background-color: #2ecc71; /* Verde */
+}
+
+.archivo-4 {
+    background-color: #f1c40f; /* Amarillo */
+}
+
+.archivo-5 {
+    background-color: #9b59b6; /* Púrpura */
+}

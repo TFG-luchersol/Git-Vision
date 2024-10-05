@@ -37,7 +37,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/details" element={<Details />}/>
         <Route path="/repositories" element={<Repositories/>}/>
-        <Route path="/repository/1" element={<Repository/>}/>
+        <Route path="/repository/:owner/:repo" element={<Repository/>}/>
         <Route path="/workspace/download" element={<WorkspaceDownload/>}/>
         <Route path="/repository/download" element={<RepositoryDownload/>}/>
         <Route path="/repository/workspace/linker" element={<RepositoryWorkspaceLinker/>}/>

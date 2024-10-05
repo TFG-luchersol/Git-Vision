@@ -30,12 +30,12 @@ public class UserRepo extends EntityIdSequential {
 
     @NotBlank
     @Column(unique = true)
-    @Pattern(regexp = "^[a-zA-Z0-9](?:[a-zA-Z0-9_-]{0,38})/[a-zA-Z0-9_-]{1,100}$")
+    @Pattern(regexp = "^[^\\s/]+/[^\\s/]+$")
     private String name;
 
     private String token;
 
-    public boolean haveToken(){
+    public boolean hasToken(){
         return token != null;
     }
 

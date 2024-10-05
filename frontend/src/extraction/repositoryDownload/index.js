@@ -9,6 +9,7 @@ import '../../static/css/home/home.css';
 import Preconditions from '../../util/check.js';
 import LoadingModal from '../../components/LoadingModal.js';
 import tokenService from '../../services/token.service.js';
+import AlertMessage from '../../components/AlertMessage.js';
 
 export default function RepositoryDownload() {
     const userIcon = <FaRegUserCircle />
@@ -64,7 +65,7 @@ export default function RepositoryDownload() {
     return (
         <div className="home-page-container">
             <LoadingModal isLoading={isLoading} />
-            <Alert isOpen={message} color="danger" style={{ position: 'absolute', top: '30px' }}>{message}</Alert>
+            <AlertMessage message={message}/>
 
             <Form onSubmit={handleSubmit} className='auth-form-container' style={{ position: 'relative', top: 35}} >
                 <div style={{ margin: "30px" }}>

@@ -8,6 +8,8 @@ public interface UserRepository extends RepositoryIdLong<User>{
 
 	Optional<User> findByUsername(String username);
 
+	String findGithubTokenByUsername(String username);
+
 	boolean existsByUsername(String username);
 	
 }

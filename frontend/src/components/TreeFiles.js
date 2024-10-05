@@ -17,11 +17,11 @@ export default function TreeFiles({ root }) {
                         return !a.leaf || a.name.includes("/") ? -1 : 1;
                     }
                 }).map(child => showTree(child))}
-            </AccordionItem>);
+            </AccordionItem>)
     }
 
     return (
-        <div style={{ marginLeft: '40px', marginTop: '20px' }}>
+        <div>
             {root.children?.sort((a, b) => {
                     // Primero comparamos por tipo (carpeta o fichero)
                     if (a.leaf === b.leaf) {

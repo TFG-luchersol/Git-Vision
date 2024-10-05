@@ -3,6 +3,7 @@ import { Navbar, NavbarBrand, NavLink, NavItem, Nav, NavbarToggler, Collapse} fr
 import { Link } from 'react-router-dom';
 import { SiSwagger, SiGoogledocs } from "react-icons/si";
 import UserInformation from './UserInformation.js';
+import { RiGitRepositoryLine } from "react-icons/ri";
 
 export default function AppNavbar() {
 
@@ -28,9 +29,8 @@ export default function AppNavbar() {
     let userLogin = (
         <>
             <NavItem>
-                <NavLink>
-                    
-                    <Link to={"/repositories"}>REPOSITORIES</Link>
+                <NavLink id="repositories" tag={Link} to="/repositories">
+                    <RiGitRepositoryLine style={{fontSize:50}}/>
                 </NavLink>
             </NavItem>
             <NavItem>

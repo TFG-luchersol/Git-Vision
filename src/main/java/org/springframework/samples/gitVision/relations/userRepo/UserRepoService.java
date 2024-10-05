@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.gitvision.relations.userRepo.model.UserRepo;
 import org.springframework.samples.gitvision.user.User;
 import org.springframework.samples.gitvision.user.UserRepository;
-import org.springframework.samples.gitvision.util.Credential;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -55,8 +54,8 @@ public class UserRepoService {
     public void linkUserWithRepository(String login, String repositoryName, String token){
         try {
             User user = this.userRepository.findByUsername(login).get();
-            token = Objects.requireNonNullElse(token, user.getGithubToken());
-            GitHub gitHub = GitHub.connect(login, token);
+            String tokenToUse = Objects.requireNonNullElse(token, user.getGithubToken());
+            GitHub gitHub = GitHub.connect(login, tokenToUse);
             GHRepository ghRepository = gitHub.getRepository(repositoryName);
             UserRepo userRepo = new UserRepo();
             userRepo.setName(repositoryName);
