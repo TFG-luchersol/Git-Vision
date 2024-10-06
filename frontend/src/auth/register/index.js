@@ -45,7 +45,6 @@ export default function Register() {
                     const {message} = await dataSignin.json()
                     throw Error(message)
                 } else {
-                    console.log(2.4)
                     const response = await dataSignin.json()
                     tokenService.setUser(response.user);
                     tokenService.updateLocalAccessToken(response.token);
@@ -53,7 +52,6 @@ export default function Register() {
                 }
             }
         } catch (error) {
-            console.log(3)
             setMessage(error.message);
         }
     }

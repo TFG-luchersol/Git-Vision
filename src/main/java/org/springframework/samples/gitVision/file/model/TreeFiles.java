@@ -44,6 +44,10 @@ public class TreeFiles {
             return name;
         }
 
+        public String getExtension(){
+            return isLeaf() ? new File(this.name).getExtension() : null;
+        }
+
         public List<TreeNode> getChildren() {
             return children;
         }

@@ -1,5 +1,9 @@
 package org.springframework.samples.gitvision.relations.linkerRepoWork;
 
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.gitvision.exceptions.ResourceNotFoundException;
 import org.springframework.samples.gitvision.relations.linkerRepoWork.model.LinkerRepoWork;
@@ -26,6 +30,14 @@ public class LinkerRepoWorkService {
         this.userRepoRepository = userRepoRepository;
         this.userWorkspaceRepository = userWorkspaceRepository;
         this.linkerRepoWorkRepository = linkerRepoWorkRepository;
+    }
+
+    @Transactional(readOnly = true)
+    public Map<String, List<String>> getAllRelationsByUserId(Long userId){
+        return linkerRepoWorkRepository.findAllByUserId(userId)
+                                .stream()
+                                .collect(Collectors.groupingBy(rw -> rw.getUserWorkspace().getName(), 
+                                Collectors.mapping(rw -> rw.getUserRepo().getName(), Collectors.toList())));
     }
 
     @Transactional

@@ -5,17 +5,21 @@ import { useParams } from 'react-router-dom';
 import tokenService from '../../services/token.service.js';
 import './repository.css';
 import { Input } from 'reactstrap';
+import MultiSelectDropdown from '../../components/MultiSelectDropdown.js';
+import { FaFilter } from "react-icons/fa";
 
 export default function Repository() {
     const { username } = tokenService.getUser();
     const { owner, repo } = useParams();
 
     const [files, setFiles] = useState({});
+    const [filter, setFilter] = useState("");
     const [percentajeLanguajes, setPercentajeLanguajes] = useState({});
     const [showPercentaje, setShowPercentaje] = useState(false)
     const [numFiles, setNumFiles] = useState(0);
     const [numBytes, setNumBytes] = useState(0);
     const [extensionCounter, setExtensionCounter] = useState({})
+    const [selectedOptions, setSelectedOptions] = useState([]);
 
     useEffect(() => {
         getFiles()
@@ -40,12 +44,14 @@ export default function Repository() {
             let newFiles = await fetch(`/api/v1/files/repository/${id}/extension_counter?login=${username}`)
             const json = await newFiles.json()
             setExtensionCounter(json.information.information.extensionCounter)
-            setNumFiles(Object.values(extensionCounter).reduce((acc,next)=> acc+next), 0);
+            const numFiles = Object.values(json.information.information.extensionCounter)
+                .reduce((acc, next) => acc + next, 0);
+            setNumFiles(numFiles);
         } catch (e) {
 
         }
     }
-
+    
     const getPercentajeLanguajes = async () => {
         try {
             const id = `${owner}/${repo}`;
@@ -62,7 +68,17 @@ export default function Repository() {
         <div style={{ position: "fixed", top: 0, zIndex: -1, left: 0, right: 0, bottom: 0, backgroundColor: "#dcdcdc" }}>
             <div style={{ marginLeft: '40px', marginTop: "8%", display: 'flex', flexDirection: 'row', maxHeight: "80%" }}>
                 <div className='contenedor-archivos'>
-                    <TreeFiles root={files} className={"archivo"} />
+                    <div style={{ display: "flex", flexDirection: "row" }}>
+                        <Input type='text' value={filter} onChange={(e) => setFilter(e.target.value)}/>
+                        &nbsp;&nbsp;
+                        <MultiSelectDropdown
+                            selectedOptions={selectedOptions}
+                            setSelectedOptions={setSelectedOptions}
+                            width={400}
+                            options={[...Object.keys(extensionCounter).filter(value => value !== "Unknown")].sort().concat("Unknown")}
+                        />
+                    </div>
+                    <TreeFiles root={files} filter={filter} filterExtension={selectedOptions} className={"archivo"} />
                 </div>
                 <div style={{ position: 'relative', left: '50px', display: "flex", flexDirection: "row" }}>
                     <div style={{ display: "flex", flexDirection: "column" }}>
@@ -82,7 +98,7 @@ export default function Repository() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {Object.keys(extensionCounter).map((key, index) =>
+                                {[...Object.keys(extensionCounter).filter(value => value !== "Unknown")].sort().concat("Unknown").map((key, index) =>
                                     <tr key={index}>
                                         <td>{key}</td>
                                         <td>{extensionCounter[key]}</td>

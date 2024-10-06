@@ -22,8 +22,7 @@ export default function RepositoryDownload() {
 
     async function handleSubmit(event) {
         event.preventDefault()
-        const reqBody = JSON.stringify(values);
-        console.log(reqBody)
+        
         setMessage(null);
         try {
             Preconditions.checkNotBlank(values.owner, "Owner");

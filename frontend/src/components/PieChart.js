@@ -5,13 +5,13 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 export default function PieChart({numBytes=0, labels=[], data=[], size=300, showPercentaje}) {
-
+    
     const [backgroundColor, setBackgroundColor] = useState([])
 
     useEffect(() => {
         const colors = labels.map(key => stringToColor(key));
         setBackgroundColor(colors);
-    }, [labels])
+    }, [labels, numBytes])
 
     function stringToColor(str) {
       let hash = 0;
@@ -24,22 +24,18 @@ export default function PieChart({numBytes=0, labels=[], data=[], size=300, show
       let g = (hash >> 8) & 0xFF;
       let b = hash & 0xFF;
   
-      // Aumentar la saturación y la intensidad
-      r = (r * 2) % 256; // Multiplica por 2
-      g = (g * 2) % 256; // Multiplica por 2
-      b = (b * 2) % 256; // Multiplica por 2
+      r = (r * 2) % 256;
+      g = (g * 2) % 256; 
+      b = (b * 2) % 256;
   
-      // Asegurar que los valores sean altos
-      r = Math.min(255, r + 50); // Aumentar un poco
+      r = Math.min(255, r + 50);
       g = Math.min(255, g + 50);
       b = Math.min(255, b + 50);
   
-      // Forzar un mínimo en los valores de color para mejorar la intensidad
-      r = Math.max(128, r); // Mantener el mínimo en 128
+      r = Math.max(128, r); 
       g = Math.max(128, g);
       b = Math.max(128, b);
   
-      // Convertir a formato hexadecimal
       let color = '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase();
   
       return color;

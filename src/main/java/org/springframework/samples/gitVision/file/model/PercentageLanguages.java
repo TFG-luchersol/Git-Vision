@@ -12,15 +12,15 @@ public class PercentageLanguages {
     private Map<String, Double> percentages;
 
     @JsonProperty
-    private long numFiles;
+    private long numBytes;
     
     public PercentageLanguages(){
         this.percentages = new HashMap<>();
     }
 
-    public PercentageLanguages(Map<String, Double> percentages, long numFiles){
+    public PercentageLanguages(Map<String, Double> percentages, long numBytes){
         this.percentages = percentages;
-        this.numFiles = numFiles;
+        this.numBytes = numBytes;
     }
 
     public static PercentageLanguages of(Map<String, Long> files){

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../App.css';
 import '../static/css/home/home.css';
 import tokenService from "../services/token.service.js";
@@ -15,10 +15,12 @@ export default function Repositories() {
 
     const [repositories, setRepositories] = useState({})
     const [workspaces, setWorkspaces] = useState({})
+    const [relation, setRelation] = useState({})
 
     useEffect(() => {
-        getRepositories()
-        getWorkspaces()
+        getRepositories();
+        getWorkspaces();
+        getRelation();
     }, [])
 
     const getRepositories = async () => {
@@ -28,7 +30,7 @@ export default function Repositories() {
             const repositories = json.information.information.repositories
             setRepositories(repositories)
         } catch (e) {
-            alert(e)
+            // alert(e)
         }
     }
 
@@ -39,7 +41,18 @@ export default function Repositories() {
             const workspaces = json.information.information.workspaces
             setWorkspaces(workspaces)
         } catch (e) {
-            alert(e)
+            // alert(e)
+        }
+    }
+
+    const getRelation = async () => {
+        try {
+            let newRelation = await fetch(`/api/v1/linker?userId=${tokenService.getUser().id}`)
+            const json = await newRelation.json()
+            const workspaceRepository = json.information.information.workspace_repository
+            setRelation(workspaceRepository)
+        } catch (e) {
+            // alert(e)
         }
     }
 
@@ -67,7 +80,21 @@ export default function Repositories() {
                     <h1 style={{ marginTop: 10 }}>Workspace <SiClockify color='blue' /></h1>
                     <div className='contenedor-rutas'>
                         {workspaces.length > 0 ?
-                            workspaces.map(workspace => <AccordionItem leaf title={workspace.name} />) :
+                            workspaces.map(workspace => 
+                                    <div style={{display: "flex", flexDirection: "row"}}>
+                                        <AccordionItem leaf title={workspace.name} />
+                                        <div style={{display: "flex", flexDirection: "column"}}>
+                                        {relation[workspace.name] && 
+                                            relation[workspace.name].map(r => 
+                                                <div style={{ marginLeft: '20px', marginTop: '10px' }}>
+                                                    <FaLink style={{marginRight: "20px"}}/>{r}
+                                                </div>
+                                            )
+                                        }
+                                        </div>
+                                            
+                                    </div>
+                                ) :
                             <h6>NO HAY REPOSITORIOS DESCARGADOS</h6>}
                     </div>
                 </div>

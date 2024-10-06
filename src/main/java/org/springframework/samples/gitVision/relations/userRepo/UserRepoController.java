@@ -5,12 +5,11 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.gitvision.auth.payload.response.MessageResponse;
-import org.springframework.samples.gitvision.relations.userRepo.model.UserRepo;
-import org.springframework.samples.gitvision.user.User;
 import org.springframework.samples.gitvision.user.UserService;
-import org.springframework.samples.gitvision.util.Credential;
 import org.springframework.samples.gitvision.util.Information;
+import org.springframework.samples.gitvision.workspace.model.Workspace;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;

@@ -1,6 +1,6 @@
 /* Estilo para el contenedor principal que simula el contenedor de archivos */
 .contenedor-archivos {
-    width: 50%;
+    width: 53%;
     height: 550px;
     border: 2px solid #333;
     border-radius: 5px;
@@ -16,8 +16,9 @@
 
 .extension-table {
     border-collapse: collapse;
-    max-height: 200px; 
+    max-height: 200px;
     overflow-y: auto;
+    background-color: whitesmoke;
     border: 1px solid black
 }
 

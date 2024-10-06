@@ -21,7 +21,6 @@ export default function Login() {
     async function handleSubmit(event) {
         event.preventDefault()
         const reqBody = JSON.stringify(values);
-        console.log(reqBody)
         setMessage(null);
         try {
             const response = await fetch("/api/v1/auth/signin", {

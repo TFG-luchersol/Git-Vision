@@ -73,7 +73,6 @@ export default function RepositoryWorkspaceLinker() {
     function handleChange(property, value) {
         let newValues = { ...values };
         newValues[property] = value;
-        console.log(newValues);
         setValues(newValues)
     }
 

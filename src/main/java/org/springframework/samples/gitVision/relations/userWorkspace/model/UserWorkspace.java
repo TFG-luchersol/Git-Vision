@@ -2,10 +2,7 @@ package org.springframework.samples.gitvision.relations.userWorkspace.model;
 
 import org.springframework.samples.gitvision.model.entity.EntityIdSequential;
 import org.springframework.samples.gitvision.user.User;
-import org.springframework.samples.gitvision.workspace.model.Workspace;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
