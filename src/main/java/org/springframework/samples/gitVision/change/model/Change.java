@@ -32,6 +32,12 @@ public class Change {
         return change;
     }
 
+    public void merge(Change other) {
+        this.setAdditions(this.additions + other.additions);
+        this.setDeletions(this.deletions + other.deletions);
+        this.calcTotalChanges();
+    }
+
     public static Change merge(Change change1, Change change2) {
         Change change = new Change();
         change.setAdditions(change1.additions + change2.additions);
@@ -39,4 +45,11 @@ public class Change {
         change.calcTotalChanges();
         return change;
     }
+
+    @Override
+    public String toString() {
+        return "Change [additions=" + additions + ", deletions=" + deletions + "]";
+    }
+
+    
 }
