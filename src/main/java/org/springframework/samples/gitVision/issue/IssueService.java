@@ -1,38 +1,73 @@
 package org.springframework.samples.gitvision.issue;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.Objects;
 
-import org.kohsuke.github.GHCommit;
-import org.kohsuke.github.GHIssue;
+import org.kohsuke.github.GHIssueEvent;
 import org.kohsuke.github.GHIssueState;
 import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GitHub;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.gitvision.commit.model.Commit;
+import org.springframework.samples.gitvision.issue.model.Issue;
+import org.springframework.samples.gitvision.relations.userRepo.UserRepoRepository;
+import org.springframework.samples.gitvision.relations.userRepo.model.UserRepo;
+import org.springframework.samples.gitvision.user.User;
+import org.springframework.samples.gitvision.user.UserRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class IssueService {
 
-    @Transactional(readOnly = true)
-    public Map<Integer, List<Commit>> getAllCommitsByIssueNumberAndRepositoryId(Integer issueNumber, Long repositoryId) throws IOException{
-        GitHub github = GitHub.connect();
-        GHRepository ghRepository = github.getRepositoryById(repositoryId);
-        Map<Integer, List<Commit>> relation = ghRepository.getIssues(GHIssueState.ALL).stream()
-                            .collect(Collectors.toMap(GHIssue::getNumber, v -> new ArrayList<>()));
-        List<GHCommit> ghCommits = ghRepository.listCommits().toList();
-        for (GHCommit ghCommit : ghCommits) {
-            Commit commit = Commit.parse(ghCommit);
-            for (Integer number : commit.getIssueNumbers()) {
-                if(!relation.containsKey(number)) continue;
-                relation.get(number).add(commit);
-            }
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private UserRepoRepository userRepoRepository;
+
+    public List<Issue> getAllIssuesByRepositoryName(String repositoryName, String login) {
+        try {
+            User user = this.userRepository.findByUsername(login).get();
+            UserRepo userRepo = this.userRepoRepository.findByNameAndUser_Id(repositoryName, user.getId()).get();
+            String tokenToUse = Objects.requireNonNullElse(userRepo.getToken(), user.getGithubToken());
+            GitHub gitHub = GitHub.connect(login, tokenToUse);
+            List<Issue> issues = gitHub.getRepository(repositoryName).getIssues(GHIssueState.ALL)
+                    .stream().map(Issue::parse).toList();
+            return issues;
+        } catch (IOException e) {
+            return null;
         }
-        return relation;
+    }
+
+    private List<Commit> getCommitsByIssueNumber(GHRepository ghRepository, int issueNumber) throws IOException {
+        return ghRepository.getIssue(issueNumber).listEvents().toList().stream()
+                    .map(GHIssueEvent::getCommitId)
+                    .filter(Objects::nonNull)
+                    .map(t -> {
+                        try {
+                            return ghRepository.getCommit(t);
+                        } catch (IOException e) {
+                            throw new RuntimeException(e); 
+                        }
+                    })
+                    .map(Commit::parse).toList();
+    }
+
+    public Issue getIssueByRepositoryNameAndIssueNumber(String repositoryName, Integer issueNumber, String login) {
+        try {
+            User user = this.userRepository.findByUsername(login).get();
+            UserRepo userRepo = this.userRepoRepository.findByNameAndUser_Id(repositoryName, user.getId()).get();
+            String tokenToUse = Objects.requireNonNullElse(userRepo.getToken(), user.getGithubToken());
+            GitHub gitHub = GitHub.connect(login, tokenToUse);
+            GHRepository ghRepository = gitHub.getRepository(repositoryName);
+            Issue issue = Issue.parse(ghRepository.getIssue(issueNumber));
+            List<Commit> commits = getCommitsByIssueNumber(ghRepository, issueNumber);
+            issue.setCommits(commits);
+            return issue;
+        } catch (IOException e) {
+            return null;
+        }
     }
 
 }
