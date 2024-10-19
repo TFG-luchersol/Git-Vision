@@ -60,7 +60,7 @@ public class FileService {
         }
         GitHub gitHub = GitHub.connect(login, token);
         GHRepository ghRepository = gitHub.getRepository(repositoryName);
-        GHTree ghTree = ghRepository.getTreeRecursive("main", -1);
+        GHTree ghTree = ghRepository.getTreeRecursive(ghRepository.getDefaultBranch(), -1);
         List<String> paths = ghTree.getTree().stream().map(entry -> entry.getPath()).toList();
         return TreeFiles.buildTreeWithCollapse(paths);
     }
@@ -76,7 +76,7 @@ public class FileService {
         }
         GitHub gitHub = GitHub.connect(login, token);
         GHRepository ghRepository = gitHub.getRepository(repositoryName);
-        GHTree ghTree = ghRepository.getTreeRecursive("main", -1);
+        GHTree ghTree = ghRepository.getTreeRecursive(ghRepository.getDefaultBranch(), -1);
         Map<String, Long> cont = ghTree.getTree().stream()
                                .filter(i -> "blob".equals(i.getType()))
                                .map(entry -> new File(entry.getPath()).getExtension())

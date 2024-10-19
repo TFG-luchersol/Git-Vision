@@ -13,6 +13,10 @@ import Repository from "./repositories/repository";
 import WorkspaceDownload from "./extraction/workspaceDownload";
 import RepositoryDownload from "./extraction/repositoryDownload";
 import RepositoryWorkspaceLinker from "./extraction/repositoryWorkspaceLinker";
+import Issues from './repositories/repository/issues';
+import Issue from './repositories/repository/issues';
+import Commits from './repositories/repository/commits';
+import Commit from './repositories/repository/commits/commit';
 
 
 function ErrorFallback({ error, resetErrorBoundary }) {
@@ -30,7 +34,7 @@ function App() {
 
   let userRoutes = <></>;
   let publicRoutes = <></>;
-  // console.log(tokenService.getUser())
+
   userRoutes = (
       <>
         <Route path="/register" element={<Register />} />
@@ -38,6 +42,10 @@ function App() {
         <Route path="/details" element={<Details />}/>
         <Route path="/repositories" element={<Repositories/>}/>
         <Route path="/repository/:owner/:repo" element={<Repository/>}/>
+        <Route path="/repository/:owner/:repo/commits" element={<Commits/>}/>
+        <Route path="/repository/:owner/:repo/commits/:sha" element={<Commit/>}/>
+        <Route path="/repository/:owner/:repo/issues" element={<Issues/>}/>
+        <Route path="/repository/:owner/:repo/issues/:issueNumber" element={<Issue/>}/>
         <Route path="/workspace/download" element={<WorkspaceDownload/>}/>
         <Route path="/repository/download" element={<RepositoryDownload/>}/>
         <Route path="/repository/workspace/linker" element={<RepositoryWorkspaceLinker/>}/>

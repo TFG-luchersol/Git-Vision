@@ -2,38 +2,81 @@ package org.springframework.samples.gitvision.commit;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.BiConsumer;
-import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import org.kohsuke.github.GHCommit;
 import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GitHub;
+import org.kohsuke.github.PagedIterable;
+import org.kohsuke.github.PagedIterator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.gitvision.commit.model.Commit;
 import org.springframework.samples.gitvision.commit.model.commitsByTimePeriod.TimePeriod;
+import org.springframework.samples.gitvision.issue.model.Issue;
+import org.springframework.samples.gitvision.relations.userRepo.UserRepoRepository;
+import org.springframework.samples.gitvision.relations.userRepo.model.UserRepo;
+import org.springframework.samples.gitvision.user.User;
+import org.springframework.samples.gitvision.user.UserRepository;
 import org.springframework.samples.gitvision.util.EntityUtils;
+import org.springframework.samples.gitvision.util.GithubApi;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class CommitService {
 
+    @Autowired
+    UserRepository userRepository;
+
+    @Autowired
+    UserRepoRepository userRepoRepository;
+
     @Transactional(readOnly = true)
-    public List<Commit> getCommitsByRepositoryId(Long repositoryId) throws IOException {
-        GitHub gitHub = GitHub.connect();
-        GHRepository ghRepository = gitHub.getRepositoryById(repositoryId);
-        return ghRepository.listCommits().toList().stream().map(Commit::parse).toList();
+    public List<Commit> getCommitsByRepository(String repositoryName, String login, Integer page) throws IOException {
+        User user = this.userRepository.findByUsername(login).get();
+        UserRepo userRepo = this.userRepoRepository.findByNameAndUser_Id(repositoryName, user.getId()).get();
+        String tokenToUse = Objects.requireNonNullElse(userRepo.getToken(), user.getGithubToken());
+        GitHub gitHub = GitHub.connect(login, tokenToUse);
+        GHRepository ghRepository = gitHub.getRepository(repositoryName);
+        PagedIterator<GHCommit> commits = ghRepository.queryCommits().pageSize(10).list().iterator();
+        List<GHCommit> ghCommits = new ArrayList<>();
+        for (int i = 0; i < page; i++) {
+            ghCommits = commits.nextPage();
+        }
+        return ghCommits.stream().map(Commit::parse).toList();
     }
 
     @Transactional(readOnly = true)
-    public Map<TimePeriod, Map<Integer, Long>> getNumCommitsGroupByTime(Long repositoryId) throws IOException {
-        GitHub github = GitHub.connect();
-        GHRepository ghRepository = github.getRepositoryById(repositoryId);
+    public Commit getCommitByRepositoryNameAndSha(String repositoryName, String sha, String login) throws IOException {
+        User user = this.userRepository.findByUsername(login).orElse(null);
+        UserRepo userRepo = this.userRepoRepository.findByNameAndUser_Id(repositoryName, user.getId()).get();
+        String tokenToUse = Objects.requireNonNullElse(userRepo.getToken(), user.getGithubToken());
+        GitHub gitHub = GitHub.connect(login, tokenToUse);
+        GHRepository ghRepository = gitHub.getRepository(repositoryName);
+        GHCommit ghCommit = ghRepository.getCommit(sha);
+        Commit commit = Commit.parse(ghCommit);
+        for (Integer issueNumber : commit.getIssueNumbers()) {
+            commit.getIssues().add(Issue.parse(ghRepository.getIssue(issueNumber)));
+        }
+        return commit;
+    }
+
+    @Transactional(readOnly = true)
+    public Map<TimePeriod, Map<Integer, Long>> getNumCommitsGroupByTime(String repositoryName, String login) throws IOException {
+        User user = this.userRepository.findByUsername(login).get();
+        UserRepo userRepo = this.userRepoRepository.findByNameAndUser_Id(repositoryName, user.getId()).get();
+        String tokenToUse = Objects.requireNonNullElse(userRepo.getToken(), user.getGithubToken());
+        GitHub gitHub = GitHub.connect(login, tokenToUse);
+        GHRepository ghRepository = gitHub.getRepository(repositoryName);
         List<GHCommit> ghCommits = ghRepository.listCommits().toList();
         int minYear = EntityUtils.parseDateToLocalDateUTC(ghCommits.get(0).getCommitDate()).getYear(), 
             maxYear = EntityUtils.parseDateToLocalDateUTC(ghCommits.get(ghCommits.size() - 1).getCommitDate()).getYear();

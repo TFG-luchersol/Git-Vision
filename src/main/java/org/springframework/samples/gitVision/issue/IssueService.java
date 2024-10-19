@@ -26,21 +26,22 @@ public class IssueService {
     @Autowired
     private UserRepoRepository userRepoRepository;
 
-    public List<Issue> getAllIssuesByRepositoryName(String repositoryName, String login) {
-        try {
-            User user = this.userRepository.findByUsername(login).get();
-            UserRepo userRepo = this.userRepoRepository.findByNameAndUser_Id(repositoryName, user.getId()).get();
-            String tokenToUse = Objects.requireNonNullElse(userRepo.getToken(), user.getGithubToken());
-            GitHub gitHub = GitHub.connect(login, tokenToUse);
-            List<Issue> issues = gitHub.getRepository(repositoryName).getIssues(GHIssueState.ALL)
-                    .stream().map(Issue::parse).toList();
-            return issues;
-        } catch (IOException e) {
-            return null;
-        }
+    public List<Issue> getAllIssuesByRepositoryName(String repositoryName, String login, Integer page) throws IOException {
+        User user = this.userRepository.findByUsername(login).get();
+        UserRepo userRepo = this.userRepoRepository.findByNameAndUser_Id(repositoryName, user.getId()).get();
+        String tokenToUse = Objects.requireNonNullElse(userRepo.getToken(), user.getGithubToken());
+        GitHub gitHub = GitHub.connect(login, tokenToUse);
+        List<Issue> issues = gitHub.getRepository(repositoryName).getIssues(GHIssueState.ALL)
+                .stream().map(Issue::parse).toList();
+        return issues;
     }
 
-    private List<Commit> getCommitsByIssueNumber(GHRepository ghRepository, int issueNumber) throws IOException {
+    private List<Commit> getCommitsByIssueNumber(String repositoryName, Integer issueNumber, String login) throws IOException {
+        User user = this.userRepository.findByUsername(login).get();
+        UserRepo userRepo = this.userRepoRepository.findByNameAndUser_Id(repositoryName, user.getId()).get();
+        String tokenToUse = Objects.requireNonNullElse(userRepo.getToken(), user.getGithubToken());
+        GitHub gitHub = GitHub.connect(login, tokenToUse);
+        GHRepository ghRepository = gitHub.getRepository(repositoryName);
         return ghRepository.getIssue(issueNumber).listEvents().toList().stream()
                     .map(GHIssueEvent::getCommitId)
                     .filter(Objects::nonNull)
@@ -61,13 +62,11 @@ public class IssueService {
             String tokenToUse = Objects.requireNonNullElse(userRepo.getToken(), user.getGithubToken());
             GitHub gitHub = GitHub.connect(login, tokenToUse);
             GHRepository ghRepository = gitHub.getRepository(repositoryName);
-            Issue issue = Issue.parse(ghRepository.getIssue(issueNumber));
-            List<Commit> commits = getCommitsByIssueNumber(ghRepository, issueNumber);
-            issue.setCommits(commits);
-            return issue;
+            return Issue.parse(ghRepository.getIssue(issueNumber));
         } catch (IOException e) {
             return null;
         }
     }
+
 
 }

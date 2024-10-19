@@ -2,13 +2,18 @@ package org.springframework.samples.gitvision.commit.model;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.kohsuke.github.GHCommit;
+import org.kohsuke.github.GHUser;
+import org.kohsuke.github.GHCommit.File;
 import org.springframework.samples.gitvision.githubUser.model.GithubUser;
+import org.springframework.samples.gitvision.issue.model.Issue;
 import org.springframework.samples.gitvision.util.EntityUtils;
 
 import lombok.AllArgsConstructor;
@@ -21,8 +26,12 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Commit {
+
+    String sha;
     
     String message;
+
+    String body;
 
     LocalDateTime date;
 
@@ -34,9 +43,20 @@ public class Commit {
 
     GithubUser author;
 
+    List<File> files;
+
+    List<Issue> issues;
+
     public void setMessage(String message) {
         this.message = message;
         this.calcCommitType();
+        this.calcCommitBody();
+    }
+
+    private void calcCommitBody() {
+        String[] split = this.message.split("\n\n");
+        if(split.length > 1)
+            this.body = split[1];
     }
 
     private void calcCommitType() {
@@ -61,10 +81,17 @@ public class Commit {
 
     public static Commit parse(GHCommit ghCommit){
         GithubUser githubUser = new GithubUser();
-        Commit commit = null;
+        Commit commit = new Commit();
         try {
-            commit = new Commit(ghCommit.getCommitShortInfo().getMessage(), EntityUtils.parseDateToLocalDateTimeUTC(ghCommit.getCommitDate()) , ghCommit.getLinesAdded(), ghCommit.getLinesDeleted(), null, githubUser);
-            commit.calcCommitType();
+            githubUser = GithubUser.parse(ghCommit.getAuthor());
+            commit.setFiles(ghCommit.listFiles().toList());
+            commit.setIssues(new ArrayList<>());
+            commit.setSha(ghCommit.getSHA1());
+            commit.setMessage(ghCommit.getCommitShortInfo().getMessage());
+            commit.setAdditions(ghCommit.getLinesAdded());
+            commit.setDeletions(ghCommit.getLinesDeleted());
+            commit.setDate(EntityUtils.parseDateToLocalDateTimeUTC(ghCommit.getCommitDate()));
+            commit.setAuthor(githubUser);
         } catch (IOException e) {
             return null;
         }

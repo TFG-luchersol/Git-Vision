@@ -1,7 +1,9 @@
 package org.springframework.samples.gitvision.githubUser.model;
 
+import java.io.IOException;
 import java.util.Objects;
 
+import org.kohsuke.github.GHUser;
 import org.springframework.samples.gitvision.model.entity.Person;
 
 import jakarta.persistence.Entity;
@@ -12,6 +14,14 @@ import lombok.Setter;
 @Getter
 @Setter
 public class GithubUser extends Person {
+
+    public static GithubUser parse(GHUser ghUser) throws IOException{
+        GithubUser githubUser = new GithubUser();
+        githubUser.setAvatarUrl(ghUser.getAvatarUrl());
+        githubUser.setEmail(ghUser.getEmail());
+        githubUser.setUsername(ghUser.getLogin());
+        return githubUser;
+    }
     
     @Override
     public boolean equals(Object obj) {

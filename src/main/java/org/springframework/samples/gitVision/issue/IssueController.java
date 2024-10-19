@@ -22,12 +22,18 @@ public class IssueController {
 
     @GetMapping("/{owner}/{repo}")
     public MessageResponse getAllIssuesByRepositoryName(@PathVariable String owner, 
-                                                    @PathVariable String repo, 
-                                                    @RequestParam String login) {
-        String repositoryName = owner + "/" + repo;
-        List<Issue> issues = this.issueService.getAllIssuesByRepositoryName(repositoryName, login);
-        Information information = Information.create("issues", issues);
-        return MessageResponse.of(information);
+                                                        @PathVariable String repo, 
+                                                        @RequestParam String login,
+                                                        @RequestParam(defaultValue = "1") Integer page) {
+        try {
+            String repositoryName = owner + "/" + repo;
+            List<Issue> issues = this.issueService.getAllIssuesByRepositoryName(repositoryName, login, page);
+            Information information = Information.create("issues", issues);
+            return MessageResponse.of(information);
+        } catch (Exception e) {
+            return MessageResponse.of(e.getMessage());
+        }
+        
     }
 
     @GetMapping("/{owner}/{repo}/{issueNumber}")

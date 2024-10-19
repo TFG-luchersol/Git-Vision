@@ -16,7 +16,6 @@ public class Issue {
     private Integer number;
     private String body;
     private String state;
-    private List<Commit> commits;
 
     public static Issue parse(GHIssue ghIssue){
         Issue issue = new Issue();

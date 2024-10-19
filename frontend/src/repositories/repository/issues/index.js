@@ -2,26 +2,27 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Input } from 'reactstrap';
 import tokenService from '../../../services/token.service';
-import './commits.css';
+import './issues.css';
 
 export default function Commits() {
     const { username } = tokenService.getUser();
     const { owner, repo } = useParams();
 
-    const [commits, setCommits] = useState([])
+    const [issues, setIssues] = useState([])
     const [filterText, setFilterText] = useState("")
     const [page, setPage] = useState(1)
 
     useEffect(() => {
-        getCommits()
+        getIssues()
     }, [])
 
-    const getCommits = async () => {
+    const getIssues = async () => {
         try {
             const repositorName = `${owner}/${repo}`;
-            const newCommits = await fetch(`/api/v1/commits/${repositorName}?login=${username}&page=${page}`)
-            const json = await newCommits.json()
-            setCommits(json.information.information.commits)
+            const newIssues = await fetch(`/api/v1/issues/${repositorName}?login=${username}&page=${page}`)
+            const json = await newIssues.json()
+            console.log(json)
+            setIssues(json.information.information.issues)
         } catch (e) {
 
         }
@@ -34,7 +35,7 @@ export default function Commits() {
                     onChange={(e) => setFilterText(e.target.value)} 
                     style={{position: "relative", left: "6%"}}/>
                 <ul className='commits-container'>
-                    {commits.map((commit, index) => 
+                    {issues.map((commit, index) => 
                         <li className="commit-row" key={index} 
                             onClick={() => window.location.href += '/'+commit.sha}>
                             <div>
