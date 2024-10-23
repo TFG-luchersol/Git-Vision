@@ -64,7 +64,7 @@ public class UserRepoService {
             userRepo.setUser(user);
             userRepoRepository.save(userRepo);
         } catch (IOException e) {
-            
+            int a = 0;
         }
         
     }

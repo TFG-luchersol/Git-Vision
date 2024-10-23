@@ -29,23 +29,27 @@ export default function Commits() {
     }
 
     return (
-        <div style={{ position: "fixed", top: 0, zIndex: -1, left: 0, right: 0, bottom: 0, backgroundColor: "#dcdcdc"}}>
-            <div style={{display: "flex", flexDirection: "column", position:"absolute", top: "15%", width: "87%"}}>
-                <Input value={filterText}
-                    onChange={(e) => setFilterText(e.target.value)} 
-                    style={{position: "relative", left: "6%"}}/>
-                <ul className='commits-container'>
-                    {issues.map((commit, index) => 
-                        <li className="commit-row" key={index} 
-                            onClick={() => window.location.href += '/'+commit.sha}>
-                            <div>
-                                <span className="title">{commit.message}</span>
-                            </div>
-                        </li>
-                    )}
-                    <div style={{position: "relative", top:20, display:"flex", justifyContent:"center"}}>
-                    </div>
-                </ul>
+        <div style={{ position: "fixed", top: 0, zIndex: -1, left: 0, right: 0, bottom: 0, backgroundColor: "#dcdcdc" }}>
+            <div style={{ display: "flex", flexDirection: "column", position: "absolute", top: "15%", width: "87%" }}>
+                {
+                    issues.length === 0 ? <p style={{margin: "5%"} }> NO HAY ISSUES</p> :
+                        <>
+                            <Input value={filterText}
+                                onChange={(e) => setFilterText(e.target.value)}
+                                style={{ position: "relative", left: "6%" }} />
+                            <ul className='commits-container'>
+                                {issues.map((commit, index) =>
+                                    <li className="commit-row" key={index}
+                                        onClick={() => window.location.href += '/' + commit.sha}>
+                                        <div>
+                                            <span className="title">{commit.message}</span>
+                                        </div>
+                                    </li>
+                                )}
+                                <div style={{ position: "relative", top: 20, display: "flex", justifyContent: "center" }}>
+                                </div>
+                            </ul>
+                        </>}
             </div>
         </div>
     );

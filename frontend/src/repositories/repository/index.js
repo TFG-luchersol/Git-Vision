@@ -4,7 +4,7 @@ import PieChart from '../../components/PieChart.js';
 import { useParams } from 'react-router-dom';
 import tokenService from '../../services/token.service.js';
 import './repository.css';
-import { Input } from 'reactstrap';
+import { Button, ButtonGroup, Input } from 'reactstrap';
 import MultiSelectDropdown from '../../components/MultiSelectDropdown.js';
 import { FaFilter } from "react-icons/fa";
 
@@ -109,6 +109,10 @@ export default function Repository() {
                             </tbody>
                         </table>
                     </div>
+                    <ButtonGroup style={{position:"absolute", bottom:"10%", right:"5%"}}>
+                        <Button style={{height:50, width:100}} onClick={() => window.location.href += "/commits"}>COMMITS</Button>
+                        <Button style={{height:50, width:100}} onClick={() => window.location.href += "/issues"}>ISSUES</Button>
+                    </ButtonGroup> 
                 </div>
             </div>
         </div>

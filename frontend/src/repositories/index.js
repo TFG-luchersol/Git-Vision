@@ -28,6 +28,7 @@ export default function Repositories() {
             let newRepositories = await fetch(`/api/v1/relation/user_repository/repositories?userId=${tokenService.getUser().id}`)
             const json = await newRepositories.json()
             const repositories = json.information.information.repositories
+            console.log(repositories)
             setRepositories(repositories)
         } catch (e) {
             // alert(e)
@@ -74,7 +75,7 @@ export default function Repositories() {
                                     )
                                     }
                                 </AccordionItem>
-                            ) : <h6>NO HAY REPOSITORIOS DESCARGADOS</h6>
+                            ) : <h6 style={{margin: 20}} >NO HAY REPOSITORIOS DESCARGADOS</h6>
                         }
                     </div>
                     <h1 style={{ marginTop: 10 }}>Workspace <SiClockify color='blue' /></h1>
@@ -95,7 +96,7 @@ export default function Repositories() {
                                             
                                     </div>
                                 ) :
-                            <h6>NO HAY REPOSITORIOS DESCARGADOS</h6>}
+                            <h6 style={{margin: 20}}>NO HAY REPOSITORIOS DESCARGADOS</h6>}
                     </div>
                 </div>
 

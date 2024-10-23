@@ -36,10 +36,19 @@ export default function Details() {
   const handleClockifyTokenChange = (e) => setClockifyToken(e.target.value);
 
   const handleSave = async (tokenType) => {
+    const user = tokenService.getUser();
     if (tokenType === 'github') {
-      await fetch(`/api/v1/users/user/${username}/token/github`, {method: "PUT", body: githubToken}); 
+      const response = await fetch(`/api/v1/users/user/${username}/token/github`, 
+        {method: "PUT", body: githubToken}
+      );
+      const json = await response.json()
+      tokenService.setUser({...user, githubToken: json.information.information.githubToken})
     } else if (tokenType === 'clockify') {
-      await fetch(`/api/v1/users/user/${username}/token/clockify`, {method: "PUT", body: clockifyToken});
+      const response = await fetch(`/api/v1/users/user/${username}/token/clockify`, 
+        {method: "PUT", body: clockifyToken}
+      );
+      const json = await response.json()
+      tokenService.setUser({...user, clockifyToken: json.information.information.clockifyToken})
     }
   };
 
