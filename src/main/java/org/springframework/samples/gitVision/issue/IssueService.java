@@ -15,6 +15,7 @@ import org.springframework.samples.gitvision.relations.userRepo.UserRepoReposito
 import org.springframework.samples.gitvision.relations.userRepo.model.UserRepo;
 import org.springframework.samples.gitvision.user.User;
 import org.springframework.samples.gitvision.user.UserRepository;
+import org.springframework.samples.gitvision.util.GithubApi;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -30,10 +31,21 @@ public class IssueService {
         User user = this.userRepository.findByUsername(login).get();
         UserRepo userRepo = this.userRepoRepository.findByNameAndUser_Id(repositoryName, user.getId()).get();
         String tokenToUse = Objects.requireNonNullElse(userRepo.getToken(), user.getGithubToken());
-        GitHub gitHub = GitHub.connect(login, tokenToUse);
-        List<Issue> issues = gitHub.getRepository(repositoryName).getIssues(GHIssueState.ALL)
-                .stream().map(Issue::parse).toList();
-        return issues;
+        return GithubApi.getIssuesByPage(repositoryName, page, 30, tokenToUse);
+    }
+
+    private List<Commit> getCommitsByIssueNumber(GHRepository ghRepository, Integer issueNumber) throws IOException {
+        return ghRepository.getIssue(issueNumber).listEvents().toList().stream()
+                    .map(GHIssueEvent::getCommitId)
+                    .filter(Objects::nonNull)
+                    .map(t -> {
+                        try {
+                            return ghRepository.getCommit(t);
+                        } catch (IOException e) {
+                            throw new RuntimeException(e); 
+                        }
+                    })
+                    .map(Commit::parse).toList();
     }
 
     private List<Commit> getCommitsByIssueNumber(String repositoryName, Integer issueNumber, String login) throws IOException {
@@ -62,7 +74,9 @@ public class IssueService {
             String tokenToUse = Objects.requireNonNullElse(userRepo.getToken(), user.getGithubToken());
             GitHub gitHub = GitHub.connect(login, tokenToUse);
             GHRepository ghRepository = gitHub.getRepository(repositoryName);
-            return Issue.parse(ghRepository.getIssue(issueNumber));
+            Issue issue = Issue.parse(ghRepository.getIssue(issueNumber));
+            issue.setCommits(getCommitsByIssueNumber(ghRepository, issueNumber));
+            return issue;
         } catch (IOException e) {
             return null;
         }

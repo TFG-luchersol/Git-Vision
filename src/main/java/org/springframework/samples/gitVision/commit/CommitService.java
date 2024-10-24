@@ -45,14 +45,7 @@ public class CommitService {
         User user = this.userRepository.findByUsername(login).get();
         UserRepo userRepo = this.userRepoRepository.findByNameAndUser_Id(repositoryName, user.getId()).get();
         String tokenToUse = Objects.requireNonNullElse(userRepo.getToken(), user.getGithubToken());
-        GitHub gitHub = GitHub.connect(login, tokenToUse);
-        GHRepository ghRepository = gitHub.getRepository(repositoryName);
-        PagedIterator<GHCommit> commits = ghRepository.queryCommits().pageSize(10).list().iterator();
-        List<GHCommit> ghCommits = new ArrayList<>();
-        for (int i = 0; i < page; i++) {
-            ghCommits = commits.nextPage();
-        }
-        return ghCommits.stream().map(Commit::parse).toList();
+        return  GithubApi.getCommitsByPage(repositoryName, page, 30,tokenToUse);
     }
 
     @Transactional(readOnly = true)

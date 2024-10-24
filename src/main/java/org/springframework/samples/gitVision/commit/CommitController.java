@@ -34,7 +34,8 @@ public class CommitController {
         try {
             String repositoryName = owner + "/" + repo;
             List<Commit> commits = this.commitService.getCommitsByRepository(repositoryName, login, page);
-            Information information = Information.create("commits", commits);
+            Information information = Information.create("commits", commits)
+                                                 .put("page", page);
             return MessageResponse.of(information);
         } catch (IOException e) {
             return null;

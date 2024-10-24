@@ -14,7 +14,7 @@ import WorkspaceDownload from "./extraction/workspaceDownload";
 import RepositoryDownload from "./extraction/repositoryDownload";
 import RepositoryWorkspaceLinker from "./extraction/repositoryWorkspaceLinker";
 import Issues from './repositories/repository/issues';
-import Issue from './repositories/repository/issues';
+import Issue from './repositories/repository/issues/issue';
 import Commits from './repositories/repository/commits';
 import Commit from './repositories/repository/commits/commit';
 

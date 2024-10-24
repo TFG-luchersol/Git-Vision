@@ -16,6 +16,8 @@ import org.springframework.samples.gitvision.githubUser.model.GithubUser;
 import org.springframework.samples.gitvision.issue.model.Issue;
 import org.springframework.samples.gitvision.util.EntityUtils;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -95,6 +97,13 @@ public class Commit {
         } catch (IOException e) {
             return null;
         }
+        return commit;
+    }
+
+    public static Commit parseJson(JsonNode jsonNode){
+        Commit commit = new Commit();
+        commit.setSha(jsonNode.get("sha").textValue());
+        commit.setMessage(jsonNode.get("commit").get("message").textValue());
         return commit;
     }
 

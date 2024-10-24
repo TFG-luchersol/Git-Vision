@@ -1,56 +1,50 @@
-.issue-container {
-    position: relative;
-    top: 20%;
-    left: 5%;
-    padding: 20px;
-    height: 80%;
-    overflow-y: auto;
-  }
-  
-  .issue-container::-webkit-scrollbar {
-    width: 15px; 
-  }
-  
-  .issue-container::-webkit-scrollbar-thumb {
-    background-color: #888; 
-    border-radius: 4px; 
-  }
-  
-  .issue-container::-webkit-scrollbar-thumb:hover {
-    background-color: #555; 
-  }
-  
-  .issue-container::-webkit-scrollbar-track {
-    background-color: #f1f1f1;
-    border-radius: 4px;
-  }
-  
-  .commit-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-direction: row;
-    background-color: #eee7e7;
-    cursor: pointer;
-    padding: 15px;
-    margin-bottom: 10px;
-    border-radius: 10px;
-    border: 1px solid #ccc;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s ease;
-  }
-  
-  .commit-row:hover {
-    transform: translateY(-2px);
-  }
-  
-  .title {
-    font-size: 16px;
-    font-weight: bold;
-    color: #333;
-  }
-  
-  .number {
-    font-size: 16px;
-    color: cornflowerblue;
-  }
+.issue-message {
+  position: relative;
+  top: 20%;
+  left: 5%;
+  background-color: #f1f1f1;
+  border-radius: 20px;
+  padding: 20px;
+  height: 80%;
+  overflow-y: auto;
+  display: flex;
+  justify-content: space-between;
+}
+
+.issue-container::-webkit-scrollbar {
+  width: 15px; 
+}
+
+.issue-container::-webkit-scrollbar-thumb {
+  background-color: #888; 
+  border-radius: 4px; 
+}
+
+.issue-container::-webkit-scrollbar-thumb:hover {
+  background-color: #555; 
+}
+
+.issue-container::-webkit-scrollbar-track {
+  background-color: #f1f1f1;
+  border-radius: 4px;
+}
+
+.commit-container {
+  position: relative;
+  overflow-y: auto;
+}
+
+.commit-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: row;
+  background-color: #eee7e7;
+  cursor: pointer;
+  padding: 15px;
+  margin-bottom: 10px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease;
+}

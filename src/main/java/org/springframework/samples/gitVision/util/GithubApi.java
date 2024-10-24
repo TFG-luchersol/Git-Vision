@@ -5,16 +5,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.h2.command.dml.Merge;
 import org.kohsuke.github.GHCommit;
 import org.kohsuke.github.GHIssue;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.samples.gitvision.commit.model.Commit;
+import org.springframework.samples.gitvision.issue.model.Issue;
 import org.springframework.samples.gitvision.project.model.Project;
 import org.springframework.samples.gitvision.task.model.Task;
 import org.springframework.samples.gitvision.workspace.model.Workspace;
 import org.springframework.web.client.RestTemplate;
+
+import com.fasterxml.jackson.databind.JsonNode;
 
 public class GithubApi {
     
@@ -24,7 +29,7 @@ public class GithubApi {
         restTemplate = new RestTemplate();
     }
 
-    private static <T> T requestClockify(String url, String githubToken, Class<T> clazz) {
+    private static <T> T requestGithub(String url, String githubToken, Class<T> clazz) {
         String url_template =  "https://api.github.com" + url;
 
         HttpHeaders headers = new HttpHeaders();
@@ -37,22 +42,16 @@ public class GithubApi {
         return response.getBody();
     }
 
-    public static GHCommit[] getCommitsByPage(String repositoryName, Integer page, String githubToken){
-        String url = String.format("/repos/%s/commits?page=%d", repositoryName, page);
-        GHCommit[] ghCommits = requestClockify(url, githubToken, GHCommit[].class);
-        return ghCommits;
+    public static List<Commit> getCommitsByPage(String repositoryName, Integer page, Integer perPage, String githubToken){
+        String url = String.format("/repos/%s/commits?page=%d&per_page=%d", repositoryName, page, perPage);
+        JsonNode[] commits = requestGithub(url, githubToken, JsonNode[].class);
+        return Arrays.stream(commits).map(Commit::parseJson).toList();
     }
 
-    public static GHIssue[] getIssuesByPage(String repositoryName, Integer page, String githubToken){
-        String url = String.format("/repos/%s/issues?page=%d", repositoryName, page);
-        GHIssue[] ghIssues = requestClockify(url, githubToken, GHIssue[].class);
-        return ghIssues;
-    }
-
-    public static List<Project> getProjectsByWorkspaceId(String workspaceId, String clockifyToken) {
-        String url = String.format("/v1/workspaces/%s/projects", workspaceId);
-        Project[] projects = requestClockify(url, clockifyToken, Project[].class);
-        return Arrays.asList(projects);
+    public static List<Issue> getIssuesByPage(String repositoryName, Integer page, Integer perPage, String githubToken){
+        String url = String.format("/repos/%s/issues?state=all&page=%d&per_page=%d", repositoryName, page, perPage);
+        JsonNode[] issues = requestGithub(url, githubToken, JsonNode[].class);
+        return Arrays.stream(issues).map(Issue::parseJson).toList();
     }
     
 }
