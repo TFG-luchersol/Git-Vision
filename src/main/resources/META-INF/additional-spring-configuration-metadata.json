@@ -13,5 +13,20 @@
     "name": "petclinic.app.jwtExpirationMs",
     "type": "java.lang.String",
     "description": "Miliseconds for JWT expiration'"
+  },
+  {
+    "name": "tokens.github",
+    "type": "java.lang.String",
+    "description": "A description for 'tokens.github'"
+  },
+  {
+    "name": "tokens.clockify",
+    "type": "java.lang.String",
+    "description": "A description for 'tokens.clockify'"
+  },
+  {
+    "name": "spring.datasource.init.mode",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.init.mode'"
   }
 ]}

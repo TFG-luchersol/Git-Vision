@@ -1,64 +1,97 @@
 package org.springframework.samples.gitvision.commit;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.function.BiConsumer;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
+import org.kohsuke.github.GHCommit;
+import org.kohsuke.github.GHRepository;
+import org.kohsuke.github.GitHub;
+import org.kohsuke.github.PagedIterable;
+import org.kohsuke.github.PagedIterator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.samples.gitvision.commit.model.commitsByPerson.CommitsByPerson;
-import org.springframework.samples.gitvision.commit.model.commitsByTimePeriod.CommitsByTimePeriod;
+import org.springframework.samples.gitvision.commit.model.Commit;
 import org.springframework.samples.gitvision.commit.model.commitsByTimePeriod.TimePeriod;
+import org.springframework.samples.gitvision.issue.model.Issue;
+import org.springframework.samples.gitvision.relations.userRepo.UserRepoRepository;
+import org.springframework.samples.gitvision.relations.userRepo.model.UserRepo;
+import org.springframework.samples.gitvision.user.User;
+import org.springframework.samples.gitvision.user.UserRepository;
+import org.springframework.samples.gitvision.util.EntityUtils;
+import org.springframework.samples.gitvision.util.GithubApi;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class CommitService {
 
-    CommitRepository commitRepository;
+    @Autowired
+    UserRepository userRepository;
 
     @Autowired
-    public CommitService(CommitRepository commitRepository) {
-        this.commitRepository = commitRepository;
+    UserRepoRepository userRepoRepository;
+
+    @Transactional(readOnly = true)
+    public List<Commit> getCommitsByRepository(String repositoryName, String login, Integer page) throws IOException {
+        User user = this.userRepository.findByUsername(login).get();
+        UserRepo userRepo = this.userRepoRepository.findByNameAndUser_Id(repositoryName, user.getId()).get();
+        String tokenToUse = Objects.requireNonNullElse(userRepo.getToken(), user.getGithubToken());
+        return  GithubApi.getCommitsByPage(repositoryName, page, 30,tokenToUse);
     }
 
     @Transactional(readOnly = true)
-    public CommitsByPerson getNumCommitsByUserInPeriod(Long repositoryId, LocalDateTime startDate,
-            LocalDateTime endDate) {
-        List<Object[]> res = null;
-        if (startDate == null && endDate == null)
-            res = this.commitRepository.getNumCommitsByUserOnDate(repositoryId, startDate, endDate);
-        else if (startDate == null)
-            res = this.commitRepository.getNumCommitsByUserBeforeThat(repositoryId, endDate);
-        else if (endDate == null)
-            res = this.commitRepository.getNumCommitsByUserAfterThat(repositoryId, startDate);
-        else
-            res = this.commitRepository.getNumCommitsByUser(repositoryId);
-
-        return CommitsByPerson.of(res);
+    public Commit getCommitByRepositoryNameAndSha(String repositoryName, String sha, String login) throws IOException {
+        User user = this.userRepository.findByUsername(login).orElse(null);
+        UserRepo userRepo = this.userRepoRepository.findByNameAndUser_Id(repositoryName, user.getId()).get();
+        String tokenToUse = Objects.requireNonNullElse(userRepo.getToken(), user.getGithubToken());
+        GitHub gitHub = GitHub.connect(login, tokenToUse);
+        GHRepository ghRepository = gitHub.getRepository(repositoryName);
+        GHCommit ghCommit = ghRepository.getCommit(sha);
+        Commit commit = Commit.parse(ghCommit);
+        for (Integer issueNumber : commit.getIssueNumbers()) {
+            commit.getIssues().add(Issue.parse(ghRepository.getIssue(issueNumber)));
+        }
+        return commit;
     }
 
     @Transactional(readOnly = true)
-    public CommitsByTimePeriod getNumCommitsGroupByTime(Long repositoryId, TimePeriod timePeriod) {
-        List<Integer[]> res = switch (timePeriod) {
-            case HOUR -> commitRepository.getNumCommitsByHour(repositoryId);
-            case DAY_OF_WEEK -> commitRepository.getNumCommitsByDayOfWeek(repositoryId);
-            case MONTH -> commitRepository.getNumCommitsByMonth(repositoryId);
-            case YEAR -> commitRepository.getNumCommitsByYear(repositoryId);
+    public Map<TimePeriod, Map<Integer, Long>> getNumCommitsGroupByTime(String repositoryName, String login) throws IOException {
+        User user = this.userRepository.findByUsername(login).get();
+        UserRepo userRepo = this.userRepoRepository.findByNameAndUser_Id(repositoryName, user.getId()).get();
+        String tokenToUse = Objects.requireNonNullElse(userRepo.getToken(), user.getGithubToken());
+        GitHub gitHub = GitHub.connect(login, tokenToUse);
+        GHRepository ghRepository = gitHub.getRepository(repositoryName);
+        List<GHCommit> ghCommits = ghRepository.listCommits().toList();
+        int minYear = EntityUtils.parseDateToLocalDateUTC(ghCommits.get(0).getCommitDate()).getYear(), 
+            maxYear = EntityUtils.parseDateToLocalDateUTC(ghCommits.get(ghCommits.size() - 1).getCommitDate()).getYear();
+        Map<TimePeriod, Map<Integer, Long>> cont = new HashMap<>();
+        Function<Integer, Long> zero = n -> 0L;
+        cont.put(TimePeriod.HOUR, IntStream.rangeClosed(0, 23).boxed().collect(Collectors.toMap(Function.identity(), zero)));
+        cont.put(TimePeriod.DAY_OF_WEEK, IntStream.rangeClosed(1, 7).boxed().collect(Collectors.toMap(Function.identity(), zero)));
+        cont.put(TimePeriod.MONTH, IntStream.rangeClosed(1, 12).boxed().collect(Collectors.toMap(Function.identity(), zero)));
+        cont.put(TimePeriod.YEAR, IntStream.rangeClosed(minYear, maxYear).boxed().collect(Collectors.toMap(Function.identity(), zero)));
+
+        BiConsumer<TimePeriod, Integer> incrementCont = (t, i) -> {
+            Map<Integer, Long> innerCont = cont.get(t);
+            innerCont.put(i, innerCont.get(i) + 1);
         };
-        return CommitsByTimePeriod.of(res, timePeriod);
+        for (GHCommit ghCommit : ghCommits) {
+            LocalDateTime date = EntityUtils.parseDateToLocalDateTimeUTC(ghCommit.getCommitDate());
+            incrementCont.accept(TimePeriod.HOUR, date.getHour());
+            incrementCont.accept(TimePeriod.DAY_OF_WEEK, date.getDayOfWeek().getValue());
+            incrementCont.accept(TimePeriod.MONTH, date.getMonthValue());
+            incrementCont.accept(TimePeriod.YEAR, date.getYear());
+        }
+        return cont;
     }
-
-    // @Transactional
-    // public void saveCommit(GHCommit ghCommit) {
-    //     Commit commit = new Commit();
-    //     try {
-    //         commit.setMessage(ghCommit.getCommitShortInfo().getMessage());
-    //         // commit.setAuthor(ghCommit.getAuthor());
-    //         commit.setDate(EntityUtils.parseDateToLocalDateTimeUTC(ghCommit.getCommitDate()));
-    //         commit.setAdditions(ghCommit.getLinesAdded());
-    //         commit.setDeletions(ghCommit.getLinesDeleted());
-    //     } catch (IOException e) {
-    //         e.printStackTrace();
-    //     }
-    // }
 
 }

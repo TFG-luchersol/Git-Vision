@@ -26,8 +26,6 @@ public class UserDetailsImpl implements UserDetails {
 	@JsonIgnore
 	private String password, clockfiyToken, avatarUrl, email;
 
-
-
 	private Collection<? extends GrantedAuthority> authorities;
 
 	public UserDetailsImpl(Long id, String username, String password) {
@@ -38,7 +36,7 @@ public class UserDetailsImpl implements UserDetails {
 	}
 
 	public static UserDetailsImpl build(User user) {
-		return new UserDetailsImpl(user.getId(), user.getUsername(), user.getGithubToken());
+		return new UserDetailsImpl(user.getId(), user.getUsername(), user.getPassword());
 	}
 
 

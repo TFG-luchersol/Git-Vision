@@ -1,0 +1,8 @@
+.flex-container {
+    margin: "30px"
+}
+
+.flex-container FormGroup{
+    display: flex !important;
+    flex-direction: row !important;
+}
