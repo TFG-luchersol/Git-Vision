@@ -17,10 +17,14 @@ package org.springframework.samples.gitvision.user;
 
 import jakarta.validation.Valid;
 
+import java.io.IOException;
+
+import org.kohsuke.github.GitHub;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.samples.gitvision.exceptions.ResourceNotFoundException;
+import org.springframework.samples.gitvision.util.ClockifyApi;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -29,12 +33,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class UserService {
 
-	private UserRepository userRepository;
-
 	@Autowired
-	public UserService(UserRepository userRepository) {
-		this.userRepository = userRepository;
-	}
+	private UserRepository userRepository;
 
 	@Transactional(readOnly = true)
 	public User findUserByUsername(String username) {
@@ -76,17 +76,28 @@ public class UserService {
 	}
 
 	@Transactional 
-	public User updateGithubToken(String username, String githubToken){
+	public void updateGithubToken(String username, String githubToken) throws IOException{
+		GitHub gitHub = GitHub.connect(username, githubToken);
+	
+		if(gitHub.getMyself() == null)
+			throw new IllegalAccessError("Error: fail to connect Github with new token");
 		User user = findUserByUsername(username);
 		user.setGithubToken(githubToken);
-		return user;
+		userRepository.save(user);
 	}
 
 	@Transactional 
-	public User updateClockifyToken(String username, String clockifyToken){
+	public void updateClockifyToken(String username, String clockifyToken){
+		
+		try {
+			ClockifyApi.getCurrentUser(clockifyToken);
+		} catch (Exception e) {
+			throw new IllegalAccessError("Error en conexión a clockify con token");
+		}
+			
 		User user = findUserByUsername(username);
 		user.setClockifyToken(clockifyToken);
-		return user;
+		userRepository.save(user);
 	}
 
 
@@ -102,6 +113,5 @@ public class UserService {
 		this.userRepository.delete(toDelete);
 	}
 
-	
 
 }

@@ -25,7 +25,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.samples.gitvision.auth.payload.response.MessageResponse;
 import org.springframework.samples.gitvision.exceptions.AccessDeniedException;
-import org.springframework.samples.gitvision.util.Data;
+import org.springframework.samples.gitvision.util.Information;
 import org.springframework.samples.gitvision.util.RestPreconditions;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,7 +37,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 // @SecurityRequirement(name = "bearerAuth")
@@ -81,20 +80,20 @@ public class UserController {
 	@PutMapping("/user/{username}/token/github")
 	public ResponseEntity<MessageResponse> updateGithubToken(@PathVariable String username, @RequestBody String githubToken) {
 		try {
-			User user = userService.updateGithubToken(username, githubToken);
-			Data customMap = Data.empty().put("githubToken", githubToken);
+			userService.updateGithubToken(username, githubToken);
+			Information customMap = Information.empty().put("githubToken", githubToken);
 			return ResponseEntity.ok(MessageResponse.of("Github Token has been updated", customMap));
 		} catch (Exception e) {
-			return ResponseEntity.badRequest().body(MessageResponse.of("Failed!"));
+			return ResponseEntity.badRequest().body(MessageResponse.of(e.getMessage()));
 		}
 	}
 
 	@PutMapping("/user/{username}/token/clockify")
 	public ResponseEntity<MessageResponse> updateClockifyToken(@PathVariable String username, @RequestBody String clockifyToken) {
 		try {
-			User user = userService.updateClockifyToken(username, clockifyToken);
-			Data customMap = Data.empty().put("clockifyToken", clockifyToken);
-			return ResponseEntity.ok(MessageResponse.of("Github Token has been updated"));
+			userService.updateClockifyToken(username, clockifyToken);
+			Information customMap = Information.empty().put("clockifyToken", clockifyToken);
+			return ResponseEntity.ok(MessageResponse.of("Github Token has been updated", customMap));
 		} catch (Exception e) {
 			return ResponseEntity.badRequest().body(MessageResponse.of("Failed!"));
 		}
@@ -104,11 +103,8 @@ public class UserController {
 	@ResponseStatus(HttpStatus.OK)
 	public ResponseEntity<MessageResponse> delete(@PathVariable("userId") Long id) {
 		RestPreconditions.checkNotNull(userService.findUserById(id), "User", "ID", id);
-		if (!Objects.equals(userService.findCurrentUser().getId(), id)) {
-			userService.deleteUserById(id);
-			return ResponseEntity.ok(new MessageResponse("User deleted!"));
-		} else
-			throw new AccessDeniedException("You can't delete yourself!");
+		userService.deleteUserById(id);
+		return ResponseEntity.ok(new MessageResponse("User deleted!"));
 	}
 
 }

@@ -25,7 +25,6 @@ class UserEdit extends Component {
     }
 
     async componentDidMount() {
-        console.log(this.id)
         if (this.id !== "new") {
             const user = await (await fetch(`/api/v1/users/${this.id}`, {
                 headers: {

@@ -1,6 +1,6 @@
 package org.springframework.samples.gitvision.auth.payload.response;
 
-import org.springframework.samples.gitvision.util.Data;
+import org.springframework.samples.gitvision.util.Information;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,7 +12,7 @@ import lombok.Setter;
 public class MessageResponse {
 
 	private String message;
-	private Data data;
+	private Information information;
 
 	public MessageResponse(String message) {
 		this.message = message;
@@ -24,15 +24,15 @@ public class MessageResponse {
 		return messageResponse;
 	}
 
-	public static MessageResponse of(Data data){
+	public static MessageResponse of(Information information){
 		MessageResponse messageResponse = MessageResponse.empty();
-		messageResponse.setData(data);
+		messageResponse.setInformation(information);
 		return messageResponse;
 	}
 
-	public static MessageResponse of(String message, Data data){
+	public static MessageResponse of(String message, Information information){
 		MessageResponse messageResponse = of(message);
-		messageResponse.setData(data);
+		messageResponse.setInformation(information);
 		return messageResponse;
 	}
 }

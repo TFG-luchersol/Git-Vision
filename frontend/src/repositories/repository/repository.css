@@ -1,0 +1,36 @@
+/* Estilo para el contenedor principal que simula el contenedor de archivos */
+.contenedor-archivos {
+    width: 53%;
+    height: 550px;
+    border: 2px solid #333;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    background-color: #f4f4f4;
+    padding: 10px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    overflow: auto;
+}
+
+.extension-table {
+    border-collapse: collapse;
+    max-height: 200px;
+    overflow-y: auto;
+    background-color: whitesmoke;
+    border: 1px solid black
+}
+
+.extension-table th {
+    border: 1px solid black;
+    background-color: rgb(153, 207, 209);
+    padding: 10px;
+}
+
+.extension-table tr {
+    border: 1px solid black;
+    background-color: whitesmoke;
+    padding: 10px;
+    text-align: center;
+}

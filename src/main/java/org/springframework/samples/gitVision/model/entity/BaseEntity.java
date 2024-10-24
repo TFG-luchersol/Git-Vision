@@ -15,6 +15,8 @@
  */
 package org.springframework.samples.gitvision.model.entity;
 
+import org.springframework.beans.factory.annotation.Value;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Id;

@@ -16,9 +16,9 @@ public class GeneralResponse extends ResponseEntity<MessageResponse> {
         return messageResponse == null ? null : messageResponse.getMessage();
     }
 
-    public Data getData(){
+    public Information getInformation(){
         MessageResponse messageResponse = this.getBody();
-        return messageResponse == null ? null : messageResponse.getData();
+        return messageResponse == null ? null : messageResponse.getInformation();
     }
     
 }
