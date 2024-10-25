@@ -12,6 +12,7 @@ import java.util.regex.Pattern;
 import org.kohsuke.github.GHCommit;
 import org.kohsuke.github.GHUser;
 import org.kohsuke.github.GHCommit.File;
+import org.springframework.samples.gitvision.change.model.Change;
 import org.springframework.samples.gitvision.githubUser.model.GithubUser;
 import org.springframework.samples.gitvision.issue.model.Issue;
 import org.springframework.samples.gitvision.util.EntityUtils;
@@ -48,6 +49,10 @@ public class Commit {
     List<File> files;
 
     List<Issue> issues;
+
+    public Change getChange(){
+        return Change.of(additions, deletions);
+    }
 
     public void setMessage(String message) {
         this.message = message;

@@ -1,6 +1,7 @@
 package org.springframework.samples.gitvision.issue;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.gitvision.auth.payload.response.MessageResponse;
@@ -42,8 +43,8 @@ public class IssueController {
                                                     @PathVariable Integer issueNumber, 
                                                     @RequestParam String login) {
         String repositoryName = owner + "/" + repo;
-        Issue issue = this.issueService.getIssueByRepositoryNameAndIssueNumber(repositoryName, issueNumber, login);
-        Information information = Information.create("issue", issue);
+        Map<String, Object> dict = this.issueService.getIssueByRepositoryNameAndIssueNumber(repositoryName, issueNumber, login);
+        Information information = Information.of(dict);
         return MessageResponse.of(information);
     }
 

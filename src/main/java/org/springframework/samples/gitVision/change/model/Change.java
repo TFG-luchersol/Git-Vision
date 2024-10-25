@@ -32,10 +32,11 @@ public class Change {
         return change;
     }
 
-    public void merge(Change other) {
+    public Change merge(Change other) {
         this.setAdditions(this.additions + other.additions);
         this.setDeletions(this.deletions + other.deletions);
         this.calcTotalChanges();
+        return this;
     }
 
     public static Change merge(Change change1, Change change2) {

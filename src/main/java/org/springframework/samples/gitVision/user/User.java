@@ -25,6 +25,10 @@ public class User extends Person {
 
 	String clockifyToken;
 
+    public boolean hasClockifyToken(){
+        return clockifyToken != null;
+    }
+
 	@Override
     public boolean equals(Object obj) {
         if (this == obj)

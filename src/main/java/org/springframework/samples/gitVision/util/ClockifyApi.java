@@ -58,5 +58,10 @@ public class ClockifyApi {
         Task[] tasks = requestClockify(url, clockifyToken, Task[].class);
         return Arrays.asList(tasks);
     }
+
+    public static Task getTaskByWorkspaceIdAndProjectIdAndTaksName(String workspaceId, String projectId, String taskName, String clockifyToken) {
+        List<Task> tasks = getTasksByWorkspaceIdAndProjectId(workspaceId, projectId, clockifyToken);
+        return tasks.stream().filter(task -> task.getName().equals("#"+taskName)).findFirst().orElse(null);
+    }
     
 }
