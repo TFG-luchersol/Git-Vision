@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.samples.gitvision.auth.payload.response.MessageResponse;
 import org.springframework.samples.gitvision.user.UserService;
 import org.springframework.samples.gitvision.util.Information;
@@ -45,11 +46,18 @@ public class UserRepoController {
         return MessageResponse.of(information);
     }
 
-    @PutMapping("/{owner}/{repo}")
-    public void updateGithubToken(@PathVariable String owner, 
+    @PutMapping("/{owner}/{repo}/token")
+    public ResponseEntity<String> updateGithubToken(@PathVariable String owner, 
                                     @PathVariable String repo, 
                                     @RequestParam String login, 
                                     @RequestBody String newGithubToken) {
+        try {
+            String repositoryName = owner + "/" + repo;
+            this.userRepoService.updateGithubToken(repositoryName, login, newGithubToken);
+            return ResponseEntity.ok("Token cambiado");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
         
     }
 

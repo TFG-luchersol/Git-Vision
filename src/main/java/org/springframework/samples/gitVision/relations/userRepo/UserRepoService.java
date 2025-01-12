@@ -55,18 +55,15 @@ public class UserRepoService {
     }
 
     @Transactional
-    public void updateGithubToken(String repositoryName, String login, String newGithubToken) {
-        try {
-            UserRepo userRepo = this.userRepoRepository.findByNameAndUser_Username(repositoryName, newGithubToken).orElseThrow(() -> new ResourceNotFoundException("Not found repository"));   
-            GitHub.connect(login, newGithubToken);
-            if(GitHub.connect(login, newGithubToken).getMyself() == null){
-                throw new Exception();
-            }
-            userRepo.setToken(newGithubToken);
-            this.userRepoRepository.save(userRepo);
-        } catch (Exception e) {
-            // TODO: handle exception
+    public void updateGithubToken(String repositoryName, String login, String newGithubToken) throws Exception {
+        UserRepo userRepo = this.userRepoRepository.findByNameAndUser_Username(repositoryName, login).orElseThrow(() -> new ResourceNotFoundException("Not found repository"));   
+        GitHub github = GitHub.connect(login, newGithubToken);
+        if(github.getMyself() == null){
+            throw new IllegalAccessException("Token invalido");
         }
+        userRepo.setToken(newGithubToken);
+        this.userRepoRepository.save(userRepo);
+
     }
 
     @Transactional

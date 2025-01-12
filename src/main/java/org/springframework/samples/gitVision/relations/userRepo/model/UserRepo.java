@@ -1,5 +1,6 @@
 package org.springframework.samples.gitvision.relations.userRepo.model;
 
+import org.hibernate.validator.constraints.URL;
 import org.springframework.samples.gitvision.model.entity.EntityIdSequential;
 import org.springframework.samples.gitvision.user.User;
 
@@ -27,6 +28,9 @@ public class UserRepo extends EntityIdSequential {
 
     @NotNull
     private Long repositoryId;
+
+    @URL
+    String url_imagen;
 
     @NotBlank
     @Column(unique = true)
