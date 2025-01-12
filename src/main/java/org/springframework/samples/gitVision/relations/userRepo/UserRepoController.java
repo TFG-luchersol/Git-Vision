@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PutMapping;
 
 
 @RestController
@@ -44,6 +45,14 @@ public class UserRepoController {
         return MessageResponse.of(information);
     }
 
+    @PutMapping("/{owner}/{repo}")
+    public void updateGithubToken(@PathVariable String owner, 
+                                    @PathVariable String repo, 
+                                    @RequestParam String login, 
+                                    @RequestBody String newGithubToken) {
+        
+    }
+
     @PostMapping
     public void linkUserWithRepository(@RequestBody String login, 
                                        @RequestParam String repo, 
@@ -55,3 +64,5 @@ public class UserRepoController {
     
 
 }
+
+

@@ -68,6 +68,11 @@ export default function Repository() {
         <div style={{ position: "fixed", top: 0, zIndex: -1, left: 0, right: 0, bottom: 0, backgroundColor: "#dcdcdc" }}>
             <div style={{ marginLeft: '40px', marginTop: "8%", display: 'flex', flexDirection: 'row', maxHeight: "80%" }}>
                 <div className='contenedor-archivos'>
+                    <ButtonGroup >
+                        <Button style={{backgroundColor: "#007bff", height:35}} onClick={() => window.location.href += "/details"}>DETAILS</Button>
+                        <Button style={{backgroundColor: "#28a745",height:35}} onClick={() => window.location.href += "/commits"}>COMMITS</Button>
+                        <Button style={{backgroundColor: "#fd7e14",height:35}} onClick={() => window.location.href += "/issues"}>ISSUES</Button>
+                    </ButtonGroup> 
                     <div style={{ display: "flex", flexDirection: "row" }}>
                         <Input type='text' value={filter} onChange={(e) => setFilter(e.target.value)}/>
                         &nbsp;&nbsp;
@@ -109,12 +114,9 @@ export default function Repository() {
                             </tbody>
                         </table>
                     </div>
-                    <ButtonGroup style={{position:"absolute", bottom:"10%", right:"5%"}}>
-                        <Button style={{height:50, width:100}} onClick={() => window.location.href += "/commits"}>COMMITS</Button>
-                        <Button style={{height:50, width:100}} onClick={() => window.location.href += "/issues"}>ISSUES</Button>
-                    </ButtonGroup> 
                 </div>
             </div>
         </div>
     );
 }
+

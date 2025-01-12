@@ -10,11 +10,15 @@ import java.util.Objects;
 import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GitHub;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.samples.gitvision.exceptions.ResourceNotFoundException;
 import org.springframework.samples.gitvision.relations.userRepo.model.UserRepo;
 import org.springframework.samples.gitvision.user.User;
 import org.springframework.samples.gitvision.user.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Service
 public class UserRepoService {
@@ -51,6 +55,21 @@ public class UserRepoService {
     }
 
     @Transactional
+    public void updateGithubToken(String repositoryName, String login, String newGithubToken) {
+        try {
+            UserRepo userRepo = this.userRepoRepository.findByNameAndUser_Username(repositoryName, newGithubToken).orElseThrow(() -> new ResourceNotFoundException("Not found repository"));   
+            GitHub.connect(login, newGithubToken);
+            if(GitHub.connect(login, newGithubToken).getMyself() == null){
+                throw new Exception();
+            }
+            userRepo.setToken(newGithubToken);
+            this.userRepoRepository.save(userRepo);
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
+    }
+
+    @Transactional
     public void linkUserWithRepository(String login, String repositoryName, String token){
         try {
             User user = this.userRepository.findByUsername(login).get();
@@ -64,7 +83,7 @@ public class UserRepoService {
             userRepo.setUser(user);
             userRepoRepository.save(userRepo);
         } catch (IOException e) {
-            int a = 0;
+            
         }
         
     }
