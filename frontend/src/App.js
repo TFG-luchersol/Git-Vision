@@ -17,6 +17,7 @@ import Issues from './repositories/repository/issues';
 import Issue from './repositories/repository/issues/issue';
 import Commits from './repositories/repository/commits';
 import Commit from './repositories/repository/commits/commit';
+import Contributors from "./repositories/repository/contributors";
 import RepositoryDetails from "./repositories/repository/repositoryDetails";
 
 function ErrorFallback({ error, resetErrorBoundary }) {
@@ -43,6 +44,7 @@ function App() {
         <Route path="/repositories" element={<Repositories/>}/>
         <Route path="/repository/:owner/:repo" element={<Repository/>}/>
         <Route path="/repository/:owner/:repo/details" element={<RepositoryDetails/>}/>
+        <Route path="/repository/:owner/:repo/contributors" element={<Contributors/>}/>
         <Route path="/repository/:owner/:repo/commits" element={<Commits/>}/>
         <Route path="/repository/:owner/:repo/commits/:sha" element={<Commit/>}/>
         <Route path="/repository/:owner/:repo/issues" element={<Issues/>}/>

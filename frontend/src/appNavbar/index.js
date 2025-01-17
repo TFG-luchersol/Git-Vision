@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { SiSwagger, SiGoogledocs } from "react-icons/si";
 import UserInformation from './UserInformation.js';
 import { RiGitRepositoryLine } from "react-icons/ri";
+import tokenService from '../services/token.service.js';
 
 export default function AppNavbar() {
 
@@ -52,7 +53,7 @@ export default function AppNavbar() {
                 <Collapse isOpen={!collapsed} navbar>
                     <Nav className="ms-auto mb-2 mb-lg-0" navbar>
                         {user}
-                        {userLogin}
+                        {tokenService.getUser() && userLogin}
                     </Nav>
                 </Collapse>
             </Navbar>

@@ -6,7 +6,6 @@ import tokenService from '../../services/token.service.js';
 import './repository.css';
 import { Button, ButtonGroup, Input } from 'reactstrap';
 import MultiSelectDropdown from '../../components/MultiSelectDropdown.js';
-import { FaFilter } from "react-icons/fa";
 
 export default function Repository() {
     const { username } = tokenService.getUser();
@@ -72,6 +71,7 @@ export default function Repository() {
                         <Button style={{backgroundColor: "#007bff", height:35}} onClick={() => window.location.href += "/details"}>DETAILS</Button>
                         <Button style={{backgroundColor: "#28a745",height:35}} onClick={() => window.location.href += "/commits"}>COMMITS</Button>
                         <Button style={{backgroundColor: "#fd7e14",height:35}} onClick={() => window.location.href += "/issues"}>ISSUES</Button>
+                        <Button style={{backgroundColor: "#8ef9c0",height:35}} onClick={() => window.location.href += "/contributors"}>CONTRIBUTORS</Button>
                     </ButtonGroup> 
                     <div style={{ display: "flex", flexDirection: "row" }}>
                         <Input type='text' value={filter} onChange={(e) => setFilter(e.target.value)}/>
