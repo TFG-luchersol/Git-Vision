@@ -3,9 +3,12 @@ package org.springframework.samples.gitvision.relations.userRepo;
 import java.util.Map;
 import java.util.List;
 
+import org.kohsuke.github.GHPersonSet;
+import org.kohsuke.github.GHUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.samples.gitvision.auth.payload.response.MessageResponse;
+import org.springframework.samples.gitvision.user.User;
 import org.springframework.samples.gitvision.user.UserService;
 import org.springframework.samples.gitvision.util.Information;
 import org.springframework.samples.gitvision.workspace.model.Workspace;
@@ -44,6 +47,21 @@ public class UserRepoController {
         List<String> owners = this.userRepoService.getAllOwnersByUserId(userId);
         Information information = Information.create("owners", owners);
         return MessageResponse.of(information);
+    }
+
+    @GetMapping("/{owner}/{repo}/contributors")
+    public MessageResponse getContributors(@PathVariable String owner, 
+                                        @PathVariable String repo, 
+                                        @RequestParam String login) {
+        String repositoryName = owner + "/" + repo;
+        try {
+            List<User> contributors = this.userRepoService.getContributors(repositoryName, login);
+            Information information = Information.create("contributors", contributors);
+            return MessageResponse.of(information);
+        } catch (Exception e) {
+            return MessageResponse.of(e.getMessage());
+        }
+
     }
 
     @PutMapping("/{owner}/{repo}/token")

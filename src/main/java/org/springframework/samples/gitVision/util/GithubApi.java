@@ -1,33 +1,21 @@
 package org.springframework.samples.gitvision.util;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import org.h2.command.dml.Merge;
-import org.kohsuke.github.GHCommit;
-import org.kohsuke.github.GHIssue;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.samples.gitvision.commit.model.Commit;
 import org.springframework.samples.gitvision.issue.model.Issue;
-import org.springframework.samples.gitvision.project.model.Project;
-import org.springframework.samples.gitvision.task.model.Task;
-import org.springframework.samples.gitvision.workspace.model.Workspace;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
 public class GithubApi {
     
-    static RestTemplate restTemplate;
-
-    static {
-        restTemplate = new RestTemplate();
-    }
+    static RestTemplate restTemplate = new RestTemplate();
 
     private static <T> T requestGithub(String url, String githubToken, Class<T> clazz) {
         String url_template =  "https://api.github.com" + url;

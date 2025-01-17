@@ -1,13 +1,24 @@
 package org.springframework.samples.gitvision.commit;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
+import org.kohsuke.github.GHRepository;
+import org.kohsuke.github.GitHub;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.gitvision.auth.payload.response.MessageResponse;
 import org.springframework.samples.gitvision.commit.model.Commit;
+import org.springframework.samples.gitvision.commit.model.CommitContribution;
 import org.springframework.samples.gitvision.commit.model.commitsByTimePeriod.TimePeriod;
+import org.springframework.samples.gitvision.exceptions.ResourceNotFoundException;
+import org.springframework.samples.gitvision.file.model.ChangesByUser;
+import org.springframework.samples.gitvision.githubUser.model.GithubUser;
+import org.springframework.samples.gitvision.relations.userRepo.model.UserRepo;
 import org.springframework.samples.gitvision.util.Information;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -67,5 +78,23 @@ public class CommitController {
         }
         
     } 
+
+    @GetMapping("/{owner}/{repo}/between_time")
+    public MessageResponse getCommitsByUserBetweenDates(@PathVariable String owner, 
+                                                        @PathVariable String repo, 
+                                                        @RequestParam String login,
+                                                        @RequestParam(required = false) Date startDate,
+                                                        @RequestParam(required = false) Date endDate) {
+        try {
+            String repositoryName = owner + "/" + repo;
+            this.commitService.getContributionsByDateBetweenDates(repositoryName, login, startDate, endDate);
+            List<CommitContribution> contributions = this.commitService.getContributionsByDateBetweenDates(repositoryName, login, startDate, endDate); 
+            Information information = Information.create("contributions", contributions);
+            return MessageResponse.of(information);
+        } catch (Exception e) {
+            return MessageResponse.of(e.getMessage());
+        }
+
+    }
 
 }

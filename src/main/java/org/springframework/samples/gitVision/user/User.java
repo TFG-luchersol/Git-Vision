@@ -2,6 +2,8 @@ package org.springframework.samples.gitvision.user;
 
 import java.util.Objects;
 
+import org.kohsuke.github.GHUser;
+import org.springframework.samples.gitvision.githubUser.model.GithubUser;
 import org.springframework.samples.gitvision.model.entity.Person;
 
 import jakarta.persistence.Entity;
@@ -27,6 +29,13 @@ public class User extends Person {
 
     public boolean hasClockifyToken(){
         return clockifyToken != null;
+    }
+
+    public static User parse(GHUser ghUser) {
+        User user = new User();
+        user.setAvatarUrl(ghUser.getAvatarUrl());
+        user.setUsername(ghUser.getLogin());
+        return user;
     }
 
 	@Override

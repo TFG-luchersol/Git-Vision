@@ -6,8 +6,6 @@ import java.util.Objects;
 import org.kohsuke.github.GHUser;
 import org.springframework.samples.gitvision.model.entity.Person;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 

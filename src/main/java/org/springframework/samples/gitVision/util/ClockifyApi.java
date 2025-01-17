@@ -16,14 +16,10 @@ import org.springframework.web.client.RestTemplate;
 
 public class ClockifyApi {
     
-    static RestTemplate restTemplate;
-
-    static {
-        restTemplate = new RestTemplate();
-    }
+    static RestTemplate restTemplate = new RestTemplate();
 
     private static <T> T requestClockify(String url, String clockifyToken, Class<T> clazz) {
-        String url_template =  "https://api.clockify.me/api" + url;
+        String url_template = "https://api.clockify.me/api" + url;
 
         HttpHeaders headers = new HttpHeaders();
         headers.set("Content-Type", "application/json");

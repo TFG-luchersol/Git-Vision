@@ -1,20 +1,24 @@
 package org.springframework.samples.gitvision.change.model;
 
-import org.springframework.samples.gitvision.file.model.File;
-import org.springframework.samples.gitvision.githubUser.model.GithubUser;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@JsonIgnoreProperties(ignoreUnknown = true) // Ignora campos desconocidos al deserializar
+@JsonInclude(JsonInclude.Include.NON_NULL) 
 @Getter
 @Setter
+@NoArgsConstructor
 public class Change {
 
-    int additions;
+    private Integer additions;
 
-    int deletions;
+    private Integer deletions;
 
-    int totalChanges;
+    private Integer totalChanges;
 
     public void calcTotalChanges(){
         this.totalChanges = this.additions + this.deletions;
@@ -39,7 +43,7 @@ public class Change {
         return this;
     }
 
-    public static Change merge(Change change1, Change change2) {
+    public static Change staticMerge(Change change1, Change change2) {
         Change change = new Change();
         change.setAdditions(change1.additions + change2.additions);
         change.setDeletions(change1.deletions + change2.deletions);

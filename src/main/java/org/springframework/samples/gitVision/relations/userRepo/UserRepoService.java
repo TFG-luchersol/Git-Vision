@@ -7,10 +7,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import org.kohsuke.github.GHPersonSet;
 import org.kohsuke.github.GHRepository;
+import org.kohsuke.github.GHUser;
 import org.kohsuke.github.GitHub;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.gitvision.exceptions.ResourceNotFoundException;
+import org.springframework.samples.gitvision.githubUser.model.GithubUser;
 import org.springframework.samples.gitvision.relations.userRepo.model.UserRepo;
 import org.springframework.samples.gitvision.user.User;
 import org.springframework.samples.gitvision.user.UserRepository;
@@ -54,6 +57,14 @@ public class UserRepoService {
         return owners;
     }
 
+    @Transactional(readOnly = true)
+    public List<User> getContributors(String repositoryName, String login) throws IOException {
+        UserRepo userRepo = this.userRepoRepository.findByNameAndUser_Username(repositoryName, login).orElseThrow(() -> new ResourceNotFoundException("Not found repository"));   
+        GitHub github = GitHub.connect("luchersol", userRepo.getToken());
+        GHRepository repository = github.getRepository(repositoryName);
+        return repository.listContributors().toList().stream().map(User::parse).toList();
+    }
+
     @Transactional
     public void updateGithubToken(String repositoryName, String login, String newGithubToken) throws Exception {
         UserRepo userRepo = this.userRepoRepository.findByNameAndUser_Username(repositoryName, login).orElseThrow(() -> new ResourceNotFoundException("Not found repository"));   
@@ -63,7 +74,6 @@ public class UserRepoService {
         }
         userRepo.setToken(newGithubToken);
         this.userRepoRepository.save(userRepo);
-
     }
 
     @Transactional
