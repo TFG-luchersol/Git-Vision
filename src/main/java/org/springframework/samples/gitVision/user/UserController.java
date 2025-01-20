@@ -16,15 +16,11 @@
 package org.springframework.samples.gitvision.user;
 
 import java.util.List;
-import java.util.Objects;
-
-import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.samples.gitvision.auth.payload.response.MessageResponse;
-import org.springframework.samples.gitvision.exceptions.AccessDeniedException;
 import org.springframework.samples.gitvision.util.Information;
 import org.springframework.samples.gitvision.util.RestPreconditions;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -38,6 +34,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 
 // @SecurityRequirement(name = "bearerAuth")
 @RestController
