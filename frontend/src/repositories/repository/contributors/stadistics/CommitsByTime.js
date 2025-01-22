@@ -12,11 +12,18 @@ import { Scatter } from "react-chartjs-2";
 import { useParams } from "react-router-dom";
 import tokenService from "../../../../services/token.service";
 import DateRangePicker from '../../../../components/DateRangePicker';
+import { RiMedalLine } from "react-icons/ri";
 import "./stadistics.css";
 
 ChartJS.register(Title, Tooltip, Legend, PointElement, CategoryScale, LinearScale);
 
 export default function CommitsByTime() {
+
+    const GoldMedal = <RiMedalLine className="medal gold" />
+    const SilverMedal = <RiMedalLine className="medal silver" />
+    const BronzeMedal = <RiMedalLine className="medal bronze" />
+    const EmptyMedal = <RiMedalLine className="medal dotted"/>
+
 
     const { username } = tokenService.getUser();
     const { owner, repo } = useParams();
@@ -30,6 +37,7 @@ export default function CommitsByTime() {
     const [possibleYears, setPossibleYears] = useState([new Date().getFullYear()])
     const [selectedYear, setSelectedYear] = useState(new Date().getFullYear())
     const [concreteSample, setConcreteSample] = useState(null)
+    const [ranking, setRanking] = useState(["l","u","c","h","e","r"])
 
     // Manejar el cambio del select
     const handleChangeSelectedAgrupation = (event) => {
@@ -57,6 +65,9 @@ export default function CommitsByTime() {
 
     useEffect(() => {}, [concreteSample])
 
+    useEffect(() => {
+        generateRanking()
+    }, [selectedType])
 
     useEffect(() => {
         const newDataset = Object.entries(groupContributionsByAuthorAndTime(contributions)).map(entry => ({
@@ -104,6 +115,30 @@ export default function CommitsByTime() {
         return color;
     }
 
+    function generateRanking() {    
+        // Crea un mapa para agregar los puntos acumulados por cada autor
+        const pointsMap = {};
+    
+        contributions.forEach(({ authorName, additions, deletions }) => {
+            if (!pointsMap[authorName]) {
+                pointsMap[authorName] = { name: authorName, points: 0 };
+            }
+
+            let value = 1;
+            if(selectedType === "num_additions") {
+                value = additions;
+            } else if(selectedType === "num_deletions") {
+                value = deletions;
+            } else if(selectedType === "num_changes") {
+                value = additions + deletions;
+            } 
+
+            pointsMap[authorName].points += value;
+
+        });
+        const newRanking = Object.values(pointsMap).sort((a, b) => b.points - a.points);
+        setRanking(prev => newRanking);
+    }
 
     async function getContributions() {
         let url = `/api/v1/commits/${owner}/${repo}/between_time?login=${username}`
@@ -416,10 +451,33 @@ export default function CommitsByTime() {
                         }
                     </select>
                 </div>
-                <ul>
-                    {/* TODO */}
-                    <li>LISTADO RANKING</li>
-                </ul>
+                <div style={{width:"70vh"}}>
+                    <div style={{display:"flex", justifyContent:"center"}}>
+                        <p>Ranking</p>
+                    </div>
+                    <table className="ranking-table">
+                        <thead>
+                            <tr>
+                                <th className="ranking-header medal-column">Medalla</th>
+                                <th className="ranking-header name-column">Nombre</th>
+                                <th className="ranking-header points-column">Puntos</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {ranking.map((user, index) => (
+                                <tr key={index} className="ranking-row">
+                                    <td className="ranking-cell medal-cell">
+                                        {index === 0 ? GoldMedal :
+                                        index === 1 ? SilverMedal :
+                                        index === 2 ? BronzeMedal : EmptyMedal}
+                                    </td>
+                                    <td className="ranking-cell name-cell">{user.name}</td>
+                                    <td className="ranking-cell points-cell">{user.points}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     );

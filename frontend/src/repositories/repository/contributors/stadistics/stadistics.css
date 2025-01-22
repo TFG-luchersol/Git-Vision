@@ -33,3 +33,85 @@
     }
   }
   
+  .medal {
+    font-size: 2rem;
+}
+
+.medal.gold {
+    color: #FFD700;
+}
+
+.medal.silver {
+    color: #C0C0C0;
+}
+
+.medal.bronze {
+    color: #CD7F32;
+}
+
+.medal.dotted {
+    color: transparent;
+    border: 2px dashed #999;
+    border-radius: 50%;
+    padding: 4px;
+}
+
+/* Tabla general */
+.ranking-table {
+  width: 100%;
+  border-collapse: collapse;
+  max-height: 40vh;
+  overflow-y: auto;
+  font-family: Arial, sans-serif;
+}
+
+/* Encabezado */
+.ranking-header {
+  border: 1px solid #ccc;
+  padding: 8px;
+  background-color: #f4f4f4;
+  text-align: center;
+  font-weight: bold;
+}
+
+/* Columnas específicas */
+.medal-column {
+  width: 20%;
+}
+
+.name-column {
+  width: 50%;
+  text-align: left;
+}
+
+.points-column {
+  width: 30%;
+  text-align: right;
+}
+
+/* Filas del cuerpo */
+.ranking-row:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.ranking-row:nth-child(odd) {
+  background-color: #ffffff;
+}
+
+.ranking-cell {
+  border: 1px solid #ccc;
+  padding: 8px;
+}
+
+/* Celdas específicas */
+.medal-cell {
+  text-align: center;
+}
+
+.name-cell {
+  text-align: left;
+}
+
+.points-cell {
+  text-align: right;
+}
