@@ -34,25 +34,25 @@ export default function CommitsByTime() {
     // Manejar el cambio del select
     const handleChangeSelectedAgrupation = (event) => {
         const value = event.target.value;
-        setSelectedAgrupation(value);
+        setSelectedAgrupation(prev => value);
         document.getElementById("select-concrete").selectedIndex = 0;
-        setConcreteSample(null);
+        setConcreteSample(prev => null);
     };
 
     const handleChangeSelectedType = (event) => {
         const value = event.target.value;
-        setSelectedType(value);
+        setSelectedType(prev => value);
     };
 
     const handleChangeSelectedYear = (event) => {
         const value = Number(event.target.value);
-        setSelectedYear(value);
+        setSelectedYear(prev => value);
     };
 
 
     const handleChangeConcreteSample = (event) => {
         const value = event.target.value;
-        setConcreteSample(value || null);
+        setConcreteSample(prev => value || null);
     }
 
     useEffect(() => {}, [concreteSample])
@@ -64,8 +64,8 @@ export default function CommitsByTime() {
             "data": entry[1],
             "backgroundColor": stringToColor(entry[0])
         }));
-        setData_({ "datasets": newDataset })
-    }, [selectedAgrupation, selectedType, selectedYear, concreteSample])
+        setData_(prev => ({ "datasets": newDataset }))
+    }, [selectedAgrupation, selectedType, selectedYear, concreteSample, contributions])
   
 
     const diasSemana = {1:"Lunes", 2:"Martes", 3:"Miercoles", 
@@ -136,10 +136,10 @@ export default function CommitsByTime() {
                 }, new Date(result[0].committedDate));
             }
             if(minYear !== null && maxYear !== null) {
-                setPossibleYears(Array.from({ length: maxYear - minYear + 1 }, (_, i) => minYear + i))
+                setPossibleYears(prev => Array.from({ length: maxYear - minYear + 1 }, (_, i) => minYear + i))
             }
-            setSelectedYear(maxYear)
-            setContributions(result)
+            setSelectedYear(prev => maxYear)
+            setContributions(prev => result)
         } catch (error) {
             alert(error)
         }
@@ -156,7 +156,7 @@ export default function CommitsByTime() {
         if(!years.has(selectedYear)) {
             setSelectedYear(prev => Math.max(...years))
         }
-        setPossibleYears([...years].sort((a,b) => a - b))
+        setPossibleYears(prev => [...years].sort((a,b) => a - b))
 
         const filtroFecha = (committedDate) => {
             let bool = new Date(committedDate).getFullYear() === selectedYear;
@@ -252,7 +252,7 @@ export default function CommitsByTime() {
             "data": entry[1],
             "backgroundColor": stringToColor(entry[0])
         }));
-        setData_({ "datasets": newDataset })
+        setData_(prev => ({ "datasets": newDataset }))
         setIsLoading(prev => false)
     }
 
@@ -354,7 +354,7 @@ export default function CommitsByTime() {
 
     return (
         <div style={{ display: "flex", flexDirection: "column" }}>
-            <div style={{ display: "flex", flexDirection: "row", justifyContent:"space-around"}}> 
+            <div style={{ display: "flex", flexDirection: "row", marginLeft: 70}}> 
                 <DateRangePicker
                     startDate={startDate}
                     endDate={endDate}
@@ -365,6 +365,7 @@ export default function CommitsByTime() {
                     onClick={calcStadistic}
                     disabled={isLoading}
                     className="button" // Usamos la clase de botón desde el CSS
+                    style={{marginLeft: 100}}
                 >
                     {isLoading ? (
                     <div className="spinner"></div> // Usamos la clase de espiral desde el CSS
@@ -374,7 +375,7 @@ export default function CommitsByTime() {
                 </button>
             </div>
 
-            <div style={{ display: "flex", flexDirection: "row", justifyContent:"space-between"}}>
+            <div style={{ display: "flex", flexDirection: "row"}}>
                 <div style={{height: "55vh", width: "100vh"}}>
                     <Scatter
                         data={data_}
@@ -382,7 +383,7 @@ export default function CommitsByTime() {
                     />
                 </div>
 
-                <div style={{display: "flex", flexDirection: "column", justifyContent: "center"}}>
+                <div style={{display: "flex", flexDirection: "column", justifyContent: "center", marginLeft: 40}}>
                     {contributions.length > 0 && 
                     <>
                         <p style={{marginTop: 10, marginBottom: 0}}>Año:</p>
@@ -415,6 +416,10 @@ export default function CommitsByTime() {
                         }
                     </select>
                 </div>
+                <ul>
+                    {/* TODO */}
+                    <li>LISTADO RANKING</li>
+                </ul>
             </div>
         </div>
     );

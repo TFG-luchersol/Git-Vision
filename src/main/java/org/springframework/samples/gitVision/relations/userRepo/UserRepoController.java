@@ -4,10 +4,12 @@ import java.util.Map;
 import java.util.List;
 
 import org.kohsuke.github.GHPersonSet;
+import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GHUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.samples.gitvision.auth.payload.response.MessageResponse;
+import org.springframework.samples.gitvision.githubUser.model.GithubUser;
 import org.springframework.samples.gitvision.user.User;
 import org.springframework.samples.gitvision.user.UserService;
 import org.springframework.samples.gitvision.util.Information;
@@ -53,9 +55,9 @@ public class UserRepoController {
     public MessageResponse getContributors(@PathVariable String owner, 
                                         @PathVariable String repo, 
                                         @RequestParam String login) {
-        String repositoryName = owner + "/" + repo;
         try {
-            List<User> contributors = this.userRepoService.getContributors(repositoryName, login);
+            GHRepository ghRepository = this.userRepoService.getRepository(owner, repo, login);
+            List<GithubUser> contributors = this.userRepoService.getContributors(ghRepository);
             Information information = Information.create("contributors", contributors);
             return MessageResponse.of(information);
         } catch (Exception e) {

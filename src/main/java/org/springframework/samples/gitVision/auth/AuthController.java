@@ -1,12 +1,14 @@
 package org.springframework.samples.gitvision.auth;
 
 import java.io.IOException;
+import java.util.Properties;
 
 import jakarta.validation.Valid;
 
 import org.kohsuke.github.GHUser;
 import org.kohsuke.github.GitHub;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.samples.gitvision.auth.payload.request.LoginRequest;
 import org.springframework.samples.gitvision.auth.payload.request.SignupRequest;
@@ -17,6 +19,7 @@ import org.springframework.samples.gitvision.configuration.services.UserDetailsI
 import org.springframework.samples.gitvision.exceptions.ResourceNotFoundException;
 import org.springframework.samples.gitvision.user.User;
 import org.springframework.samples.gitvision.user.UserService;
+import org.springframework.samples.gitvision.util.AESUtil;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -54,7 +57,7 @@ public class AuthController {
 	}
 
 	@PostMapping("/signin")
-	public ResponseEntity authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+	public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 		try {
 			String username = loginRequest.getUsername();
 			String password = loginRequest.getPassword();
@@ -71,7 +74,8 @@ public class AuthController {
 
 			UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 			User user = userService.findUserById(userDetails.getId());
-			
+			String githubToken = AESUtil.decrypt(user.getGithubToken());
+			user.setGithubToken(githubToken);
 			return ResponseEntity.ok().body(new JwtResponse(jwt, user));
 		} catch(ResourceNotFoundException exception) {
 			return ResponseEntity.badRequest().body(MessageResponse.of(exception.getMessage()));
@@ -101,6 +105,10 @@ public class AuthController {
 			String username = signUpRequest.getUsername();
 			String token = signUpRequest.getGithubToken();
             GitHub gitHub = GitHub.connect(username, token);
+
+			token = AESUtil.encrypt(token);
+			signUpRequest.setGithubToken(token);
+
             GHUser user = gitHub.getMyself();
 			if(user == null || !user.getLogin().equals(username))
 				return ResponseEntity.badRequest().body(MessageResponse.of("Error: Username or token is incorrect"));
@@ -111,7 +119,7 @@ public class AuthController {
 			authService.createUser(user, signUpRequest);
 			return ResponseEntity.ok(MessageResponse.of("User registered successfully!"));
 
-		} catch (IOException e) {
+		} catch (Exception e) {
 			return ResponseEntity.badRequest().body(MessageResponse.of("Error: Connection to github failed"));
 		}
 		

@@ -1,12 +1,10 @@
 package org.springframework.samples.gitvision.commit;
 
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -15,7 +13,6 @@ import java.util.stream.IntStream;
 
 import org.kohsuke.github.GHCommit;
 import org.kohsuke.github.GHRepository;
-import org.kohsuke.github.GitHub;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.gitvision.commit.model.Commit;
 import org.springframework.samples.gitvision.commit.model.CommitContribution;
@@ -24,7 +21,6 @@ import org.springframework.samples.gitvision.exceptions.ResourceNotFoundExceptio
 import org.springframework.samples.gitvision.issue.model.Issue;
 import org.springframework.samples.gitvision.relations.userRepo.UserRepoRepository;
 import org.springframework.samples.gitvision.relations.userRepo.model.UserRepo;
-import org.springframework.samples.gitvision.user.User;
 import org.springframework.samples.gitvision.user.UserRepository;
 import org.springframework.samples.gitvision.util.EntityUtils;
 import org.springframework.samples.gitvision.util.GithubApi;
@@ -42,20 +38,14 @@ public class CommitService {
     UserRepoRepository userRepoRepository;
 
     @Transactional(readOnly = true)
-    public List<Commit> getCommitsByRepository(String repositoryName, String login, Integer page) throws IOException {
-        User user = this.userRepository.findByUsername(login).get();
-        UserRepo userRepo = this.userRepoRepository.findByNameAndUser_Id(repositoryName, user.getId()).get();
-        String tokenToUse = Objects.requireNonNullElse(userRepo.getToken(), user.getGithubToken());
+    public List<Commit> getCommitsByRepository(String repositoryName, String login, Integer page) throws Exception {
+        UserRepo userRepo = this.userRepoRepository.findByNameAndUser_Username(repositoryName, login).get();
+        String tokenToUse = userRepo.getDecryptedToken();
         return GithubApi.getCommitsByPage(repositoryName, page, 30, tokenToUse);
     }
 
     @Transactional(readOnly = true)
-    public Commit getCommitByRepositoryNameAndSha(String repositoryName, String sha, String login) throws IOException {
-        User user = this.userRepository.findByUsername(login).orElse(null);
-        UserRepo userRepo = this.userRepoRepository.findByNameAndUser_Id(repositoryName, user.getId()).get();
-        String tokenToUse = Objects.requireNonNullElse(userRepo.getToken(), user.getGithubToken());
-        GitHub gitHub = GitHub.connect(login, tokenToUse);
-        GHRepository ghRepository = gitHub.getRepository(repositoryName);
+    public Commit getCommitByRepositoryNameAndSha(GHRepository ghRepository, String sha) throws Exception {
         GHCommit ghCommit = ghRepository.getCommit(sha);
         Commit commit = Commit.parse(ghCommit);
         for (Integer issueNumber : commit.getIssueNumbers()) {
@@ -65,13 +55,8 @@ public class CommitService {
     }
 
     @Transactional(readOnly = true)
-    public Map<TimePeriod, Map<Integer, Long>> getNumCommitsGroupByTime(String repositoryName, String login)
-            throws IOException {
-        User user = this.userRepository.findByUsername(login).get();
-        UserRepo userRepo = this.userRepoRepository.findByNameAndUser_Id(repositoryName, user.getId()).get();
-        String tokenToUse = Objects.requireNonNullElse(userRepo.getToken(), user.getGithubToken());
-        GitHub gitHub = GitHub.connect(login, tokenToUse);
-        GHRepository ghRepository = gitHub.getRepository(repositoryName);
+    public Map<TimePeriod, Map<Integer, Long>> getNumCommitsGroupByTime(GHRepository ghRepository)
+            throws Exception {
         List<GHCommit> ghCommits = ghRepository.listCommits().toList();
         int minYear = EntityUtils.parseDateToLocalDateUTC(ghCommits.get(0).getCommitDate()).getYear(),
                 maxYear = EntityUtils.parseDateToLocalDateUTC(ghCommits.get(ghCommits.size() - 1).getCommitDate())
@@ -103,9 +88,9 @@ public class CommitService {
     public List<CommitContribution> getContributionsByDateBetweenDates(String repositoryName, String login,
             Date startDate, Date endDate) throws Exception {
         UserRepo userRepo = this.userRepoRepository.findByNameAndUser_Username(repositoryName, login)
-                .orElseThrow(() -> new ResourceNotFoundException("Not found repository"));
-        String token = userRepo.getToken();
-        GithubGraphQLApi githubGraphQLApi = GithubGraphQLApi.connect(token);
+            .orElseThrow(() -> new ResourceNotFoundException("Not found repository"));
+        String tokenToUse = userRepo.getDecryptedToken();
+        GithubGraphQLApi githubGraphQLApi = GithubGraphQLApi.connect(tokenToUse);
         List<CommitContribution> commitContributions = githubGraphQLApi.getContributionsBetweenDates(repositoryName, startDate, endDate);
         return commitContributions;
     }

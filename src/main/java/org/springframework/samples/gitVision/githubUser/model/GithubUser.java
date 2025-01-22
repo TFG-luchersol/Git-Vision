@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Objects;
 
 import org.kohsuke.github.GHUser;
+import org.kohsuke.github.GHRepository.Contributor;
 import org.springframework.samples.gitvision.model.entity.Person;
 
 import lombok.Getter;
@@ -20,6 +21,14 @@ public class GithubUser extends Person {
         githubUser.setUsername(ghUser.getLogin());
         return githubUser;
     }
+
+    public static GithubUser parseContributor(Contributor contributor) {
+        GithubUser githubUser = new GithubUser();
+        githubUser.setUsername(contributor.getLogin());
+        githubUser.setAvatarUrl(contributor.getAvatarUrl());
+        return githubUser;
+    }
+    
     
     @Override
     public boolean equals(Object obj) {

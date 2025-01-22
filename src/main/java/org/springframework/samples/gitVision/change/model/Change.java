@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@JsonIgnoreProperties(ignoreUnknown = true) // Ignora campos desconocidos al deserializar
+@JsonIgnoreProperties(ignoreUnknown = true) 
 @JsonInclude(JsonInclude.Include.NON_NULL) 
 @Getter
 @Setter
@@ -53,7 +53,11 @@ public class Change {
 
     @Override
     public String toString() {
-        return "Change [additions=" + additions + ", deletions=" + deletions + "]";
+        return new StringBuilder().append("Change [additions=")
+                                  .append(additions)
+                                  .append(", deletions=")
+                                  .append(deletions)
+                                  .append("]").toString();
     }
 
     

@@ -6,11 +6,13 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.kohsuke.github.GHRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.gitvision.auth.payload.response.MessageResponse;
 import org.springframework.samples.gitvision.commit.model.Commit;
 import org.springframework.samples.gitvision.commit.model.CommitContribution;
 import org.springframework.samples.gitvision.commit.model.commitsByTimePeriod.TimePeriod;
+import org.springframework.samples.gitvision.relations.userRepo.UserRepoService;
 import org.springframework.samples.gitvision.util.Information;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,6 +31,9 @@ public class CommitController {
     @Autowired
     CommitService commitService;
 
+    @Autowired
+    UserRepoService userRepoService;
+
     @GetMapping("/{owner}/{repo}")
     public MessageResponse getCommitsByRepository(@PathVariable String owner, 
                                                   @PathVariable String repo, 
@@ -40,7 +45,7 @@ public class CommitController {
             Information information = Information.create("commits", commits)
                                                  .put("page", page);
             return MessageResponse.of(information);
-        } catch (IOException e) {
+        } catch (Exception e) {
             return null;
         }
     }   
@@ -51,11 +56,11 @@ public class CommitController {
                                                   @PathVariable String sha,
                                                   @RequestParam String login ){
         try {
-            String repositoryName = owner + "/" + repo;
-            Commit commit = this.commitService.getCommitByRepositoryNameAndSha(repositoryName, sha, login);
+            GHRepository ghRepository = this.userRepoService.getRepository(owner, repo, login);
+            Commit commit = this.commitService.getCommitByRepositoryNameAndSha(ghRepository, sha);
             Information information = Information.create("commit", commit);
             return MessageResponse.of(information);
-        } catch (IOException e) {
+        } catch (Exception e) {
             return null;
         }
     }  
@@ -63,8 +68,8 @@ public class CommitController {
     @GetMapping("/{owner}/{repo}/byTime")
     public Map<TimePeriod, Map<Integer, Long>> getNumCommitsGroupByTime(@PathVariable String owner, @PathVariable String repo, @RequestParam String login){
         try {
-            String repositoryName = owner + "/" + repo;
-            return this.commitService.getNumCommitsGroupByTime(repositoryName, login);
+            GHRepository ghRepository = this.userRepoService.getRepository(owner, repo, login);
+            return this.commitService.getNumCommitsGroupByTime(ghRepository);
         } catch (Exception e) {
             return null;
         }
