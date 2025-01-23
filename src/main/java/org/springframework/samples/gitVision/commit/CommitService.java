@@ -1,7 +1,6 @@
 package org.springframework.samples.gitvision.commit;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,16 +14,13 @@ import org.kohsuke.github.GHCommit;
 import org.kohsuke.github.GHRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.gitvision.commit.model.Commit;
-import org.springframework.samples.gitvision.commit.model.CommitContribution;
 import org.springframework.samples.gitvision.commit.model.commitsByTimePeriod.TimePeriod;
-import org.springframework.samples.gitvision.exceptions.ResourceNotFoundException;
 import org.springframework.samples.gitvision.issue.model.Issue;
 import org.springframework.samples.gitvision.relations.userRepo.UserRepoRepository;
 import org.springframework.samples.gitvision.relations.userRepo.model.UserRepo;
 import org.springframework.samples.gitvision.user.UserRepository;
 import org.springframework.samples.gitvision.util.EntityUtils;
 import org.springframework.samples.gitvision.util.GithubApi;
-import org.springframework.samples.gitvision.util.GithubGraphQLApi;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -84,15 +80,6 @@ public class CommitService {
         return cont;
     }
 
-    @Transactional(readOnly = true)
-    public List<CommitContribution> getContributionsByDateBetweenDates(String repositoryName, String login,
-            Date startDate, Date endDate) throws Exception {
-        UserRepo userRepo = this.userRepoRepository.findByNameAndUser_Username(repositoryName, login)
-            .orElseThrow(() -> new ResourceNotFoundException("Not found repository"));
-        String tokenToUse = userRepo.getDecryptedToken();
-        GithubGraphQLApi githubGraphQLApi = GithubGraphQLApi.connect(tokenToUse);
-        List<CommitContribution> commitContributions = githubGraphQLApi.getContributionsBetweenDates(repositoryName, startDate, endDate);
-        return commitContributions;
-    }
+
 
 }

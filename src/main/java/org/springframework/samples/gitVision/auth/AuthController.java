@@ -73,9 +73,7 @@ public class AuthController {
 			String jwt = jwtUtils.generateJwtToken(authentication);
 
 			UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-			User user = userService.findUserById(userDetails.getId());
-			String githubToken = AESUtil.decrypt(user.getGithubToken());
-			user.setGithubToken(githubToken);
+			User user = this.userService.findUserById(userDetails.getId());
 			return ResponseEntity.ok().body(new JwtResponse(jwt, user));
 		} catch(ResourceNotFoundException exception) {
 			return ResponseEntity.badRequest().body(MessageResponse.of(exception.getMessage()));

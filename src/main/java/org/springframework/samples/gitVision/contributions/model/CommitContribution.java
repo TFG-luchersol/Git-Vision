@@ -1,4 +1,4 @@
-package org.springframework.samples.gitvision.commit.model;
+package org.springframework.samples.gitvision.contributions.model;
 
 import lombok.Data;
 

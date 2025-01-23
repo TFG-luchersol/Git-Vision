@@ -20,7 +20,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.samples.gitvision.commit.model.CommitContribution;
+import org.springframework.samples.gitvision.contributions.model.CommitContribution;
 import org.springframework.samples.gitvision.util.graphQL.models.GraphQLCommitResponse;
 import org.springframework.web.client.RestTemplate;
 

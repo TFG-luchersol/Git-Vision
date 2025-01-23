@@ -10,8 +10,8 @@ import org.kohsuke.github.GHRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.gitvision.auth.payload.response.MessageResponse;
 import org.springframework.samples.gitvision.commit.model.Commit;
-import org.springframework.samples.gitvision.commit.model.CommitContribution;
 import org.springframework.samples.gitvision.commit.model.commitsByTimePeriod.TimePeriod;
+import org.springframework.samples.gitvision.contributions.model.CommitContribution;
 import org.springframework.samples.gitvision.relations.userRepo.UserRepoService;
 import org.springframework.samples.gitvision.util.Information;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -76,24 +76,6 @@ public class CommitController {
         
     } 
 
-    @GetMapping("/{owner}/{repo}/between_time")
-    public MessageResponse getCommitsByUserBetweenDates(@PathVariable String owner, 
-                                                        @PathVariable String repo, 
-                                                        @RequestParam String login,
-                                                        @RequestParam(required = false) String startDate,
-                                                        @RequestParam(required = false) String endDate) {
-        try {
-            String repositoryName = owner + "/" + repo;
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-            Date d1 = startDate == null ? null : dateFormat.parse(startDate);
-            Date d2 = endDate == null ? null : dateFormat.parse(endDate);
-            List<CommitContribution> contributions = this.commitService.getContributionsByDateBetweenDates(repositoryName, login, d1, d2); 
-            Information information = Information.create("contributions", contributions);
-            return MessageResponse.of(information);
-        } catch (Exception e) {
-            return MessageResponse.of(e.getMessage());
-        }
 
-    }
 
 }
