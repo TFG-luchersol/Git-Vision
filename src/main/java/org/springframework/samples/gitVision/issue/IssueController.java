@@ -1,10 +1,13 @@
 package org.springframework.samples.gitvision.issue;
 
 import java.util.List;
+import java.util.Map;
 
+import org.kohsuke.github.GHRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.gitvision.auth.payload.response.MessageResponse;
 import org.springframework.samples.gitvision.issue.model.Issue;
+import org.springframework.samples.gitvision.relations.userRepo.UserRepoService;
 import org.springframework.samples.gitvision.util.Information;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,6 +22,10 @@ public class IssueController {
     
     @Autowired
     IssueService issueService;
+
+    @Autowired
+    UserRepoService userRepoService;
+
 
     @GetMapping("/{owner}/{repo}")
     public MessageResponse getAllIssuesByRepositoryName(@PathVariable String owner, 
@@ -41,10 +48,17 @@ public class IssueController {
                                                     @PathVariable String repo, 
                                                     @PathVariable Integer issueNumber, 
                                                     @RequestParam String login) {
-        String repositoryName = owner + "/" + repo;
-        Issue issue = this.issueService.getIssueByRepositoryNameAndIssueNumber(repositoryName, issueNumber, login);
-        Information information = Information.create("issue", issue);
-        return MessageResponse.of(information);
+        
+        try {
+            String repositoryName = owner + "/" + repo;
+            GHRepository ghRepository = this.userRepoService.getRepository(repositoryName, login);
+            Map<String, Object> dict = this.issueService.getIssueByRepositoryNameAndIssueNumber(ghRepository, issueNumber);
+            Information information = Information.of(dict);
+            return MessageResponse.of(information);
+        } catch (Exception e) {
+            return null;
+        }
+    
     }
 
 }

@@ -40,7 +40,7 @@ export default function Commit() {
                 </ul>),
         "Issues": (<ul>
             {commit.issues?.map((issue, index) => {
-                return (<li id={index} className='file-row'>
+                return (<li id={index} className='file-row' onClick={() => window.location.href = `/repository/${owner}/${repo}/issues/${issue.number}` }>
                     <div>
                         {issue.title}
                     </div>

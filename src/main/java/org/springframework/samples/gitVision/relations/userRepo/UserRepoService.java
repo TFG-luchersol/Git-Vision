@@ -1,6 +1,5 @@
 package org.springframework.samples.gitvision.relations.userRepo;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -10,9 +9,12 @@ import java.util.Objects;
 import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GitHub;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.samples.gitvision.exceptions.ResourceNotFoundException;
+import org.springframework.samples.gitvision.githubUser.model.GithubUser;
 import org.springframework.samples.gitvision.relations.userRepo.model.UserRepo;
 import org.springframework.samples.gitvision.user.User;
 import org.springframework.samples.gitvision.user.UserRepository;
+import org.springframework.samples.gitvision.util.AESUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,10 +22,10 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserRepoService {
     
     @Autowired
-    UserRepoRepository userRepoRepository;
+    private UserRepoRepository userRepoRepository;
 
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
     @Transactional(readOnly = true)
     public Map<String, List<String>> getAllRepositories(Long userId) {
@@ -50,21 +52,58 @@ public class UserRepoService {
         return owners;
     }
 
+    @Transactional(readOnly = true)
+    public GitHub connect(String repositoryName, String login) throws Exception {
+        UserRepo userRepo = this.userRepoRepository.findByNameAndUser_Username(repositoryName, login).get();
+        String tokenToUse = userRepo.getDecryptedToken();
+        return GitHub.connect(login, tokenToUse);
+    }
+
+    @Transactional(readOnly = true)
+    public GHRepository getRepository(String owner, String repo, String login) throws Exception {
+        String repositoryName = new StringBuilder().append(owner).append("/").append(repo).toString();
+        GitHub github = connect(repositoryName, login);
+        return github.getRepository(repositoryName);
+    }
+
+    @Transactional(readOnly = true)
+    public GHRepository getRepository(String repositoryName, String login) throws Exception {
+        GitHub github = connect(repositoryName, login);
+        return github.getRepository(repositoryName);
+    }
+
+    @Transactional(readOnly = true)
+    public List<GithubUser> getContributors(GHRepository ghRepository) throws Exception {
+        return ghRepository.listContributors().toList().stream().map(GithubUser::parseContributor).toList();
+    }
+
+    @Transactional
+    public void updateGithubToken(String repositoryName, String login, String newGithubToken) throws Exception {
+        UserRepo userRepo = this.userRepoRepository.findByNameAndUser_Username(repositoryName, login).orElseThrow(() -> new ResourceNotFoundException("Not found repository"));   
+        GitHub github = GitHub.connect(login, newGithubToken);
+        if(github.getMyself() == null){
+            throw new IllegalAccessException("Token invalido");
+        }
+        userRepo.setTokenAndEncrypt(newGithubToken);
+        this.userRepoRepository.save(userRepo);
+    }
+
     @Transactional
     public void linkUserWithRepository(String login, String repositoryName, String token){
         try {
             User user = this.userRepository.findByUsername(login).get();
-            String tokenToUse = Objects.requireNonNullElse(token, user.getGithubToken());
+            String tokenToUse = Objects.requireNonNullElse(token, user.getDecryptedGithubToken());
+            
             GitHub gitHub = GitHub.connect(login, tokenToUse);
             GHRepository ghRepository = gitHub.getRepository(repositoryName);
             UserRepo userRepo = new UserRepo();
             userRepo.setName(repositoryName);
             userRepo.setRepositoryId(ghRepository.getId());
-            userRepo.setToken(token);
+            userRepo.setTokenAndEncrypt(tokenToUse);
             userRepo.setUser(user);
             userRepoRepository.save(userRepo);
-        } catch (IOException e) {
-            int a = 0;
+        } catch (Exception e) {
+            
         }
         
     }

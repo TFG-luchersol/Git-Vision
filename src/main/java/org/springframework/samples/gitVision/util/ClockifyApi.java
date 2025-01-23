@@ -16,14 +16,10 @@ import org.springframework.web.client.RestTemplate;
 
 public class ClockifyApi {
     
-    static RestTemplate restTemplate;
-
-    static {
-        restTemplate = new RestTemplate();
-    }
+    static RestTemplate restTemplate = new RestTemplate();
 
     private static <T> T requestClockify(String url, String clockifyToken, Class<T> clazz) {
-        String url_template =  "https://api.clockify.me/api" + url;
+        String url_template = "https://api.clockify.me/api" + url;
 
         HttpHeaders headers = new HttpHeaders();
         headers.set("Content-Type", "application/json");
@@ -57,6 +53,11 @@ public class ClockifyApi {
         String url = String.format("/v1/workspaces/%s/projects/%s/tasks", workspaceId, projectId);
         Task[] tasks = requestClockify(url, clockifyToken, Task[].class);
         return Arrays.asList(tasks);
+    }
+
+    public static Task getTaskByWorkspaceIdAndProjectIdAndTaksName(String workspaceId, String projectId, String taskName, String clockifyToken) {
+        List<Task> tasks = getTasksByWorkspaceIdAndProjectId(workspaceId, projectId, clockifyToken);
+        return tasks.stream().filter(task -> task.getName().equals("#"+taskName)).findFirst().orElse(null);
     }
     
 }

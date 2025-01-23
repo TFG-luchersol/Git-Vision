@@ -1,7 +1,9 @@
 package org.springframework.samples.gitvision.relations.userRepo.model;
 
+import org.hibernate.validator.constraints.URL;
 import org.springframework.samples.gitvision.model.entity.EntityIdSequential;
 import org.springframework.samples.gitvision.user.User;
+import org.springframework.samples.gitvision.util.AESUtil;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -28,15 +30,26 @@ public class UserRepo extends EntityIdSequential {
     @NotNull
     private Long repositoryId;
 
+    @URL
+    String url_imagen;
+
     @NotBlank
     @Column(unique = true)
     @Pattern(regexp = "^[^\\s/]+/[^\\s/]+$")
     private String name;
 
+    @NotBlank
     private String token;
 
     public boolean hasToken(){
         return token != null;
     }
 
+    public String getDecryptedToken() throws Exception {
+        return AESUtil.decrypt(this.token);
+    }
+
+    public void setTokenAndEncrypt(String token) throws Exception{
+        this.token = AESUtil.encrypt(token);
+    }
 }

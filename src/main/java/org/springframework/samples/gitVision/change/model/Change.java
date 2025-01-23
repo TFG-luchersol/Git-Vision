@@ -1,20 +1,24 @@
 package org.springframework.samples.gitvision.change.model;
 
-import org.springframework.samples.gitvision.file.model.File;
-import org.springframework.samples.gitvision.githubUser.model.GithubUser;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@JsonIgnoreProperties(ignoreUnknown = true) 
+@JsonInclude(JsonInclude.Include.NON_NULL) 
 @Getter
 @Setter
+@NoArgsConstructor
 public class Change {
 
-    int additions;
+    private Integer additions;
 
-    int deletions;
+    private Integer deletions;
 
-    int totalChanges;
+    private Integer totalChanges;
 
     public void calcTotalChanges(){
         this.totalChanges = this.additions + this.deletions;
@@ -32,13 +36,14 @@ public class Change {
         return change;
     }
 
-    public void merge(Change other) {
+    public Change merge(Change other) {
         this.setAdditions(this.additions + other.additions);
         this.setDeletions(this.deletions + other.deletions);
         this.calcTotalChanges();
+        return this;
     }
 
-    public static Change merge(Change change1, Change change2) {
+    public static Change staticMerge(Change change1, Change change2) {
         Change change = new Change();
         change.setAdditions(change1.additions + change2.additions);
         change.setDeletions(change1.deletions + change2.deletions);
@@ -48,7 +53,11 @@ public class Change {
 
     @Override
     public String toString() {
-        return "Change [additions=" + additions + ", deletions=" + deletions + "]";
+        return new StringBuilder().append("Change [additions=")
+                                  .append(additions)
+                                  .append(", deletions=")
+                                  .append(deletions)
+                                  .append("]").toString();
     }
 
     

@@ -49,9 +49,9 @@ export default function Commits() {
                     </div>
                 </ul>
                 <div style={{display:"flex",justifyContent:"center"}}>
-                    <Button onClick={previousPage}>Previous</Button>
+                    <Button onClick={previousPage}>Anterior</Button>
                     <div style={{padding:10, paddingInline: 20}}>{page}</div>
-                    <Button onClick={nextPage}>Next</Button>
+                    <Button onClick={nextPage}>Siguiente</Button>
                 </div>
             </div>
         </div>
