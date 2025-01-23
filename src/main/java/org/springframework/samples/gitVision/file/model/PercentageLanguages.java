@@ -1,56 +1,31 @@
 package org.springframework.samples.gitvision.file.model;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
-import org.springframework.samples.gitvision.util.LanguageDetector;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class PercentageLanguages {
     
     @JsonProperty
     private Map<String, Double> percentages;
+
+    @JsonProperty
+    private long numBytes;
     
     public PercentageLanguages(){
         this.percentages = new HashMap<>();
     }
 
-    public PercentageLanguages(Map<String, Double> percentages){
+    public PercentageLanguages(Map<String, Double> percentages, long numBytes){
         this.percentages = percentages;
+        this.numBytes = numBytes;
     }
 
-    public static PercentageLanguages empty(){
-        return new PercentageLanguages();
-    }
-
-    public Double get(String language) {
-        return this.percentages.getOrDefault(language, 0.);
-    }
-
-    @JsonIgnore
-    public Double getUnknown(){
-        return this.percentages.getOrDefault("Unknown", 0.);
-    }
-
-    public boolean contains(String language) {
-        return this.percentages.containsKey(language);
-    }
-
-    public static PercentageLanguages of(Map<String, Double> percentages){
-        return new PercentageLanguages(percentages);
-    }
-
-    public static PercentageLanguages of(List<File> files){
-        Map<String, Double> percentajes = new HashMap<>();
-        int cont = files.size();
-        for (File file : files) {
-            String languaje = LanguageDetector.detectLanguageByExtension(file);
-            Double newValue = percentajes.getOrDefault(languaje, 0.) + 1./cont;
-            percentajes.put(languaje, newValue);
-        }
-        return PercentageLanguages.of(percentajes);
+    public static PercentageLanguages of(Map<String, Long> files){
+        long cont = files.values().stream().mapToLong(Long::valueOf).sum();
+        Map<String, Double> percentajes = files.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, entry -> 1.* entry.getValue() / cont));
+        return new PercentageLanguages(percentajes, cont);
     }
 }

@@ -13,9 +13,17 @@ public class Information {
     public Information(){
         this.information = new HashMap<String, Object>();
     }
+
+    public Information(Map<String, Object> information){
+        this.information = information;
+    }
     
     public static Information empty(){
         return new Information();
+    }
+
+    public static Information of(Map<String, Object> information){
+        return new Information(information);
     }
 
     public Information put(String key, Object value){

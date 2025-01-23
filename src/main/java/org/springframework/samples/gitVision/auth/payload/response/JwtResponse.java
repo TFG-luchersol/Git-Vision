@@ -1,6 +1,5 @@
 package org.springframework.samples.gitvision.auth.payload.response;
 
-import org.springframework.samples.gitvision.configuration.services.UserDetailsImpl;
 import org.springframework.samples.gitvision.user.User;
 
 import lombok.Getter;

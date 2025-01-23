@@ -1,162 +1,125 @@
-import "../../static/css/auth/authButton.css";
-import "../../static/css/auth/authPage.css";
-import tokenService from "../../services/token.service";
-import FormGenerator from "../../components/formGenerator/formGenerator";
-import { registerFormOwnerInputs } from "./form/registerFormOwnerInputs";
-import { registerFormVetInputs } from "./form/registerFormVetInputs";
-import { registerFormClinicOwnerInputs } from "./form/registerFormClinicOwnerInputs";
-import { useEffect, useRef, useState } from "react";
+import React, { useState } from 'react';
+import { FaEnvelope, FaGithub, FaLock, FaRegUserCircle, FaUnlock } from "react-icons/fa";
+import { Link } from 'react-router-dom';
+import { Alert, Button, Form, FormGroup } from 'reactstrap';
+import '../../App.css';
+import CustomInput from '../../components/CustomInput.js';
+import tokenService from "../../services/token.service.js";
+import '../../static/css/auth/authPage.css';
+import '../../static/css/home/home.css';
+import Preconditions from '../../util/check.js';
 
 export default function Register() {
-  let [type, setType] = useState(null);
-  let [authority, setAuthority] = useState(null);
-  let [clinics, setClinics] = useState([]);
 
-  const registerFormRef = useRef();
+    const userIcon = <FaRegUserCircle />;
+    const githubIcon = <FaGithub />;
+    const emailIcon = <FaEnvelope />;
+    const passwordLockIcon = <FaLock onClick={() => setShowPassword(prev => !prev)} />;
+    const passwordUnlockIcon = <FaUnlock onClick={() => setShowPassword(prev => !prev)} />;
 
-  function handleButtonClick(event) {
-    const target = event.target;
-    let value = target.value;
-    if (value === "Back") value = null;
-    else setAuthority(value);
-    setType(value);
-  }
+    const [message, setMessage] = useState(null)
+    const [values, setValues] = useState({ username: "", email: "", password: "", githubToken: "" })
+    const [showPassword, setShowPassword] = useState(false);
 
-  function handleSubmit({ values }) {
-
-    if(!registerFormRef.current.validate()) return;
-
-    const request = values;
-    request.clinic = clinics.filter((clinic) => clinic.name === request.clinic)[0];
-    request["authority"] = authority;
-    let state = "";
-
-    fetch("/api/v1/auth/signup", {
-      headers: { "Content-Type": "application/json" },
-      method: "POST",
-      body: JSON.stringify(request),
-    })
-      .then(function (response) {
-        if (response.status === 200) {
-          const loginRequest = {
-            username: request.username,
-            password: request.password,
-          };
-
-          fetch("/api/v1/auth/signin", {
-            headers: { "Content-Type": "application/json" },
-            method: "POST",
-            body: JSON.stringify(loginRequest),
-          })
-            .then(function (response) {
-              if (response.status === 200) {
-                state = "200";
-                return response.json();
-              } else {
-                state = "";
-                return response.json();
-              }
-            })
-            .then(function (data) {
-              if (state !== "200") alert(data.message);
-              else {
-                tokenService.setUser(data);
-                tokenService.updateLocalAccessToken(data.token);
-                window.location.href = "/dashboard";
-              }
-            })
-            .catch((message) => {
-              alert(message);
+    async function handleSubmit(event) {
+        event.preventDefault()
+        const reqBodySignup = JSON.stringify(values);
+        const reqBodySignin = JSON.stringify({username: values.username, password: values.password});
+        setMessage(null);
+        try {
+            const dataRegister = await fetch("/api/v1/auth/signup", {
+                headers: { "Content-Type": "application/json" },
+                method: "POST",
+                body: reqBodySignup,
             });
-        }
-      })
-      .catch((message) => {
-        alert(message);
-      });
-  }
-
-  useEffect(() => {
-    if (type === "Owner" || type === "Vet") {
-      if (registerFormOwnerInputs[5].values.length === 1){
-        fetch("/api/v1/clinics")
-        .then(function (response) {
-          if (response.status === 200) {
-            return response.json();
-          } else {
-            return response.json();
-          }
-        })
-        .then(function (data) {
-          setClinics(data);
-          if (data.length !== 0) {
-            let clinicNames = data.map((clinic) => {
-              return clinic.name;
-            });
-
-            registerFormOwnerInputs[5].values = ["None", ...clinicNames];
-          }
-        })
-        .catch((message) => {
-          alert(message);
-        });
-      }
-    }
-  }, [type]);
-
-  if (type) {
-    return (
-      <div className="auth-page-container">
-        <h1>Register</h1>
-        <div className="auth-form-container">
-          <FormGenerator
-            ref={registerFormRef}
-            inputs={
-              type === "Owner" ? registerFormOwnerInputs 
-              : type === "Vet" ? registerFormVetInputs
-              : registerFormClinicOwnerInputs
+            if(dataRegister.status !== 200) { 
+                const {message} = await dataRegister.json()
+                throw Error(message)
+            } else {
+                const dataSignin = await fetch("/api/v1/auth/signin", {
+                    headers: { "Content-Type": "application/json" },
+                    method: "POST",
+                    body: reqBodySignin,
+                });
+                if (dataSignin.status !== 200) {
+                    const {message} = await dataSignin.json()
+                    throw Error(message)
+                } else {
+                    const response = await dataSignin.json()
+                    tokenService.setUser(response.user);
+                    tokenService.updateLocalAccessToken(response.token);
+                    window.location.href = "/";
+                }
             }
-            onSubmit={handleSubmit}
-            numberOfColumns={1}
-            listenEnterKey
-            buttonText="Save"
-            buttonClassName="auth-button"
-          />
-        </div>
-      </div>
-    );
-  } else {
+        } catch (error) {
+            setMessage(error.message);
+        }
+    }
+
+    function handleChange(event) {
+        const target = event.target;
+        const { name, value } = target;
+        let newValues = { ...values };
+        newValues[name] = value;
+        setValues(newValues)
+    }
+
     return (
-      <div className="auth-page-container">
-        <div className="auth-form-container">
-          <h1>Register</h1>
-          <h2 className="text-center text-md">
-            What type of user will you be?
-          </h2>
-          <div className="options-row">
-            <button
-              className="auth-button"
-              value="Owner"
-              onClick={handleButtonClick}
-            >
-              Owner
-            </button>
-            <button
-              className="auth-button"
-              value="Vet"
-              onClick={handleButtonClick}
-            >
-              Vet
-            </button>
-            <button
-              className="auth-button"
-              value="Clinic Owner"
-              onClick={handleButtonClick}
-            >
-              Clinic Owner
-            </button>
-          </div>
+        <div className="home-page-container">
+            <Alert isOpen={message} color="danger" style={{ position: 'fixed', top: '15%' }}>{message}</Alert>
+            <Form style={{marginTop: "20%"}} onSubmit={handleSubmit} className='auth-form-container'>
+                <div style={{ margin: "30px" }}>
+                    <title className='center-title'><h1>Register</h1></title>
+                    <FormGroup>
+                        <CustomInput
+                            icon={userIcon}
+                            label={"Username:"}
+                            type='text'
+                            name='username'
+                            value={values.username || ""}
+                            onChange={handleChange}
+                        />
+                    </FormGroup>
+                    <FormGroup>
+                        <CustomInput
+                            icon={githubIcon}
+                            label={"Github Token:"}
+                            type='text'
+                            name='githubToken'
+                            value={values.githubToken || ""}
+                            onChange={handleChange}
+                        />
+                    </FormGroup>
+                    <FormGroup>
+                        <CustomInput
+                            icon={emailIcon}
+                            label={"Email:"}
+                            type='email'
+                            name='email'
+                            value={values.email || ""}
+                            onChange={handleChange}
+                        />
+                    </FormGroup>
+                    <FormGroup>
+                        <CustomInput
+                            icon={showPassword ? passwordUnlockIcon : passwordLockIcon}
+                            label={"Password:"}
+                            type={showPassword ? 'text' : 'password'}
+                            name='password'
+                            value={values.password || ""}
+                            onChange={handleChange}
+                        />
+                    </FormGroup>
+                    <div className='button-group'>
+                        <Button type='submit'>Register</Button>
+                        <Button type='button'>
+                            <Link className='custom-link' to={"/"}>Cancelar</Link>
+                        </Button>
+                    </div>
+                </div>
+            </Form>
+
+
         </div>
-      </div>
     );
-  }
 }

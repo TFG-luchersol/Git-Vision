@@ -1,21 +1,55 @@
 package org.springframework.samples.gitvision.relations.userRepo.model;
 
+import org.hibernate.validator.constraints.URL;
 import org.springframework.samples.gitvision.model.entity.EntityIdSequential;
-import org.springframework.samples.gitvision.repository.Repository;
 import org.springframework.samples.gitvision.user.User;
+import org.springframework.samples.gitvision.util.AESUtil;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 @Entity
-@Table(name = "user_repository")
+@Table(name = "user_repository", uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"user_id", "repositoryId"})
+})
 public class UserRepo extends EntityIdSequential {
     
     @ManyToOne
-    User user;
+    private User user;
 
-    @ManyToOne
-    Repository repository;
+    @NotNull
+    private Long repositoryId;
 
+    @URL
+    String url_imagen;
+
+    @NotBlank
+    @Column(unique = true)
+    @Pattern(regexp = "^[^\\s/]+/[^\\s/]+$")
+    private String name;
+
+    @NotBlank
+    private String token;
+
+    public boolean hasToken(){
+        return token != null;
+    }
+
+    public String getDecryptedToken() throws Exception {
+        return AESUtil.decrypt(this.token);
+    }
+
+    public void setTokenAndEncrypt(String token) throws Exception{
+        this.token = AESUtil.encrypt(token);
+    }
 }

@@ -2,14 +2,23 @@ import React from "react";
 import { Route, Routes } from "react-router-dom";
 import { ErrorBoundary } from "react-error-boundary";
 
-import Login from "./login";
-import Register from "./register";
+import Login from "./auth/login"
+import Register from "./auth/register";
 import SwaggerDocs from "./public/swagger";
-import AppNavbar from "./appNavbar/AppNavbar.js";
-import Home from "./home/index.js";
-import Details from "./details/index.js";
-import Repositories from "./repositories/index.js";
-import Repository from "./repositories/repository/index.js";
+import AppNavbar from "./appNavbar";
+import Home from "./home";
+import Details from "./details";
+import Repositories from "./repositories";
+import Repository from "./repositories/repository";
+import WorkspaceDownload from "./extraction/workspaceDownload";
+import RepositoryDownload from "./extraction/repositoryDownload";
+import RepositoryWorkspaceLinker from "./extraction/repositoryWorkspaceLinker";
+import Issues from './repositories/repository/issues';
+import Issue from './repositories/repository/issues/issue';
+import Commits from './repositories/repository/commits';
+import Commit from './repositories/repository/commits/commit';
+import Contributors from "./repositories/repository/contributors";
+import RepositoryDetails from "./repositories/repository/repositoryDetails";
 
 function ErrorFallback({ error, resetErrorBoundary }) {
   return (
@@ -26,14 +35,23 @@ function App() {
 
   let userRoutes = <></>;
   let publicRoutes = <></>;
-  // console.log(tokenService.getUser())
+
   userRoutes = (
       <>
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/details" element={<Details />}/>
         <Route path="/repositories" element={<Repositories/>}/>
-        <Route path="/repository/1" element={<Repository/>}/>
+        <Route path="/repository/:owner/:repo" element={<Repository/>}/>
+        <Route path="/repository/:owner/:repo/details" element={<RepositoryDetails/>}/>
+        <Route path="/repository/:owner/:repo/contributors" element={<Contributors/>}/>
+        <Route path="/repository/:owner/:repo/commits" element={<Commits/>}/>
+        <Route path="/repository/:owner/:repo/commits/:sha" element={<Commit/>}/>
+        <Route path="/repository/:owner/:repo/issues" element={<Issues/>}/>
+        <Route path="/repository/:owner/:repo/issues/:issueNumber" element={<Issue/>}/>
+        <Route path="/workspace/download" element={<WorkspaceDownload/>}/>
+        <Route path="/repository/download" element={<RepositoryDownload/>}/>
+        <Route path="/repository/workspace/linker" element={<RepositoryWorkspaceLinker/>}/>
       </>
     )
 
@@ -53,3 +71,5 @@ function App() {
 }
 
 export default App;
+
+

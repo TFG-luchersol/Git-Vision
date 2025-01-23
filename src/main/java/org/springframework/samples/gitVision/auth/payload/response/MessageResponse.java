@@ -9,7 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor(staticName = "empty")
-public class MessageResponse {
+public class MessageResponse{
 
 	private String message;
 	private Information information;

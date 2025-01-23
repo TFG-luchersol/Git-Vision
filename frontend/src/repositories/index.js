@@ -1,90 +1,118 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../App.css';
 import '../static/css/home/home.css';
 import tokenService from "../services/token.service.js";
 import { Button } from 'reactstrap';
 import '../static/css/auth/authPage.css'
-import AccordionItem from './AccordionItem.js';
+import AccordionItem from '../components/AccordionItem.js'
 import './repositories.css'
+import { Link } from 'react-router-dom';
+import { SiClockify } from "react-icons/si";
+import { IoLogoGithub } from "react-icons/io5";
+import { FaLink } from "react-icons/fa6";
 
 export default function Repositories() {
 
     const [repositories, setRepositories] = useState({})
     const [workspaces, setWorkspaces] = useState({})
+    const [relation, setRelation] = useState({})
 
     useEffect(() => {
-        getRepositories()
-        getWorkspaces()
+        getRepositories();
+        getWorkspaces();
+        getRelation();
     }, [])
 
     const getRepositories = async () => {
         try {
-            let newRepositories = await fetch(`/api/v1/relation/user_repository/repositories?userId=${1}`)
+            let newRepositories = await fetch(`/api/v1/relation/user_repository/repositories?userId=${tokenService.getUser().id}`)
             const json = await newRepositories.json()
-            const repositories = json.data.information.repositories
+            const repositories = json.information.information.repositories
+            console.log(repositories)
             setRepositories(repositories)
         } catch (e) {
-            alert(e)
+            // alert(e)
         }
     }
 
     const getWorkspaces = async () => {
-        // try {
-        //     let newWorkspaces = await fetch(`/api/v1/relation/user_repository/repositories?userId=${1}`)
-        //     newWorkspaces = await newWorkspaces.json()
-        //     setWorkspaces(newWorkspaces)
-        // } catch(e) {
-        //     alert(e)
-        // }
+        try {
+            let newWorkspaces = await fetch(`/api/v1/relation/user_workspace/workspaces?userId=${tokenService.getUser().id}`)
+            const json = await newWorkspaces.json()
+            const workspaces = json.information.information.workspaces
+            setWorkspaces(workspaces)
+        } catch (e) {
+            // alert(e)
+        }
+    }
+
+    const getRelation = async () => {
+        try {
+            let newRelation = await fetch(`/api/v1/linker?userId=${tokenService.getUser().id}`)
+            const json = await newRelation.json()
+            const workspaceRepository = json.information.information.workspace_repository
+            setRelation(workspaceRepository)
+        } catch (e) {
+            // alert(e)
+        }
     }
 
 
     return (
-        <div style={{ display: 'flex', justifyContent: 'center', height: '100%' }}>
+        <div className='grey-cover'>
+            <div style={{ zIndex: 200, display: 'flex', justifyContent: 'space-around', height: '100%' }}>
 
-            <div>
-                <h1>Repositorios 📂</h1>
-                {Object.keys(repositories).length > 0 ?
-                    Object.keys(repositories).map(owner =>
-                        <AccordionItem title={owner}>
-                            {repositories[owner].map(repo =>
-                                <AccordionItem onClick={() => window.location.href = '/files/1'} title={repo} leaf>
-                                    <span>📄</span> <span>📋</span>
+                <div style={{ position: 'relative', top: "100px" }}>
+                    <h1>Repositorios <IoLogoGithub /></h1>
+                    <div className='contenedor-rutas'>
+                        {Object.keys(repositories).length > 0 ?
+                            Object.keys(repositories).map(owner =>
+                                <AccordionItem title={owner}>
+                                    {repositories[owner].map(repo =>
+                                        <div onClick={() => window.location.href = `/repository/${owner + "/" + repo}`}>
+                                            <AccordionItem title={repo} leaf />
+                                        </div>
+                                    )
+                                    }
                                 </AccordionItem>
-                            )
-                            }
-                        </AccordionItem>
-                    ) : <h6>NO HAY REPOSITORIOS DESCARGADOS</h6>
-}
+                            ) : <h6 style={{margin: 20}} >NO HAY REPOSITORIOS DESCARGADOS</h6>
+                        }
+                    </div>
+                    <h1 style={{ marginTop: 10 }}>Workspace <SiClockify color='blue' /></h1>
+                    <div className='contenedor-rutas'>
+                        {workspaces.length > 0 ?
+                            workspaces.map(workspace => 
+                                    <div style={{display: "flex", flexDirection: "row"}}>
+                                        <AccordionItem leaf title={workspace.name} />
+                                        <div style={{display: "flex", flexDirection: "column"}}>
+                                        {relation[workspace.name] && 
+                                            relation[workspace.name].map(r => 
+                                                <div style={{ marginLeft: '20px', marginTop: '10px' }}>
+                                                    <FaLink style={{marginRight: "20px"}}/>{r}
+                                                </div>
+                                            )
+                                        }
+                                        </div>
+                                            
+                                    </div>
+                                ) :
+                            <h6 style={{margin: 20}}>NO HAY REPOSITORIOS DESCARGADOS</h6>}
+                    </div>
+                </div>
 
-                <h2>Workspace ⏲️</h2>
-                {workspaces.size > 0 ?
-                    workspaces.keys().map(owner => {
-                        return (<AccordionItem title={owner}>
-                            {workspaces.get(owner).map(repo =>
-                                <AccordionItem title={repo} leaf>
-                                    <span>📄</span> <span>📋</span>
-                                </AccordionItem>)
-                            }
-                        </AccordionItem>);
-                    }) : <h6>NO HAY REPOSITORIOS DESCARGADOS</h6>}
+                <div className='button-group' style={{ justifyContent: "center" }}>
+                    <Button >
+                        <Link className='custom-link' to={"/repository/download"}>Añadir repositorio</Link>
+                    </Button>
+                    <Button >
+                        <Link className='custom-link' to={"/workspace/download"}>Añadir workspace</Link>
+                    </Button>
+                    <Button style={{ marginTop: 10 }} >
+                        <Link className='custom-link' to={"/repository/workspace/linker"}>Enlazar proyecto con workspace</Link>
+                    </Button>
+                </div>
+
             </div>
-
-            <div className='button-group'>
-                <Button onClick={() => alert('Añadir organización')}>
-                    Añadir organización
-                </Button>
-                <Button onClick={() => alert('Añadir proyecto')}>
-                    Añadir proyecto
-                </Button>
-                <Button onClick={() => alert('Añadir workspace')} >
-                    Añadir workspace
-                </Button>
-                <Button style={{ marginTop: 10 }} onClick={() => alert('Enlazar proyecto con workspace')} >
-                    Enlazar proyecto con workspace
-                </Button>
-            </div>
-
         </div>
     );
 }

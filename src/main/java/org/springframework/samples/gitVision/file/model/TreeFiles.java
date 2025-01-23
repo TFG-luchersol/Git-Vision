@@ -24,6 +24,7 @@ public class TreeFiles {
         private static final String NAME_ROOT = "/";
 
         private String name;
+        
         private List<TreeNode> children;
 
         @JsonProperty
@@ -41,6 +42,10 @@ public class TreeFiles {
 
         public String getName() {
             return name;
+        }
+
+        public String getExtension(){
+            return isLeaf() ? new File(this.name).getExtension() : null;
         }
 
         public List<TreeNode> getChildren() {

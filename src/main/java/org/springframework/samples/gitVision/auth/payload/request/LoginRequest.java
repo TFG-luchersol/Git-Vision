@@ -9,10 +9,10 @@ import lombok.Setter;
 @Setter
 public class LoginRequest {
 	
-	// @NotBlank
+	@NotBlank
 	private String username;
 
-	// @NotBlank
-	private String githubToken;
+	@NotBlank
+	private String password;
 
 }
