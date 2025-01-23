@@ -10,6 +10,7 @@ import { Link } from 'react-router-dom';
 import { SiClockify } from "react-icons/si";
 import { IoLogoGithub } from "react-icons/io5";
 import { FaLink } from "react-icons/fa6";
+import getBody from '../util/getBody.js';
 
 export default function Repositories() {
 
@@ -27,11 +28,10 @@ export default function Repositories() {
         try {
             let newRepositories = await fetch(`/api/v1/relation/user_repository/repositories?userId=${tokenService.getUser().id}`)
             const json = await newRepositories.json()
-            const repositories = json.information.information.repositories
-            console.log(repositories)
+            const {repositories} = getBody(json)
             setRepositories(repositories)
         } catch (e) {
-            // alert(e)
+            alert(e.message)
         }
     }
 
@@ -39,7 +39,7 @@ export default function Repositories() {
         try {
             let newWorkspaces = await fetch(`/api/v1/relation/user_workspace/workspaces?userId=${tokenService.getUser().id}`)
             const json = await newWorkspaces.json()
-            const workspaces = json.information.information.workspaces
+            const {workspaces} = getBody(json)
             setWorkspaces(workspaces)
         } catch (e) {
             // alert(e)
@@ -50,8 +50,8 @@ export default function Repositories() {
         try {
             let newRelation = await fetch(`/api/v1/linker?userId=${tokenService.getUser().id}`)
             const json = await newRelation.json()
-            const workspaceRepository = json.information.information.workspace_repository
-            setRelation(workspaceRepository)
+            const {workspace_repository} = getBody(json)
+            setRelation(workspace_repository)
         } catch (e) {
             // alert(e)
         }

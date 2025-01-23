@@ -14,6 +14,7 @@ import { Table } from 'reactstrap';
 import tokenService from "../../../../services/token.service";
 import DateRangePicker from '../../../../components/DateRangePicker';
 import { RiMedalLine } from "react-icons/ri";
+import getBody from '../../../../util/getBody';
 import "./stadistics.css";
 
 ChartJS.register(Title, Tooltip, Legend, PointElement, CategoryScale, LinearScale);
@@ -160,7 +161,7 @@ export default function CommitsByTime() {
         try {
             const response = await fetch(url);
             const json = await response.json();
-            const result = json.information.information.contributions
+            const result = getBody(json)
             if (minYear === null && result.length !== 0) {
                 minYear = result.reduce((earliest, current) => {
                     const currentDate = new Date(current.committedDate);

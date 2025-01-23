@@ -4,6 +4,7 @@ import tokenService from '../../../../services/token.service';
 import CounterChanges from '../../../../components/CounterChanges';
 import FolderTabs from '../../../../components/FolderTabs';
 import './commit.css';
+import getBody from '../../../../util/getBody';
 
 export default function Commit() {
     const { username } = tokenService.getUser();
@@ -20,10 +21,10 @@ export default function Commit() {
             const repositorName = `${owner}/${repo}`;
             const newCommit = await fetch(`/api/v1/commits/${repositorName}/${sha}?login=${username}`)
             const json = await newCommit.json()
-            console.log(json)
-            setCommit(json.information.information.commit)
+            const {commit} = getBody(json)
+            setCommit(commit)
         } catch (e) {
-
+            alert(e.message)
         }
     }
 

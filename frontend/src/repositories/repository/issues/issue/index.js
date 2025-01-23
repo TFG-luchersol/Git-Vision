@@ -8,6 +8,7 @@ import './issue.css';
 import CounterChanges from '../../../../components/CounterChanges';
 
 import FolderTabs from '../../../../components/FolderTabs';
+import getBody from '../../../../util/getBody';
 
 export default function Issue() {
     const { username } = tokenService.getUser();
@@ -28,15 +29,14 @@ export default function Issue() {
             const id = `${owner}/${repo}`;
             const newIssues = await fetch(`/api/v1/issues/${id}/${issueNumber}?login=${username}`)
             const json = await newIssues.json()
-            const information = json.information.information;
-            setIssue(information.issue)
-            setCommits(information.commits)
-            setFiles(information.files)
-            setChangesByUser(information.changesByUser)
-            setAssigness(information.assigness)
-            console.log(information.assigness)
+            const {issue, commits, files, changesByUser, assigness} = getBody(json)
+            setIssue(issue)
+            setCommits(commits)
+            setFiles(files)
+            setChangesByUser(changesByUser)
+            setAssigness(assigness)
         } catch (e) {
-
+            alert(e.message)
         }
     }
 

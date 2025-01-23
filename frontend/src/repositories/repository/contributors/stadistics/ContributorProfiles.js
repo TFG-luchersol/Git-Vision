@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import tokenService from '../../../../services/token.service.js';
+import getBody from '../../../../util/getBody.js';
 
 export default function ContributorProfiles() {
 
@@ -17,7 +18,8 @@ export default function ContributorProfiles() {
         try {
             let response = await fetch(`/api/v1/relation/user_repository/${owner}/${repo}/contributors?login=${username}`)
             const json = await response.json()
-            setContributors(json.information.information.contributors)
+            const result = getBody(json);
+            setContributors(result.contributors)
         } catch (e) {
             alert(e)
         }

@@ -4,6 +4,7 @@ import { Button, Input } from 'reactstrap';
 import tokenService from '../../../services/token.service';
 import './issues.css';
 import { GoIssueClosed, GoIssueOpened } from 'react-icons/go';
+import getBody from '../../../util/getBody';
 
 export default function Issues() {
     const { username } = tokenService.getUser();
@@ -23,12 +24,14 @@ export default function Issues() {
             const repositorName = `${owner}/${repo}`;
             const newIssues = await fetch(`/api/v1/issues/${repositorName}?login=${username}&page=${page}`)
             const json = await newIssues.json()
-            if(json.information.information.issues.length > 0){
-                setIssues(json.information.information.issues)
+            const {issues} = getBody(json)
+            if(issues.length > 0){
+                console.log(issues)
+                setIssues(issues)
                 setPage(page)
             } 
         } catch (e) {
-
+            alert(e.message)
         }
     }
 

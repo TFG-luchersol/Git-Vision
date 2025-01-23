@@ -7,6 +7,7 @@ import tokenService from "../../services/token.service.js";
 import "../../static/css/auth/authPage.css";
 import { Link } from 'react-router-dom';
 import CustomInput from '../../components/CustomInput.js';
+import getBody from '../../util/getBody.js';
 
 export default function RepositoryWorkspaceLinker() {
 
@@ -26,22 +27,22 @@ export default function RepositoryWorkspaceLinker() {
     useEffect(() => {
         const userId = tokenService.getUser().id
         const loadRepositories = async () => {
-            const response = await fetch(`/api/v1/relation/user_repository/repositories?userId=${userId}`)
-            if (response.status === 200) {
-                const json = await response.json()
-                setRepositories(json.information.information.repositories)
-            } else {
-                const error = await response.json();
+            try {
+                const response = await fetch(`/api/v1/relation/user_repository/repositories?userId=${userId}`)
+                const json = await response.json();
+                const {respositories} = getBody(json);
+                setRepositories(respositories)
+            } catch (error) {
                 setMessage(error.message)
             }
         };
         const loadWorkspaces = async () => {
-            const response = await fetch(`/api/v1/relation/user_workspace/workspaces?userId=${userId}`)
-            if (response.status === 200) {
-                const json = await response.json()
-                setWorkspaces(json.information.information.workspaces)
-            } else {
-                const error = await response.json();
+            try {
+                const response = await fetch(`/api/v1/relation/user_workspace/workspaces?userId=${userId}`)
+                const json = await response.json();
+                const {workspaces} = getBody(json);
+                setWorkspaces(workspaces)
+            } catch (error) {
                 setMessage(error.message)
             }
         };

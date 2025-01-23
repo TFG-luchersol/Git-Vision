@@ -6,6 +6,7 @@ import tokenService from '../../services/token.service.js';
 import './repository.css';
 import { Button, ButtonGroup, Input } from 'reactstrap';
 import MultiSelectDropdown from '../../components/MultiSelectDropdown.js';
+import getBody from '../../util/getBody.js';
 
 export default function Repository() {
     const { username } = tokenService.getUser();
@@ -31,9 +32,10 @@ export default function Repository() {
             const id = `${owner}/${repo}`;
             let newFiles = await fetch(`/api/v1/files/repository/${id}?login=${username}`)
             const json = await newFiles.json()
-            setFiles(json.information.information.tree)
+            const {tree} = getBody(json);
+            setFiles(tree)
         } catch (e) {
-
+            alert(e.message)
         }
     }
 
@@ -42,12 +44,12 @@ export default function Repository() {
             const id = `${owner}/${repo}`;
             let newFiles = await fetch(`/api/v1/files/repository/${id}/extension_counter?login=${username}`)
             const json = await newFiles.json()
-            setExtensionCounter(json.information.information.extensionCounter)
-            const numFiles = Object.values(json.information.information.extensionCounter)
-                .reduce((acc, next) => acc + next, 0);
+            const {extensionCounter} = getBody(json)
+            setExtensionCounter(extensionCounter)
+            const numFiles = Object.values(extensionCounter).reduce((acc, next) => acc + next, 0);
             setNumFiles(numFiles);
         } catch (e) {
-
+            alert(e.message)
         }
     }
     
@@ -56,10 +58,11 @@ export default function Repository() {
             const id = `${owner}/${repo}`;
             let newPercentajeLanguajes = await fetch(`/api/v1/files/languajes/repository/${id}?login=${username}`)
             const json = await newPercentajeLanguajes.json()
-            setPercentajeLanguajes(json.information.information.percentageLanguages.percentages)
-            setNumBytes(json.information.information.percentageLanguages.numBytes);
+            const {percentageLanguages} = getBody(json)
+            setPercentajeLanguajes(percentageLanguages.percentages)
+            setNumBytes(percentageLanguages.numBytes);
         } catch (e) {
-
+            alert(e.message)
         }
     }
 

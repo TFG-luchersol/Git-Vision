@@ -8,7 +8,7 @@ export default function CounterChanges({ additions = 0, deletions = 0 }) {
     const changeStyle = { display: "flex", alignItems: "center" }
     const iconStyle = { fontSize: 30, marginRight: 5 }
     const numberStyle = { fontSize: 20, marginTop: 15 }
-    return (<div style={{ display: "flex", justifyContent: "space-between", width: "15%" }}>
+    return (<div style={{ display: "flex", justifyContent: "space-between"}}>
         {
             additions > 0 || deletions > 0 ? <>
                 <div style={changeStyle}>{additions > 0 && <>

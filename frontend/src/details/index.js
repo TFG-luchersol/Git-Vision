@@ -7,6 +7,7 @@ import { Button, Modal, ModalBody, ModalHeader } from 'reactstrap';
 import CustomInput from '../components/CustomInput.js';
 import tokenService from '../services/token.service.js'
 import './details.css';
+import getBody from '../util/getBody.js';
 
 export default function Details() {
   const userIcon = <FaRegUserCircle />
@@ -37,18 +38,24 @@ export default function Details() {
 
   const handleSave = async (tokenType) => {
     const user = tokenService.getUser();
-    if (tokenType === 'github') {
-      const response = await fetch(`/api/v1/users/user/${username}/token/github`, 
-        {method: "PUT", body: githubToken}
-      );
-      const json = await response.json()
-      tokenService.setUser({...user, githubToken: json.information.information.githubToken})
-    } else if (tokenType === 'clockify') {
-      const response = await fetch(`/api/v1/users/user/${username}/token/clockify`, 
-        {method: "PUT", body: clockifyToken}
-      );
-      const json = await response.json()
-      tokenService.setUser({...user, clockifyToken: json.information.information.clockifyToken})
+    try {
+      if (tokenType === 'github') {
+        const response = await fetch(`/api/v1/users/user/${username}/token/github`, 
+          {method: "PUT", body: githubToken}
+        );
+        const json = await response.json()
+        const result = getBody(json)
+        tokenService.setUser({...user, githubToken: result.githubToken})
+      } else if (tokenType === 'clockify') {
+        const response = await fetch(`/api/v1/users/user/${username}/token/clockify`, 
+          {method: "PUT", body: clockifyToken}
+        );
+        const json = await response.json()
+        const result = getBody(json)
+        tokenService.setUser({...user, clockifyToken: result.clockifyToken})
+      }
+    } catch (error) {
+      alert(error)
     }
   };
 
