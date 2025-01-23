@@ -8,7 +8,9 @@ import java.util.Map;
 
 import org.kohsuke.github.GHRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.samples.gitvision.auth.payload.response.BadResponse;
 import org.springframework.samples.gitvision.auth.payload.response.MessageResponse;
+import org.springframework.samples.gitvision.auth.payload.response.OkResponse;
 import org.springframework.samples.gitvision.commit.model.Commit;
 import org.springframework.samples.gitvision.commit.model.commitsByTimePeriod.TimePeriod;
 import org.springframework.samples.gitvision.contributions.model.CommitContribution;
@@ -44,9 +46,9 @@ public class CommitController {
             List<Commit> commits = this.commitService.getCommitsByRepository(repositoryName, login, page);
             Information information = Information.create("commits", commits)
                                                  .put("page", page);
-            return MessageResponse.of(information);
+            return OkResponse.of(information);
         } catch (Exception e) {
-            return null;
+            return BadResponse.of(e);
         }
     }   
     
@@ -59,22 +61,22 @@ public class CommitController {
             GHRepository ghRepository = this.userRepoService.getRepository(owner, repo, login);
             Commit commit = this.commitService.getCommitByRepositoryNameAndSha(ghRepository, sha);
             Information information = Information.create("commit", commit);
-            return MessageResponse.of(information);
+            return OkResponse.of(information);
         } catch (Exception e) {
-            return null;
+            return BadResponse.of(e);
         }
     }  
 
-    @GetMapping("/{owner}/{repo}/byTime")
-    public Map<TimePeriod, Map<Integer, Long>> getNumCommitsGroupByTime(@PathVariable String owner, @PathVariable String repo, @RequestParam String login){
-        try {
-            GHRepository ghRepository = this.userRepoService.getRepository(owner, repo, login);
-            return this.commitService.getNumCommitsGroupByTime(ghRepository);
-        } catch (Exception e) {
-            return null;
-        }
+    // @GetMapping("/{owner}/{repo}/byTime")
+    // public Map<TimePeriod, Map<Integer, Long>> getNumCommitsGroupByTime(@PathVariable String owner, @PathVariable String repo, @RequestParam String login){
+    //     try {
+    //         GHRepository ghRepository = this.userRepoService.getRepository(owner, repo, login);
+    //         return this.commitService.getNumCommitsGroupByTime(ghRepository);
+    //     } catch (Exception e) {
+    //         return null;
+    //     }
         
-    } 
+    // } 
 
 
 

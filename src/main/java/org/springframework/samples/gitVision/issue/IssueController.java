@@ -5,7 +5,9 @@ import java.util.Map;
 
 import org.kohsuke.github.GHRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.samples.gitvision.auth.payload.response.BadResponse;
 import org.springframework.samples.gitvision.auth.payload.response.MessageResponse;
+import org.springframework.samples.gitvision.auth.payload.response.OkResponse;
 import org.springframework.samples.gitvision.issue.model.Issue;
 import org.springframework.samples.gitvision.relations.userRepo.UserRepoService;
 import org.springframework.samples.gitvision.util.Information;
@@ -36,9 +38,9 @@ public class IssueController {
             String repositoryName = owner + "/" + repo;
             List<Issue> issues = this.issueService.getAllIssuesByRepositoryName(repositoryName, login, page);
             Information information = Information.create("issues", issues);
-            return MessageResponse.of(information);
+            return OkResponse.of(information);
         } catch (Exception e) {
-            return MessageResponse.of(e.getMessage());
+            return BadResponse.of(e.getMessage());
         }
         
     }
@@ -50,13 +52,12 @@ public class IssueController {
                                                     @RequestParam String login) {
         
         try {
-            String repositoryName = owner + "/" + repo;
-            GHRepository ghRepository = this.userRepoService.getRepository(repositoryName, login);
+            GHRepository ghRepository = this.userRepoService.getRepository(owner, repo, login);
             Map<String, Object> dict = this.issueService.getIssueByRepositoryNameAndIssueNumber(ghRepository, issueNumber);
             Information information = Information.of(dict);
-            return MessageResponse.of(information);
+            return OkResponse.of(information);
         } catch (Exception e) {
-            return null;
+            return BadResponse.of(e);
         }
     
     }

@@ -9,6 +9,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.gitvision.auth.payload.response.MessageResponse;
+import org.springframework.samples.gitvision.auth.payload.response.OkResponse;
 import org.springframework.samples.gitvision.relations.userRepo.model.UserRepo;
 import org.springframework.samples.gitvision.relations.userWorkspace.model.UserWorkspace;
 import org.springframework.samples.gitvision.util.Information;
@@ -38,7 +39,7 @@ public class LinkerRepoWorkController {
     public MessageResponse getAllRelationsByUserId(@RequestParam Long userId) {
         Map<String, List<String>> workspace_repository = this.linkerRepoWorkService.getAllRelationsByUserId(userId);
         Information information = Information.create("workspace_repository", workspace_repository);
-        return MessageResponse.of(information);
+        return OkResponse.of(information);
     }
     
     

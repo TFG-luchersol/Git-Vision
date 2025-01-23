@@ -31,7 +31,6 @@ public class IssueService {
             throws Exception {
         UserRepo userRepo = this.userRepoRepository.findByNameAndUser_Username(repositoryName, login).get();
         String tokenToUse = userRepo.getDecryptedToken();
-
         return GithubApi.getIssuesByPage(repositoryName, page, 30, tokenToUse);
     }
 

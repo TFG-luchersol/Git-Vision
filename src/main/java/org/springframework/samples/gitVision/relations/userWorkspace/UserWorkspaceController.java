@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.gitvision.auth.payload.response.MessageResponse;
+import org.springframework.samples.gitvision.auth.payload.response.OkResponse;
 import org.springframework.samples.gitvision.relations.userWorkspace.model.UserWorkspace;
 import org.springframework.samples.gitvision.util.Information;
 import org.springframework.samples.gitvision.workspace.model.Workspace;
@@ -34,7 +35,7 @@ public class UserWorkspaceController {
     public MessageResponse getAllWorkspacesByUserId(@RequestParam Long userId) {
         List<UserWorkspace> userWorkspaces = this.userWorkspaceService.getAllWorkspaceByUserId(userId);
         Information information = Information.create("workspaces", userWorkspaces);
-        return MessageResponse.of(information);
+        return OkResponse.of(information);
     }
 
     @PostMapping

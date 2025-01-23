@@ -5,7 +5,9 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.samples.gitvision.auth.payload.response.BadResponse;
 import org.springframework.samples.gitvision.auth.payload.response.MessageResponse;
+import org.springframework.samples.gitvision.auth.payload.response.OkResponse;
 import org.springframework.samples.gitvision.contributions.model.CommitContribution;
 import org.springframework.samples.gitvision.relations.userRepo.UserRepoService;
 import org.springframework.samples.gitvision.util.Information;
@@ -41,9 +43,9 @@ public class ContributionController {
             Date d2 = endDate == null ? null : dateFormat.parse(endDate);
             List<CommitContribution> contributions = this.contributionService.getContributionsByDateBetweenDates(repositoryName, login, d1, d2); 
             Information information = Information.create("contributions", contributions);
-            return MessageResponse.of(information);
+            return OkResponse.of(information);
         } catch (Exception e) {
-            return MessageResponse.of(e.getMessage());
+            return BadResponse.of(e);
         }
 
     }

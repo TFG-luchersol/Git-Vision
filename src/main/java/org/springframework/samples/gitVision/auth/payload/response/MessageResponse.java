@@ -1,5 +1,6 @@
 package org.springframework.samples.gitvision.auth.payload.response;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.samples.gitvision.util.Information;
 
 import lombok.Getter;
@@ -8,31 +9,44 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@NoArgsConstructor(staticName = "empty")
-public class MessageResponse{
+public class MessageResponse {
 
-	private String message;
-	private Information information;
+	protected String message;
+	protected Information body;
+	protected HttpStatus httpStatus;
+
+	public MessageResponse() {
+
+	}
+
+	public MessageResponse(HttpStatus httpStatus) {
+		this.httpStatus = httpStatus;
+	}
 
 	public MessageResponse(String message) {
 		this.message = message;
 	}
 
+	public MessageResponse(String message, HttpStatus httpStatus) {
+		this.message = message;
+		this.httpStatus = httpStatus;
+	}
+
 	public static MessageResponse of(String message){
-		MessageResponse messageResponse = MessageResponse.empty();
+		MessageResponse messageResponse = new MessageResponse();
 		messageResponse.setMessage(message);
 		return messageResponse;
 	}
 
 	public static MessageResponse of(Information information){
-		MessageResponse messageResponse = MessageResponse.empty();
-		messageResponse.setInformation(information);
+		MessageResponse messageResponse = new MessageResponse();
+		messageResponse.setBody(information);
 		return messageResponse;
 	}
 
 	public static MessageResponse of(String message, Information information){
 		MessageResponse messageResponse = of(message);
-		messageResponse.setInformation(information);
+		messageResponse.setBody(information);
 		return messageResponse;
 	}
 }

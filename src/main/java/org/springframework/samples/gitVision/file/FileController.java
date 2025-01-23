@@ -4,7 +4,9 @@ import java.util.Map;
 
 import org.kohsuke.github.GHRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.samples.gitvision.auth.payload.response.BadResponse;
 import org.springframework.samples.gitvision.auth.payload.response.MessageResponse;
+import org.springframework.samples.gitvision.auth.payload.response.OkResponse;
 import org.springframework.samples.gitvision.file.model.PercentageLanguages;
 import org.springframework.samples.gitvision.file.model.TreeFiles.TreeNode;
 import org.springframework.samples.gitvision.relations.userRepo.UserRepoService;
@@ -31,13 +33,12 @@ public class FileController {
                                                      @PathVariable String repo,
                                                      @RequestParam String login){
         try {
-            String repositoryName = owner + "/" + repo;
-            GHRepository ghRepository = this.userRepoService.getRepository(repositoryName, login);
+            GHRepository ghRepository = this.userRepoService.getRepository(owner, repo, login);
             TreeNode treeNode = this.fileService.getFileTreeByRepositoryName(ghRepository);
             Information information = Information.create("tree", treeNode);
-            return MessageResponse.of(information);
+            return OkResponse.of(information);
         } catch (Exception e) {
-            return MessageResponse.of(e.getMessage());
+            return BadResponse.of(e);
         }
         
     }
@@ -47,13 +48,12 @@ public class FileController {
                                                              @PathVariable String repo,
                                                              @RequestParam String login){
         try {
-            String repositoryName = owner + "/" + repo;
-            GHRepository ghRepository = this.userRepoService.getRepository(repositoryName, login);
+            GHRepository ghRepository = this.userRepoService.getRepository(owner, repo, login);
             Map<String, Long> extensionCounter = this.fileService.getExtensionCounterByRepositoryId(ghRepository);
             Information information = Information.create("extensionCounter", extensionCounter);
-            return MessageResponse.of(information);
+            return OkResponse.of(information);
         } catch (Exception e) {
-            return MessageResponse.of(e.getMessage());
+            return BadResponse.of(e);
         }
         
     }
@@ -63,13 +63,12 @@ public class FileController {
                                                                   @PathVariable String repo,
                                                                   @RequestParam String login){
         try {
-            String repositoryName = owner + "/" + repo;
-            GHRepository ghRepository = this.userRepoService.getRepository(repositoryName, login);
+            GHRepository ghRepository = this.userRepoService.getRepository(owner, repo, login);
             PercentageLanguages percentageLanguages = this.fileService.getPercentageExtensionsByRespositoryName(ghRepository);
             Information information = Information.create("percentageLanguages", percentageLanguages);
-            return MessageResponse.of(information);
+            return OkResponse.of(information);
         } catch (Exception e) {
-            return MessageResponse.of(e.getMessage());
+            return BadResponse.of(e);
         }
         
     }
