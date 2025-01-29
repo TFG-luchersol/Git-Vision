@@ -1,23 +1,26 @@
 import React from 'react';
 import AccordionItem from './AccordionItem.js';
 
-export default function TreeFiles({href=null, root, filter = "", filterExtension = [] }) {
+export default function TreeFiles({styleText={}, href=null, root, filter = "", deepFilter=false, filterExtension = [] }) {
     
     const filterTree = (node) => {
         if (!filter && filterExtension.length === 0) return true;
 
-        const nodeMatchesText = node.name.toLowerCase().includes(filter.toLowerCase());
-        
-        if (filterExtension.length === 0) {
+        const nodeMatchesText = node.name.toLowerCase().includes(filter.toLowerCase());)
+        if (filterExtension.length === 0 ) {
             return nodeMatchesText;
         }
-        
+
         if (node.leaf) {
             const nodeMatchesExtension = filterExtension.includes(node.extension);
             return nodeMatchesText && nodeMatchesExtension;
         }
 
-        const childrenMatch = node.children?.some(child => filterTree(child));
+        const childrenMatch = deepFilter ? node.children?.some(child => {
+            console.log(child)
+            return filterTree(child);
+        }) : false;
+
         return childrenMatch;
     };
 
@@ -44,14 +47,25 @@ export default function TreeFiles({href=null, root, filter = "", filterExtension
 
         if (node.leaf) {
             return (
-                <AccordionItem href={`${window.location.href}/blob/${removeCharsLeftOfFirstSlash(fullPath)}`} fullPath={fullPath} title={node.name} leaf />
+                <AccordionItem 
+                    styleText={styleText} 
+                    href={`${window.location.href}/blob/${removeCharsLeftOfFirstSlash(fullPath)}`} 
+                    fullPath={fullPath} 
+                    title={node.name} 
+                    leaf 
+                />
             );
         } else {
             const children = node.children
                 ?.map(child => showTree(child, fullPath))
                 .filter(child => child !== null);
             return (
-                <AccordionItem href={`${window.location.href}/tree/${removeCharsLeftOfFirstSlash(fullPath)}`} title={node.name} >
+                <AccordionItem 
+                    styleText={styleText} 
+                    fullPath={fullPath}
+                    href={`${window.location.href}/tree/${removeCharsLeftOfFirstSlash(fullPath)}`} 
+                    title={node.name} 
+                >
                     {children}
                 </AccordionItem>
             );

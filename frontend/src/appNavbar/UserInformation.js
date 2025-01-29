@@ -17,7 +17,6 @@ export default function UserInformation() {
     const user = tokenService.getUser();
     if (user !== null) {
       tokenService.removeUser();
-      console.log(tokenService.getUser());
       window.location.href = "/";
     } else {
       alert("There is no user logged in");

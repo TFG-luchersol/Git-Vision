@@ -86,7 +86,7 @@ export default function Repository() {
                             options={[...Object.keys(extensionCounter).filter(value => value !== "Unknown")].sort().concat("Unknown")}
                         />
                     </div>
-                    <TreeFiles root={files} filter={filter} filterExtension={selectedOptions} className={"archivo"} />
+                    <TreeFiles deepFilter root={files} filter={filter} filterExtension={selectedOptions} className={"archivo"} />
                 </div>
                 <div style={{ position: 'relative', left: '50px', display: "flex", flexDirection: "row" }}>
                     <div style={{ display: "flex", flexDirection: "column" }}>
@@ -106,7 +106,16 @@ export default function Repository() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {[...Object.keys(extensionCounter).filter(value => value !== "Unknown")].sort().concat("Unknown").map((key, index) =>
+                                {
+                                Object.keys(extensionCounter).includes("Unknown") ?
+                                [...Object.keys(extensionCounter).filter(value => value !== "Unknown")].sort().concat("Unknown").map((key, index) =>
+                                    <tr key={index}>
+                                        <td>{key}</td>
+                                        <td>{extensionCounter[key]}</td>
+                                        <td>{((extensionCounter[key] / numFiles) * 100).toFixed(2)}%</td>
+                                    </tr>
+                                ) :
+                                [...Object.keys(extensionCounter)].sort().map((key, index) =>
                                     <tr key={index}>
                                         <td>{key}</td>
                                         <td>{extensionCounter[key]}</td>
