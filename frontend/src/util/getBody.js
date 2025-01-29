@@ -1,5 +1,4 @@
 export default function getBody(response) {
-    console.log(response)
     const handlers = {
         "OK": () => response.body.information,
         "BAD_REQUEST": () => { throw new Error(response.message); },

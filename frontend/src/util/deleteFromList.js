@@ -30,7 +30,6 @@ export default function deleteFromList(url, id, [state, setState], [alerts, setA
                         getDeleteAlertsOrModal(JSON.parse(text), id, alerts, setAlerts, setMessage, setVisible);
             })
             .catch((err) => {
-                console.log(err);
                 alert("Error deleting entity")
             });
     }

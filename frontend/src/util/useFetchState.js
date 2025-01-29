@@ -26,7 +26,6 @@ export default function useFetchState(initial, url, jwt, setMessage, setVisible,
                             }
                         }
                     }).catch((message) => {
-                        console.log(message);
                         setMessage('Failed to fetch data');
                         setVisible(true);
                     });
