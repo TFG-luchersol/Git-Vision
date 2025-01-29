@@ -1,23 +1,25 @@
 import {
-    CategoryScale,
     Chart as ChartJS,
     Legend,
     LinearScale,
     PointElement,
     Title,
     Tooltip,
+    LineElement,
+    LineController
 } from "chart.js";
 import React, { useEffect, useState } from "react";
-import { Scatter } from "react-chartjs-2";
+import { Line } from "react-chartjs-2";
 import { useParams } from "react-router-dom";
 import { Table } from 'reactstrap';
 import tokenService from "../../../../services/token.service";
 import DateRangePicker from '../../../../components/DateRangePicker';
 import { RiMedalLine } from "react-icons/ri";
 import getBody from '../../../../util/getBody';
+import { darkenColor, stringToColor } from '../../../../util/tools';
 import "./stadistics.css";
 
-ChartJS.register(Title, Tooltip, Legend, PointElement, CategoryScale, LinearScale);
+ChartJS.register(LineElement, PointElement, LinearScale, Title, Tooltip, Legend, LineController);
 
 export default function CommitsByTime() {
 
@@ -75,7 +77,12 @@ export default function CommitsByTime() {
         const newDataset = Object.entries(groupContributionsByAuthorAndTime(contributions)).map(entry => ({
             "label": entry[0],
             "data": entry[1],
-            "backgroundColor": stringToColor(entry[0])
+            "backgroundColor": stringToColor(entry[0]) + '80',
+            "borderColor": darkenColor(stringToColor(entry[0])),
+            "borderWidth": 1,
+            "fill": true, 
+            "showLine": true,
+            "tension": 0.3,
         }));
         setData_(prev => ({ "datasets": newDataset }))
     }, [selectedAgrupation, selectedType, selectedYear, concreteSample, contributions])
@@ -89,34 +96,6 @@ export default function CommitsByTime() {
     const meses = {
         1: "Enero", 2: "Febrero", 3: "Marzo", 4: "Abril", 5: "Mayo", 6: "Junio",
         7: "Julio", 8: "Agosto", 9: "Septiembre", 10: "Octubre", 11: "Noviembre", 12: "Diciembre"
-    }
-
-    function stringToColor(str) {
-        let hash = 0;
-        for (let i = 0; i < str.length; i++) {
-            hash = str.charCodeAt(i) + ((hash << 5) - hash);
-        }
-
-        // Extraer los componentes RGB
-        let r = (hash >> 16) & 0xFF;
-        let g = (hash >> 8) & 0xFF;
-        let b = hash & 0xFF;
-
-        r = (r * 2) % 256;
-        g = (g * 2) % 256;
-        b = (b * 2) % 256;
-
-        r = Math.min(255, r + 50);
-        g = Math.min(255, g + 50);
-        b = Math.min(255, b + 50);
-
-        r = Math.max(128, r);
-        g = Math.max(128, g);
-        b = Math.max(128, b);
-
-        let color = '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase();
-
-        return color;
     }
 
     function generateRanking() {
@@ -161,7 +140,8 @@ export default function CommitsByTime() {
         try {
             const response = await fetch(url);
             const json = await response.json();
-            const result = getBody(json)
+            const result = getBody(json).contributions
+            
             if (minYear === null && result.length !== 0) {
                 minYear = result.reduce((earliest, current) => {
                     const currentDate = new Date(current.committedDate);
@@ -179,19 +159,21 @@ export default function CommitsByTime() {
             }
             setSelectedYear(prev => maxYear)
             setContributions(prev => result)
+            generateRanking()
         } catch (error) {
             alert(error)
         }
     }
 
-    function groupContributionsByAuthorAndTime(contributions) {
+    function groupContributionsByAuthorAndTime(contributions=[]) {
         const grouped = {};
         const years = new Set();
+
         contributions.forEach(({ committedDate }) => {
             const date = new Date(committedDate);
-            years.add(date.getFullYear());
+            years.add(date.getFullYear());           
         });
-
+        
         if (!years.has(selectedYear)) {
             setSelectedYear(prev => Math.max(...years))
         }
@@ -213,7 +195,7 @@ export default function CommitsByTime() {
 
             return bool;
         }
-
+        
         contributions
             .filter(({ committedDate }) => filtroFecha(committedDate))
             .forEach(({ committedDate, additions, deletions, authorName }) => {
@@ -417,7 +399,7 @@ export default function CommitsByTime() {
 
                 <div style={{ display: "flex", flexDirection: "row" }}>
                     <div style={{ height: "55vh", width: "100vh" }}>
-                        <Scatter
+                        <Line
                             data={data_}
                             options={options}
                         />
