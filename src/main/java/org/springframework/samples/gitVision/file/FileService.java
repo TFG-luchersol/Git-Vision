@@ -7,6 +7,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.kohsuke.github.GHCommit;
+import org.kohsuke.github.GHContent;
 import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GHTree;
 import org.kohsuke.github.GitHub;
@@ -26,6 +27,11 @@ public class FileService {
     public PercentageLanguages getPercentageExtensionsByRespositoryName(GHRepository ghRepository) throws Exception{
         Map<String, Long> contLanguajes = ghRepository.listLanguages();
         return PercentageLanguages.of(contLanguajes);
+    }
+
+    public String getFileContentTreeByPath(GHRepository ghRepository, String path) throws Exception {
+        GHContent ghContent = ghRepository.getFileContent(path);
+        return new String(ghContent.read().readAllBytes());
     }
 
     public TreeNode getFileTreeByRepositoryName(GHRepository ghRepository) throws Exception {

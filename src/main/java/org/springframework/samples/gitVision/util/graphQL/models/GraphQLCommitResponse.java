@@ -14,42 +14,48 @@ public class GraphQLCommitResponse {
 
         @Data
         public static class Repository {
-            private GitObject object;
+            private DefaultBranchRef defaultBranchRef;
 
             @Data
-            public static class GitObject {
-                private CommitHistory history;
+            public static class DefaultBranchRef {
+                private String name;
+                private Target target;
 
                 @Data
-                public static class CommitHistory {
-                    private List<CommitEdge> edges;
-                    private PageInfo pageInfo;
-
-                    @Data
-                    public static class CommitEdge {
-                        private CommitNode node;
-
-                        @Data
-                        public static class CommitNode {
-                            private String committedDate;
-                            private int additions;
-                            private int deletions;
-                            private Author author;
-
-                            @Data
-                            public static class Author {
-                                private String name;
-                                private String email;
-                            }
-                        }
-                    }
-
-                    @Data
-                    public static class PageInfo {
-                        private String endCursor;
-                        private boolean hasNextPage;
-                    }
+                public static class Target {
+                    private CommitHistory history;
                 }
+            }
+
+            @Data
+            public static class CommitHistory {
+                private List<CommitEdge> edges;
+                private PageInfo pageInfo;
+
+                @Data
+                public static class CommitEdge {
+                    private CommitNode node;
+                }
+
+                @Data
+                public static class CommitNode {
+                    private String committedDate;
+                    private int additions;
+                    private int deletions;
+                    private Author author;
+                }
+
+                @Data
+                public static class Author {
+                    private String name;
+                    private String email;
+                }
+            }
+
+            @Data
+            public static class PageInfo {
+                private String endCursor;
+                private boolean hasNextPage;
             }
         }
     }

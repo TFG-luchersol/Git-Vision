@@ -90,7 +90,8 @@ public class GithubGraphQLApi {
             
             List<CommitContribution> contributions = response.getData()
                 .getRepository()
-                .getObject()
+                .getDefaultBranchRef()
+                .getTarget()
                 .getHistory()
                 .getEdges()
                 .stream()
@@ -109,7 +110,7 @@ public class GithubGraphQLApi {
             allContributions.addAll(contributions);
 
             // Revisar si hay más páginas
-            var pageInfo = response.getData().getRepository().getObject().getHistory().getPageInfo();
+            var pageInfo = response.getData().getRepository().getDefaultBranchRef().getTarget().getHistory().getPageInfo();
             hasNextPage = pageInfo.isHasNextPage();
             String cursor = pageInfo.getEndCursor();
 

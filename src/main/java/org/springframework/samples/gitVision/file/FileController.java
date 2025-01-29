@@ -43,6 +43,38 @@ public class FileController {
         
     }
 
+    @GetMapping("/repository/{owner}/{repo}/blob/content")
+    public MessageResponse getFileByRepositoryId(@PathVariable String owner, 
+                                                 @PathVariable String repo,
+                                                 @RequestParam String login,
+                                                 @RequestParam String path){
+        try {
+            GHRepository ghRepository = this.userRepoService.getRepository(owner, repo, login);
+            String content = this.fileService.getFileContentTreeByPath(ghRepository, path);
+            Information information = Information.create("content", content);
+            return OkResponse.of(information);
+        } catch (Exception e) {
+            return BadResponse.of(e);
+        }
+        
+    }
+
+    @GetMapping("/repository/{owner}/{repo}/tree")
+    public MessageResponse getFolderByRepositoryId(@PathVariable String owner, 
+                                                     @PathVariable String repo,
+                                                     @RequestParam String login,
+                                                     @RequestParam String path){
+        try {
+            GHRepository ghRepository = this.userRepoService.getRepository(owner, repo, login);
+            TreeNode treeNode = this.fileService.getFileTreeByRepositoryName(ghRepository);
+            Information information = Information.create("tree", treeNode);
+            return OkResponse.of(information);
+        } catch (Exception e) {
+            return BadResponse.of(e);
+        }
+        
+    }
+
     @GetMapping("/repository/{owner}/{repo}/extension_counter")
     public MessageResponse getExtensionCounterByRepositoryId(@PathVariable String owner, 
                                                              @PathVariable String repo,
