@@ -6,7 +6,7 @@ export default function TreeFiles({styleText={}, href=null, root, filter = "", d
     const filterTree = (node) => {
         if (!filter && filterExtension.length === 0) return true;
 
-        const nodeMatchesText = node.name.toLowerCase().includes(filter.toLowerCase());)
+        const nodeMatchesText = node.name.toLowerCase().includes(filter.toLowerCase());
         if (filterExtension.length === 0 ) {
             return nodeMatchesText;
         }

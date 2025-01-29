@@ -8,24 +8,24 @@ import java.util.Objects;
 
 import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GitHub;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.gitvision.exceptions.ResourceNotFoundException;
 import org.springframework.samples.gitvision.githubUser.model.GithubUser;
 import org.springframework.samples.gitvision.relations.userRepo.model.UserRepo;
 import org.springframework.samples.gitvision.user.User;
 import org.springframework.samples.gitvision.user.UserRepository;
-import org.springframework.samples.gitvision.util.AESUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UserRepoService {
     
-    @Autowired
-    private UserRepoRepository userRepoRepository;
+    private final UserRepoRepository userRepoRepository;
+    private final UserRepository userRepository;
 
-    @Autowired
-    private UserRepository userRepository;
+    public UserRepoService(UserRepoRepository userRepoRepository, UserRepository userRepository){
+        this.userRepoRepository = userRepoRepository;
+        this.userRepository = userRepository;
+    }
 
     @Transactional(readOnly = true)
     public Map<String, List<String>> getAllRepositories(Long userId) {

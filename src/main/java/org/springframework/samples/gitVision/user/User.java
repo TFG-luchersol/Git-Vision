@@ -3,7 +3,6 @@ package org.springframework.samples.gitvision.user;
 import java.util.Objects;
 
 import org.kohsuke.github.GHUser;
-import org.springframework.samples.gitvision.githubUser.model.GithubUser;
 import org.springframework.samples.gitvision.model.entity.Person;
 import org.springframework.samples.gitvision.util.AESUtil;
 
@@ -33,11 +32,19 @@ public class User extends Person {
     }
 
     public String getDecryptedGithubToken() throws Exception{
-        return AESUtil.decrypt(this.githubToken);
+        return AESUtil.decrypt_github(this.githubToken);
     }
 
     public void setGithubTokenAndEncrypt(String githubToken) throws Exception{
-        this.githubToken = AESUtil.encrypt(githubToken);
+        this.githubToken = AESUtil.encrypt_github(githubToken);
+    }
+
+    public String getDecryptedClockifyToken() throws Exception{
+        return AESUtil.decrypt_clockify(this.clockifyToken);
+    }
+
+    public void setClockifyTokenAndEncrypt(String clockifyToken) throws Exception{
+        this.githubToken = AESUtil.encrypt_clockify(clockifyToken);
     }
 
     public static User parse(GHUser ghUser) {

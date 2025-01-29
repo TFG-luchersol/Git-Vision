@@ -3,7 +3,6 @@ package org.springframework.samples.gitvision.file;
 import java.util.Map;
 
 import org.kohsuke.github.GHRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.gitvision.auth.payload.response.BadResponse;
 import org.springframework.samples.gitvision.auth.payload.response.MessageResponse;
 import org.springframework.samples.gitvision.auth.payload.response.OkResponse;
@@ -11,22 +10,24 @@ import org.springframework.samples.gitvision.file.model.PercentageLanguages;
 import org.springframework.samples.gitvision.file.model.TreeFiles.TreeNode;
 import org.springframework.samples.gitvision.relations.userRepo.UserRepoService;
 import org.springframework.samples.gitvision.util.Information;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.GetMapping;
 
 
 @RestController
 @RequestMapping("/api/v1/files")
 public class FileController {
     
-    @Autowired
-    FileService fileService;
+    private final FileService fileService;
+    private final UserRepoService userRepoService;
 
-    @Autowired
-    UserRepoService userRepoService;
+    public FileController(FileService fileService, UserRepoService userRepoService){
+        this.fileService = fileService;
+        this.userRepoService = userRepoService;
+    }
 
     @GetMapping("/repository/{owner}/{repo}")
     public MessageResponse getFileTreeByRepositoryId(@PathVariable String owner, 

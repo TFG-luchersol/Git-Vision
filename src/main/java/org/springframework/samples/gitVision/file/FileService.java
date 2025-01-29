@@ -10,15 +10,12 @@ import org.kohsuke.github.GHCommit;
 import org.kohsuke.github.GHContent;
 import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GHTree;
-import org.kohsuke.github.GitHub;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.gitvision.change.model.Change;
 import org.springframework.samples.gitvision.file.model.ChangesByUser;
 import org.springframework.samples.gitvision.file.model.File;
 import org.springframework.samples.gitvision.file.model.PercentageLanguages;
 import org.springframework.samples.gitvision.file.model.TreeFiles;
 import org.springframework.samples.gitvision.file.model.TreeFiles.TreeNode;
-import org.springframework.samples.gitvision.relations.userRepo.UserRepoService;
 import org.springframework.stereotype.Service;
 
 @Service

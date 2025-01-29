@@ -46,10 +46,10 @@ public class UserRepo extends EntityIdSequential {
     }
 
     public String getDecryptedToken() throws Exception {
-        return AESUtil.decrypt(this.token);
+        return AESUtil.decrypt_github(this.token);
     }
 
     public void setTokenAndEncrypt(String token) throws Exception{
-        this.token = AESUtil.encrypt(token);
+        this.token = AESUtil.encrypt_github(token);
     }
 }

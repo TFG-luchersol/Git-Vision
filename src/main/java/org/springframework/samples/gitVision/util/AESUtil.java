@@ -1,20 +1,15 @@
 package org.springframework.samples.gitvision.util;
 
+import java.util.Base64;
+
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import io.github.cdimascio.dotenv.Dotenv;
-
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Base64;
-import java.util.Properties;
 
 @Component
 public class AESUtil {
@@ -43,9 +38,14 @@ public class AESUtil {
         return encrypt(plainText, secretKey);
     }
 
-    public static String encrypt(String plainText) throws Exception {
+    public static String encrypt_github(String plainText) throws Exception {
         Dotenv dotenv = Dotenv.configure().load();
-        return encrypt(plainText, dotenv.get("ENCRYPTION_SECRET"));
+        return encrypt(plainText, dotenv.get("ENCRYPTION_SECRET_GITHUB"));
+    }
+
+    public static String encrypt_clockify(String plainText) throws Exception {
+        Dotenv dotenv = Dotenv.configure().load();
+        return encrypt(plainText, dotenv.get("ENCRYPTION_SECRET_CLOCKIFY"));
     }
 
     // Método para descifrar texto usando una clave secreta
@@ -62,9 +62,14 @@ public class AESUtil {
         return decrypt(encryptedText, secretKey);
     }
 
-    public static String decrypt(String encryptedText) throws Exception {
+    public static String decrypt_github(String encryptedText) throws Exception {
         Dotenv dotenv = Dotenv.configure().load();
-        return decrypt(encryptedText, dotenv.get("ENCRYPTION_SECRET"));
+        return decrypt(encryptedText, dotenv.get("ENCRYPTION_SECRET_GITHUB"));
+    }
+
+    public static String decrypt_clockify(String encryptedText) throws Exception {
+        Dotenv dotenv = Dotenv.configure().load();
+        return decrypt(encryptedText, dotenv.get("ENCRYPTION_SECRET_CLOCKIFY"));
     }
 
     // Convierte una cadena de texto a una clave secreta (se utiliza cuando se guarda una clave en la base de datos)

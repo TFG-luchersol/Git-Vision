@@ -15,26 +15,26 @@
  */
 package org.springframework.samples.gitvision.user;
 
-import jakarta.validation.Valid;
-
 import org.kohsuke.github.GitHub;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataAccessException;
 import org.springframework.samples.gitvision.exceptions.ResourceNotFoundException;
-import org.springframework.samples.gitvision.util.AESUtil;
 import org.springframework.samples.gitvision.util.ClockifyApi;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import jakarta.validation.Valid;
+
 @Service
 public class UserService {
 
-	@Autowired
-	private UserRepository userRepository;
+	private final UserRepository userRepository;
+
+	public UserService(UserRepository userRepository){
+		this.userRepository = userRepository;
+	}
 
 	@Transactional(readOnly = true)
 	public User findUserByUsername(String username) {
@@ -82,8 +82,7 @@ public class UserService {
 		if(gitHub.getMyself() == null)
 			throw new IllegalAccessError("Error: fail to connect Github with new token");
 		User user = findUserByUsername(username);
-		githubToken = AESUtil.encrypt(githubToken);
-		user.setGithubToken(githubToken);
+		user.setGithubTokenAndEncrypt(githubToken);
 		userRepository.save(user);
 	}
 
@@ -97,8 +96,7 @@ public class UserService {
 		}
 			
 		User user = findUserByUsername(username);
-		clockifyToken = AESUtil.encrypt(clockifyToken);
-		user.setClockifyToken(clockifyToken);
+		user.setClockifyTokenAndEncrypt(clockifyToken);
 		userRepository.save(user);
 	}
 

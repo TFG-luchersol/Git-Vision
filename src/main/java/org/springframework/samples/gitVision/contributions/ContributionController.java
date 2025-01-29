@@ -4,12 +4,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.gitvision.auth.payload.response.BadResponse;
 import org.springframework.samples.gitvision.auth.payload.response.MessageResponse;
 import org.springframework.samples.gitvision.auth.payload.response.OkResponse;
 import org.springframework.samples.gitvision.contributions.model.CommitContribution;
-import org.springframework.samples.gitvision.relations.userRepo.UserRepoService;
 import org.springframework.samples.gitvision.util.Information;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,11 +22,11 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @Tag(name = "Commit")
 public class ContributionController {
     
-    @Autowired
-    UserRepoService userRepoService;
+    private final ContributionService contributionService;
 
-    @Autowired
-    ContributionService contributionService;
+    public ContributionController(ContributionService contributionService){
+        this.contributionService = contributionService;
+    }
 
     @GetMapping("/{owner}/{repo}/between_time")
     public MessageResponse getCommitsByUserBetweenDates(@PathVariable String owner, 

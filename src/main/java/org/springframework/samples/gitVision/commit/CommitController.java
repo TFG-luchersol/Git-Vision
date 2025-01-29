@@ -1,19 +1,12 @@
 package org.springframework.samples.gitvision.commit;
 
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import org.kohsuke.github.GHRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.gitvision.auth.payload.response.BadResponse;
 import org.springframework.samples.gitvision.auth.payload.response.MessageResponse;
 import org.springframework.samples.gitvision.auth.payload.response.OkResponse;
 import org.springframework.samples.gitvision.commit.model.Commit;
-import org.springframework.samples.gitvision.commit.model.commitsByTimePeriod.TimePeriod;
-import org.springframework.samples.gitvision.contributions.model.CommitContribution;
 import org.springframework.samples.gitvision.relations.userRepo.UserRepoService;
 import org.springframework.samples.gitvision.util.Information;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,11 +23,13 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @Tag(name = "Commit")
 public class CommitController {
     
-    @Autowired
-    CommitService commitService;
+    private final CommitService commitService;
+    private final UserRepoService userRepoService;
 
-    @Autowired
-    UserRepoService userRepoService;
+    public CommitController(CommitService commitService, UserRepoService userRepoService){
+        this.commitService = commitService;
+        this.userRepoService = userRepoService;
+    }
 
     @GetMapping("/{owner}/{repo}")
     public MessageResponse getCommitsByRepository(@PathVariable String owner, 

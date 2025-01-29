@@ -8,9 +8,7 @@ import org.springframework.samples.gitvision.auth.payload.response.MessageRespon
 import org.springframework.samples.gitvision.auth.payload.response.OkResponse;
 import org.springframework.samples.gitvision.relations.userWorkspace.model.UserWorkspace;
 import org.springframework.samples.gitvision.util.Information;
-import org.springframework.samples.gitvision.workspace.model.Workspace;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
