@@ -45,8 +45,8 @@ function App() {
         <Route path="/details" element={<Details />}/>
         <Route path="/repositories" element={<Repositories/>}/>
         <Route path="/repository/:owner/:repo" element={<Repository/>}/>
-        <Route path="/repository/:owner/:repo/blod/:path" element={<File/>}/>
-        <Route path="/repository/:owner/:repo/tree/:path" element={<Folder/>}/>
+        <Route path="/repository/:owner/:repo/blob/*" element={<File/>}/>
+        <Route path="/repository/:owner/:repo/tree/*" element={<Folder/>}/>
         <Route path="/repository/:owner/:repo/details" element={<RepositoryDetails/>}/>
         <Route path="/repository/:owner/:repo/contributors" element={<Contributors/>}/>
         <Route path="/repository/:owner/:repo/commits" element={<Commits/>}/>

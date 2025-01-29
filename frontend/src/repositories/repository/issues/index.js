@@ -26,7 +26,6 @@ export default function Issues() {
             const json = await newIssues.json()
             const {issues} = getBody(json)
             if(issues.length > 0){
-                console.log(issues)
                 setIssues(issues)
                 setPage(page)
             } 

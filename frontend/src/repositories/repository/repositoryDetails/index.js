@@ -24,7 +24,6 @@ export default function RepositoryDetails() {
 
   const handleSave = async () => {
     const user = tokenService.getUser();    
-    console.log(githubToken)
     await fetch(`/api/v1/relation/user_repository/${owner}/${repo}/token?login=${user.username}`, {
       method: "PUT", 
       body: githubToken
