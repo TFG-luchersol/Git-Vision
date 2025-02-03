@@ -1,8 +1,11 @@
 import React from 'react';
+import { useParams } from 'react-router-dom';
 import AccordionItem from './AccordionItem.js';
 
 export default function TreeFiles({styleText={}, href=null, root, filter = "", deepFilter=false, filterExtension = [] }) {
     
+    const {repo, owner} = useParams();
+
     const filterTree = (node) => {
         if (!filter && filterExtension.length === 0) return true;
 
@@ -49,7 +52,7 @@ export default function TreeFiles({styleText={}, href=null, root, filter = "", d
             return (
                 <AccordionItem 
                     styleText={styleText} 
-                    href={`${window.location.href}/blob/${removeCharsLeftOfFirstSlash(fullPath)}`} 
+                    href={window.location.origin + `/repository/${owner}/${repo}/blob/${removeCharsLeftOfFirstSlash(fullPath)}`} 
                     fullPath={fullPath} 
                     title={node.name} 
                     leaf 
@@ -63,7 +66,7 @@ export default function TreeFiles({styleText={}, href=null, root, filter = "", d
                 <AccordionItem 
                     styleText={styleText} 
                     fullPath={fullPath}
-                    href={`${window.location.href}/tree/${removeCharsLeftOfFirstSlash(fullPath)}`} 
+                    href={window.location.origin + `/repository/${owner}/${repo}/tree/${removeCharsLeftOfFirstSlash(fullPath)}`} 
                     title={node.name} 
                 >
                     {children}

@@ -26,14 +26,23 @@ public class FileService {
         return PercentageLanguages.of(contLanguajes);
     }
 
-    public String getFileContentTreeByPath(GHRepository ghRepository, String path) throws Exception {
+    public byte[] getFileContentTreeByPath(GHRepository ghRepository, String path) throws Exception {
         GHContent ghContent = ghRepository.getFileContent(path);
-        return new String(ghContent.read().readAllBytes());
+        return ghContent.read().readAllBytes();
     }
 
     public TreeNode getFileTreeByRepositoryName(GHRepository ghRepository) throws Exception {
         GHTree ghTree = ghRepository.getTreeRecursive(ghRepository.getDefaultBranch(), -1);
         List<String> paths = ghTree.getTree().stream().map(entry -> entry.getPath()).toList();
+        return TreeFiles.buildTreeWithCollapse(paths);
+    }
+
+    public TreeNode getFileSubTreeByRepositoryName(GHRepository ghRepository, String initPath) throws Exception {
+        GHTree ghTree = ghRepository.getTreeRecursive(ghRepository.getDefaultBranch(), -1);
+        List<String> paths = ghTree.getTree().stream()
+                                             .map(entry -> entry.getPath())
+                                             .filter(path -> path.startsWith(initPath) && !path.equals(initPath))
+                                             .toList();
         return TreeFiles.buildTreeWithCollapse(paths);
     }
 

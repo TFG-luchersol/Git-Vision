@@ -51,7 +51,7 @@ public class FileController {
                                                  @RequestParam String path){
         try {
             GHRepository ghRepository = this.userRepoService.getRepository(owner, repo, login);
-            String content = this.fileService.getFileContentTreeByPath(ghRepository, path);
+            byte[] content = this.fileService.getFileContentTreeByPath(ghRepository, path);
             Information information = Information.create("content", content);
             return OkResponse.of(information);
         } catch (Exception e) {
@@ -60,14 +60,14 @@ public class FileController {
         
     }
 
-    @GetMapping("/repository/{owner}/{repo}/tree")
-    public MessageResponse getFolderByRepositoryId(@PathVariable String owner, 
+    @GetMapping("/repository/{owner}/{repo}/tree/files")
+    public MessageResponse getFolderFilesByRepositoryId(@PathVariable String owner, 
                                                      @PathVariable String repo,
                                                      @RequestParam String login,
                                                      @RequestParam String path){
         try {
             GHRepository ghRepository = this.userRepoService.getRepository(owner, repo, login);
-            TreeNode treeNode = this.fileService.getFileTreeByRepositoryName(ghRepository);
+            TreeNode treeNode = this.fileService.getFileSubTreeByRepositoryName(ghRepository, path);
             Information information = Information.create("tree", treeNode);
             return OkResponse.of(information);
         } catch (Exception e) {

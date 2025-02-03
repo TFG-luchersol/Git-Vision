@@ -19,3 +19,30 @@
 /* div {
     border: 1px dotted red;
 } */
+
+
+/* Personalización de la barra en Webkit (Chrome, Edge, Safari) */
+::-webkit-scrollbar {
+    width: 12px; /* Ancho de la barra */
+}
+
+/* Track (fondo de la barra) */
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+    margin-right: 5px;
+}
+
+/* Thumb (el botón de desplazamiento) */
+::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+    border: 3px solid transparent;
+    background-clip: content-box;
+}
+
+/* Efecto hover más suave */
+::-webkit-scrollbar-thumb:hover {
+    background: #555; /* Cambio de color */
+    transition: background 0.3s ease; /* Transición suave */
+}

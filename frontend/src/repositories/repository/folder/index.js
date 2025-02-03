@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import React from 'react';
 import FolderTabs from '../../../components/FolderTabs.js';
 import FolderContent from './sections/FolderContent';
 
@@ -7,7 +6,7 @@ import FolderContent from './sections/FolderContent';
 export default function Folder() {
 
     const sections = {
-        "Content": <FolderContent />,
+        "Files": <FolderContent />,
     }
 
     return (

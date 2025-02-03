@@ -1,25 +1,26 @@
 import {
+    CategoryScale,
     Chart as ChartJS,
     Legend,
     LinearScale,
+    LineController,
+    LineElement,
     PointElement,
     Title,
-    Tooltip,
-    LineElement,
-    LineController
+    Tooltip
 } from "chart.js";
 import React, { useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
+import { RiMedalLine } from "react-icons/ri";
 import { useParams } from "react-router-dom";
 import { Table } from 'reactstrap';
-import tokenService from "../../../../services/token.service";
 import DateRangePicker from '../../../../components/DateRangePicker';
-import { RiMedalLine } from "react-icons/ri";
+import tokenService from "../../../../services/token.service";
 import getBody from '../../../../util/getBody';
 import { darkenColor, stringToColor } from '../../../../util/tools';
 import "./stadistics.css";
 
-ChartJS.register(LineElement, PointElement, LinearScale, Title, Tooltip, Legend, LineController);
+ChartJS.register(CategoryScale, LineElement, PointElement, LinearScale, Title, Tooltip, Legend, LineController);
 
 export default function CommitsByTime() {
 

@@ -1,12 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import React from 'react';
 import FolderTabs from '../../../components/FolderTabs';
 import FileContent from './sections/FileContent';
+import FileContribution from './sections/FileContribution';
 
 export default function File() {
 
     const sections = {
         "Content": <FileContent />,
+        "Contributions": <FileContribution />
     }
 
     return (
