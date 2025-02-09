@@ -1,11 +1,11 @@
 package org.springframework.samples.gitvision.util.graphQL.models;
 
-import lombok.Data;
-
 import java.util.List;
 
+import lombok.Data;
+
 @Data
-public class GraphQLCommitResponse {
+public class GraphQLContributionResponse {
     private DataWrapper data;
 
     @Data

@@ -5,12 +5,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.json.JSONObject;
@@ -20,14 +20,17 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.samples.gitvision.contributions.model.CommitContribution;
-import org.springframework.samples.gitvision.util.graphQL.models.GraphQLCommitResponse;
+import org.springframework.samples.gitvision.contributions.model.Contribution;
+import org.springframework.samples.gitvision.util.graphQL.models.GraphQLContributionResponse;
 import org.springframework.web.client.RestTemplate;
 
 public class GithubGraphQLApi {
 
     private RestTemplate restTemplate;
     private String token;
+
+    private static Function<Date, String> formatDate = date -> new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").format(date);
+
 
     private GithubGraphQLApi(String token) {
         this.token = token;
@@ -68,27 +71,22 @@ public class GithubGraphQLApi {
         }
     }
 
-    public List<CommitContribution> getContributionsBetweenDates(String repositoryName, Date startDate, Date endDate) throws IOException {
+    public List<Contribution> getContributionsBetweenDates(String repositoryName, String filePath, Date startDate, Date endDate) throws IOException {
         String[] owner_repo = repositoryName.split("/");
         String query = readGraphQLQuery("getContributionsBetweenDates.graphql");
         Map<String, Object> vars = new HashMap<>();
         vars.put("owner", owner_repo[0]);
         vars.put("repo", owner_repo[1]);
-        if(startDate != null) {
-            String startDateStr = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").format(startDate);
-            vars.put("startDate", startDateStr);
-        }
-        if(endDate != null) {
-            String endDateStr = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").format(endDate);
-            vars.put("endDate", endDateStr);
-        }
+        if(filePath != null) vars.put("filePath", filePath);
+        if(startDate != null) vars.put("startDate", formatDate.apply(startDate));
+        if(endDate != null) vars.put("endDate", formatDate.apply(endDate));
         vars.put("cursor", null);
-        List<CommitContribution> allContributions = new ArrayList<>();
+        List<Contribution> allContributions = new ArrayList<>();
         boolean hasNextPage = true;
         while(hasNextPage) {
-            GraphQLCommitResponse response = this.requestGithubGraphQL(query, vars, GraphQLCommitResponse.class);
+            GraphQLContributionResponse response = this.requestGithubGraphQL(query, vars, GraphQLContributionResponse.class);
             
-            List<CommitContribution> contributions = response.getData()
+            List<Contribution> contributions = response.getData()
                 .getRepository()
                 .getDefaultBranchRef()
                 .getTarget()
@@ -96,7 +94,7 @@ public class GithubGraphQLApi {
                 .getEdges()
                 .stream()
                 .map(edge -> {
-                    CommitContribution contribution = new CommitContribution();
+                    Contribution contribution = new Contribution();
                     contribution.setCommittedDate(edge.getNode().getCommittedDate());
                     contribution.setAdditions(edge.getNode().getAdditions());
                     contribution.setDeletions(edge.getNode().getDeletions());

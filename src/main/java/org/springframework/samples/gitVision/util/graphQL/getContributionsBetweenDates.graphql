@@ -1,10 +1,23 @@
-query($owner: String!, $repo: String!, $startDate: GitTimestamp, $endDate: GitTimestamp, $cursor: String) {
+query (
+  $owner: String!
+  $repo: String!
+  $filePath: String
+  $startDate: GitTimestamp
+  $endDate: GitTimestamp
+  $cursor: String
+) {
   repository(owner: $owner, name: $repo) {
     defaultBranchRef {
       name
       target {
         ... on Commit {
-          history(since: $startDate, until: $endDate, first: 100, after: $cursor) {
+          history(
+            path: $filePath
+            since: $startDate
+            until: $endDate
+            first: 100
+            after: $cursor
+          ) {
             edges {
               node {
                 committedDate

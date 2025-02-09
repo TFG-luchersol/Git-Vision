@@ -4,7 +4,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.samples.gitvision.util.Information;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter

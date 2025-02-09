@@ -3,7 +3,7 @@ package org.springframework.samples.gitvision.contributions.model;
 import lombok.Data;
 
 @Data
-public class CommitContribution {
+public class Contribution {
     private String committedDate;
     private int additions;
     private int deletions;
