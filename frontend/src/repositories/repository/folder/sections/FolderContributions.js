@@ -18,7 +18,7 @@ import DateRangePicker from "../../../../components/DateRangePicker";
 import tokenService from "../../../../services/token.service";
 import getBody from "../../../../util/getBody";
 import { darkenColor, stringToColor } from "../../../../util/tools";
-import "./fileContributions.css";
+import "./folderContributions.css";
 
 ChartJS.register(
   CategoryScale,
@@ -31,7 +31,7 @@ ChartJS.register(
   LineController
 );
 
-export default function FileContributions() {
+export default function FolderContributions() {
   const GoldMedal = <RiMedalLine className="medal gold" />;
   const SilverMedal = <RiMedalLine className="medal silver" />;
   const BronzeMedal = <RiMedalLine className="medal bronze" />;

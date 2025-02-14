@@ -12,11 +12,11 @@ query (
       target {
         ... on Commit {
           history(
+            first: 100
+            after: $cursor
             path: $filePath
             since: $startDate
             until: $endDate
-            first: 100
-            after: $cursor
           ) {
             edges {
               node {
@@ -25,7 +25,6 @@ query (
                 deletions
                 author {
                   name
-                  email
                 }
               }
             }
@@ -37,5 +36,11 @@ query (
         }
       }
     }
+  }
+  rateLimit {
+    limit
+    cost
+    remaining
+    resetAt
   }
 }

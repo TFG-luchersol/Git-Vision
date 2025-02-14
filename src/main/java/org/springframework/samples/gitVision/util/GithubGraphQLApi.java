@@ -99,7 +99,6 @@ public class GithubGraphQLApi {
                     contribution.setAdditions(edge.getNode().getAdditions());
                     contribution.setDeletions(edge.getNode().getDeletions());
                     contribution.setAuthorName(edge.getNode().getAuthor().getName());
-                    contribution.setAuthorEmail(edge.getNode().getAuthor().getEmail());
                     return contribution;
                 })
                 .collect(Collectors.toList());

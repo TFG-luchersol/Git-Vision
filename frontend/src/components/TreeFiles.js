@@ -19,10 +19,7 @@ export default function TreeFiles({styleText={}, href=null, root, filter = "", d
             return nodeMatchesText && nodeMatchesExtension;
         }
 
-        const childrenMatch = deepFilter ? node.children?.some(child => {
-            console.log(child)
-            return filterTree(child);
-        }) : false;
+        const childrenMatch = deepFilter ? node.children?.some(child => filterTree(child)) : false;
 
         return childrenMatch;
     };
@@ -60,7 +57,13 @@ export default function TreeFiles({styleText={}, href=null, root, filter = "", d
             );
         } else {
             const children = node.children
-                ?.map(child => showTree(child, fullPath))
+                ?.sort((a, b) => {
+                    if (a.leaf === b.leaf) {
+                        return a.name.localeCompare(b.name);
+                    } else {
+                        return !a.leaf ? -1 : 1;
+                    }
+                }).map(child => showTree(child, fullPath))
                 .filter(child => child !== null);
             return (
                 <AccordionItem 

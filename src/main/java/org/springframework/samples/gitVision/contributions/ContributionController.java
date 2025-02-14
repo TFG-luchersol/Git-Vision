@@ -40,7 +40,7 @@ public class ContributionController {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
             Date d1 = startDate == null ? null : dateFormat.parse(startDate);
             Date d2 = endDate == null ? null : dateFormat.parse(endDate);
-            List<Contribution> contributions = this.contributionService.getContributionsByDateBetweenDates(repositoryName, null, login, d1, d2); 
+            List<Contribution> contributions = this.contributionService.getContributionsByDateBetweenDates(repositoryName, login, path, d1, d2); 
             Information information = Information.create("contributions", contributions);
             return OkResponse.of(information);
         } catch (Exception e) {

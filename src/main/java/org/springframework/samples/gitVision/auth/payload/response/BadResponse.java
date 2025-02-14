@@ -2,7 +2,7 @@ package org.springframework.samples.gitvision.auth.payload.response;
 
 import org.springframework.http.HttpStatus;
 
-public class BadResponse extends MessageResponse{
+public class BadResponse extends MessageResponse {
     
     public BadResponse(){
 		super(HttpStatus.BAD_REQUEST);

@@ -6,6 +6,8 @@ import org.kohsuke.github.GHUser;
 import org.springframework.samples.gitvision.model.entity.Person;
 import org.springframework.samples.gitvision.util.AESUtil;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
@@ -31,18 +33,22 @@ public class User extends Person {
         return clockifyToken != null;
     }
 
+    @JsonIgnore
     public String getDecryptedGithubToken() throws Exception{
         return AESUtil.decrypt_github(this.githubToken);
     }
 
+    @JsonIgnore
     public void setGithubTokenAndEncrypt(String githubToken) throws Exception{
         this.githubToken = AESUtil.encrypt_github(githubToken);
     }
 
+    @JsonIgnore
     public String getDecryptedClockifyToken() throws Exception{
         return AESUtil.decrypt_clockify(this.clockifyToken);
     }
 
+    @JsonIgnore
     public void setClockifyTokenAndEncrypt(String clockifyToken) throws Exception{
         this.githubToken = AESUtil.encrypt_clockify(clockifyToken);
     }

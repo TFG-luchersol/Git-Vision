@@ -1,12 +1,14 @@
 import React from 'react';
 import FolderTabs from '../../../components/FolderTabs.js';
-import FolderContent from './sections/FolderContent';
+import FolderContent from './sections/FolderContent.js';
+import FolderContributions from './sections/FolderContributions.js';
 
 
 export default function Folder() {
 
     const sections = {
         "Files": <FolderContent />,
+        "Contributions": <FolderContributions />,
     }
 
     return (

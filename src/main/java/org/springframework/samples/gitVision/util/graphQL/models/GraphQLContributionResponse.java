@@ -11,6 +11,7 @@ public class GraphQLContributionResponse {
     @Data
     public static class DataWrapper {
         private Repository repository;
+        private RateLimit rateLimit;
 
         @Data
         public static class Repository {
@@ -48,7 +49,6 @@ public class GraphQLContributionResponse {
                 @Data
                 public static class Author {
                     private String name;
-                    private String email;
                 }
             }
 
@@ -58,5 +58,15 @@ public class GraphQLContributionResponse {
                 private boolean hasNextPage;
             }
         }
+        @Data
+        public static class RateLimit {
+            private int limit;
+            private int cost;
+            private int remaining;
+            private String resetAt;
+        }
+    
     }
+
+  
 }
