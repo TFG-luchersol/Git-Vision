@@ -16,8 +16,9 @@ import { Input, Table } from "reactstrap";
 import tokenService from "../services/token.service";
 import getBody from "../util/getBody";
 import { darkenColor, stringToColor } from "../util/tools";
+import "./css/contributions.css";
 import DateRangePicker from "./DateRangePicker";
-import "./contributions.css";
+import DelayedButton from "./DelayedButton";
   
   ChartJS.register(
     CategoryScale,
@@ -445,18 +446,13 @@ import "./contributions.css";
               setStartDate={setStartDate}
               setEndDate={setEndDate}
             />
-            <button
+            <DelayedButton               
               onClick={calcStadistic}
               disabled={isLoading}
               className="button" // Usamos la clase de botón desde el CSS
-              style={{ marginLeft: 100 }}
-            >
-              {isLoading ? (
-                <div className="spinner"></div> // Usamos la clase de espiral desde el CSS
-              ) : (
-                "Buscar"
-              )}
-            </button>
+              style={{ marginLeft: 100 }} 
+              text={"Buscar"}
+            />
           </div>
   
           <div style={{ display: "flex", flexDirection: "row" }}>
@@ -533,7 +529,7 @@ import "./contributions.css";
           <div style={{ display: "flex", justifyContent: "center" }}>
             <p>Ranking</p>
           </div>
-          <div style={{ height: "45%", overflowY: "auto", marginInline: 10 }}>
+          <div style={{ height: "40%", overflowY: "auto", marginInline: 10 }}>
             <Table striped bordered responsive>
               <thead>
                 <tr>

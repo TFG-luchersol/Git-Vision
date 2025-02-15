@@ -1,6 +1,6 @@
 import React from 'react';
-import './loadingModal.css'; 
 import { Modal } from 'reactstrap';
+import './css/loadingModal.css';
 
 export default function LoadingModal({ isLoading, message="Cargando..." }) {
 
