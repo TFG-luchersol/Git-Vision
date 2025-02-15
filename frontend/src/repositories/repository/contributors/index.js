@@ -1,13 +1,16 @@
 import React from 'react';
+import { useParams } from 'react-router-dom';
+import Contributions from '../../../components/Contributions.js';
 import FolderTabs from '../../../components/FolderTabs.js';
-import CommitsByTime from './stadistics/CommitsByTime.js';
 import ContributorProfiles from './stadistics/ContributorProfiles.js';
 
 export default function Contributors() {
 
+    const {owner, repo} = useParams();
+
     const sections = {
         "Contributors": <ContributorProfiles />,
-        "Commits / Time": <CommitsByTime />
+        "Commits / Time": <Contributions owner={owner} repo={repo} />,
     }
 
     return (

@@ -1,13 +1,16 @@
 import React from 'react';
+import { useParams } from 'react-router-dom';
+import Contributions from '../../../components/Contributions';
 import FolderTabs from '../../../components/FolderTabs';
 import FileContent from './sections/FileContent';
-import FileContribution from './sections/FileContribution';
 
 export default function File() {
 
+    const { owner, repo, "*": path } = useParams();
+
     const sections = {
         "Content": <FileContent />,
-        "Contributions": <FileContribution />
+        "Contributions": <Contributions owner={owner} repo={repo} path={path} />,
     }
 
     return (
