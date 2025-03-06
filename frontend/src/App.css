@@ -41,3 +41,19 @@
 .NavbarBrand {
   margin-left: 20px;
 }
+
+.repo-box {
+  background-color: #ececec; /* Fondo gris claro */
+  color: #555; /* Texto gris oscuro */
+  padding: 4px 12px; /* Espaciado interno */
+  border-radius: 6px; /* Bordes ligeramente redondeados */
+  border: 1px solid #ddd; /* Borde gris claro */
+  font-weight: 500;
+  font-size: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 100px;
+  text-align: center;
+}
+

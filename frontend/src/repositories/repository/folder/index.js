@@ -11,7 +11,7 @@ export default function Folder() {
     
     const sections = {
         "Files": <FolderContent />,
-        "Contributions": <Contributions owner={owner} repo={repo} path={path} />,
+        "Contributions": <Contributions owner={owner} repo={repo} path={path + "&isFolder=true"} />,
     }
 
     return (

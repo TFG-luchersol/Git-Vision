@@ -12,12 +12,10 @@ import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.samples.gitvision.configuration.jwt.AuthEntryPointJwt;
 import org.springframework.samples.gitvision.configuration.jwt.AuthTokenFilter;
 import org.springframework.samples.gitvision.configuration.services.UserDetailsServiceImpl;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -38,13 +36,13 @@ public class SecurityConfiguration {
 	UserDetailsServiceImpl userDetailsService;
 
 	@Autowired
-	private AuthEntryPointJwt unauthorizedHandler;
+	AuthEntryPointJwt unauthorizedHandler;
 
 	@Autowired
 	DataSource dataSource;
 
 	@Bean
-	protected SecurityFilterChain configure(HttpSecurity http) throws Exception {
+	SecurityFilterChain configure(HttpSecurity http) throws Exception {
 		
 		http
 			.cors(withDefaults())		
@@ -63,23 +61,23 @@ public class SecurityConfiguration {
 	}
 
 	@Bean
-	public AuthTokenFilter authenticationJwtTokenFilter() {
+	AuthTokenFilter authenticationJwtTokenFilter() {
 		return new AuthTokenFilter();
 	}
 
 	@Bean
-	public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception{
+	AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception{
 		return config.getAuthenticationManager();
 	}	
 
 
 	@Bean
-	public PasswordEncoder passwordEncoder() {
+	PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
 
 	@Bean
-	public RestTemplate restTemplate(){
+	RestTemplate restTemplate(){
 		return new RestTemplate();
 	}
 	

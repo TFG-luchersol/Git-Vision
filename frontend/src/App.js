@@ -1,26 +1,26 @@
 import React from "react";
-import { Route, Routes } from "react-router-dom";
 import { ErrorBoundary } from "react-error-boundary";
+import { Route, Routes } from "react-router-dom";
 
-import Login from "./auth/login"
-import Register from "./auth/register";
-import SwaggerDocs from "./public/swagger";
 import AppNavbar from "./appNavbar";
-import Home from "./home";
+import Login from "./auth/login";
+import Register from "./auth/register";
 import Details from "./details";
-import Repositories from "./repositories";
-import Repository from "./repositories/repository";
-import WorkspaceDownload from "./extraction/workspaceDownload";
 import RepositoryDownload from "./extraction/repositoryDownload";
 import RepositoryWorkspaceLinker from "./extraction/repositoryWorkspaceLinker";
-import Issues from './repositories/repository/issues';
-import Issue from './repositories/repository/issues/issue';
-import Commits from './repositories/repository/commits';
-import Commit from './repositories/repository/commits/commit';
+import WorkspaceDownload from "./extraction/workspaceDownload";
+import Home from "./home";
+import SwaggerDocs from "./public/swagger";
+import Repositories from "./repositories";
+import Repository from "./repositories/repository";
+import Commits from "./repositories/repository/commits";
+import Commit from "./repositories/repository/commits/commit";
 import Contributors from "./repositories/repository/contributors";
-import RepositoryDetails from "./repositories/repository/repositoryDetails";
 import File from "./repositories/repository/file";
 import Folder from "./repositories/repository/folder";
+import Issues from "./repositories/repository/issues";
+import Issue from "./repositories/repository/issues/issue";
+import RepositoryDetails from "./repositories/repository/repositoryDetails";
 
 function ErrorFallback({ error, resetErrorBoundary }) {
   return (
@@ -29,7 +29,7 @@ function ErrorFallback({ error, resetErrorBoundary }) {
       <pre>{error.message}</pre>
       <button onClick={resetErrorBoundary}>Try again</button>
     </div>
-  )
+  );
 }
 
 function App() {
@@ -39,29 +39,44 @@ function App() {
   let publicRoutes = <></>;
 
   userRoutes = (
-      <>
-        <Route path="/register" element={<Register />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/details" element={<Details />}/>
-        <Route path="/repositories" element={<Repositories/>}/>
-        <Route path="/repository/:owner/:repo" element={<Repository/>}/>
-        <Route path="/repository/:owner/:repo/blob/*" element={<File/>}/>
-        <Route path="/repository/:owner/:repo/tree/*" element={<Folder/>}/>
-        <Route path="/repository/:owner/:repo/details" element={<RepositoryDetails/>}/>
-        <Route path="/repository/:owner/:repo/contributors" element={<Contributors/>}/>
-        <Route path="/repository/:owner/:repo/commits" element={<Commits/>}/>
-        <Route path="/repository/:owner/:repo/commits/:sha" element={<Commit/>}/>
-        <Route path="/repository/:owner/:repo/issues" element={<Issues/>}/>
-        <Route path="/repository/:owner/:repo/issues/:issueNumber" element={<Issue/>}/>
-        <Route path="/workspace/download" element={<WorkspaceDownload/>}/>
-        <Route path="/repository/download" element={<RepositoryDownload/>}/>
-        <Route path="/repository/workspace/linker" element={<RepositoryWorkspaceLinker/>}/>
-      </>
-    )
+    <>
+      <Route path="/register" element={<Register />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/details" element={<Details />} />
+      <Route path="/repositories" element={<Repositories />} />
+      <Route path="/repository/:owner/:repo" element={<Repository />} />
+      <Route path="/repository/:owner/:repo/blob/*" element={<File />} />
+      <Route path="/repository/:owner/:repo/tree/*" element={<Folder />} />
+      <Route
+        path="/repository/:owner/:repo/details"
+        element={<RepositoryDetails />}
+      />
+      <Route
+        path="/repository/:owner/:repo/contributors"
+        element={<Contributors />}
+      />
+      <Route path="/repository/:owner/:repo/commits" element={<Commits />} />
+      <Route
+        path="/repository/:owner/:repo/commits/:sha"
+        element={<Commit />}
+      />
+      <Route path="/repository/:owner/:repo/issues" element={<Issues />} />
+      <Route
+        path="/repository/:owner/:repo/issues/:issueNumber"
+        element={<Issue />}
+      />
+      <Route path="/workspace/download" element={<WorkspaceDownload />} />
+      <Route path="/repository/download" element={<RepositoryDownload />} />
+      <Route
+        path="/repository/workspace/linker"
+        element={<RepositoryWorkspaceLinker />}
+      />
+    </>
+  );
 
   return (
     <div>
-      <ErrorBoundary FallbackComponent={ErrorFallback} >
+      <ErrorBoundary FallbackComponent={ErrorFallback}>
         <AppNavbar />
         <Routes>
           <Route path="/" exact={true} element={<Home />} />
@@ -75,5 +90,3 @@ function App() {
 }
 
 export default App;
-
-

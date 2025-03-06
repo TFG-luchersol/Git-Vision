@@ -25,10 +25,9 @@ export default function FolderContent() {
         }
     }
 
-    console.log(files)
     return (
-        <>
-        {files.map(d => <TreeFiles root={ d}/>)}
-        </>
+        <div>
+            {files.map(file => <TreeFiles root={file}/>)}
+        </div>
     );
 }

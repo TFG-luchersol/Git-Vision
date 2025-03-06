@@ -4,10 +4,12 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import org.kohsuke.github.GHRepository;
 import org.springframework.samples.gitvision.auth.payload.response.BadResponse;
 import org.springframework.samples.gitvision.auth.payload.response.MessageResponse;
 import org.springframework.samples.gitvision.auth.payload.response.OkResponse;
 import org.springframework.samples.gitvision.contributions.model.Contribution;
+import org.springframework.samples.gitvision.relations.userRepo.UserRepoService;
 import org.springframework.samples.gitvision.util.Information;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,24 +25,30 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 public class ContributionController {
     
     private final ContributionService contributionService;
+    private final UserRepoService userRepoService;
 
-    public ContributionController(ContributionService contributionService){
+    public ContributionController(ContributionService contributionService, UserRepoService userRepoService){
         this.contributionService = contributionService;
+        this.userRepoService = userRepoService;
     }
 
     @GetMapping("/{owner}/{repo}/between_time")
     public MessageResponse getCommitsByUserBetweenDates(@PathVariable String owner, 
                                                         @PathVariable String repo, 
                                                         @RequestParam String login,
+                                                        @RequestParam(defaultValue = "false") boolean isFolder,
                                                         @RequestParam(required = false) String path,
                                                         @RequestParam(required = false) String startDate,
                                                         @RequestParam(required = false) String endDate) {
         try {
             String repositoryName = owner + "/" + repo;
+            GHRepository ghRepository = this.userRepoService.getRepository(repositoryName, login);
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
             Date d1 = startDate == null ? null : dateFormat.parse(startDate);
             Date d2 = endDate == null ? null : dateFormat.parse(endDate);
-            List<Contribution> contributions = this.contributionService.getContributionsByDateBetweenDates(repositoryName, login, path, d1, d2); 
+            List<Contribution> contributions = isFolder ? 
+                this.contributionService.getContributionsInFolderByDateBetweenDates(ghRepository, repositoryName, login, path, d1, d2) :
+                this.contributionService.getContributionsByDateBetweenDates(repositoryName, login, path, d1, d2);
             Information information = Information.create("contributions", contributions);
             return OkResponse.of(information);
         } catch (Exception e) {
