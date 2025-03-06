@@ -1,16 +1,17 @@
-import React, { useState, useEffect } from 'react';
-import '../App.css';
-import '../static/css/home/home.css';
-import tokenService from "../services/token.service.js";
-import { Button } from 'reactstrap';
-import '../static/css/auth/authPage.css'
-import AccordionItem from '../components/AccordionItem.js'
-import './repositories.css'
-import { Link } from 'react-router-dom';
-import { SiClockify } from "react-icons/si";
-import { IoLogoGithub } from "react-icons/io5";
+import React, { useEffect, useState } from 'react';
 import { FaLink } from "react-icons/fa6";
+import { IoLogoGithub } from "react-icons/io5";
+import { SiClockify } from "react-icons/si";
+import { Link } from 'react-router-dom';
+import { Button } from 'reactstrap';
+import '../App.css';
+import AccordionItem from '../components/AccordionItem.js';
+import tokenService from "../services/token.service.js";
+import '../static/css/auth/authPage.css';
+import '../static/css/home/home.css';
+import fetchWithToken from '../util/fetchWithToken.js';
 import getBody from '../util/getBody.js';
+import './repositories.css';
 
 export default function Repositories() {
 
@@ -26,7 +27,7 @@ export default function Repositories() {
 
     const getRepositories = async () => {
         try {
-            let newRepositories = await fetch(`/api/v1/relation/user_repository/repositories?userId=${tokenService.getUser().id}`)
+            let newRepositories = await fetchWithToken(`/api/v1/relation/user_repository/repositories?userId=${tokenService.getUser().id}`)
             const json = await newRepositories.json()
             const {repositories} = getBody(json)
             setRepositories(repositories)
@@ -37,7 +38,7 @@ export default function Repositories() {
 
     const getWorkspaces = async () => {
         try {
-            let newWorkspaces = await fetch(`/api/v1/relation/user_workspace/workspaces?userId=${tokenService.getUser().id}`)
+            let newWorkspaces = await fetchWithToken(`/api/v1/relation/user_workspace/workspaces?userId=${tokenService.getUser().id}`)
             const json = await newWorkspaces.json()
             const {workspaces} = getBody(json)
             setWorkspaces(workspaces)
@@ -48,7 +49,7 @@ export default function Repositories() {
 
     const getRelation = async () => {
         try {
-            let newRelation = await fetch(`/api/v1/linker?userId=${tokenService.getUser().id}`)
+            let newRelation = await fetchWithToken(`/api/v1/linker?userId=${tokenService.getUser().id}`)
             const json = await newRelation.json()
             const {workspace_repository} = getBody(json)
             setRelation(workspace_repository)

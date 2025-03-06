@@ -4,6 +4,7 @@ import { marked } from "marked";
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import tokenService from '../../../../services/token.service';
+import fetchWithToken from "../../../../util/fetchWithToken";
 import getBody from '../../../../util/getBody';
 
 export default function FileContent() {
@@ -48,7 +49,7 @@ export default function FileContent() {
 
     async function getContent() {
         try {
-            const response = await fetch(`/api/v1/files/repository/${owner}/${repo}/blob/content?login=${username}&path=${path}`);
+            const response = await fetchWithToken(`/api/v1/files/repository/${owner}/${repo}/blob/content?login=${username}&path=${path}`);
             const json = await response.json();
             const { content } = getBody(json);
             if(isImage(path)){

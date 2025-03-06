@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import tokenService from '../../../../services/token.service';
 import CounterChanges from '../../../../components/CounterChanges';
 import FolderTabs from '../../../../components/FolderTabs';
-import './commit.css';
+import tokenService from '../../../../services/token.service';
+import fetchWithToken from '../../../../util/fetchWithToken';
 import getBody from '../../../../util/getBody';
+import './commit.css';
 
 export default function Commit() {
     const { username } = tokenService.getUser();
@@ -19,7 +20,7 @@ export default function Commit() {
     const getCommit = async () => {
         try {
             const repositorName = `${owner}/${repo}`;
-            const newCommit = await fetch(`/api/v1/commits/${repositorName}/${sha}?login=${username}`)
+            const newCommit = await fetchWithToken(`/api/v1/commits/${repositorName}/${sha}?login=${username}`)
             const json = await newCommit.json()
             const {commit} = getBody(json)
             setCommit(commit)

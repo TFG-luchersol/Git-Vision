@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { IoPersonCircleOutline } from 'react-icons/io5';
-import { Button } from 'reactstrap';
-import CustomInput from '../../../components/CustomInput.js'
-import tokenService from '../../../services/token.service.js'
-import './details.css';
 import { FaGithub } from 'react-icons/fa';
+import { IoPersonCircleOutline } from 'react-icons/io5';
 import { useParams } from 'react-router-dom';
+import { Button } from 'reactstrap';
+import CustomInput from '../../../components/CustomInput.js';
+import tokenService from '../../../services/token.service.js';
+import fetchWithToken from '../../../util/fetchWithToken.js';
+import './details.css';
 
 export default function RepositoryDetails() {
   const saveTokenGithubButton = <Button className='save-button' onClick={() => handleSave()}>Guardar</Button>;
@@ -24,7 +25,7 @@ export default function RepositoryDetails() {
 
   const handleSave = async () => {
     const user = tokenService.getUser();    
-    await fetch(`/api/v1/relation/user_repository/${owner}/${repo}/token?login=${user.username}`, {
+    await fetchWithToken(`/api/v1/relation/user_repository/${owner}/${repo}/token?login=${user.username}`, {
       method: "PUT", 
       body: githubToken
     }

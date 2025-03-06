@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import TreeFiles from '../../../../components/TreeFiles';
 import tokenService from '../../../../services/token.service';
+import fetchWithToken from '../../../../util/fetchWithToken';
 import getBody from '../../../../util/getBody';
 
 export default function FolderContent() {
@@ -16,7 +17,7 @@ export default function FolderContent() {
 
     async function getFiles() {
         try {
-            const response = await fetch(`/api/v1/files/repository/${owner}/${repo}/tree/files?login=${username}&path=${path}`)
+            const response = await fetchWithToken(`/api/v1/files/repository/${owner}/${repo}/tree/files?login=${username}&path=${path}`)
             const json = await response.json();
             const { tree } = getBody(json);
             setFiles(tree.children);

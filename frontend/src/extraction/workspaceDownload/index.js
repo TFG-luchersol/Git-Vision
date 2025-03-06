@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
-import '../../App.css';
-import '../../static/css/home/home.css';
-import { Alert, Button, Form, FormGroup } from 'reactstrap';
-import "../../static/css/auth/authPage.css";
 import { Link } from 'react-router-dom';
+import { Alert, Button, Form, FormGroup } from 'reactstrap';
+import '../../App.css';
 import CustomInput from '../../components/CustomInput.js';
-import Preconditions from '../../util/check.js';
 import LoadingModal from '../../components/LoadingModal.js';
 import tokenService from '../../services/token.service.js';
+import "../../static/css/auth/authPage.css";
+import '../../static/css/home/home.css';
+import Preconditions from '../../util/check.js';
+import fetchWithToken from '../../util/fetchWithToken.js';
 
 export default function WorkspaceDownload(){
 
@@ -22,7 +23,7 @@ export default function WorkspaceDownload(){
             Preconditions.checkNotBlank(values.id, "Id")
             Preconditions.checkNotBlank(values.name, "Name")
             setIsLoading(true);
-            const response = await fetch(`/api/v1/relation/user_workspace?workspaceId=${values.id}&name=${values.name}`, {
+            const response = await fetchWithToken(`/api/v1/relation/user_workspace?workspaceId=${values.id}&name=${values.name}`, {
                 method: "POST",
                 body: tokenService.getUser().username
             });

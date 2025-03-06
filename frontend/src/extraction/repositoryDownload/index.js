@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
 import { FaGithub, FaRegUserCircle } from "react-icons/fa";
 import { Link } from 'react-router-dom';
-import { Alert, Button, Form, FormGroup, Input, Label } from 'reactstrap';
+import { Button, Form, FormGroup, Input, Label } from 'reactstrap';
 import '../../App.css';
+import AlertMessage from '../../components/AlertMessage.js';
 import CustomInput from '../../components/CustomInput.js';
+import LoadingModal from '../../components/LoadingModal.js';
+import tokenService from '../../services/token.service.js';
 import "../../static/css/auth/authPage.css";
 import '../../static/css/home/home.css';
 import Preconditions from '../../util/check.js';
-import LoadingModal from '../../components/LoadingModal.js';
-import tokenService from '../../services/token.service.js';
-import AlertMessage from '../../components/AlertMessage.js';
+import fetchWithToken from '../../util/fetchWithToken.js';
 
 export default function RepositoryDownload() {
     const userIcon = <FaRegUserCircle />
@@ -33,7 +34,7 @@ export default function RepositoryDownload() {
                 url += `&token=${values.token}`;
             
             setIsLoading(true);
-            const response = await fetch(url, {
+            const response = await fetchWithToken(url, {
                 method: "POST",
                 headers: { 
                     "Content-Type": "application/json"

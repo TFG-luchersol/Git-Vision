@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import tokenService from '../services/token.service';
 import Login from '../auth/login';
 
 const PrivateRoute = ({ children }) => {

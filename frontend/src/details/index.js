@@ -5,9 +5,10 @@ import { MdOutlineEmail } from "react-icons/md";
 import { SiClockify } from "react-icons/si";
 import { Button, Modal, ModalBody, ModalHeader } from 'reactstrap';
 import CustomInput from '../components/CustomInput.js';
-import tokenService from '../services/token.service.js'
-import './details.css';
+import tokenService from '../services/token.service.js';
+import fetchWithToken from '../util/fetchWithToken.js';
 import getBody from '../util/getBody.js';
+import './details.css';
 
 export default function Details() {
   const userIcon = <FaRegUserCircle />
@@ -40,14 +41,14 @@ export default function Details() {
     const user = tokenService.getUser();
     try {
       if (tokenType === 'github') {
-        const response = await fetch(`/api/v1/users/user/${username}/token/github`, 
+        const response = await fetchWithToken(`/api/v1/users/user/${username}/token/github`, 
           {method: "PUT", body: githubToken}
         );
         const json = await response.json()
         const result = getBody(json)
         tokenService.setUser({...user, githubToken: result.githubToken})
       } else if (tokenType === 'clockify') {
-        const response = await fetch(`/api/v1/users/user/${username}/token/clockify`, 
+        const response = await fetchWithToken(`/api/v1/users/user/${username}/token/clockify`, 
           {method: "PUT", body: clockifyToken}
         );
         const json = await response.json()
@@ -60,7 +61,7 @@ export default function Details() {
   };
 
   const handleDeleteAccount = async () => {
-    await fetch(`/api/v1/users/${userId}`, {method: "DELETE"})
+    await fetchWithToken(`/api/v1/users/${userId}`, {method: "DELETE"})
               .then(response => {
                 setDeleteModal(false)
                 if(response.status === 200) {

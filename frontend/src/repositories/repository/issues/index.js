@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
+import { GoIssueClosed, GoIssueOpened } from 'react-icons/go';
 import { useParams } from 'react-router-dom';
 import { Button, Input } from 'reactstrap';
 import tokenService from '../../../services/token.service';
-import './issues.css';
-import { GoIssueClosed, GoIssueOpened } from 'react-icons/go';
+import fetchWithToken from '../../../util/fetchWithToken';
 import getBody from '../../../util/getBody';
+import './issues.css';
 
 export default function Issues() {
     const { username } = tokenService.getUser();
@@ -22,7 +23,7 @@ export default function Issues() {
         if(page < 1) return;
         try {
             const repositorName = `${owner}/${repo}`;
-            const newIssues = await fetch(`/api/v1/issues/${repositorName}?login=${username}&page=${page}`)
+            const newIssues = await fetchWithToken(`/api/v1/issues/${repositorName}?login=${username}&page=${page}`)
             const json = await newIssues.json()
             const {issues} = getBody(json)
             if(issues.length > 0){

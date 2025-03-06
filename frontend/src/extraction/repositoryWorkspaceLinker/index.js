@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { Alert, Button, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Form, FormGroup, Input } from 'reactstrap';
 import '../../App.css';
-import '../../static/css/home/home.css';
-import './repositoryWorkspaceLinker.css'
-import { Alert, Button, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Form, FormGroup, Input, Label } from 'reactstrap';
 import tokenService from "../../services/token.service.js";
 import "../../static/css/auth/authPage.css";
-import { Link } from 'react-router-dom';
-import CustomInput from '../../components/CustomInput.js';
+import '../../static/css/home/home.css';
+import fetchWithToken from '../../util/fetchWithToken.js';
 import getBody from '../../util/getBody.js';
+import './repositoryWorkspaceLinker.css';
 
 export default function RepositoryWorkspaceLinker() {
 
@@ -28,7 +28,7 @@ export default function RepositoryWorkspaceLinker() {
         const userId = tokenService.getUser().id
         const loadRepositories = async () => {
             try {
-                const response = await fetch(`/api/v1/relation/user_repository/repositories?userId=${userId}`)
+                const response = await fetchWithToken(`/api/v1/relation/user_repository/repositories?userId=${userId}`)
                 const json = await response.json();
                 const {respositories} = getBody(json);
                 setRepositories(respositories)
@@ -38,7 +38,7 @@ export default function RepositoryWorkspaceLinker() {
         };
         const loadWorkspaces = async () => {
             try {
-                const response = await fetch(`/api/v1/relation/user_workspace/workspaces?userId=${userId}`)
+                const response = await fetchWithToken(`/api/v1/relation/user_workspace/workspaces?userId=${userId}`)
                 const json = await response.json();
                 const {workspaces} = getBody(json);
                 setWorkspaces(workspaces)
@@ -56,7 +56,7 @@ export default function RepositoryWorkspaceLinker() {
         setMessage(null);
         try {
             const repositoryName = `${owner}/${values.repository}`
-            const response = await fetch(`/api/v1/linker?repositoryName=${repositoryName}&workspaceName=${values.workspace.name}&userId=${tokenService.getUser().id}`, {
+            const response = await fetchWithToken(`/api/v1/linker?repositoryName=${repositoryName}&workspaceName=${values.workspace.name}&userId=${tokenService.getUser().id}`, {
                 method: "POST",
             });
 

@@ -51,14 +51,6 @@ export default function Login() {
         setValues(newValues)
     }
 
-    async function testDownloadGithub() {
-        await fetch('/api/v1/github/TFG-luchersol/Git-Vision', { method: "POST" }).then(e => alert(`GITHUB: ${e.status}`))
-    }
-
-    async function testDownloadClockify() {
-        await fetch('/api/v1/clockify/workspaces/664b1bcbfae74255cbb0abc9?name=workspace_test_TFG', { method: "POST" }).then(e => alert(`CLOCKIFY: ${e.status}`))
-    }
-
     return (
         <div className="home-page-container">
             {/* <div style={{display:'flex', flexDirection:'column'}}>

@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { GoIssueClosed, GoIssueOpened } from "react-icons/go";
+import { IoCopyOutline } from "react-icons/io5";
 import { useParams } from 'react-router-dom';
 import { Input } from 'reactstrap';
-import { IoCopyOutline } from "react-icons/io5";
+import CounterChanges from '../../../../components/CounterChanges';
 import tokenService from '../../../../services/token.service';
 import './issue.css';
-import CounterChanges from '../../../../components/CounterChanges';
 
 import FolderTabs from '../../../../components/FolderTabs';
+import fetchWithToken from '../../../../util/fetchWithToken';
 import getBody from '../../../../util/getBody';
 
 export default function Issue() {
@@ -27,7 +28,7 @@ export default function Issue() {
     const getIssue = async () => {
         try {
             const id = `${owner}/${repo}`;
-            const newIssues = await fetch(`/api/v1/issues/${id}/${issueNumber}?login=${username}`)
+            const newIssues = await fetchWithToken(`/api/v1/issues/${id}/${issueNumber}?login=${username}`)
             const json = await newIssues.json()
             const {issue, commits, files, changesByUser, assigness} = getBody(json)
             setIssue(issue)

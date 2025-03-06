@@ -12,6 +12,7 @@ import {
 import React, { useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
 import tokenService from "../services/token.service";
+import fetchWithToken from "../util/fetchWithToken";
 import getBody from "../util/getBody";
 import { darkenColor, stringToColor } from "../util/tools";
 import "./css/contributions.css";
@@ -171,7 +172,7 @@ export default function Contributions({ owner, repo, path = null }) {
     }
 
     try {
-      const response = await fetch(url);
+      const response = await fetchWithToken(url);
       const json = await response.json();
       const result = getBody(json).contributions;
 
