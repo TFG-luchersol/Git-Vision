@@ -17,12 +17,13 @@ package org.springframework.samples.gitvision.user;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.samples.gitvision.auth.payload.response.MessageResponse;
+import org.springframework.samples.gitvision.configuration.services.UserDetailsImpl;
 import org.springframework.samples.gitvision.util.Information;
 import org.springframework.samples.gitvision.util.RestPreconditions;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,7 +37,7 @@ import org.springframework.web.bind.annotation.RestController;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
-// @SecurityRequirement(name = "bearerAuth")
+
 @RestController
 @RequestMapping("/api/v1/users")
 @Tag(name = "User")
@@ -44,7 +45,6 @@ public class UserController {
 
 	private final UserService userService;
 
-	@Autowired
 	public UserController(UserService userService) {
 		this.userService = userService;
 	}
@@ -56,7 +56,8 @@ public class UserController {
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<User> findById(@PathVariable("id") Long id) {
+	public ResponseEntity<User> findById(@PathVariable Long id,
+			@AuthenticationPrincipal UserDetailsImpl userDetailsImpl) {
 		return new ResponseEntity<>(userService.findUserById(id), HttpStatus.OK);
 	}
 
@@ -67,9 +68,9 @@ public class UserController {
 		return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
 	}
 
-	@PutMapping("/{userId}")
+	@PutMapping("/{id}")
 	@ResponseStatus(HttpStatus.OK)
-	public ResponseEntity<User> update(@PathVariable("userId") Long id, @RequestBody @Valid User user) {
+	public ResponseEntity<User> update(@PathVariable Long id, @RequestBody @Valid User user) {
 		RestPreconditions.checkNotNull(userService.findUserById(id), "User", "ID", id);
 		return ResponseEntity.ok(this.userService.updateUser(user, id));
 	}
@@ -96,9 +97,9 @@ public class UserController {
 		}
 	}
 
-	@DeleteMapping("/{userId}")
+	@DeleteMapping("/{id}")
 	@ResponseStatus(HttpStatus.OK)
-	public ResponseEntity<MessageResponse> delete(@PathVariable("userId") Long id) {
+	public ResponseEntity<MessageResponse> delete(@PathVariable Long id) {
 		RestPreconditions.checkNotNull(userService.findUserById(id), "User", "ID", id);
 		userService.deleteUserById(id);
 		return ResponseEntity.ok(new MessageResponse("User deleted!"));

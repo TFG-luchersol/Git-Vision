@@ -27,10 +27,10 @@ import io.jsonwebtoken.security.Keys;
 public class JwtUtils {
 	private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
 
-	@Value("${gitVision.app.jwtSecret}")
+	@Value("${gitVision.app.jwt.secret}")
 	private String jwtSecret;
 
-	@Value("${gitVision.app.jwtExpirationMs}")
+	@Value("${gitVision.app.jwt.expiration}")
 	private int jwtExpirationMs;
 
 	public String generateJwtToken(Authentication authentication) {

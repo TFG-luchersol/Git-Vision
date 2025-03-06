@@ -1,6 +1,6 @@
 {"properties": [
   {
-    "name": "gitVision.app.jwtSecret",
+    "name": "gitVision.app.jwt.secret",
     "type": "java.lang.String",
     "description": "Secret Key for JWT"
   },
@@ -10,7 +10,7 @@
     "description": "Miliseconds for JWT Refresh expiration"
   },
   {
-    "name": "gitVision.app.jwtExpirationMs",
+    "name": "gitVision.app.jwt.expiration",
     "type": "java.lang.String",
     "description": "Miliseconds for JWT expiration'"
   },
