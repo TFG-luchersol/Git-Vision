@@ -1,6 +1,6 @@
 {"properties": [
   {
-    "name": "jwtSecret",
+    "name": "gitVision.app.jwtSecret",
     "type": "java.lang.String",
     "description": "Secret Key for JWT"
   },

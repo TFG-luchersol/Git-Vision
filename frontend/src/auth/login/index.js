@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
+import { FaLock, FaRegUserCircle, FaUnlock } from "react-icons/fa";
+import { Link } from 'react-router-dom';
+import { Alert, Button, Form, FormGroup } from 'reactstrap';
 import '../../App.css';
-import '../../static/css/home/home.css';
-import { Alert, Button, Form, FormGroup, Input, Label, Modal } from 'reactstrap';
+import CustomInput from '../../components/CustomInput.js';
 import tokenService from "../../services/token.service.js";
 import "../../static/css/auth/authPage.css";
-import { Link } from 'react-router-dom';
-import CustomInput from '../../components/CustomInput.js';
-import { FaRegUserCircle, FaGithub, FaLock, FaUnlock } from "react-icons/fa";
+import '../../static/css/home/home.css';
 
 export default function Login() {
     const userIcon = <FaRegUserCircle />
