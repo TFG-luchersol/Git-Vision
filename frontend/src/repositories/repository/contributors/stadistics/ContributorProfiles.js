@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import tokenService from '../../../../services/token.service.js';
 import fetchWithToken from '../../../../util/fetchWithToken.ts';
 import getBody from '../../../../util/getBody.ts';
 
 export default function ContributorProfiles() {
 
-    const { username } = tokenService.getUser();
     const { owner, repo } = useParams();
 
     const [contributors, setContributors] = useState([]);

@@ -2,13 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { GoIssueClosed, GoIssueOpened } from 'react-icons/go';
 import { useParams } from 'react-router-dom';
 import { Button, Input } from 'reactstrap';
-import tokenService from '../../../services/token.service';
 import fetchWithToken from '../../../util/fetchWithToken.ts';
 import getBody from '../../../util/getBody.ts';
 import './issues.css';
 
 export default function Issues() {
-    const { username } = tokenService.getUser();
     const { owner, repo } = useParams();
 
     const [issues, setIssues] = useState([])

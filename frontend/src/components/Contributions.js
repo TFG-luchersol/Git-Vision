@@ -11,7 +11,6 @@ import {
 } from "chart.js";
 import React, { useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
-import tokenService from "../services/token.service";
 import fetchWithToken from "../util/fetchWithToken.ts";
 import getBody from "../util/getBody.ts";
 import { darkenColor, stringToColor } from "../util/tools";
@@ -32,7 +31,6 @@ ChartJS.register(
 );
 
 export default function Contributions({ owner, repo, path = null }) {
-  const { username } = tokenService.getUser();
   const [isLoading, setIsLoading] = useState(false);
   const [data_, setData_] = useState({ datasets: [] });
   const [startDate, setStartDate] = useState(null);

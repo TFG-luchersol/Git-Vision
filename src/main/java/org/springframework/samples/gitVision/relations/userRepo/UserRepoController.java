@@ -84,9 +84,9 @@ public class UserRepoController {
         
     }
 
-    @PostMapping
-    public void linkUserWithRepository(@RequestParam String repo, 
-                                       @RequestParam String owner,
+    @PostMapping("/{owner}/{repo}")
+    public void linkUserWithRepository(@PathVariable String repo, 
+                                       @PathVariable String owner,
                                        @RequestParam(required = false) String token,
                                        @AuthenticationPrincipal UserDetailsImpl userDetailsImpl) {
         String login = userDetailsImpl.getUsername();

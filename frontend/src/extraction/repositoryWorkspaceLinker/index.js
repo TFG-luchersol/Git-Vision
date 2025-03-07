@@ -28,7 +28,7 @@ export default function RepositoryWorkspaceLinker() {
         const userId = tokenService.getUser().id
         const loadRepositories = async () => {
             try {
-                const response = await fetchWithToken(`/api/v1/relation/user_repository/repositories?userId=${userId}`)
+                const response = await fetchWithToken(`/api/v1/relation/user_repository/repositories`)
                 const {respositories} = await getBody(response);
                 setRepositories(respositories)
             } catch (error) {
@@ -37,7 +37,7 @@ export default function RepositoryWorkspaceLinker() {
         };
         const loadWorkspaces = async () => {
             try {
-                const response = await fetchWithToken(`/api/v1/relation/user_workspace/workspaces?userId=${userId}`)
+                const response = await fetchWithToken(`/api/v1/relation/user_workspace/workspaces`)
                 const {workspaces} = await getBody(response);
                 setWorkspaces(workspaces)
             } catch (error) {

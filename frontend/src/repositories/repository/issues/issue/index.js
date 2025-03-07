@@ -4,7 +4,6 @@ import { IoCopyOutline } from "react-icons/io5";
 import { useParams } from 'react-router-dom';
 import { Input } from 'reactstrap';
 import CounterChanges from '../../../../components/CounterChanges';
-import tokenService from '../../../../services/token.service';
 import './issue.css';
 
 import FolderTabs from '../../../../components/FolderTabs';
@@ -12,7 +11,6 @@ import fetchWithToken from '../../../../util/fetchWithToken.ts';
 import getBody from '../../../../util/getBody.ts';
 
 export default function Issue() {
-    const { username } = tokenService.getUser();
     const { owner, repo, issueNumber } = useParams();
 
     const [issue, setIssue] = useState({});

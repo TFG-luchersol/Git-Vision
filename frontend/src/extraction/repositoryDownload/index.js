@@ -6,7 +6,6 @@ import '../../App.css';
 import AlertMessage from '../../components/AlertMessage.js';
 import CustomInput from '../../components/CustomInput.js';
 import LoadingModal from '../../components/LoadingModal.js';
-import tokenService from '../../services/token.service.js';
 import "../../static/css/auth/authPage.css";
 import '../../static/css/home/home.css';
 import Preconditions from '../../util/check.js';
@@ -29,17 +28,17 @@ export default function RepositoryDownload() {
             Preconditions.checkNotBlank(values.owner, "Owner");
             Preconditions.checkNotBlank(values.repo, "Repository");
             Preconditions.if(validateToken).checkNotBlank(values.token, "Token");
-            let url = `/api/v1/relation/user_repository?repo=${values.repo}&owner=${values.owner}`
+            let url = `/api/v1/relation/user_repository/${values.owner}/${values.repo}`
             if(values.validOtherToken) 
-                url += `&token=${values.token}`;
+                url += `?token=${values.token}`;
             
             setIsLoading(true);
             const response = await fetchWithToken(url, {
                 method: "POST",
                 headers: { 
                     "Content-Type": "application/json"
-                },
-                body: tokenService.getUser().username}
+                }
+            }
             );
             if (response.status === 200) {
                 window.location.href = "/";

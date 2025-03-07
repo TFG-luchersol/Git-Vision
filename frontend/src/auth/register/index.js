@@ -7,7 +7,6 @@ import CustomInput from '../../components/CustomInput.js';
 import tokenService from "../../services/token.service.js";
 import '../../static/css/auth/authPage.css';
 import '../../static/css/home/home.css';
-import Preconditions from '../../util/check.js';
 
 export default function Register() {
 

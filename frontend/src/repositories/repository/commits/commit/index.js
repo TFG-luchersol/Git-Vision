@@ -2,13 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import CounterChanges from '../../../../components/CounterChanges';
 import FolderTabs from '../../../../components/FolderTabs';
-import tokenService from '../../../../services/token.service';
 import fetchWithToken from '../../../../util/fetchWithToken.ts';
 import getBody from '../../../../util/getBody.ts';
 import './commit.css';
 
 export default function Commit() {
-    const { username } = tokenService.getUser();
     const { owner, repo, sha } = useParams();
 
     const [commit, setCommit] = useState([])

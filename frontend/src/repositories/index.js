@@ -27,7 +27,7 @@ export default function Repositories() {
 
     const getRepositories = async () => {
         try {
-            let newRepositories = await fetchWithToken(`/api/v1/relation/user_repository/repositories?userId=${tokenService.getUser().id}`)
+            let newRepositories = await fetchWithToken("/api/v1/relation/user_repository/repositories")
             const {repositories} = await getBody(newRepositories)
             setRepositories(repositories)
         } catch (e) {
