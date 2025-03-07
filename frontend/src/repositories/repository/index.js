@@ -4,9 +4,9 @@ import { Button, ButtonGroup, Input } from 'reactstrap';
 import MultiSelectDropdown from '../../components/MultiSelectDropdown.js';
 import PieChart from '../../components/PieChart.js';
 import TreeFiles from '../../components/TreeFiles.js';
+import '../../static/css/repositories/repository';
 import fetchWithToken from '../../util/fetchWithToken.ts';
 import getBody from '../../util/getBody.ts';
-import './repository.css';
 
 export default function Repository() {
     const { owner, repo } = useParams();

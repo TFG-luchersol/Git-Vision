@@ -1,3 +1,5 @@
+import "@CSS/auth/authPage.css";
+import '@CSS/home/home.css';
 import React, { useState } from 'react';
 import { FaLock, FaRegUserCircle, FaUnlock } from "react-icons/fa";
 import { Link } from 'react-router-dom';
@@ -5,8 +7,6 @@ import { Alert, Button, Form, FormGroup } from 'reactstrap';
 import '../../App.css';
 import CustomInput from '../../components/CustomInput.js';
 import tokenService from "../../services/token.service.js";
-import "../../static/css/auth/authPage.css";
-import '../../static/css/home/home.css';
 import getBody from '../../util/getBody.ts';
 
 export default function Login() {

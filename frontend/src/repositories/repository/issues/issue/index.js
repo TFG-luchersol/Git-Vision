@@ -4,7 +4,7 @@ import { IoCopyOutline } from "react-icons/io5";
 import { useParams } from 'react-router-dom';
 import { Input } from 'reactstrap';
 import CounterChanges from '../../../../components/CounterChanges';
-import './issue.css';
+import '../../../../static/css/repositories/repository/issues/issue/issue.css';
 
 import FolderTabs from '../../../../components/FolderTabs';
 import fetchWithToken from '../../../../util/fetchWithToken.ts';

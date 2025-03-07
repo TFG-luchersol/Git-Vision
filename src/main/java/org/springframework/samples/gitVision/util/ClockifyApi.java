@@ -43,21 +43,16 @@ public class ClockifyApi {
         return workspace;
     }
 
-    public static List<Project> getProjectsByWorkspaceId(String workspaceId, String clockifyToken) {
+    public static List<Project> getProjects(String workspaceId, String clockifyToken) {
         String url = String.format("/v1/workspaces/%s/projects", workspaceId);
         Project[] projects = requestClockify(url, clockifyToken, Project[].class);
         return Arrays.asList(projects);
     }
 
-    public static List<Task> getTasksByWorkspaceIdAndProjectId(String workspaceId, String projectId, String clockifyToken) {
+    public static List<Task> getTasks(String workspaceId, String projectId, String clockifyToken) {
         String url = String.format("/v1/workspaces/%s/projects/%s/tasks", workspaceId, projectId);
         Task[] tasks = requestClockify(url, clockifyToken, Task[].class);
         return Arrays.asList(tasks);
-    }
-
-    public static Task getTaskByWorkspaceIdAndProjectIdAndTaksName(String workspaceId, String projectId, String taskName, String clockifyToken) {
-        List<Task> tasks = getTasksByWorkspaceIdAndProjectId(workspaceId, projectId, clockifyToken);
-        return tasks.stream().filter(task -> task.getName().equals("#"+taskName)).findFirst().orElse(null);
     }
     
 }
