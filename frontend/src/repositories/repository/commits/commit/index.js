@@ -20,7 +20,7 @@ export default function Commit() {
     const getCommit = async () => {
         try {
             const repositorName = `${owner}/${repo}`;
-            const newCommit = await fetchWithToken(`/api/v1/commits/${repositorName}/${sha}?login=${username}`)
+            const newCommit = await fetchWithToken(`/api/v1/commits/${repositorName}/${sha}`)
             const {commit} = await getBody(newCommit)
             setCommit(commit)
         } catch (e) {

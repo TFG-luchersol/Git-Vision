@@ -7,9 +7,11 @@ import org.kohsuke.github.GHRepository;
 import org.springframework.samples.gitvision.auth.payload.response.BadResponse;
 import org.springframework.samples.gitvision.auth.payload.response.MessageResponse;
 import org.springframework.samples.gitvision.auth.payload.response.OkResponse;
+import org.springframework.samples.gitvision.configuration.services.UserDetailsImpl;
 import org.springframework.samples.gitvision.issue.model.Issue;
 import org.springframework.samples.gitvision.relations.userRepo.UserRepoService;
 import org.springframework.samples.gitvision.util.Information;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,10 +34,11 @@ public class IssueController {
 
     @GetMapping("/{owner}/{repo}")
     public MessageResponse getAllIssuesByRepositoryName(@PathVariable String owner, 
-                                                        @PathVariable String repo, 
-                                                        @RequestParam String login,
-                                                        @RequestParam(defaultValue = "1") Integer page) {
+                                                        @PathVariable String repo,
+                                                        @RequestParam(defaultValue = "1") Integer page,
+                                                        @AuthenticationPrincipal UserDetailsImpl userDetailsImpl) {
         try {
+            String login = userDetailsImpl.getUsername();
             String repositoryName = owner + "/" + repo;
             List<Issue> issues = this.issueService.getAllIssuesByRepositoryName(repositoryName, login, page);
             Information information = Information.create("issues", issues);
@@ -50,9 +53,10 @@ public class IssueController {
     public MessageResponse getIssueByRepositoryNameAndIssueNumber(@PathVariable String owner, 
                                                     @PathVariable String repo, 
                                                     @PathVariable Integer issueNumber, 
-                                                    @RequestParam String login) {
+                                                    @AuthenticationPrincipal UserDetailsImpl userDetailsImpl) {
         
         try {
+            String login = userDetailsImpl.getUsername();
             GHRepository ghRepository = this.userRepoService.getRepository(owner, repo, login);
             Map<String, Object> dict = this.issueService.getIssueByRepositoryNameAndIssueNumber(ghRepository, issueNumber);
             Information information = Information.of(dict);

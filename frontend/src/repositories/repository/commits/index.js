@@ -21,7 +21,7 @@ export default function Commits() {
     const getCommits = async () => {
         try {
             const repositorName = `${owner}/${repo}`;
-            const newCommits = await fetchWithToken(`/api/v1/commits/${repositorName}?login=${username}&page=${page}`)
+            const newCommits = await fetchWithToken(`/api/v1/commits/${repositorName}?page=${page}`)
             const {commits} = await getBody(newCommits)
             setCommits(commits)
         } catch (e) {

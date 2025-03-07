@@ -28,7 +28,7 @@ export default function Issue() {
     const getIssue = async () => {
         try {
             const id = `${owner}/${repo}`;
-            const newIssues = await fetchWithToken(`/api/v1/issues/${id}/${issueNumber}?login=${username}`)
+            const newIssues = await fetchWithToken(`/api/v1/issues/${id}/${issueNumber}`)
             const {issue, commits, files, changesByUser, assigness} = await getBody(newIssues)
             setIssue(issue)
             setCommits(commits)

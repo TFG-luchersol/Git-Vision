@@ -155,24 +155,28 @@ export default function Contributions({ owner, repo, path = null }) {
   }
 
   async function getContributions() {
-    let url = `/api/v1/contributions/${owner}/${repo}/between_time?login=${username}`;
+    let url = `/api/v1/contributions/${owner}/${repo}/between_time`;
+    let urlObj = new URL(url, window.location.origin);
+    console.log(1)
+    let searchParams = new URLSearchParams(urlObj.search);
     if (path !== null) {
-      url += `&path=${path}`;
+      searchParams.set("path", path)
     }
     let minYear, maxYear;
     if (startDate !== null) {
-      url += `&startDate=${new Date(startDate).toISOString()}`;
+      searchParams.set("startDate",new Date(startDate).toISOString())
       minYear = new Date(startDate).getFullYear();
     }
     if (endDate !== null) {
-      url += `&endDate=${new Date(endDate).toISOString()}`;
+      searchParams.set("endDate", new Date(endDate).toISOString())
       maxYear = new Date(endDate).getFullYear();
     } else {
       maxYear = new Date().getFullYear();
     }
+    urlObj.search = searchParams.toString()
 
     try {
-      const response = await fetchWithToken(url);
+      const response = await fetchWithToken(urlObj.toString());
       const result = (await getBody(response)).contributions;
       if (minYear === null && result.length !== 0) {
         minYear = result.reduce((earliest, current) => {
@@ -305,17 +309,20 @@ export default function Contributions({ owner, repo, path = null }) {
   }
 
   async function calcStadistic() {
-    setIsLoading(prev => true);
-    await getContributions();
-    const newDataset = Object.entries(
-      groupContributionsByAuthorAndTime(contributions)
-    ).map((entry) => ({
-      label: entry[0],
-      data: entry[1],
-      backgroundColor: stringToColor(entry[0]),
-    }));
-    setData_(prev => ({ datasets: newDataset }));
-    setIsLoading(prev => false);
+    try {
+      setIsLoading(prev => true);
+      await getContributions();
+      const newDataset = Object.entries(
+        groupContributionsByAuthorAndTime(contributions)
+      ).map((entry) => ({
+        label: entry[0],
+        data: entry[1],
+        backgroundColor: stringToColor(entry[0]),
+      }));
+      setData_(prev => ({ datasets: newDataset }));
+    } finally {
+      setIsLoading(prev => false);
+    }
   }
 
   function getWeeksOfYear(year = selectedYear) {

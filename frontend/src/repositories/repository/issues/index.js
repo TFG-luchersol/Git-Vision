@@ -23,7 +23,7 @@ export default function Issues() {
         if(page < 1) return;
         try {
             const repositorName = `${owner}/${repo}`;
-            const newIssues = await fetchWithToken(`/api/v1/issues/${repositorName}?login=${username}&page=${page}`)
+            const newIssues = await fetchWithToken(`/api/v1/issues/${repositorName}?page=${page}`)
             const {issues} = await getBody(newIssues)
             if(issues.length > 0){
                 setIssues(issues)
