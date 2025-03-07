@@ -3,8 +3,8 @@ import { GoIssueClosed, GoIssueOpened } from 'react-icons/go';
 import { useParams } from 'react-router-dom';
 import { Button, Input } from 'reactstrap';
 import tokenService from '../../../services/token.service';
-import fetchWithToken from '../../../util/fetchWithToken';
-import getBody from '../../../util/getBody';
+import fetchWithToken from '../../../util/fetchWithToken.ts';
+import getBody from '../../../util/getBody.ts';
 import './issues.css';
 
 export default function Issues() {
@@ -24,8 +24,7 @@ export default function Issues() {
         try {
             const repositorName = `${owner}/${repo}`;
             const newIssues = await fetchWithToken(`/api/v1/issues/${repositorName}?login=${username}&page=${page}`)
-            const json = await newIssues.json()
-            const {issues} = getBody(json)
+            const {issues} = await getBody(newIssues)
             if(issues.length > 0){
                 setIssues(issues)
                 setPage(page)

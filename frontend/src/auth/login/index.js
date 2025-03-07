@@ -7,6 +7,7 @@ import CustomInput from '../../components/CustomInput.js';
 import tokenService from "../../services/token.service.js";
 import "../../static/css/auth/authPage.css";
 import '../../static/css/home/home.css';
+import getBody from '../../util/getBody.ts';
 
 export default function Login() {
     const userIcon = <FaRegUserCircle />
@@ -28,16 +29,11 @@ export default function Login() {
                 method: "POST",
                 body: reqBody,
             });
-
-            if (response.status === 200) {
-                const data = await response.json();
-                tokenService.setLocalAccessToken(data.token)
-                tokenService.setUser(data.user);
-                window.location.href = "/";
-            } else {
-                const error = await response.json();
-                setMessage(error.message)
-            }
+            
+            const {jwt} = await getBody(response);
+            tokenService.setLocalAccessToken(jwt.token)
+            tokenService.setUser(jwt.user);
+            window.location.href = "/";
         } catch (error) {
             setMessage(error.message);
         }

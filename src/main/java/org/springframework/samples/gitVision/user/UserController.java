@@ -15,11 +15,10 @@
  */
 package org.springframework.samples.gitvision.user;
 
-import java.util.List;
-
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.samples.gitvision.auth.payload.response.BadResponse;
 import org.springframework.samples.gitvision.auth.payload.response.MessageResponse;
+import org.springframework.samples.gitvision.auth.payload.response.OkResponse;
 import org.springframework.samples.gitvision.configuration.services.UserDetailsImpl;
 import org.springframework.samples.gitvision.util.Information;
 import org.springframework.samples.gitvision.util.RestPreconditions;
@@ -49,60 +48,59 @@ public class UserController {
 		this.userService = userService;
 	}
 
-	@GetMapping
-	public ResponseEntity<List<User>> findAll() {
-		List<User> res = (List<User>) userService.findAll();
-		return new ResponseEntity<>(res, HttpStatus.OK);
-	}
-
 	@GetMapping("/{id}")
-	public ResponseEntity<User> findById(@PathVariable Long id,
+	public MessageResponse findById(@PathVariable Long id,
 			@AuthenticationPrincipal UserDetailsImpl userDetailsImpl) {
-		return new ResponseEntity<>(userService.findUserById(id), HttpStatus.OK);
+		Information information = Information.create("user", userService.findUserById(id));
+		return OkResponse.of(information);
 	}
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<User> create(@RequestBody @Valid User user) {
+	public MessageResponse create(@RequestBody @Valid User user) {
 		User savedUser = userService.saveUser(user);
-		return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
+		Information information = Information.create("user", savedUser);
+		return OkResponse.of(information);
 	}
 
 	@PutMapping("/{id}")
 	@ResponseStatus(HttpStatus.OK)
-	public ResponseEntity<User> update(@PathVariable Long id, @RequestBody @Valid User user) {
+	public MessageResponse update(@PathVariable Long id, @RequestBody @Valid User user) {
 		RestPreconditions.checkNotNull(userService.findUserById(id), "User", "ID", id);
-		return ResponseEntity.ok(this.userService.updateUser(user, id));
+		User updatedUser = this.userService.updateUser(user, id);
+		Information information = Information.create("updatedUser", updatedUser);
+		return OkResponse.of(information);
 	}
 
 	@PutMapping("/user/{username}/token/github")
-	public ResponseEntity<MessageResponse> updateGithubToken(@PathVariable String username, @RequestBody String githubToken) {
+	public MessageResponse updateGithubToken(@PathVariable String username, @RequestBody String githubToken) {
 		try {
 			userService.updateGithubToken(username, githubToken);
-			Information customMap = Information.empty().put("githubToken", githubToken);
-			return ResponseEntity.ok(MessageResponse.of("Github Token has been updated", customMap));
+			Information information = Information.create("message", "Github Token has been updated")
+											   .put("githubToken", githubToken);
+			return OkResponse.of(information);
 		} catch (Exception e) {
-			return ResponseEntity.badRequest().body(MessageResponse.of(e.getMessage()));
+			return BadResponse.of(e);
 		}
 	}
 
 	@PutMapping("/user/{username}/token/clockify")
-	public ResponseEntity<MessageResponse> updateClockifyToken(@PathVariable String username, @RequestBody String clockifyToken) {
+	public MessageResponse updateClockifyToken(@PathVariable String username, @RequestBody String clockifyToken) {
 		try {
 			userService.updateClockifyToken(username, clockifyToken);
-			Information customMap = Information.empty().put("clockifyToken", clockifyToken);
-			return ResponseEntity.ok(MessageResponse.of("Github Token has been updated", customMap));
+			Information information = Information.create("message", "Github Token has been updated").put("clockifyToken", clockifyToken);
+			return OkResponse.of(information);
 		} catch (Exception e) {
-			return ResponseEntity.badRequest().body(MessageResponse.of("Failed!"));
+			return BadResponse.of(e);
 		}
 	}
 
 	@DeleteMapping("/{id}")
 	@ResponseStatus(HttpStatus.OK)
-	public ResponseEntity<MessageResponse> delete(@PathVariable Long id) {
+	public MessageResponse delete(@PathVariable Long id) {
 		RestPreconditions.checkNotNull(userService.findUserById(id), "User", "ID", id);
 		userService.deleteUserById(id);
-		return ResponseEntity.ok(new MessageResponse("User deleted!"));
+		return OkResponse.of("User deleted!");
 	}
 
 }

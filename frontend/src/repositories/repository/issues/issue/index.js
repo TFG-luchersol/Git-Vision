@@ -8,8 +8,8 @@ import tokenService from '../../../../services/token.service';
 import './issue.css';
 
 import FolderTabs from '../../../../components/FolderTabs';
-import fetchWithToken from '../../../../util/fetchWithToken';
-import getBody from '../../../../util/getBody';
+import fetchWithToken from '../../../../util/fetchWithToken.ts';
+import getBody from '../../../../util/getBody.ts';
 
 export default function Issue() {
     const { username } = tokenService.getUser();
@@ -29,8 +29,7 @@ export default function Issue() {
         try {
             const id = `${owner}/${repo}`;
             const newIssues = await fetchWithToken(`/api/v1/issues/${id}/${issueNumber}?login=${username}`)
-            const json = await newIssues.json()
-            const {issue, commits, files, changesByUser, assigness} = getBody(json)
+            const {issue, commits, files, changesByUser, assigness} = await getBody(newIssues)
             setIssue(issue)
             setCommits(commits)
             setFiles(files)

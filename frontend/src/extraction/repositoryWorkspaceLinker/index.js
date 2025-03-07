@@ -5,8 +5,8 @@ import '../../App.css';
 import tokenService from "../../services/token.service.js";
 import "../../static/css/auth/authPage.css";
 import '../../static/css/home/home.css';
-import fetchWithToken from '../../util/fetchWithToken.js';
-import getBody from '../../util/getBody.js';
+import fetchWithToken from '../../util/fetchWithToken.ts';
+import getBody from '../../util/getBody.ts';
 import './repositoryWorkspaceLinker.css';
 
 export default function RepositoryWorkspaceLinker() {
@@ -29,8 +29,7 @@ export default function RepositoryWorkspaceLinker() {
         const loadRepositories = async () => {
             try {
                 const response = await fetchWithToken(`/api/v1/relation/user_repository/repositories?userId=${userId}`)
-                const json = await response.json();
-                const {respositories} = getBody(json);
+                const {respositories} = await getBody(response);
                 setRepositories(respositories)
             } catch (error) {
                 setMessage(error.message)
@@ -39,8 +38,7 @@ export default function RepositoryWorkspaceLinker() {
         const loadWorkspaces = async () => {
             try {
                 const response = await fetchWithToken(`/api/v1/relation/user_workspace/workspaces?userId=${userId}`)
-                const json = await response.json();
-                const {workspaces} = getBody(json);
+                const {workspaces} = await getBody(response);
                 setWorkspaces(workspaces)
             } catch (error) {
                 setMessage(error.message)

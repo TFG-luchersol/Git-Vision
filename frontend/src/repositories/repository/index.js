@@ -5,8 +5,8 @@ import MultiSelectDropdown from '../../components/MultiSelectDropdown.js';
 import PieChart from '../../components/PieChart.js';
 import TreeFiles from '../../components/TreeFiles.js';
 import tokenService from '../../services/token.service.js';
-import fetchWithToken from '../../util/fetchWithToken.js';
-import getBody from '../../util/getBody.js';
+import fetchWithToken from '../../util/fetchWithToken.ts';
+import getBody from '../../util/getBody.ts';
 import './repository.css';
 
 export default function Repository() {
@@ -32,8 +32,7 @@ export default function Repository() {
         try {
             const id = `${owner}/${repo}`;
             let newFiles = await fetchWithToken(`/api/v1/files/repository/${id}?login=${username}`)
-            const json = await newFiles.json()
-            const {tree} = getBody(json);
+            const {tree} = await getBody(newFiles);
             setFiles(tree)
         } catch (e) {
             alert(e.message)
@@ -44,11 +43,10 @@ export default function Repository() {
         try {
             const id = `${owner}/${repo}`;
             let newFiles = await fetchWithToken(`/api/v1/files/repository/${id}/extension_counter?login=${username}`)
-            const json = await newFiles.json()
-            const {extensionCounter} = getBody(json)
-            setExtensionCounter(extensionCounter)
+            const {extensionCounter} = await getBody(newFiles)
             const numFiles = Object.values(extensionCounter).reduce((acc, next) => acc + next, 0);
             setNumFiles(numFiles);
+            setExtensionCounter(extensionCounter);
         } catch (e) {
             alert(e.message)
         }
@@ -57,9 +55,8 @@ export default function Repository() {
     const getPercentajeLanguajes = async () => {
         try {
             const id = `${owner}/${repo}`;
-            let newPercentajeLanguajes = await fetchWithToken(`/api/v1/files/languajes/repository/${id}?login=${username}`)
-            const json = await newPercentajeLanguajes.json()
-            const {percentageLanguages} = getBody(json)
+            let newPercentageLanguages = await fetchWithToken(`/api/v1/files/languajes/repository/${id}?login=${username}`)
+            const {percentageLanguages} = await getBody(newPercentageLanguages)
             setPercentajeLanguajes(percentageLanguages.percentages)
             setNumBytes(percentageLanguages.numBytes);
         } catch (e) {

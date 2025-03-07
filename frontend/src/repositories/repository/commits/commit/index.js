@@ -3,8 +3,8 @@ import { useParams } from 'react-router-dom';
 import CounterChanges from '../../../../components/CounterChanges';
 import FolderTabs from '../../../../components/FolderTabs';
 import tokenService from '../../../../services/token.service';
-import fetchWithToken from '../../../../util/fetchWithToken';
-import getBody from '../../../../util/getBody';
+import fetchWithToken from '../../../../util/fetchWithToken.ts';
+import getBody from '../../../../util/getBody.ts';
 import './commit.css';
 
 export default function Commit() {
@@ -21,8 +21,7 @@ export default function Commit() {
         try {
             const repositorName = `${owner}/${repo}`;
             const newCommit = await fetchWithToken(`/api/v1/commits/${repositorName}/${sha}?login=${username}`)
-            const json = await newCommit.json()
-            const {commit} = getBody(json)
+            const {commit} = await getBody(newCommit)
             setCommit(commit)
         } catch (e) {
             alert(e.message)

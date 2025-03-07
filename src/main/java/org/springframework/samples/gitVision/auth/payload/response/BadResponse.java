@@ -9,4 +9,16 @@ public class BadResponse extends MessageResponse {
         super(body, HttpStatus.BAD_REQUEST);
     }
 
+    public static BadResponse of(Information body) {
+        return new BadResponse(body);
+    }
+
+    public static BadResponse of(String message) {
+        return of(Information.of(message));
+    }
+
+    public static BadResponse of(Exception exception){
+        return of(exception.getMessage());
+    }
+
 }

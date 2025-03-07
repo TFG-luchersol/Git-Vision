@@ -6,8 +6,8 @@ import { SiClockify } from "react-icons/si";
 import { Button, Modal, ModalBody, ModalHeader } from 'reactstrap';
 import CustomInput from '../components/CustomInput.js';
 import tokenService from '../services/token.service.js';
-import fetchWithToken from '../util/fetchWithToken.js';
-import getBody from '../util/getBody.js';
+import fetchWithToken from '../util/fetchWithToken.ts';
+import getBody from '../util/getBody.ts';
 import './details.css';
 
 export default function Details() {
@@ -44,15 +44,13 @@ export default function Details() {
         const response = await fetchWithToken(`/api/v1/users/user/${username}/token/github`, 
           {method: "PUT", body: githubToken}
         );
-        const json = await response.json()
-        const result = getBody(json)
+        const result = await getBody(response)
         tokenService.setUser({...user, githubToken: result.githubToken})
       } else if (tokenType === 'clockify') {
         const response = await fetchWithToken(`/api/v1/users/user/${username}/token/clockify`, 
           {method: "PUT", body: clockifyToken}
         );
-        const json = await response.json()
-        const result = getBody(json)
+        const result = await getBody(response)
         tokenService.setUser({...user, clockifyToken: result.clockifyToken})
       }
     } catch (error) {

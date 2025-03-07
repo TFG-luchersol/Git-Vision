@@ -5,14 +5,17 @@ import org.kohsuke.github.GitHub;
 import org.springframework.http.ResponseEntity;
 import org.springframework.samples.gitvision.auth.payload.request.LoginRequest;
 import org.springframework.samples.gitvision.auth.payload.request.SignupRequest;
+import org.springframework.samples.gitvision.auth.payload.response.BadResponse;
 import org.springframework.samples.gitvision.auth.payload.response.JwtResponse;
 import org.springframework.samples.gitvision.auth.payload.response.MessageResponse;
+import org.springframework.samples.gitvision.auth.payload.response.OkResponse;
 import org.springframework.samples.gitvision.configuration.jwt.JwtUtils;
 import org.springframework.samples.gitvision.configuration.services.UserDetailsImpl;
 import org.springframework.samples.gitvision.exceptions.ResourceNotFoundException;
 import org.springframework.samples.gitvision.user.User;
 import org.springframework.samples.gitvision.user.UserService;
 import org.springframework.samples.gitvision.util.AESUtil;
+import org.springframework.samples.gitvision.util.Information;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -49,7 +52,7 @@ public class AuthController {
 	}
 
 	@PostMapping("/signin")
-	public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+	public MessageResponse authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 		try {
 			String username = loginRequest.getUsername();
 			String password = loginRequest.getPassword();
@@ -66,11 +69,12 @@ public class AuthController {
 
 			UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 			User user = this.userService.findUserById(userDetails.getId());
-			return ResponseEntity.ok().body(new JwtResponse(jwt, user));
+			Information information = Information.create("jwt", new JwtResponse(jwt, user));
+			return OkResponse.of(information);
 		} catch(ResourceNotFoundException exception) {
-			return ResponseEntity.badRequest().body(MessageResponse.of(exception.getMessage()));
+			return BadResponse.of(exception);
 		} catch(Exception exception) {
-			return ResponseEntity.badRequest().body(MessageResponse.of("Bad Credentials!"));
+			return BadResponse.of("¡Credenciales incorrectas!");
 		} 
 	}
 
@@ -82,7 +86,7 @@ public class AuthController {
 
 	
 	@PostMapping("/signup")	
-	public ResponseEntity<MessageResponse> registerUser(@Valid @RequestBody SignupRequest signUpRequest, BindingResult result) {
+	public MessageResponse registerUser(@Valid @RequestBody SignupRequest signUpRequest, BindingResult result) {
 		try {
 			if (result.hasErrors()) {
 				FieldError firstError = result.getFieldErrors().get(0);
@@ -90,7 +94,7 @@ public class AuthController {
 							   firstError.getField().substring(1).toLowerCase(),
 					   defaultMessage = firstError.getDefaultMessage(),
 				       message = field + " " + defaultMessage;
-				return ResponseEntity.badRequest().body(MessageResponse.of(message));
+				return BadResponse.of(message);
 			}
 			String username = signUpRequest.getUsername();
 			String token = signUpRequest.getGithubToken();
@@ -101,16 +105,16 @@ public class AuthController {
 
             GHUser user = gitHub.getMyself();
 			if(user == null || !user.getLogin().equals(username))
-				return ResponseEntity.badRequest().body(MessageResponse.of("Error: Username or token is incorrect"));
+				return BadResponse.of("Error: Username or token is incorrect");
 			if (userService.existsUserByUsername(username)) 
-				return ResponseEntity.badRequest().body(MessageResponse.of("Error: Username is already taken!"));
+				return BadResponse.of("Error: Username is already taken!");
 
 
 			authService.createUser(user, signUpRequest);
-			return ResponseEntity.ok(MessageResponse.of("User registered successfully!"));
+			return OkResponse.of("User registered successfully!");
 
 		} catch (Exception e) {
-			return ResponseEntity.badRequest().body(MessageResponse.of("Error: Connection to github failed"));
+			return BadResponse.of("Error: Connection to github failed");
 		}
 		
 	}

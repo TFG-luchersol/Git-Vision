@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Button, Input } from 'reactstrap';
 import tokenService from '../../../services/token.service';
-import fetchWithToken from '../../../util/fetchWithToken';
-import getBody from '../../../util/getBody';
+import fetchWithToken from '../../../util/fetchWithToken.ts';
+import getBody from '../../../util/getBody.ts';
 import './commits.css';
 
 export default function Commits() {
@@ -22,8 +22,7 @@ export default function Commits() {
         try {
             const repositorName = `${owner}/${repo}`;
             const newCommits = await fetchWithToken(`/api/v1/commits/${repositorName}?login=${username}&page=${page}`)
-            const json = await newCommits.json()
-            const {commits} = getBody(json)
+            const {commits} = await getBody(newCommits)
             setCommits(commits)
         } catch (e) {
             alert(e)

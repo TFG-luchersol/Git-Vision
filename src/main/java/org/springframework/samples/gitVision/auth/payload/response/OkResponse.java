@@ -9,4 +9,11 @@ public class OkResponse extends MessageResponse{
         super(body, HttpStatus.OK);
     }
 
+    public static OkResponse of(Information body) {
+        return new OkResponse(body);
+    }
+
+    public static OkResponse of(String message) {
+        return of(Information.of(message));
+    }
 }

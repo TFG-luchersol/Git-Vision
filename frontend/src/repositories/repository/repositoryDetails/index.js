@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom';
 import { Button } from 'reactstrap';
 import CustomInput from '../../../components/CustomInput.js';
 import tokenService from '../../../services/token.service.js';
-import fetchWithToken from '../../../util/fetchWithToken.js';
+import fetchWithToken from '../../../util/fetchWithToken.ts';
 import './details.css';
 
 export default function RepositoryDetails() {

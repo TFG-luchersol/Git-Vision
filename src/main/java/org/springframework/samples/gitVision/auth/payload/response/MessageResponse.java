@@ -1,6 +1,5 @@
 package org.springframework.samples.gitvision.auth.payload.response;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.samples.gitvision.util.Information;
@@ -17,11 +16,15 @@ public class MessageResponse extends ResponseEntity<Information> {
 	}
 
 	public static MessageResponse of(Information information, HttpStatusCode status) {
-        return new MessageResponse(information, HttpStatus.OK);
+        return new MessageResponse(information, status);
     }
 
 	public static MessageResponse of(String message, HttpStatusCode status) {
-        return new MessageResponse(Information.create("message", message), HttpStatus.OK);
+        return of(Information.of(message), status);
+    }
+
+	public static MessageResponse of(Exception exception, HttpStatusCode status) {
+        return of(exception.getMessage(), status);
     }
 
 	

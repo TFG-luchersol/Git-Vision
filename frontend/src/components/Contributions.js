@@ -12,8 +12,8 @@ import {
 import React, { useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
 import tokenService from "../services/token.service";
-import fetchWithToken from "../util/fetchWithToken";
-import getBody from "../util/getBody";
+import fetchWithToken from "../util/fetchWithToken.ts";
+import getBody from "../util/getBody.ts";
 import { darkenColor, stringToColor } from "../util/tools";
 import "./css/contributions.css";
 import DateRangePicker from "./DateRangePicker";
@@ -173,9 +173,7 @@ export default function Contributions({ owner, repo, path = null }) {
 
     try {
       const response = await fetchWithToken(url);
-      const json = await response.json();
-      const result = getBody(json).contributions;
-
+      const result = (await getBody(response)).contributions;
       if (minYear === null && result.length !== 0) {
         minYear = result.reduce((earliest, current) => {
           const currentDate = new Date(current.committedDate);

@@ -24,8 +24,12 @@ public class Information extends HashMap<String, Object> {
         return new Information(information);
     }
 
+    public static Information of(String message){
+        return new Information(new HashMap<>(Map.of("message", message)));
+    }
+
     public Information put(String key, Object value){
-        this.put(key, value);
+        super.put(key, value);
         return this;
     }
 

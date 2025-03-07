@@ -9,8 +9,8 @@ import AccordionItem from '../components/AccordionItem.js';
 import tokenService from "../services/token.service.js";
 import '../static/css/auth/authPage.css';
 import '../static/css/home/home.css';
-import fetchWithToken from '../util/fetchWithToken.js';
-import getBody from '../util/getBody.js';
+import fetchWithToken from '../util/fetchWithToken.ts';
+import getBody from '../util/getBody.ts';
 import './repositories.css';
 
 export default function Repositories() {
@@ -28,8 +28,7 @@ export default function Repositories() {
     const getRepositories = async () => {
         try {
             let newRepositories = await fetchWithToken(`/api/v1/relation/user_repository/repositories?userId=${tokenService.getUser().id}`)
-            const json = await newRepositories.json()
-            const {repositories} = getBody(json)
+            const {repositories} = await getBody(newRepositories)
             setRepositories(repositories)
         } catch (e) {
             alert(e.message)
@@ -39,8 +38,7 @@ export default function Repositories() {
     const getWorkspaces = async () => {
         try {
             let newWorkspaces = await fetchWithToken(`/api/v1/relation/user_workspace/workspaces?userId=${tokenService.getUser().id}`)
-            const json = await newWorkspaces.json()
-            const {workspaces} = getBody(json)
+            const {workspaces} = await getBody(newWorkspaces)
             setWorkspaces(workspaces)
         } catch (e) {
             // alert(e)
@@ -50,8 +48,7 @@ export default function Repositories() {
     const getRelation = async () => {
         try {
             let newRelation = await fetchWithToken(`/api/v1/linker?userId=${tokenService.getUser().id}`)
-            const json = await newRelation.json()
-            const {workspace_repository} = getBody(json)
+            const {workspace_repository} = await getBody(newRelation)
             setRelation(workspace_repository)
         } catch (e) {
             // alert(e)
