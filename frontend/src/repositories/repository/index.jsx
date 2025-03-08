@@ -4,7 +4,7 @@ import { Button, ButtonGroup, Input } from 'reactstrap';
 import MultiSelectDropdown from '../../components/MultiSelectDropdown.jsx';
 import PieChart from '../../components/PieChart.jsx';
 import TreeFiles from '../../components/TreeFiles.jsx';
-import '../../static/css/repositories/repository/repository.css';
+import '../../static/css/repositories/repository';
 import fetchWithToken from '../../util/fetchWithToken.ts';
 import getBody from '../../util/getBody.ts';
 

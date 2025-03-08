@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Button, Input } from 'reactstrap';
-import "../../../static/css/repositories/repository/commits/commits.css";
+import "../../../static/css/repositories/repository/commits";
 import fetchWithToken from '../../../util/fetchWithToken.ts';
 import getBody from '../../../util/getBody.ts';
 

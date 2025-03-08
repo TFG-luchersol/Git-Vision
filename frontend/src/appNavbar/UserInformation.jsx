@@ -1,9 +1,9 @@
-import React, {useState} from 'react';
-import "../static/css/appnavbar/appnavbar.css";
+import React, { useState } from 'react';
+import { IoPersonCircleOutline } from "react-icons/io5";
+import { Link } from 'react-router-dom';
 import { Popover, PopoverBody, PopoverHeader } from 'reactstrap';
 import tokenService from '../services/token.service';
-import { Link } from 'react-router-dom';
-import { IoPersonCircleOutline } from "react-icons/io5";
+import "../static/css/appnavbar";
 
 // eslint-disable-next-line react/no-typos
 export default function UserInformation() {

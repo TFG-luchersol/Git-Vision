@@ -9,7 +9,7 @@ import AccordionItem from '../components/AccordionItem.jsx';
 import tokenService from "../services/token.service.js";
 import '../static/css/auth/authPage.css';
 import '../static/css/home';
-import '../static/css/repositories/repositories.css';
+import '../static/css/repositories';
 import fetchWithToken from '../util/fetchWithToken.ts';
 import getBody from '../util/getBody.ts';
 

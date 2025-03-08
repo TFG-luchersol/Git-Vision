@@ -4,7 +4,7 @@ import { IoPersonCircleOutline } from 'react-icons/io5';
 import { useParams } from 'react-router-dom';
 import { Button } from 'reactstrap';
 import CustomInput from '../../../components/CustomInput.jsx';
-import "../../../static/css/repositories/repository/repositoryDetails/details.css";
+import "../../../static/css/repositories/repository/repositoryDetails";
 import fetchWithToken from '../../../util/fetchWithToken.ts';
 
 export default function RepositoryDetails() {

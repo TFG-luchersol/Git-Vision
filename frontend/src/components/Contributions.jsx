@@ -11,7 +11,7 @@ import {
 } from "chart.js";
 import React, { useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
-import '../static/css/components/contributions.css';
+import '../static/css/components/contributions';
 import fetchWithToken from "../util/fetchWithToken.ts";
 import getBody from "../util/getBody.ts";
 import { darkenColor, stringToColor } from "../util/tools.js";
