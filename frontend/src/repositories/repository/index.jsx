@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Button, ButtonGroup, Input } from 'reactstrap';
-import MultiSelectDropdown from '../../components/MultiSelectDropdown.js';
-import PieChart from '../../components/PieChart.js';
-import TreeFiles from '../../components/TreeFiles.js';
-import '../../static/css/repositories/repository';
+import MultiSelectDropdown from '../../components/MultiSelectDropdown.jsx';
+import PieChart from '../../components/PieChart.jsx';
+import TreeFiles from '../../components/TreeFiles.jsx';
+import '../../static/css/repositories/repository/repository.css';
 import fetchWithToken from '../../util/fetchWithToken.ts';
 import getBody from '../../util/getBody.ts';
+
 
 export default function Repository() {
     const { owner, repo } = useParams();

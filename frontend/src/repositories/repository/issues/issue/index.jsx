@@ -3,10 +3,9 @@ import { GoIssueClosed, GoIssueOpened } from "react-icons/go";
 import { IoCopyOutline } from "react-icons/io5";
 import { useParams } from 'react-router-dom';
 import { Input } from 'reactstrap';
-import CounterChanges from '../../../../components/CounterChanges';
+import CounterChanges from '../../../../components/CounterChanges.jsx';
+import FolderTabs from '../../../../components/FolderTabs.jsx';
 import '../../../../static/css/repositories/repository/issues/issue/issue.css';
-
-import FolderTabs from '../../../../components/FolderTabs';
 import fetchWithToken from '../../../../util/fetchWithToken.ts';
 import getBody from '../../../../util/getBody.ts';
 

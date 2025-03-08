@@ -1,6 +1,6 @@
 import React from 'react';
-import "./input.css";
 import { Input, Label } from 'reactstrap';
+import '../static/css/components/input.css';
 
 export default function CustomInput({ icon, type, readOnly, name, placeholder, value, onChange, label, button, min, max }) {
     return (

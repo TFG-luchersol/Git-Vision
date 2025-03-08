@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { GoIssueClosed, GoIssueOpened } from 'react-icons/go';
 import { useParams } from 'react-router-dom';
 import { Button, Input } from 'reactstrap';
+import "../../../static/css/repositories/repository/issues/issues.css";
 import fetchWithToken from '../../../util/fetchWithToken.ts';
 import getBody from '../../../util/getBody.ts';
-import './issues.css';
 
 export default function Issues() {
     const { owner, repo } = useParams();

@@ -3,11 +3,11 @@ import { FaGithub, FaRegUserCircle } from "react-icons/fa";
 import { Link } from 'react-router-dom';
 import { Button, Form, FormGroup, Input, Label } from 'reactstrap';
 import '../../App.css';
-import AlertMessage from '../../components/AlertMessage.js';
-import CustomInput from '../../components/CustomInput.js';
-import LoadingModal from '../../components/LoadingModal.js';
+import AlertMessage from '../../components/AlertMessage.jsx';
+import CustomInput from '../../components/CustomInput.jsx';
+import LoadingModal from '../../components/LoadingModal.jsx';
 import "../../static/css/auth/authPage.css";
-import '../../static/css/home/home.css';
+import '../../static/css/home';
 import Preconditions from '../../util/check.js';
 import fetchWithToken from '../../util/fetchWithToken.ts';
 

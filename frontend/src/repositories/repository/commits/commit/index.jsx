@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import CounterChanges from '../../../../components/CounterChanges';
-import FolderTabs from '../../../../components/FolderTabs';
+import CounterChanges from '../../../../components/CounterChanges.jsx';
+import FolderTabs from '../../../../components/FolderTabs.jsx';
+import "../../../../static/css/repositories/repository/commits/commit/commit.css";
 import fetchWithToken from '../../../../util/fetchWithToken.ts';
 import getBody from '../../../../util/getBody.ts';
-import './commit.css';
 
 export default function Commit() {
     const { owner, repo, sha } = useParams();

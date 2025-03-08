@@ -3,7 +3,8 @@ import { FaGithub } from 'react-icons/fa';
 import { IoPersonCircleOutline } from 'react-icons/io5';
 import { useParams } from 'react-router-dom';
 import { Button } from 'reactstrap';
-import CustomInput from '../../../components/CustomInput.js';
+import CustomInput from '../../../components/CustomInput.jsx';
+import "../../../static/css/repositories/repository/repositoryDetails/details.css";
 import fetchWithToken from '../../../util/fetchWithToken.ts';
 import './details.css';
 

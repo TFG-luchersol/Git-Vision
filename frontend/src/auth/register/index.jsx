@@ -6,7 +6,7 @@ import '../../App.css';
 import CustomInput from '../../components/CustomInput.js';
 import tokenService from "../../services/token.service.js";
 import '../../static/css/auth/authPage.css';
-import '../../static/css/home/home.css';
+import '../../static/css/home';
 
 export default function Register() {
 

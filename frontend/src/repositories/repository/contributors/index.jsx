@@ -1,7 +1,7 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import Contributions from '../../../components/Contributions.js';
-import FolderTabs from '../../../components/FolderTabs.js';
+import Contributions from '../../../components/Contributions.jsx';
+import FolderTabs from '../../../components/FolderTabs.jsx';
 import ContributorProfiles from './stadistics/ContributorProfiles.js';
 
 export default function Contributors() {

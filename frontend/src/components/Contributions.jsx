@@ -11,13 +11,13 @@ import {
 } from "chart.js";
 import React, { useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
+import '../static/css/components/contributions.css';
 import fetchWithToken from "../util/fetchWithToken.ts";
 import getBody from "../util/getBody.ts";
-import { darkenColor, stringToColor } from "../util/tools";
-import "./css/contributions.css";
-import DateRangePicker from "./DateRangePicker";
-import DelayedButton from "./DelayedButton";
-import Ranking from "./Ranking";
+import { darkenColor, stringToColor } from "../util/tools.js";
+import DateRangePicker from "./DateRangePicker.js";
+import DelayedButton from "./DelayedButton.js";
+import Ranking from "./Ranking.js";
 
 ChartJS.register(
   CategoryScale,

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { IoMdArrowDropdownCircle, IoMdArrowDroprightCircle } from "react-icons/io";
-import './css/accordionItem.css';
+import '../static/css/components/accordionItem.css';
 
 function AccordionItem({href=null, title, children, leaf }) {
     const [isOpen, setIsOpen] = useState(false);

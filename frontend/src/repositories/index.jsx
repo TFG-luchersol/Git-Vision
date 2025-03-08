@@ -5,13 +5,13 @@ import { SiClockify } from "react-icons/si";
 import { Link } from 'react-router-dom';
 import { Button } from 'reactstrap';
 import '../App.css';
-import AccordionItem from '../components/AccordionItem.js';
+import AccordionItem from '../components/AccordionItem.jsx';
 import tokenService from "../services/token.service.js";
 import '../static/css/auth/authPage.css';
-import '../static/css/home/home.css';
+import '../static/css/home';
+import '../static/css/repositories/repositories.css';
 import fetchWithToken from '../util/fetchWithToken.ts';
 import getBody from '../util/getBody.ts';
-import './repositories.css';
 
 export default function Repositories() {
 

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import TreeFiles from '../../../../components/TreeFiles';
+import TreeFiles from '../../../../components/TreeFiles.jsx';
 import fetchWithToken from '../../../../util/fetchWithToken.ts';
 import getBody from '../../../../util/getBody.ts';
 

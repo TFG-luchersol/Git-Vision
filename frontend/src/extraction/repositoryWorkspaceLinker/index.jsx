@@ -4,7 +4,7 @@ import { Alert, Button, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Fo
 import '../../App.css';
 import tokenService from "../../services/token.service.js";
 import "../../static/css/auth/authPage.css";
-import '../../static/css/home/home.css';
+import '../../static/css/home';
 import fetchWithToken from '../../util/fetchWithToken.ts';
 import getBody from '../../util/getBody.ts';
 import './repositoryWorkspaceLinker.css';
