@@ -1,0 +1,19 @@
+{
+    "compilerOptions": {
+      "target": "ES6",
+      "module": "ESNext",
+      "jsx": "react", 
+      "strict": true,
+      "esModuleInterop": true,
+      "skipLibCheck": true,
+      "forceConsistentCasingInFileNames": true,
+      "moduleResolution": "node",
+      "outDir": "./dist", 
+      "baseUrl": "./src",
+      "resolveJsonModule": true,
+      "allowJs": true
+    },
+    "include": ["src/**/*"],  // Asegura que todos los archivos en src/ se incluyan
+    "exclude": ["node_modules"]
+  }
+  

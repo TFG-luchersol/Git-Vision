@@ -4,9 +4,9 @@ import { IoPersonCircleOutline } from 'react-icons/io5';
 import { MdOutlineEmail } from "react-icons/md";
 import { SiClockify } from "react-icons/si";
 import { Button, Modal, ModalBody, ModalHeader } from 'reactstrap';
-import CustomInput from '../components/CustomInput.jsx';
+import CustomInput from '../components/CustomInput';
 import tokenService from '../services/token.service.js';
-import '../static/css/details/details.css';
+import '../static/css/details';
 import fetchWithToken from '../util/fetchWithToken.ts';
 import getBody from '../util/getBody.ts';
 

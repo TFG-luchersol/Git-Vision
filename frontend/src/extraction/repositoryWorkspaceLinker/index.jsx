@@ -4,17 +4,17 @@ import { Alert, Button, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Fo
 import '../../App.css';
 import tokenService from "../../services/token.service.js";
 import "../../static/css/auth/authPage.css";
+import '../../static/css/extraction/repositoryWorkspaceLinker';
 import '../../static/css/home';
 import fetchWithToken from '../../util/fetchWithToken.ts';
 import getBody from '../../util/getBody.ts';
-import './repositoryWorkspaceLinker.css';
 
 export default function RepositoryWorkspaceLinker() {
 
     const [message, setMessage] = useState(null);
     const [values, setValues] = useState({ repository: "", workspace: "" });
-    const [repositories, setRepositories] = useState({});
     const [owner, setOwner] = useState("");
+    const [repositories, setRepositories] = useState({});
     const [workspaces, setWorkspaces] = useState([]);
     const [dropdownOwnerOpen, setDropdownOwnerOpen] = useState(false);
     const [dropdownRepositoryOpen, setDropdownRepositoryOpen] = useState(false);
@@ -25,12 +25,11 @@ export default function RepositoryWorkspaceLinker() {
     const toggleWorkspace = () => setDropdownWorkspaceOpen(prevState => !prevState);
 
     useEffect(() => {
-        const userId = tokenService.getUser().id
         const loadRepositories = async () => {
             try {
                 const response = await fetchWithToken(`/api/v1/relation/user_repository/repositories`)
-                const {respositories} = await getBody(response);
-                setRepositories(respositories)
+                const {repositories} = await getBody(response);
+                setRepositories(repositories)
             } catch (error) {
                 setMessage(error.message)
             }
@@ -61,8 +60,7 @@ export default function RepositoryWorkspaceLinker() {
             if (response.status === 200) {
                 window.location.href = "/";
             } else {
-                const error = await response.json();
-                setMessage(error.message)
+                await response.json(); // Por defecto lanza una excepción con el error
             }
         } catch (error) {
             setMessage(error.message);

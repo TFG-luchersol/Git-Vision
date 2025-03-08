@@ -6,7 +6,6 @@ import { Button } from 'reactstrap';
 import CustomInput from '../../../components/CustomInput.jsx';
 import "../../../static/css/repositories/repository/repositoryDetails/details.css";
 import fetchWithToken from '../../../util/fetchWithToken.ts';
-import './details.css';
 
 export default function RepositoryDetails() {
   const saveTokenGithubButton = <Button className='save-button' onClick={() => handleSave()}>Guardar</Button>;

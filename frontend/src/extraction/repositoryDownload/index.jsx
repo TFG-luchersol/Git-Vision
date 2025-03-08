@@ -3,9 +3,9 @@ import { FaGithub, FaRegUserCircle } from "react-icons/fa";
 import { Link } from 'react-router-dom';
 import { Button, Form, FormGroup, Input, Label } from 'reactstrap';
 import '../../App.css';
-import AlertMessage from '../../components/AlertMessage.jsx';
-import CustomInput from '../../components/CustomInput.jsx';
-import LoadingModal from '../../components/LoadingModal.jsx';
+import AlertMessage from '../../components/AlertMessage';
+import CustomInput from '../../components/CustomInput';
+import LoadingModal from '../../components/LoadingModal';
 import "../../static/css/auth/authPage.css";
 import '../../static/css/home';
 import Preconditions from '../../util/check.js';
@@ -111,7 +111,7 @@ export default function RepositoryDownload() {
                     <div className='button-group'>
                         <Button type='submit'>Download</Button>
                         <Button type='button'>
-                            <Link className='custom-link' to={"/register"}>Cancel</Link>
+                            <Link className='custom-link' to={"/"}>Cancel</Link>
                         </Button>
                     </div>
                 </div>

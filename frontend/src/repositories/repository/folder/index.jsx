@@ -1,8 +1,8 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import Contributions from '../../../components/Contributions.jsx';
-import FolderTabs from '../../../components/FolderTabs.jsx';
-import FolderContent from './sections/FolderContent.js';
+import Contributions from '../../../components/Contributions';
+import FolderTabs from '../../../components/FolderTabs';
+import FolderContent from './sections/FolderContent';
 
 
 export default function Folder() {

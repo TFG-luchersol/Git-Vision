@@ -1,6 +1,7 @@
 export default async function getBody(response: Response) {
     const json = await response.json();
-    const handlers = {
+
+    const handlers: Record<number, Function> = {
         200: () => json,
         400: () => { throw new Error(json.message); },
     };

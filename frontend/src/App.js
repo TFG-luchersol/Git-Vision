@@ -21,6 +21,7 @@ import Folder from "./repositories/repository/folder";
 import Issues from "./repositories/repository/issues";
 import Issue from "./repositories/repository/issues/issue";
 import RepositoryDetails from "./repositories/repository/repositoryDetails";
+import tokenService from "./services/token.service";
 
 function ErrorFallback({ error, resetErrorBoundary }) {
   return (
@@ -33,7 +34,7 @@ function ErrorFallback({ error, resetErrorBoundary }) {
 }
 
 function App() {
-  const jwt = null; // tokenService.getLocalAccessToken();
+  const jwt = tokenService.getLocalAccessToken();
 
   let userRoutes = <></>;
   let publicRoutes = <></>;
@@ -82,7 +83,7 @@ function App() {
           <Route path="/" exact={true} element={<Home />} />
           <Route path="/swagger" element={<SwaggerDocs />} />
           {publicRoutes}
-          {userRoutes}
+          {jwt && userRoutes}
         </Routes>
       </ErrorBoundary>
     </div>

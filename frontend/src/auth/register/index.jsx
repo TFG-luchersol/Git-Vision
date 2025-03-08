@@ -3,7 +3,7 @@ import { FaEnvelope, FaGithub, FaLock, FaRegUserCircle, FaUnlock } from "react-i
 import { Link } from 'react-router-dom';
 import { Alert, Button, Form, FormGroup } from 'reactstrap';
 import '../../App.css';
-import CustomInput from '../../components/CustomInput.js';
+import CustomInput from '../../components/CustomInput';
 import tokenService from "../../services/token.service.js";
 import '../../static/css/auth/authPage.css';
 import '../../static/css/home';

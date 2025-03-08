@@ -3,8 +3,9 @@ import { RiGitRepositoryLine } from "react-icons/ri";
 import { SiGoogledocs, SiSwagger } from "react-icons/si";
 import { Link, useLocation, useParams } from "react-router-dom";
 import { Collapse, Nav, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink } from "reactstrap";
+import logo from "../../public/logo.png";
 import tokenService from "../services/token.service.js";
-import UserInformation from "./UserInformation.js";
+import UserInformation from "./UserInformation";
 
 export default function AppNavbar() {
     const { owner: paramOwner, repo: paramRepo } = useParams();
@@ -61,7 +62,7 @@ export default function AppNavbar() {
         <div>
             <Navbar expand="md" style={{ backgroundColor: "#D7D0D0" }}>
                 <NavbarBrand href="/">
-                    <img alt="logo" src="/logo.png" style={{ height: 40, width: 140 }} />
+                    <img alt="logo" src={logo} style={{ height: 40, width: 140 }} />
                 </NavbarBrand>
                 {
                     owner && repo && 

@@ -15,9 +15,9 @@ import '../static/css/components/contributions.css';
 import fetchWithToken from "../util/fetchWithToken.ts";
 import getBody from "../util/getBody.ts";
 import { darkenColor, stringToColor } from "../util/tools.js";
-import DateRangePicker from "./DateRangePicker.js";
-import DelayedButton from "./DelayedButton.js";
-import Ranking from "./Ranking.js";
+import DateRangePicker from "./DateRangePicker";
+import DelayedButton from "./DelayedButton";
+import Ranking from "./Ranking";
 
 ChartJS.register(
   CategoryScale,

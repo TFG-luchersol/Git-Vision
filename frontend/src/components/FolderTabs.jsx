@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import "../static/css/folderTabs/folderTabs.css";
-import "./css/folderTabs.css";
+import "../static/css/components/folderTabs.css";
 
 // {'file1': <div>Contenido 1</div>, 'file2': <div>Contenido 2</div>, 'file3': <div>Contenido 3</div>}
 export default function FolderTabs({sections={}, style}) {

@@ -1,6 +1,6 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import AccordionItem from './AccordionItem.js';
+import AccordionItem from './AccordionItem';
 
 export default function TreeFiles({styleText={}, href=null, root, filter = "", deepFilter=false, filterExtension = [] }) {
     

@@ -1,7 +1,7 @@
 import React from 'react';
 import '../App.css';
 import Login from '../auth/login/index.jsx';
-import Repositories from '../repositories/index.js';
+import Repositories from '../repositories';
 import tokenService from "../services/token.service.js";
 import "../static/css/auth/authButton.css";
 import '../static/css/home';

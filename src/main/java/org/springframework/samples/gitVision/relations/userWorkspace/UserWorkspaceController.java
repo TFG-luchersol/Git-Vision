@@ -1,13 +1,13 @@
 package org.springframework.samples.gitvision.relations.userWorkspace;
 
-import java.util.Map;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.gitvision.auth.payload.response.MessageResponse;
 import org.springframework.samples.gitvision.auth.payload.response.OkResponse;
+import org.springframework.samples.gitvision.configuration.services.UserDetailsImpl;
 import org.springframework.samples.gitvision.relations.userWorkspace.model.UserWorkspace;
 import org.springframework.samples.gitvision.util.Information;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,13 +24,13 @@ public class UserWorkspaceController {
     
     UserWorkspaceService userWorkspaceService;
 
-    @Autowired
     public UserWorkspaceController(UserWorkspaceService userRepoService) {
         this.userWorkspaceService = userRepoService;
     }
 
     @GetMapping("/workspaces")
-    public MessageResponse getAllWorkspacesByUserId(@RequestParam Long userId) {
+    public MessageResponse getAllWorkspacesByUserId(@AuthenticationPrincipal UserDetailsImpl userDetailsImpl) {
+        Long userId = userDetailsImpl.getId();
         List<UserWorkspace> userWorkspaces = this.userWorkspaceService.getAllWorkspaceByUserId(userId);
         Information information = Information.create("workspaces", userWorkspaces);
         return OkResponse.of(information);
