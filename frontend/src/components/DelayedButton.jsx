@@ -1,6 +1,6 @@
 import React from "react";
 
-import '../static/css/components/delayedButton.css';
+import '@css/components/delayedButton.css';
 
 export default function DelayedButton({ onClick, disabled, text = "" }) {
   return (

@@ -2,26 +2,26 @@ import React from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { Route, Routes } from "react-router-dom";
 
-import AppNavbar from "./appNavbar";
-import Login from "./auth/login";
-import Register from "./auth/register";
-import Details from "./details";
-import RepositoryDownload from "./extraction/repositoryDownload";
-import RepositoryWorkspaceLinker from "./extraction/repositoryWorkspaceLinker";
-import WorkspaceDownload from "./extraction/workspaceDownload";
-import Home from "./home";
-import SwaggerDocs from "./public/swagger";
-import Repositories from "./repositories";
-import Repository from "./repositories/repository";
-import Commits from "./repositories/repository/commits";
-import Commit from "./repositories/repository/commits/commit";
-import Contributors from "./repositories/repository/contributors";
-import File from "./repositories/repository/file";
-import Folder from "./repositories/repository/folder";
-import Issues from "./repositories/repository/issues";
-import Issue from "./repositories/repository/issues/issue";
-import RepositoryDetails from "./repositories/repository/repositoryDetails";
-import tokenService from "./services/token.service";
+import AppNavbar from "@screens/appNavbar";
+import Login from "@screens/auth/login";
+import Register from "@screens/auth/register";
+import Details from "@screens/details";
+import RepositoryDownload from "@screens/extraction/repositoryDownload";
+import RepositoryWorkspaceLinker from "@screens/extraction/repositoryWorkspaceLinker";
+import WorkspaceDownload from "@screens/extraction/workspaceDownload";
+import Home from "@screens/home";
+import SwaggerDocs from "@screens/public/swagger";
+import Repositories from "@screens/repositories";
+import Repository from "@screens/repositories/repository";
+import Commits from "@screens/repositories/repository/commits";
+import Commit from "@screens/repositories/repository/commits/commit";
+import Contributors from "@screens/repositories/repository/contributors";
+import File from "@screens/repositories/repository/file";
+import Folder from "@screens/repositories/repository/folder";
+import Issues from "@screens/repositories/repository/issues";
+import Issue from "@screens/repositories/repository/issues/issue";
+import RepositoryDetails from "@screens/repositories/repository/repositoryDetails";
+import tokenService from "@services/token.service";
 
 function ErrorFallback({ error, resetErrorBoundary }) {
   return (

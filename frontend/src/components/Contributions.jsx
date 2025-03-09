@@ -1,3 +1,7 @@
+import '@css/components/contributions';
+import fetchWithToken from '@utils/fetchWithToken.ts';
+import getBody from '@utils/getBody.ts';
+import { darkenColor, stringToColor } from '@utils/tools.js';
 import {
   CategoryScale,
   Chart as ChartJS,
@@ -11,10 +15,6 @@ import {
 } from "chart.js";
 import React, { useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
-import '../static/css/components/contributions';
-import fetchWithToken from "../util/fetchWithToken.ts";
-import getBody from "../util/getBody.ts";
-import { darkenColor, stringToColor } from "../util/tools.js";
 import DateRangePicker from "./DateRangePicker";
 import DelayedButton from "./DelayedButton";
 import Ranking from "./Ranking";

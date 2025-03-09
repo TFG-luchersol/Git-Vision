@@ -9,9 +9,13 @@
       "forceConsistentCasingInFileNames": true,
       "moduleResolution": "node",
       "outDir": "./dist", 
-      "baseUrl": "./src",
+      "baseUrl": ".",
       "resolveJsonModule": true,
-      "allowJs": true
+      "allowJs": true,
+      "paths": {
+        "@services/*": ["src/services/*"],
+        "@components/*": ["src/components/*"]
+      },
     },
     "include": ["src/**/*"],  // Asegura que todos los archivos en src/ se incluyan
     "exclude": ["node_modules"]

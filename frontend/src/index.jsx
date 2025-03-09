@@ -1,12 +1,12 @@
+import '@css';
+import '@css/global.css';
+import '@splidejs/react-splide/css/sea-green';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.css';
-import './global.css';
-import '@splidejs/react-splide/css/sea-green';
+import { BrowserRouter } from 'react-router-dom';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import { BrowserRouter } from 'react-router-dom';
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));

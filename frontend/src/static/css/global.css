@@ -1,0 +1,48 @@
+:root{
+    --main-red-color: #c42323;
+    --main-blue-color: #2333c4;
+    --main-green-color: #23c483;
+    --green-shadow-color: rgba(46, 229, 157, 0.4);
+    --blue-shadow-color: rgba(46, 92, 229, 0.4);
+    --red-shadow-color: rgba(229, 46, 46, 0.4);
+}
+
+@font-face {
+    font-family: 'american-typewriter'; /*a name to be used later*/
+    src: url('../../../src/static/fonts/American\ Typewriter\ Bold.ttf'); /*URL to font*/
+}
+
+* {
+    font-family: 'american-typewriter';
+}
+
+/* div {
+    border: 1px dotted red;
+} */
+
+
+/* Personalización de la barra en Webkit (Chrome, Edge, Safari) */
+::-webkit-scrollbar {
+    width: 12px; /* Ancho de la barra */
+}
+
+/* Track (fondo de la barra) */
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+    margin-right: 5px;
+}
+
+/* Thumb (el botón de desplazamiento) */
+::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+    border: 3px solid transparent;
+    background-clip: content-box;
+}
+
+/* Efecto hover más suave */
+::-webkit-scrollbar-thumb:hover {
+    background: #555; /* Cambio de color */
+    transition: background 0.3s ease; /* Transición suave */
+}

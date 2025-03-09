@@ -1,7 +1,7 @@
+import { stringToColor } from '@utils/tools';
+import { ArcElement, Chart as ChartJS, Legend, Tooltip } from 'chart.js';
 import React, { useEffect, useState } from 'react';
 import { Pie } from 'react-chartjs-2';
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
-import { stringToColor } from '../util/tools';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
