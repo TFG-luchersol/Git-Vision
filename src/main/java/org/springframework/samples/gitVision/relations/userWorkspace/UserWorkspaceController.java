@@ -2,6 +2,7 @@ package org.springframework.samples.gitvision.relations.userWorkspace;
 
 import java.util.List;
 
+import org.springframework.samples.gitvision.auth.payload.response.BadResponse;
 import org.springframework.samples.gitvision.auth.payload.response.MessageResponse;
 import org.springframework.samples.gitvision.auth.payload.response.OkResponse;
 import org.springframework.samples.gitvision.configuration.services.UserDetailsImpl;
@@ -15,11 +16,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/api/v1/relation/user_workspace")
 @Tag(name = "Relation User_Workspace")
+@SecurityRequirement(name = "bearerAuth")
 public class UserWorkspaceController {
     
     UserWorkspaceService userWorkspaceService;
@@ -47,5 +50,18 @@ public class UserWorkspaceController {
         }
          
     }
+
+    @GetMapping("/{workspaceId}/timeByUser")
+    public MessageResponse getTimeByUser(@RequestParam String workspaceId, 
+                                         @AuthenticationPrincipal UserDetailsImpl userDetailsImpl) {
+        try {
+            var x = userWorkspaceService.getTimeByUser(workspaceId, userDetailsImpl.getId());
+            Information information = Information.create("x", x);
+            return OkResponse.of(information);
+        } catch (Exception e) {
+            return BadResponse.of(e);
+        }
+    }
+    
 
 }
