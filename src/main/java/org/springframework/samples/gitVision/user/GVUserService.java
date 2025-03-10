@@ -28,50 +28,50 @@ import org.springframework.transaction.annotation.Transactional;
 import jakarta.validation.Valid;
 
 @Service
-public class UserService {
+public class GVUserService {
 
-	private final UserRepository userRepository;
+	private final GVUserRepository gvUserRepository;
 
-	public UserService(UserRepository userRepository){
-		this.userRepository = userRepository;
+	public GVUserService(GVUserRepository gvUserRepository){
+		this.gvUserRepository = gvUserRepository;
 	}
 
 	@Transactional(readOnly = true)
-	public User findUserByUsername(String username) {
-		return userRepository.findByUsername(username)
+	public GVUser findUserByUsername(String username) {
+		return gvUserRepository.findByUsername(username)
 				.orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
 	}
 
 	@Transactional(readOnly = true)
-	public User findUserById(Long id) {
-		return userRepository.findById(id)
+	public GVUser findUserById(Long id) {
+		return gvUserRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("User", "id", id));
 	}
 
 	@Transactional(readOnly = true)
-	public User findCurrentUser() {
+	public GVUser findCurrentUser() {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		if (auth == null)
 			throw new ResourceNotFoundException("Nobody authenticated!");
 		else
-			return userRepository.findByUsername(auth.getName())
+			return gvUserRepository.findByUsername(auth.getName())
 					.orElseThrow(() -> new ResourceNotFoundException("User", "Username", auth.getName()));
 	}
 
 	@Transactional(readOnly = true)
-	public Iterable<User> findAll() {
-		return userRepository.findAll();
+	public Iterable<GVUser> findAll() {
+		return gvUserRepository.findAll();
 	}
 
 	public Boolean existsUserByUsername(String username) {
-		return userRepository.existsByUsername(username);
+		return gvUserRepository.existsByUsername(username);
 	}
 
 	@Transactional
-	public User updateUser(@Valid User user, Long idToUpdate) {
-		User toUpdate = findUserById(idToUpdate);
+	public GVUser updateUser(@Valid GVUser user, Long idToUpdate) {
+		GVUser toUpdate = findUserById(idToUpdate);
 		BeanUtils.copyProperties(user, toUpdate, "id");
-		userRepository.save(toUpdate);
+		gvUserRepository.save(toUpdate);
 		return toUpdate;
 	}
 
@@ -81,9 +81,9 @@ public class UserService {
 	
 		if(gitHub.getMyself() == null)
 			throw new IllegalAccessError("Error: fail to connect Github with new token");
-		User user = findUserByUsername(username);
+		GVUser user = findUserByUsername(username);
 		user.setGithubToken(githubToken);
-		userRepository.save(user);
+		gvUserRepository.save(user);
 	}
 
 	@Transactional 
@@ -95,22 +95,22 @@ public class UserService {
 			throw new IllegalAccessError("Error en conexión a clockify con token");
 		}
 			
-		User user = findUserByUsername(username);
+		GVUser user = findUserByUsername(username);
 		user.setClockifyToken(clockifyToken);
-		userRepository.save(user);
+		gvUserRepository.save(user);
 	}
 
 
 	@Transactional
-	public User saveUser(User user) throws DataAccessException {
-		userRepository.save(user);
+	public GVUser saveUser(GVUser user) throws DataAccessException {
+		gvUserRepository.save(user);
 		return user;
 	}
 
 	@Transactional
 	public void deleteUserById(Long id) {
-		User toDelete = findUserById(id);
-		this.userRepository.delete(toDelete);
+		GVUser toDelete = findUserById(id);
+		this.gvUserRepository.delete(toDelete);
 	}
 
 

@@ -1,23 +1,23 @@
-package org.springframework.samples.gitvision.relations.userRepo;
+package org.springframework.samples.gitvision.relations.repository;
 
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.samples.gitvision.model.repository.RepositoryIdLong;
-import org.springframework.samples.gitvision.relations.userRepo.model.UserRepo;
+import org.springframework.samples.gitvision.relations.repository.model.GVRepo;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface UserRepoRepository extends RepositoryIdLong<UserRepo> {
+public interface GVRepoRepository extends RepositoryIdLong<GVRepo> {
     
     @Query("select ur.name from UserRepo ur where ur.user.id = :userId")
     List<String> findAllRepository_NameByUser_Id(Long userId);
 
     boolean existsByNameAndUser_Id(String repositoryName, Long userId);
 
-    Optional<UserRepo> findByNameAndUser_Id(String repositoryName, Long userId);
+    Optional<GVRepo> findByNameAndUser_Id(String repositoryName, Long userId);
 
-    Optional<UserRepo> findByNameAndUser_Username(String repositoryName, String username);
+    Optional<GVRepo> findByNameAndUser_Username(String repositoryName, String username);
 
 }

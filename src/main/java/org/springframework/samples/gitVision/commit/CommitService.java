@@ -15,8 +15,8 @@ import org.kohsuke.github.GHRepository;
 import org.springframework.samples.gitvision.commit.model.Commit;
 import org.springframework.samples.gitvision.commit.model.commitsByTimePeriod.TimePeriod;
 import org.springframework.samples.gitvision.issue.model.Issue;
-import org.springframework.samples.gitvision.relations.userRepo.UserRepoRepository;
-import org.springframework.samples.gitvision.relations.userRepo.model.UserRepo;
+import org.springframework.samples.gitvision.relations.repository.GVRepoRepository;
+import org.springframework.samples.gitvision.relations.repository.model.GVRepo;
 import org.springframework.samples.gitvision.util.EntityUtils;
 import org.springframework.samples.gitvision.util.GithubApi;
 import org.springframework.stereotype.Service;
@@ -25,16 +25,16 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class CommitService {
 
-    private final UserRepoRepository userRepoRepository;
+    private final GVRepoRepository gvRepoRepository;
 
-    public CommitService(UserRepoRepository userRepoRepository){
-        this.userRepoRepository = userRepoRepository;
+    public CommitService(GVRepoRepository gvRepoRepository){
+        this.gvRepoRepository = gvRepoRepository;
     }
 
     @Transactional(readOnly = true)
     public List<Commit> getCommitsByRepository(String repositoryName, String login, Integer page) throws Exception {
-        UserRepo userRepo = this.userRepoRepository.findByNameAndUser_Username(repositoryName, login).get();
-        String tokenToUse = userRepo.getToken();
+        GVRepo gvRepo = this.gvRepoRepository.findByNameAndUser_Username(repositoryName, login).get();
+        String tokenToUse = gvRepo.getToken();
         return GithubApi.getCommitsByPage(repositoryName, page, 30, tokenToUse);
     }
 

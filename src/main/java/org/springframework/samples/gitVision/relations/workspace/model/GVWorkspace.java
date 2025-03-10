@@ -1,10 +1,8 @@
-package org.springframework.samples.gitvision.relations.userWorkspace.model;
+package org.springframework.samples.gitvision.relations.workspace.model;
 
 import org.springframework.samples.gitvision.model.entity.EntityIdSequential;
-import org.springframework.samples.gitvision.user.User;
-import org.springframework.samples.gitvision.util.AESConverter;
+import org.springframework.samples.gitvision.user.GVUser;
 
-import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -16,10 +14,10 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "user_workspace", uniqueConstraints = {
+@Table(name = "workspace", uniqueConstraints = {
     @UniqueConstraint(columnNames = {"user_id", "name"})
 })
-public class UserWorkspace extends EntityIdSequential {
+public class GVWorkspace extends EntityIdSequential {
 
     @NotBlank
     private String workspaceId;
@@ -28,9 +26,6 @@ public class UserWorkspace extends EntityIdSequential {
     private String name;
         
     @ManyToOne
-    private User user;
-
-    @Convert(converter = AESConverter.class)
-    private String token;
+    private GVUser user;
 
 }

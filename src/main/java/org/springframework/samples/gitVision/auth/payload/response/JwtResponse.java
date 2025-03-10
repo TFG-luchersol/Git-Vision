@@ -1,6 +1,6 @@
 package org.springframework.samples.gitvision.auth.payload.response;
 
-import org.springframework.samples.gitvision.user.User;
+import org.springframework.samples.gitvision.user.GVUser;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -11,9 +11,9 @@ public class JwtResponse {
 
 	private String token;
 	private String type = "Bearer";
-	private User user;
+	private GVUser user;
 
-	public JwtResponse(String accessToken, User user) {
+	public JwtResponse(String accessToken, GVUser user) {
 		this.token = accessToken;
 		this.user = user;
 	}

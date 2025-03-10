@@ -1,4 +1,4 @@
-package org.springframework.samples.gitvision.relations.userRepo;
+package org.springframework.samples.gitvision.relations.repository;
 
 import java.util.List;
 import java.util.Map;
@@ -10,7 +10,7 @@ import org.springframework.samples.gitvision.auth.payload.response.MessageRespon
 import org.springframework.samples.gitvision.auth.payload.response.OkResponse;
 import org.springframework.samples.gitvision.configuration.services.UserDetailsImpl;
 import org.springframework.samples.gitvision.githubUser.model.GithubUser;
-import org.springframework.samples.gitvision.user.UserService;
+import org.springframework.samples.gitvision.user.GVUserService;
 import org.springframework.samples.gitvision.util.Information;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,20 +26,20 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 
 @RestController
-@RequestMapping("/api/v1/relation/user_repository")
-@Tag(name = "Relation User_Repository")
-public class UserRepoController {
+@RequestMapping("/api/v1/relation/repository")
+@Tag(name = "Relation repository")
+public class GVRepoController {
     
     @Autowired
-    UserRepoService userRepoService;
+    GVRepoService gvRepoService;
     
     @Autowired
-    UserService userService;
+    GVUserService userService;
 
     @GetMapping("/repositories")
     public MessageResponse getAllRepositoriesByUserId(@AuthenticationPrincipal UserDetailsImpl userDetailsImpl) {
         Long userId = userDetailsImpl.getId();
-        Map<String, List<String>> owner_repositories = this.userRepoService.getAllRepositories(userId);
+        Map<String, List<String>> owner_repositories = this.gvRepoService.getAllRepositories(userId);
         Information information = Information.create("repositories", owner_repositories);
         return OkResponse.of(information);
     }
@@ -47,7 +47,7 @@ public class UserRepoController {
     @GetMapping("/owners")
     public MessageResponse getAllOwnersByUserId(@AuthenticationPrincipal UserDetailsImpl userDetailsImpl) {
         Long userId = userDetailsImpl.getId();
-        List<String> owners = this.userRepoService.getAllOwnersByUserId(userId);
+        List<String> owners = this.gvRepoService.getAllOwnersByUserId(userId);
         Information information = Information.create("owners", owners);
         return OkResponse.of(information);
     }
@@ -58,8 +58,8 @@ public class UserRepoController {
                                            @AuthenticationPrincipal UserDetailsImpl userDetailsImpl) {
         try {
             String login = userDetailsImpl.getUsername();
-            GHRepository ghRepository = this.userRepoService.getRepository(owner, repo, login);
-            List<GithubUser> contributors = this.userRepoService.getContributors(ghRepository);
+            GHRepository ghRepository = this.gvRepoService.getRepository(owner, repo, login);
+            List<GithubUser> contributors = this.gvRepoService.getContributors(ghRepository);
             Information information = Information.create("contributors", contributors);
             return OkResponse.of(information);
         } catch (Exception e) {
@@ -76,7 +76,7 @@ public class UserRepoController {
         try {
             String login = userDetailsImpl.getUsername();
             String repositoryName = owner + "/" + repo;
-            this.userRepoService.updateGithubToken(repositoryName, login, newGithubToken);
+            this.gvRepoService.updateGithubToken(repositoryName, login, newGithubToken);
             return OkResponse.of("Token cambiado");
         } catch (Exception e) {
             return BadResponse.of(e);
@@ -91,7 +91,20 @@ public class UserRepoController {
                                        @AuthenticationPrincipal UserDetailsImpl userDetailsImpl) {
         String login = userDetailsImpl.getUsername();
         String repositoryName = owner + "/" + repo; 
-        this.userRepoService.linkUserWithRepository(login, repositoryName, token);
+        this.gvRepoService.linkUserWithRepository(login, repositoryName, token);
+    }
+
+    @PostMapping
+    public MessageResponse linkRepositoryWithWorkspace(@RequestParam String repositoryName, 
+                                            @RequestParam String workspaceName, 
+                                            @AuthenticationPrincipal UserDetailsImpl userDetailsImpl) {
+        try {
+            Long userId = userDetailsImpl.getId();
+            this.gvRepoService.linkRepositoryWithWorkspace(repositoryName, workspaceName, userId);
+            return OkResponse.of("Repositorio "+ repositoryName + " enlazado con Workspace" + workspaceName);
+        } catch (Exception e) {
+            return BadResponse.of(e);
+        }
     }
     
 

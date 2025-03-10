@@ -28,7 +28,7 @@ export default function RepositoryDownload() {
             Preconditions.checkNotBlank(values.owner, "Owner");
             Preconditions.checkNotBlank(values.repo, "Repository");
             Preconditions.if(validateToken).checkNotBlank(values.token, "Token");
-            let url = `/api/v1/relation/user_repository/${values.owner}/${values.repo}`
+            let url = `/api/v1/relation/repository/${values.owner}/${values.repo}`
             if(values.validOtherToken) 
                 url += `?token=${values.token}`;
             

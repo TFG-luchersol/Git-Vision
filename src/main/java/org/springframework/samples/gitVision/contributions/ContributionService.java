@@ -8,8 +8,8 @@ import org.kohsuke.github.GHContent;
 import org.kohsuke.github.GHRepository;
 import org.springframework.samples.gitvision.contributions.model.Contribution;
 import org.springframework.samples.gitvision.exceptions.ResourceNotFoundException;
-import org.springframework.samples.gitvision.relations.userRepo.UserRepoRepository;
-import org.springframework.samples.gitvision.relations.userRepo.model.UserRepo;
+import org.springframework.samples.gitvision.relations.repository.GVRepoRepository;
+import org.springframework.samples.gitvision.relations.repository.model.GVRepo;
 import org.springframework.samples.gitvision.util.GithubGraphQLApi;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,18 +17,18 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class ContributionService {
     
-    private final UserRepoRepository userRepoRepository;
+    private final GVRepoRepository gvRepoRepository;
 
-    public ContributionService(UserRepoRepository userRepoRepository){
-        this.userRepoRepository = userRepoRepository;
+    public ContributionService(GVRepoRepository gvRepoRepository){
+        this.gvRepoRepository = gvRepoRepository;
     }
 
     @Transactional(readOnly = true)
     public List<Contribution> getContributionsByDateBetweenDates(String repositoryName, String login, String filePath,
             Date startDate, Date endDate) throws Exception {
-        UserRepo userRepo = this.userRepoRepository.findByNameAndUser_Username(repositoryName, login)
+        GVRepo gvRepo = this.gvRepoRepository.findByNameAndUser_Username(repositoryName, login)
             .orElseThrow(() -> new ResourceNotFoundException("Not found repository"));
-        String tokenToUse = userRepo.getToken();
+        String tokenToUse = gvRepo.getToken();
         GithubGraphQLApi githubGraphQLApi = GithubGraphQLApi.connect(tokenToUse);
         List<Contribution> contribution = githubGraphQLApi.getContributionsBetweenDates(repositoryName, filePath, startDate, endDate);
         return contribution;
@@ -38,9 +38,9 @@ public class ContributionService {
     @Transactional(readOnly = true)
     public List<Contribution> getContributionsInFolderByDateBetweenDates(GHRepository ghRepository, String repositoryName, String login, String path,
             Date startDate, Date endDate) throws Exception {
-        UserRepo userRepo = this.userRepoRepository.findByNameAndUser_Username(repositoryName, login)
+        GVRepo gvRepo = this.gvRepoRepository.findByNameAndUser_Username(repositoryName, login)
             .orElseThrow(() -> new ResourceNotFoundException("Not found repository"));
-        String tokenToUse = userRepo.getToken();
+        String tokenToUse = gvRepo.getToken();
         GithubGraphQLApi githubGraphQLApi = GithubGraphQLApi.connect(tokenToUse);
         List<GHContent> contents = ghRepository.getDirectoryContent(path);
         List<Contribution> contributions = contents.parallelStream()

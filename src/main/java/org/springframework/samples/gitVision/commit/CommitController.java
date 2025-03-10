@@ -8,7 +8,7 @@ import org.springframework.samples.gitvision.auth.payload.response.MessageRespon
 import org.springframework.samples.gitvision.auth.payload.response.OkResponse;
 import org.springframework.samples.gitvision.commit.model.Commit;
 import org.springframework.samples.gitvision.configuration.services.UserDetailsImpl;
-import org.springframework.samples.gitvision.relations.userRepo.UserRepoService;
+import org.springframework.samples.gitvision.relations.repository.GVRepoService;
 import org.springframework.samples.gitvision.util.Information;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,11 +26,11 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 public class CommitController {
     
     private final CommitService commitService;
-    private final UserRepoService userRepoService;
+    private final GVRepoService gvRepoService;
 
-    public CommitController(CommitService commitService, UserRepoService userRepoService){
+    public CommitController(CommitService commitService, GVRepoService gvRepoService){
         this.commitService = commitService;
-        this.userRepoService = userRepoService;
+        this.gvRepoService = gvRepoService;
     }
 
     @GetMapping("/{owner}/{repo}")
@@ -57,7 +57,7 @@ public class CommitController {
                                                   @AuthenticationPrincipal UserDetailsImpl userDetailsImpl){
         try {
             String login = userDetailsImpl.getUsername();
-            GHRepository ghRepository = this.userRepoService.getRepository(owner, repo, login);
+            GHRepository ghRepository = this.gvRepoService.getRepository(owner, repo, login);
             Commit commit = this.commitService.getCommitByRepositoryNameAndSha(ghRepository, sha);
             Information information = Information.create("commit", commit);
             return OkResponse.of(information);
@@ -69,7 +69,7 @@ public class CommitController {
     // @GetMapping("/{owner}/{repo}/byTime")
     // public Map<TimePeriod, Map<Integer, Long>> getNumCommitsGroupByTime(@PathVariable String owner, @PathVariable String repo, @RequestParam String login){
     //     try {
-    //         GHRepository ghRepository = this.userRepoService.getRepository(owner, repo, login);
+    //         GHRepository ghRepository = this.gvRepoService.getRepository(owner, repo, login);
     //         return this.commitService.getNumCommitsGroupByTime(ghRepository);
     //     } catch (Exception e) {
     //         return null;

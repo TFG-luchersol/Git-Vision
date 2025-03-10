@@ -30,6 +30,11 @@ class TokenService {
         window.localStorage.removeItem("jwt");
     }
 
+    hasAnyAuthority(...authorities) {
+        const roles = new Set(this.getUser().roles);
+        return authorities.some(item => roles.has(item));
+    }
+
 }
 const tokenService = new TokenService();
 

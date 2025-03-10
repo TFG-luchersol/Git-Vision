@@ -27,7 +27,7 @@ export default function RepositoryWorkspaceLinker() {
     useEffect(() => {
         const loadRepositories = async () => {
             try {
-                const response = await fetchWithToken(`/api/v1/relation/user_repository/repositories`)
+                const response = await fetchWithToken(`/api/v1/relation/repository/repositories`)
                 const {repositories} = await getBody(response);
                 setRepositories(repositories)
             } catch (error) {
@@ -36,7 +36,7 @@ export default function RepositoryWorkspaceLinker() {
         };
         const loadWorkspaces = async () => {
             try {
-                const response = await fetchWithToken(`/api/v1/relation/user_workspace/workspaces`)
+                const response = await fetchWithToken(`/api/v1/relation/workspace/workspaces`)
                 const {workspaces} = await getBody(response);
                 setWorkspaces(workspaces)
             } catch (error) {

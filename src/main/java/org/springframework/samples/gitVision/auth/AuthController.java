@@ -12,8 +12,8 @@ import org.springframework.samples.gitvision.auth.payload.response.OkResponse;
 import org.springframework.samples.gitvision.configuration.jwt.JwtUtils;
 import org.springframework.samples.gitvision.configuration.services.UserDetailsImpl;
 import org.springframework.samples.gitvision.exceptions.ResourceNotFoundException;
-import org.springframework.samples.gitvision.user.User;
-import org.springframework.samples.gitvision.user.UserService;
+import org.springframework.samples.gitvision.user.GVUser;
+import org.springframework.samples.gitvision.user.GVUserService;
 import org.springframework.samples.gitvision.util.Information;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -38,11 +38,11 @@ import jakarta.validation.Valid;
 public class AuthController {
 
 	private final AuthenticationManager authenticationManager;
-	private final UserService userService;
+	private final GVUserService userService;
 	private final JwtUtils jwtUtils;
 	private final AuthService authService;
 
-	public AuthController(AuthenticationManager authenticationManager, UserService userService, 
+	public AuthController(AuthenticationManager authenticationManager, GVUserService userService, 
 			JwtUtils jwtUtils, AuthService authService) {
 		this.userService = userService;
 		this.jwtUtils = jwtUtils;
@@ -67,7 +67,7 @@ public class AuthController {
 			String jwt = jwtUtils.generateJwtToken(authentication);
 
 			UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-			User user = this.userService.findUserById(userDetails.getId());
+			GVUser user = this.userService.findUserById(userDetails.getId());
 			Information information = Information.create("jwt", new JwtResponse(jwt, user));
 			return OkResponse.of(information);
 		} catch(ResourceNotFoundException exception) {

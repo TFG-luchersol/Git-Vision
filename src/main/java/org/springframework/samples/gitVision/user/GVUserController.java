@@ -40,11 +40,11 @@ import jakarta.validation.Valid;
 @RestController
 @RequestMapping("/api/v1/users")
 @Tag(name = "User")
-public class UserController {
+public class GVUserController {
 
-	private final UserService userService;
+	private final GVUserService userService;
 
-	public UserController(UserService userService) {
+	public GVUserController(GVUserService userService) {
 		this.userService = userService;
 	}
 
@@ -57,17 +57,17 @@ public class UserController {
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public MessageResponse create(@RequestBody @Valid User user) {
-		User savedUser = userService.saveUser(user);
+	public MessageResponse create(@RequestBody @Valid GVUser user) {
+		GVUser savedUser = userService.saveUser(user);
 		Information information = Information.create("user", savedUser);
 		return OkResponse.of(information);
 	}
 
 	@PutMapping("/{id}")
 	@ResponseStatus(HttpStatus.OK)
-	public MessageResponse update(@PathVariable Long id, @RequestBody @Valid User user) {
+	public MessageResponse update(@PathVariable Long id, @RequestBody @Valid GVUser user) {
 		RestPreconditions.checkNotNull(userService.findUserById(id), "User", "ID", id);
-		User updatedUser = this.userService.updateUser(user, id);
+		GVUser updatedUser = this.userService.updateUser(user, id);
 		Information information = Information.create("updatedUser", updatedUser);
 		return OkResponse.of(information);
 	}

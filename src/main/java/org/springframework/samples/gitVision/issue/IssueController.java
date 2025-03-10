@@ -9,7 +9,7 @@ import org.springframework.samples.gitvision.auth.payload.response.MessageRespon
 import org.springframework.samples.gitvision.auth.payload.response.OkResponse;
 import org.springframework.samples.gitvision.configuration.services.UserDetailsImpl;
 import org.springframework.samples.gitvision.issue.model.Issue;
-import org.springframework.samples.gitvision.relations.userRepo.UserRepoService;
+import org.springframework.samples.gitvision.relations.repository.GVRepoService;
 import org.springframework.samples.gitvision.util.Information;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,11 +24,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class IssueController {
     
     private final IssueService issueService;
-    private final UserRepoService userRepoService;
+    private final GVRepoService gvRepoService;
 
-    public IssueController(IssueService issueService, UserRepoService userRepoService){
+    public IssueController(IssueService issueService, GVRepoService gvRepoService){
         this.issueService = issueService;
-        this.userRepoService = userRepoService;
+        this.gvRepoService = gvRepoService;
     }
 
 
@@ -57,7 +57,7 @@ public class IssueController {
         
         try {
             String login = userDetailsImpl.getUsername();
-            GHRepository ghRepository = this.userRepoService.getRepository(owner, repo, login);
+            GHRepository ghRepository = this.gvRepoService.getRepository(owner, repo, login);
             Map<String, Object> dict = this.issueService.getIssueByRepositoryNameAndIssueNumber(ghRepository, issueNumber);
             Information information = Information.of(dict);
             return OkResponse.of(information);

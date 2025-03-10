@@ -4,9 +4,9 @@ import java.util.Optional;
 
 import org.springframework.samples.gitvision.model.repository.RepositoryIdLong;
 
-public interface UserRepository extends RepositoryIdLong<User>{
+public interface GVUserRepository extends RepositoryIdLong<GVUser>{
 
-	Optional<User> findByUsername(String username);
+	Optional<GVUser> findByUsername(String username);
 
 	String findGithubTokenByUsername(String username);
 

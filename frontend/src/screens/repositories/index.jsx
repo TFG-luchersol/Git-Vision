@@ -27,7 +27,7 @@ export default function Repositories() {
 
     const getRepositories = async () => {
         try {
-            let newRepositories = await fetchWithToken("/api/v1/relation/user_repository/repositories")
+            let newRepositories = await fetchWithToken("/api/v1/relation/repository/repositories")
             const {repositories} = await getBody(newRepositories)
             setRepositories(repositories)
         } catch (e) {
@@ -37,11 +37,11 @@ export default function Repositories() {
 
     const getWorkspaces = async () => {
         try {
-            let newWorkspaces = await fetchWithToken(`/api/v1/relation/user_workspace/workspaces?userId=${tokenService.getUser().id}`)
+            let newWorkspaces = await fetchWithToken(`/api/v1/relation/workspace/workspaces?userId=${tokenService.getUser().id}`)
             const {workspaces} = await getBody(newWorkspaces)
             setWorkspaces(workspaces)
         } catch (e) {
-            // alert(e)
+            
         }
     }
 
@@ -51,7 +51,7 @@ export default function Repositories() {
             const {workspace_repository} = await getBody(newRelation)
             setRelation(workspace_repository)
         } catch (e) {
-            // alert(e)
+            
         }
     }
 

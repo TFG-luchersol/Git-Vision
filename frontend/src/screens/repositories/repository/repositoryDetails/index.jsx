@@ -23,7 +23,7 @@ export default function RepositoryDetails() {
   const handleGithubTokenChange = (e) => setGithubToken(e.target.value);
 
   const handleSave = async () => {
-    await fetchWithToken(`/api/v1/relation/user_repository/${owner}/${repo}/token`, {
+    await fetchWithToken(`/api/v1/relation/repository/${owner}/${repo}/token`, {
       method: "PUT", 
       body: githubToken
     }

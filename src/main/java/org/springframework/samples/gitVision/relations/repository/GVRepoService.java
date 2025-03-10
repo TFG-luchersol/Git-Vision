@@ -1,4 +1,4 @@
-package org.springframework.samples.gitvision.relations.userRepo;
+package org.springframework.samples.gitvision.relations.repository;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,26 +10,31 @@ import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GitHub;
 import org.springframework.samples.gitvision.exceptions.ResourceNotFoundException;
 import org.springframework.samples.gitvision.githubUser.model.GithubUser;
-import org.springframework.samples.gitvision.relations.userRepo.model.UserRepo;
-import org.springframework.samples.gitvision.user.User;
-import org.springframework.samples.gitvision.user.UserRepository;
+import org.springframework.samples.gitvision.relations.repository.model.GVRepo;
+import org.springframework.samples.gitvision.relations.workspace.GVWorkspaceRepository;
+import org.springframework.samples.gitvision.relations.workspace.model.GVWorkspace;
+import org.springframework.samples.gitvision.user.GVUser;
+import org.springframework.samples.gitvision.user.GVUserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class UserRepoService {
+public class GVRepoService {
     
-    private final UserRepoRepository userRepoRepository;
-    private final UserRepository userRepository;
+    private final GVRepoRepository gvRepoRepository;
+    private final GVWorkspaceRepository gvWorkspaceRepository;
+    private final GVUserRepository gvUserRepository;
 
-    public UserRepoService(UserRepoRepository userRepoRepository, UserRepository userRepository){
-        this.userRepoRepository = userRepoRepository;
-        this.userRepository = userRepository;
+    public GVRepoService(GVRepoRepository gvRepoRepository, GVWorkspaceRepository gvWorkspaceRepository,
+     GVUserRepository gvUserRepository){
+        this.gvRepoRepository = gvRepoRepository;
+        this.gvWorkspaceRepository = gvWorkspaceRepository;
+        this.gvUserRepository = gvUserRepository;
     }
 
     @Transactional(readOnly = true)
     public Map<String, List<String>> getAllRepositories(Long userId) {
-        List<String> nameRepositories = this.userRepoRepository.findAllRepository_NameByUser_Id(userId);
+        List<String> nameRepositories = this.gvRepoRepository.findAllRepository_NameByUser_Id(userId);
         Map<String, List<String>> dict = new HashMap<>();
         for (String name : nameRepositories) {
             String[] pieces = name.split("/");
@@ -47,15 +52,15 @@ public class UserRepoService {
 
     @Transactional(readOnly = true)
     public List<String> getAllOwnersByUserId(Long userId) {
-        List<String> nameRepositories = this.userRepoRepository.findAllRepository_NameByUser_Id(userId);
+        List<String> nameRepositories = this.gvRepoRepository.findAllRepository_NameByUser_Id(userId);
         List<String> owners = nameRepositories.stream().map(i -> i.split("/")[0]).toList();
         return owners;
     }
 
     @Transactional(readOnly = true)
     public GitHub connect(String repositoryName, String login) throws Exception {
-        UserRepo userRepo = this.userRepoRepository.findByNameAndUser_Username(repositoryName, login).get();
-        String tokenToUse = userRepo.getToken();
+        GVRepo gvRepo = this.gvRepoRepository.findByNameAndUser_Username(repositoryName, login).get();
+        String tokenToUse = gvRepo.getToken();
         return GitHub.connect(login, tokenToUse);
     }
 
@@ -79,33 +84,53 @@ public class UserRepoService {
 
     @Transactional
     public void updateGithubToken(String repositoryName, String login, String newGithubToken) throws Exception {
-        UserRepo userRepo = this.userRepoRepository.findByNameAndUser_Username(repositoryName, login).orElseThrow(() -> new ResourceNotFoundException("Not found repository"));   
+        GVRepo gvRepo = this.gvRepoRepository.findByNameAndUser_Username(repositoryName, login).orElseThrow(() -> new ResourceNotFoundException("Not found repository"));   
         GitHub github = GitHub.connect(login, newGithubToken);
         if(github.getMyself() == null){
             throw new IllegalAccessException("Token invalido");
         }
-        userRepo.setToken(newGithubToken);
-        this.userRepoRepository.save(userRepo);
+        gvRepo.setToken(newGithubToken);
+        this.gvRepoRepository.save(gvRepo);
     }
 
     @Transactional
     public void linkUserWithRepository(String login, String repositoryName, String token){
         try {
-            User user = this.userRepository.findByUsername(login).get();
+            GVUser user = this.gvUserRepository.findByUsername(login).get();
             String tokenToUse = Objects.requireNonNullElse(token, user.getGithubToken());
             
             GitHub gitHub = GitHub.connect(login, tokenToUse);
             GHRepository ghRepository = gitHub.getRepository(repositoryName);
-            UserRepo userRepo = new UserRepo();
-            userRepo.setName(repositoryName);
-            userRepo.setRepositoryId(ghRepository.getId());
-            userRepo.setToken(tokenToUse);
-            userRepo.setUser(user);
-            userRepoRepository.save(userRepo);
+            GVRepo gvRepo = new GVRepo();
+            gvRepo.setName(repositoryName);
+            gvRepo.setRepositoryId(ghRepository.getId());
+            gvRepo.setToken(tokenToUse);
+            gvRepo.setUser(user);
+            gvRepoRepository.save(gvRepo);
         } catch (Exception e) {
             
         }
         
+    }
+
+    @Transactional
+    public void linkRepositoryWithWorkspace(String repositoryName, String workspaceName, Long userId) throws Exception{
+        if(!gvUserRepository.existsById(userId))
+            throw new ResourceNotFoundException("User", "ID", userId);
+        
+        GVRepo gvRepo = gvRepoRepository.findByNameAndUser_Id(repositoryName, userId).orElseThrow(() -> new ResourceNotFoundException("UserRepo not found"));;
+        
+        if(gvRepo.hasLinkedWorkspace()){
+            throw new IllegalAccessError("No se puede enlazar más de un workspace a un repositorio");
+        }
+
+        GVWorkspace gvWorkspace = gvWorkspaceRepository.findByNameAndUser_Id(workspaceName, userId).orElseThrow(() -> new ResourceNotFoundException("UserWorkspace not found"));;
+        
+        if(Objects.equals(gvRepo.getWorkspace(), gvWorkspace)){
+            throw new Exception("Relation exist");
+        }
+        gvRepo.setWorkspace(gvWorkspace);
+        gvRepoRepository.save(gvRepo);
     }
 
 }

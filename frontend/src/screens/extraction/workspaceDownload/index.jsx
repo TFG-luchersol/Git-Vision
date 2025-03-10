@@ -23,7 +23,7 @@ export default function WorkspaceDownload(){
             Preconditions.checkNotBlank(values.id, "Id")
             Preconditions.checkNotBlank(values.name, "Name")
             setIsLoading(true);
-            const response = await fetchWithToken(`/api/v1/relation/user_workspace?workspaceId=${values.id}&name=${values.name}`, {
+            const response = await fetchWithToken(`/api/v1/relation/workspace?workspaceId=${values.id}&name=${values.name}`, {
                 method: "POST",
                 body: tokenService.getUser().username
             });

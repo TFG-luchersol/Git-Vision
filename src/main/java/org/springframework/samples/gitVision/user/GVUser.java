@@ -17,7 +17,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "users")
-public class User extends Person {
+public class GVUser extends Person {
 
     @Pattern(regexp = ".+")
     String password;
@@ -32,8 +32,8 @@ public class User extends Person {
         return clockifyToken != null;
     }
 
-    public static User parse(GHUser ghUser) {
-        User user = new User();
+    public static GVUser parse(GHUser ghUser) {
+        GVUser user = new GVUser();
         user.setAvatarUrl(ghUser.getAvatarUrl());
         user.setUsername(ghUser.getLogin());
         return user;
@@ -47,7 +47,7 @@ public class User extends Person {
             return false;
         if (getClass() != obj.getClass())
             return false;
-		User other = (User) obj;
+		GVUser other = (GVUser) obj;
         return this.id != null && Objects.equals(other.id, this.id);
     }
 

@@ -49,10 +49,6 @@ export default function Login() {
 
     return (
         <div className="home-page-container">
-            {/* <div style={{display:'flex', flexDirection:'column'}}>
-                <button onClick={() => testDownloadGithub()} >DESCARGA DE PRUEBA GITHUB</button>
-                <button onClick={() => testDownloadClockify()} >DESCARGA DE PRUEBA CLOCKIFY</button>
-            </div> */}
 
             <Alert isOpen={message} color="danger" style={{ position: 'fixed', top: '15%' }}>{message}</Alert>
 
