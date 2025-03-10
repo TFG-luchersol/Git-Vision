@@ -28,7 +28,7 @@ public class ContributionService {
             Date startDate, Date endDate) throws Exception {
         UserRepo userRepo = this.userRepoRepository.findByNameAndUser_Username(repositoryName, login)
             .orElseThrow(() -> new ResourceNotFoundException("Not found repository"));
-        String tokenToUse = userRepo.getDecryptedToken();
+        String tokenToUse = userRepo.getToken();
         GithubGraphQLApi githubGraphQLApi = GithubGraphQLApi.connect(tokenToUse);
         List<Contribution> contribution = githubGraphQLApi.getContributionsBetweenDates(repositoryName, filePath, startDate, endDate);
         return contribution;
@@ -40,7 +40,7 @@ public class ContributionService {
             Date startDate, Date endDate) throws Exception {
         UserRepo userRepo = this.userRepoRepository.findByNameAndUser_Username(repositoryName, login)
             .orElseThrow(() -> new ResourceNotFoundException("Not found repository"));
-        String tokenToUse = userRepo.getDecryptedToken();
+        String tokenToUse = userRepo.getToken();
         GithubGraphQLApi githubGraphQLApi = GithubGraphQLApi.connect(tokenToUse);
         List<GHContent> contents = ghRepository.getDirectoryContent(path);
         List<Contribution> contributions = contents.parallelStream()

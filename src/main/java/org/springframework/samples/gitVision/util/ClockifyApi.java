@@ -1,9 +1,7 @@
 package org.springframework.samples.gitvision.util;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -13,6 +11,8 @@ import org.springframework.samples.gitvision.project.model.Project;
 import org.springframework.samples.gitvision.task.model.Task;
 import org.springframework.samples.gitvision.workspace.model.Workspace;
 import org.springframework.web.client.RestTemplate;
+
+import com.fasterxml.jackson.databind.JsonNode;
 
 public class ClockifyApi {
     
@@ -31,10 +31,10 @@ public class ClockifyApi {
         return response.getBody();
     }
 
-    public static Map<String, String> getCurrentUser(String clockifyToken){
+    public static JsonNode getCurrentUser(String clockifyToken){
         String url = "/v1/user";
-        Map<String, String> map = requestClockify(url, clockifyToken, HashMap.class);
-        return map;
+        JsonNode json = requestClockify(url, clockifyToken, JsonNode.class);
+        return json;
     }
 
     public static Workspace getWorkspace(String workspaceId, String clockifyToken) {

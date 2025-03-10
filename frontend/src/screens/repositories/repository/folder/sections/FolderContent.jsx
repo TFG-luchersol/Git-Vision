@@ -1,10 +1,12 @@
 import TreeFiles from '@components/TreeFiles.jsx';
+import '@css/repositories/repository/folder/sections/folderContent.css';
 import fetchWithToken from '@utils/fetchWithToken.ts';
 import getBody from '@utils/getBody.ts';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 export default function FolderContent() {
+    // console.log(styles)
     const { owner, repo, "*": path } = useParams();
     
     const [files, setFiles] = useState([])
@@ -24,7 +26,7 @@ export default function FolderContent() {
     }
 
     return (
-        <div>
+        <div className='folder-content'>
             {files.map(file => <TreeFiles root={file}/>)}
         </div>
     );

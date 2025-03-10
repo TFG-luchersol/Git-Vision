@@ -1,3 +1,4 @@
+import "@css/App.css";
 import tokenService from "@services/token.service.js";
 import React, { useEffect, useState } from "react";
 import { RiGitRepositoryLine } from "react-icons/ri";

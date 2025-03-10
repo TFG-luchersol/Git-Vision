@@ -82,7 +82,7 @@ public class UserService {
 		if(gitHub.getMyself() == null)
 			throw new IllegalAccessError("Error: fail to connect Github with new token");
 		User user = findUserByUsername(username);
-		user.setGithubTokenAndEncrypt(githubToken);
+		user.setGithubToken(githubToken);
 		userRepository.save(user);
 	}
 
@@ -96,7 +96,7 @@ public class UserService {
 		}
 			
 		User user = findUserByUsername(username);
-		user.setClockifyTokenAndEncrypt(clockifyToken);
+		user.setClockifyToken(clockifyToken);
 		userRepository.save(user);
 	}
 

@@ -30,7 +30,7 @@ ChartJS.register(
   LineController
 );
 
-export default function Contributions({ owner, repo, path = null }) {
+export default function Contributions({ owner, repo, path = null, isFolder=false }) {
   const [isLoading, setIsLoading] = useState(false);
   const [data_, setData_] = useState({ datasets: [] });
   const [startDate, setStartDate] = useState(null);
@@ -159,6 +159,7 @@ export default function Contributions({ owner, repo, path = null }) {
     let searchParams = new URLSearchParams(urlObj.search);
     if (path !== null) {
       searchParams.set("path", path)
+      searchParams.set("isFolder", isFolder)
     }
     let minYear, maxYear;
     if (startDate !== null) {

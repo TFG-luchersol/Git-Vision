@@ -41,13 +41,13 @@ export default function Details() {
     const user = tokenService.getUser();
     try {
       if (tokenType === 'github') {
-        const response = await fetchWithToken(`/api/v1/users/user/${username}/token/github`, 
+        const response = await fetchWithToken('/api/v1/users/user/token/github', 
           {method: "PUT", body: githubToken}
         );
         const result = await getBody(response)
         tokenService.setUser({...user, githubToken: result.githubToken})
       } else if (tokenType === 'clockify') {
-        const response = await fetchWithToken(`/api/v1/users/user/${username}/token/clockify`, 
+        const response = await fetchWithToken('/api/v1/users/user/token/clockify', 
           {method: "PUT", body: clockifyToken}
         );
         const result = await getBody(response)

@@ -72,9 +72,11 @@ public class UserController {
 		return OkResponse.of(information);
 	}
 
-	@PutMapping("/user/{username}/token/github")
-	public MessageResponse updateGithubToken(@PathVariable String username, @RequestBody String githubToken) {
+	@PutMapping("/user/token/github")
+	public MessageResponse updateGithubToken(@RequestBody String githubToken,
+											 @AuthenticationPrincipal UserDetailsImpl userDetailsImpl) {
 		try {
+			String username = userDetailsImpl.getUsername();
 			userService.updateGithubToken(username, githubToken);
 			Information information = Information.create("message", "Github Token has been updated")
 											   .put("githubToken", githubToken);
@@ -84,9 +86,11 @@ public class UserController {
 		}
 	}
 
-	@PutMapping("/user/{username}/token/clockify")
-	public MessageResponse updateClockifyToken(@PathVariable String username, @RequestBody String clockifyToken) {
+	@PutMapping("/user/token/clockify")
+	public MessageResponse updateClockifyToken(@RequestBody String clockifyToken,
+											   @AuthenticationPrincipal UserDetailsImpl userDetailsImpl) {
 		try {
+			String username = userDetailsImpl.getUsername();
 			userService.updateClockifyToken(username, clockifyToken);
 			Information information = Information.create("message", "Github Token has been updated").put("clockifyToken", clockifyToken);
 			return OkResponse.of(information);

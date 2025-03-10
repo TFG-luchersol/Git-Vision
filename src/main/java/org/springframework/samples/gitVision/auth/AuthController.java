@@ -14,7 +14,6 @@ import org.springframework.samples.gitvision.configuration.services.UserDetailsI
 import org.springframework.samples.gitvision.exceptions.ResourceNotFoundException;
 import org.springframework.samples.gitvision.user.User;
 import org.springframework.samples.gitvision.user.UserService;
-import org.springframework.samples.gitvision.util.AESUtil;
 import org.springframework.samples.gitvision.util.Information;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -99,8 +98,6 @@ public class AuthController {
 			String username = signUpRequest.getUsername();
 			String token = signUpRequest.getGithubToken();
             GitHub gitHub = GitHub.connect(username, token);
-
-			token = AESUtil.encrypt_github(token);
 			signUpRequest.setGithubToken(token);
 
             GHUser user = gitHub.getMyself();

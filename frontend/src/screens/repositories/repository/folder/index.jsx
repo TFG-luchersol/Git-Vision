@@ -4,14 +4,13 @@ import React from 'react';
 import { useParams } from 'react-router-dom';
 import FolderContent from './sections/FolderContent';
 
-
 export default function Folder() {
     
     const { owner, repo, "*": path } = useParams();
     
     const sections = {
         "Files": <FolderContent />,
-        "Contributions": <Contributions owner={owner} repo={repo} path={path + "&isFolder=true"} />,
+        "Contributions": <Contributions owner={owner} repo={repo} path={path} isFolder={true} />,
     }
 
     return (

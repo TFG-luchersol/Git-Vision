@@ -2,6 +2,8 @@ import React from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { Route, Routes } from "react-router-dom";
 
+import "@css";
+import "@css/global.css";
 import AppNavbar from "@screens/appNavbar";
 import Login from "@screens/auth/login";
 import Register from "@screens/auth/register";
