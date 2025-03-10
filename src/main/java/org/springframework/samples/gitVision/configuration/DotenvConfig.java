@@ -1,14 +1,13 @@
 package org.springframework.samples.gitvision.configuration;
 
-import io.github.cdimascio.dotenv.Dotenv;
-import jakarta.annotation.PostConstruct;
-import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.Configuration;
 
-@Component
+import io.github.cdimascio.dotenv.Dotenv;
+
+@Configuration
 public class DotenvConfig {
 
-    @PostConstruct
-    public void loadEnv() {
+    static {
         Dotenv dotenv = Dotenv.configure().load();
         dotenv.entries().forEach(entry -> System.setProperty(entry.getKey(), entry.getValue()));
     }
