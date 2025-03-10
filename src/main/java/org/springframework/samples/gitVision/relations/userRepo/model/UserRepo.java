@@ -3,9 +3,10 @@ package org.springframework.samples.gitvision.relations.userRepo.model;
 import org.hibernate.validator.constraints.URL;
 import org.springframework.samples.gitvision.model.entity.EntityIdSequential;
 import org.springframework.samples.gitvision.user.User;
-import org.springframework.samples.gitvision.util.AESUtil;
+import org.springframework.samples.gitvision.util.AESConverter;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -38,18 +39,11 @@ public class UserRepo extends EntityIdSequential {
     @Pattern(regexp = "^[^\\s/]+/[^\\s/]+$")
     private String name;
 
-    @NotBlank
+    @Convert(converter = AESConverter.class)
     private String token;
 
     public boolean hasToken(){
         return token != null;
     }
 
-    public String getDecryptedToken() throws Exception {
-        return AESUtil.decrypt(this.token);
-    }
-
-    public void setTokenAndEncrypt(String token) throws Exception{
-        this.token = AESUtil.encrypt(token);
-    }
 }

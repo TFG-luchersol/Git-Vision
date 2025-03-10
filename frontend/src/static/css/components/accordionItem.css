@@ -1,0 +1,11 @@
+/* styles.css */
+.text-hover {
+    color: black; /* color inicial */
+    transition: color 0.3s ease; /* transición suave */
+    text-decoration: none;
+  }
+  
+  .text-hover:hover {
+    color: rgb(86, 44, 127); /* color cuando el mouse pasa por encima */
+  }
+  

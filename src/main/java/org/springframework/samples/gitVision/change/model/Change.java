@@ -11,9 +11,14 @@ import lombok.Setter;
 @JsonInclude(JsonInclude.Include.NON_NULL) 
 @Getter
 @Setter
-@NoArgsConstructor
 public class Change {
 
+    public Change(){
+        this.additions = 0;
+        this.deletions = 0;
+        this.totalChanges = 0;
+    }
+    
     private Integer additions;
 
     private Integer deletions;

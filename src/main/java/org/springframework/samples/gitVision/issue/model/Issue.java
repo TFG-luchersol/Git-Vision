@@ -30,6 +30,7 @@ public class Issue {
 
     public static Issue parseJson(JsonNode jsonNode){
         Issue issue = new Issue();
+        System.out.println(jsonNode);
         issue.setTitle(jsonNode.get("title").textValue());
         issue.setNumber(jsonNode.get("number").intValue());
         issue.setState(jsonNode.get("state").textValue());

@@ -7,7 +7,6 @@ import org.springframework.samples.gitvision.relations.userWorkspace.model.UserW
 import org.springframework.samples.gitvision.user.User;
 import org.springframework.samples.gitvision.user.UserRepository;
 import org.springframework.samples.gitvision.util.ClockifyApi;
-import org.springframework.samples.gitvision.workspace.model.Workspace;
 import org.springframework.stereotype.Service;
 
 @Service

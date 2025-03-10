@@ -76,3 +76,5 @@ coverage/jacoco.xml
 .gitignore
 package-lock.json
 .DS_Store
+
+frontend/dist

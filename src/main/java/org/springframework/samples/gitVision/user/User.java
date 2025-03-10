@@ -3,13 +3,12 @@ package org.springframework.samples.gitvision.user;
 import java.util.Objects;
 
 import org.kohsuke.github.GHUser;
-import org.springframework.samples.gitvision.githubUser.model.GithubUser;
 import org.springframework.samples.gitvision.model.entity.Person;
-import org.springframework.samples.gitvision.util.AESUtil;
+import org.springframework.samples.gitvision.util.AESConverter;
 
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.Setter;
@@ -23,21 +22,14 @@ public class User extends Person {
     @Pattern(regexp = ".+")
     String password;
 
-	@NotBlank
+	@Convert(converter = AESConverter.class)
 	String githubToken;
 
+	@Convert(converter = AESConverter.class)
 	String clockifyToken;
 
     public boolean hasClockifyToken(){
         return clockifyToken != null;
-    }
-
-    public String getDecryptedGithubToken() throws Exception{
-        return AESUtil.decrypt(this.githubToken);
-    }
-
-    public void setGithubTokenAndEncrypt(String githubToken) throws Exception{
-        this.githubToken = AESUtil.encrypt(githubToken);
     }
 
     public static User parse(GHUser ghUser) {

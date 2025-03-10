@@ -1,9 +1,6 @@
 package org.springframework.samples.gitvision.auth;
 
-import java.io.IOException;
-
 import org.kohsuke.github.GHUser;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.gitvision.auth.payload.request.SignupRequest;
 import org.springframework.samples.gitvision.user.User;
 import org.springframework.samples.gitvision.user.UserService;
@@ -17,7 +14,6 @@ public class AuthService {
 	private final PasswordEncoder encoder;
 	private final UserService userService;
 
-	@Autowired
 	public AuthService(UserService userService, PasswordEncoder encoder) {
 		this.userService = userService;
 		this.encoder = encoder;

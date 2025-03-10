@@ -7,17 +7,15 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.kohsuke.github.GHCommit;
+import org.kohsuke.github.GHContent;
 import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GHTree;
-import org.kohsuke.github.GitHub;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.gitvision.change.model.Change;
 import org.springframework.samples.gitvision.file.model.ChangesByUser;
 import org.springframework.samples.gitvision.file.model.File;
 import org.springframework.samples.gitvision.file.model.PercentageLanguages;
 import org.springframework.samples.gitvision.file.model.TreeFiles;
 import org.springframework.samples.gitvision.file.model.TreeFiles.TreeNode;
-import org.springframework.samples.gitvision.relations.userRepo.UserRepoService;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -28,9 +26,23 @@ public class FileService {
         return PercentageLanguages.of(contLanguajes);
     }
 
+    public byte[] getFileContentTreeByPath(GHRepository ghRepository, String path) throws Exception {
+        GHContent ghContent = ghRepository.getFileContent(path);
+        return ghContent.read().readAllBytes();
+    }
+
     public TreeNode getFileTreeByRepositoryName(GHRepository ghRepository) throws Exception {
         GHTree ghTree = ghRepository.getTreeRecursive(ghRepository.getDefaultBranch(), -1);
         List<String> paths = ghTree.getTree().stream().map(entry -> entry.getPath()).toList();
+        return TreeFiles.buildTreeWithCollapse(paths);
+    }
+
+    public TreeNode getFileSubTreeByRepositoryName(GHRepository ghRepository, String initPath) throws Exception {
+        GHTree ghTree = ghRepository.getTreeRecursive(ghRepository.getDefaultBranch(), -1);
+        List<String> paths = ghTree.getTree().stream()
+                                             .map(entry -> entry.getPath())
+                                             .filter(path -> path.startsWith(initPath) && !path.equals(initPath))
+                                             .toList();
         return TreeFiles.buildTreeWithCollapse(paths);
     }
 

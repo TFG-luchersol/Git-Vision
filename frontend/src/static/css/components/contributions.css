@@ -1,0 +1,24 @@
+/* App.css */  
+.medal {
+    font-size: 2rem;
+}
+
+.medal.gold {
+    color: #FFD700;
+}
+
+.medal.silver {
+    color: #C0C0C0;
+}
+
+.medal.bronze {
+    color: #CD7F32;
+}
+
+.medal.dotted {
+    color: transparent;
+    border: 2px dashed #999;
+    border-radius: 50%;
+    padding: 4px;
+}
+

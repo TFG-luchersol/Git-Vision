@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.gitvision.exceptions.ResourceNotFoundException;
 import org.springframework.samples.gitvision.relations.linkerRepoWork.model.LinkerRepoWork;
 import org.springframework.samples.gitvision.relations.userRepo.UserRepoRepository;
@@ -23,7 +22,6 @@ public class LinkerRepoWorkService {
     private UserWorkspaceRepository userWorkspaceRepository;
     private LinkerRepoWorkRepository linkerRepoWorkRepository;
     
-    @Autowired
     public LinkerRepoWorkService(UserRepository userRepository, UserRepoRepository userRepoRepository,
             UserWorkspaceRepository userWorkspaceRepository, LinkerRepoWorkRepository linkerRepoWorkRepository) {
         this.userRepository = userRepository;

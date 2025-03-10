@@ -1,32 +1,7 @@
 project:
-  name: 'PSG2-2324-GX-XY Petclinic'
-  owner: 'LX'
-  teamId: 'XY'
+  name: 'Git-Vision'
+  owner: 'luchersol'
+  teamId: 'TFG'
   identities:
     github:
-      url: 'https://github.com/gii-is-psg2/react-petclinic'
-  members:
-    member1:
-      name: 'José María'
-      surname: 'García' 
-      githubUsername: 'josemgarcia'
-    member2:
-      name: 'Jose Antonio'
-      surname: 'Parejo'
-      githubUsername: 'japarejo'
-    member3:
-      name: 'Amador'
-      surname: 'Durán'
-      githubUsername: 'amador-duran-toro'
-    member4:
-      name: 'Carlos'
-      surname: 'Müller'
-      githubUsername: 'cmullercejas'
-    member5:
-      name: 'Lola'
-      surname: 'De Acuña'
-      githubUsername: 'loladacuna'
-    member6:
-      name: 'Alfonso'
-      surname: 'Márquez'
-      githubUsername: 'alfedu'
+      url: 'https://github.com/TFG-luchersol/Git-Vision'
