@@ -3,25 +3,20 @@ import SwaggerUI from "swagger-ui-react";
 import "swagger-ui-react/swagger-ui.css";
 
 export default function SwaggerDocs(){
-    const [docs,setDocs]=useState({});
-    
+    const [docs, setDocs] = useState(null);
+
     useEffect(() => {
         loadDocs();
-    },[]);
+    }, []);
 
     async function loadDocs() {
         try {
-            const response = await fetch(`/v3/api-docs`, {
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            });
-            const mydocs = await response.json()
+            const response = await fetch('http://localhost:8080/v3/api-docs');
+            const mydocs = await response.json();
             setDocs(mydocs);
         } catch (error) {
-            alert(error)
+            console.error(error);
         }
-
     }    
     
     return (

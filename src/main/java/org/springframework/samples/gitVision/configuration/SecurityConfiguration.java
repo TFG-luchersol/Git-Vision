@@ -37,7 +37,7 @@ public class SecurityConfiguration {
 	SecurityFilterChain configure(HttpSecurity http) throws Exception {
 		
 		http
-			// .cors(withDefaults())		
+			// .cors(Customizer.withDefaults())		
 			.csrf(AbstractHttpConfigurer::disable)		
 			.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))			
 			.headers((headers) -> headers.frameOptions((frameOptions) -> frameOptions.disable()))
