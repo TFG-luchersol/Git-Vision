@@ -90,7 +90,7 @@ public class Commit {
         GithubUser githubUser = new GithubUser();
         Commit commit = new Commit();
         try {
-            githubUser = GithubUser.parse(ghCommit.getAuthor());
+            githubUser = GithubUser.parseGitUser(ghCommit.getCommitShortInfo().getAuthor());
             commit.setFiles(ghCommit.listFiles().toList());
             commit.setIssues(new ArrayList<>());
             commit.setSha(ghCommit.getSHA1());

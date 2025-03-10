@@ -12,13 +12,11 @@ import java.util.stream.IntStream;
 
 import org.kohsuke.github.GHCommit;
 import org.kohsuke.github.GHRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.gitvision.commit.model.Commit;
 import org.springframework.samples.gitvision.commit.model.commitsByTimePeriod.TimePeriod;
 import org.springframework.samples.gitvision.issue.model.Issue;
 import org.springframework.samples.gitvision.relations.userRepo.UserRepoRepository;
 import org.springframework.samples.gitvision.relations.userRepo.model.UserRepo;
-import org.springframework.samples.gitvision.user.UserRepository;
 import org.springframework.samples.gitvision.util.EntityUtils;
 import org.springframework.samples.gitvision.util.GithubApi;
 import org.springframework.stereotype.Service;
@@ -27,16 +25,16 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class CommitService {
 
-    @Autowired
-    UserRepository userRepository;
+    private final UserRepoRepository userRepoRepository;
 
-    @Autowired
-    UserRepoRepository userRepoRepository;
+    public CommitService(UserRepoRepository userRepoRepository){
+        this.userRepoRepository = userRepoRepository;
+    }
 
     @Transactional(readOnly = true)
     public List<Commit> getCommitsByRepository(String repositoryName, String login, Integer page) throws Exception {
         UserRepo userRepo = this.userRepoRepository.findByNameAndUser_Username(repositoryName, login).get();
-        String tokenToUse = userRepo.getDecryptedToken();
+        String tokenToUse = userRepo.getToken();
         return GithubApi.getCommitsByPage(repositoryName, page, 30, tokenToUse);
     }
 
