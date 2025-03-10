@@ -1,9 +1,6 @@
 package org.springframework.samples.gitvision.issue.model;
 
-import java.util.List;
-
 import org.kohsuke.github.GHIssue;
-import org.springframework.samples.gitvision.commit.model.Commit;
 
 import com.fasterxml.jackson.databind.JsonNode;
 

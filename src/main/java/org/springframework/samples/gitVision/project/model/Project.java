@@ -4,12 +4,9 @@ import java.time.Duration;
 
 import org.springframework.boot.convert.DurationFormat;
 import org.springframework.boot.convert.DurationStyle;
-import org.springframework.samples.gitvision.model.entity.EntityIdString;
 import org.springframework.samples.gitvision.workspace.model.Workspace;
 
-import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 

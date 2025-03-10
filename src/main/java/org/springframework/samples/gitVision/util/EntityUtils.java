@@ -19,13 +19,8 @@ package org.springframework.samples.gitvision.util;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.Base64;
 import java.util.Collection;
 import java.util.Date;
-
-import javax.crypto.Cipher;
-import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
 
 import org.springframework.orm.ObjectRetrievalFailureException;
 import org.springframework.samples.gitvision.model.entity.BaseEntity;

@@ -10,7 +10,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.kohsuke.github.GHCommit;
-import org.kohsuke.github.GHUser;
 import org.kohsuke.github.GHCommit.File;
 import org.springframework.samples.gitvision.change.model.Change;
 import org.springframework.samples.gitvision.githubUser.model.GithubUser;

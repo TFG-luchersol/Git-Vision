@@ -56,7 +56,7 @@ public class CommitService {
                 maxYear = EntityUtils.parseDateToLocalDateUTC(ghCommits.get(ghCommits.size() - 1).getCommitDate())
                         .getYear();
         Map<TimePeriod, Map<Integer, Long>> cont = new HashMap<>();
-        Function<Integer, Long> zero = n -> 0L;
+        Function<Integer, Long> zero = _ -> 0L;
         BiFunction<Integer, Integer, Map<Integer, Long>> empty = (start, end) -> IntStream.rangeClosed(start, end)
                 .boxed().collect(Collectors.toMap(Function.identity(), zero));
         cont.put(TimePeriod.HOUR, empty.apply(0, 23));

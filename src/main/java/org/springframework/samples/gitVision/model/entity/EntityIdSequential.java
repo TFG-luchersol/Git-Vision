@@ -1,7 +1,5 @@
 package org.springframework.samples.gitvision.model.entity;
 
-import org.hibernate.annotations.UuidGenerator;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.GeneratedValue;
