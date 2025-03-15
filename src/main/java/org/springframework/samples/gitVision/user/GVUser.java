@@ -16,7 +16,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "users")
+@Table(name = "gv_users")
 public class GVUser extends Person {
 
     @Pattern(regexp = ".+")

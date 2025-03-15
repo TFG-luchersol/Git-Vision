@@ -27,7 +27,7 @@ export default function Repositories() {
 
     const getRepositories = async () => {
         try {
-            let newRepositories = await fetchWithToken("/api/v1/relation/repository/repositories")
+            let newRepositories = await fetchWithToken("/api/v1/relation/repository")
             const {repositories} = await getBody(newRepositories)
             setRepositories(repositories)
         } catch (e) {

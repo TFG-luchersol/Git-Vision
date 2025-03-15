@@ -1,5 +1,7 @@
 package org.springframework.samples.gitvision.relations.repository.model;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.validator.constraints.URL;
 import org.springframework.samples.gitvision.model.entity.EntityIdSequential;
 import org.springframework.samples.gitvision.relations.workspace.model.GVWorkspace;
@@ -22,22 +24,24 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "repository", uniqueConstraints = {
+@Table(name = "gv_repositories", uniqueConstraints = {
     @UniqueConstraint(columnNames = {"user_id", "repositoryId"})
 })
 public class GVRepo extends EntityIdSequential {
     
-    @ManyToOne()
+    @ManyToOne(optional = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private GVUser user;
 
-    @OneToOne
+    @OneToOne(optional = true)
+    @OnDelete(action = OnDeleteAction.SET_NULL)
     private GVWorkspace workspace;
 
     @NotNull
     private Long repositoryId;
 
     @URL
-    String url_imagen;
+    private String url_imagen;
 
     @NotBlank
     @Column(unique = true)
@@ -48,7 +52,7 @@ public class GVRepo extends EntityIdSequential {
     private String token;
 
     public boolean hasToken(){
-        return token != null;
+        return this.token != null;
     }
 
     public boolean hasLinkedWorkspace(){

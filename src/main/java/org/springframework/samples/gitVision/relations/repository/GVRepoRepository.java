@@ -3,7 +3,6 @@ package org.springframework.samples.gitvision.relations.repository;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.samples.gitvision.model.repository.RepositoryIdLong;
 import org.springframework.samples.gitvision.relations.repository.model.GVRepo;
 import org.springframework.stereotype.Repository;
@@ -11,8 +10,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface GVRepoRepository extends RepositoryIdLong<GVRepo> {
     
-    @Query("select ur.name from UserRepo ur where ur.user.id = :userId")
-    List<String> findAllRepository_NameByUser_Id(Long userId);
+    List<String> findNameByUser_Id(Long userId);
 
     boolean existsByNameAndUser_Id(String repositoryName, Long userId);
 

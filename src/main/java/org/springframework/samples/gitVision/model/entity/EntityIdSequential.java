@@ -12,12 +12,10 @@ import jakarta.persistence.SequenceGenerator;
 public class EntityIdSequential {
     
     @Id
-    @SequenceGenerator(name = "entity_seq", 
-                       sequenceName = "global_sequence", 
-                       initialValue = 100)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "entity_seq")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "global_sequence")
+    @SequenceGenerator(name = "global_sequence", sequenceName = "git_vision.global_sequence", allocationSize = 1)
 	protected Long id;
-
+	
 	public Long getId() {
 		return id;
 	}

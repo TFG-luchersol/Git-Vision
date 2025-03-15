@@ -1,5 +1,7 @@
 package org.springframework.samples.gitvision.relations.workspace.model;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.samples.gitvision.model.entity.EntityIdSequential;
 import org.springframework.samples.gitvision.user.GVUser;
 
@@ -14,7 +16,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "workspace", uniqueConstraints = {
+@Table(name = "gv_workspaces", uniqueConstraints = {
     @UniqueConstraint(columnNames = {"user_id", "name"})
 })
 public class GVWorkspace extends EntityIdSequential {
@@ -25,7 +27,8 @@ public class GVWorkspace extends EntityIdSequential {
     @NotBlank
     private String name;
         
-    @ManyToOne
+    @ManyToOne(optional = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private GVUser user;
 
 }

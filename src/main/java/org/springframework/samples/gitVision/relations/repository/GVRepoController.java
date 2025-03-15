@@ -36,12 +36,17 @@ public class GVRepoController {
     @Autowired
     GVUserService userService;
 
-    @GetMapping("/repositories")
+    @GetMapping
     public MessageResponse getAllRepositoriesByUserId(@AuthenticationPrincipal UserDetailsImpl userDetailsImpl) {
-        Long userId = userDetailsImpl.getId();
-        Map<String, List<String>> owner_repositories = this.gvRepoService.getAllRepositories(userId);
-        Information information = Information.create("repositories", owner_repositories);
-        return OkResponse.of(information);
+        try {
+            Long userId = userDetailsImpl.getId();
+            Map<String, List<String>> owner_repositories = this.gvRepoService.getAllRepositories(userId);
+            Information information = Information.create("repositories", owner_repositories);
+            return OkResponse.of(information);
+        } catch (Exception e) {
+            return BadResponse.of(e);
+        }
+
     }
 
     @GetMapping("/owners")

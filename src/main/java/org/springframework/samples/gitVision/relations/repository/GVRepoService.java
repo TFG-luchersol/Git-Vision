@@ -25,8 +25,9 @@ public class GVRepoService {
     private final GVWorkspaceRepository gvWorkspaceRepository;
     private final GVUserRepository gvUserRepository;
 
-    public GVRepoService(GVRepoRepository gvRepoRepository, GVWorkspaceRepository gvWorkspaceRepository,
-     GVUserRepository gvUserRepository){
+    public GVRepoService(GVRepoRepository gvRepoRepository, 
+                         GVWorkspaceRepository gvWorkspaceRepository,
+                         GVUserRepository gvUserRepository){
         this.gvRepoRepository = gvRepoRepository;
         this.gvWorkspaceRepository = gvWorkspaceRepository;
         this.gvUserRepository = gvUserRepository;
@@ -34,7 +35,7 @@ public class GVRepoService {
 
     @Transactional(readOnly = true)
     public Map<String, List<String>> getAllRepositories(Long userId) {
-        List<String> nameRepositories = this.gvRepoRepository.findAllRepository_NameByUser_Id(userId);
+        List<String> nameRepositories = this.gvRepoRepository.findNameByUser_Id(userId);
         Map<String, List<String>> dict = new HashMap<>();
         for (String name : nameRepositories) {
             String[] pieces = name.split("/");
@@ -52,7 +53,7 @@ public class GVRepoService {
 
     @Transactional(readOnly = true)
     public List<String> getAllOwnersByUserId(Long userId) {
-        List<String> nameRepositories = this.gvRepoRepository.findAllRepository_NameByUser_Id(userId);
+        List<String> nameRepositories = this.gvRepoRepository.findNameByUser_Id(userId);
         List<String> owners = nameRepositories.stream().map(i -> i.split("/")[0]).toList();
         return owners;
     }
