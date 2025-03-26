@@ -8,6 +8,7 @@ import java.util.Objects;
 
 import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GitHub;
+import org.springframework.samples.gitvision.exceptions.ConnectionGithubException;
 import org.springframework.samples.gitvision.exceptions.ResourceNotFoundException;
 import org.springframework.samples.gitvision.githubUser.model.GithubUser;
 import org.springframework.samples.gitvision.relations.repository.model.GVRepo;
@@ -20,12 +21,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class GVRepoService {
-    
+
     private final GVRepoRepository gvRepoRepository;
     private final GVWorkspaceRepository gvWorkspaceRepository;
     private final GVUserRepository gvUserRepository;
 
-    public GVRepoService(GVRepoRepository gvRepoRepository, 
+    public GVRepoService(GVRepoRepository gvRepoRepository,
                          GVWorkspaceRepository gvWorkspaceRepository,
                          GVUserRepository gvUserRepository){
         this.gvRepoRepository = gvRepoRepository;
@@ -59,10 +60,15 @@ public class GVRepoService {
     }
 
     @Transactional(readOnly = true)
-    public GitHub connect(String repositoryName, String login) throws Exception {
-        GVRepo gvRepo = this.gvRepoRepository.findByNameAndUser_Username(repositoryName, login).get();
-        String tokenToUse = gvRepo.getToken();
-        return GitHub.connect(login, tokenToUse);
+    public GitHub connect(String repositoryName, String login) throws ConnectionGithubException {
+        try {
+            GVRepo gvRepo = this.gvRepoRepository.findByNameAndUser_Username(repositoryName, login).get();
+            String tokenToUse = gvRepo.getToken();
+            return GitHub.connect(login, tokenToUse);
+        } catch (Exception e) {
+            throw new ConnectionGithubException(e.getMessage());
+        }
+
     }
 
     @Transactional(readOnly = true)
@@ -85,7 +91,7 @@ public class GVRepoService {
 
     @Transactional
     public void updateGithubToken(String repositoryName, String login, String newGithubToken) throws Exception {
-        GVRepo gvRepo = this.gvRepoRepository.findByNameAndUser_Username(repositoryName, login).orElseThrow(() -> new ResourceNotFoundException("Not found repository"));   
+        GVRepo gvRepo = this.gvRepoRepository.findByNameAndUser_Username(repositoryName, login).orElseThrow(() -> new ResourceNotFoundException("Not found repository"));
         GitHub github = GitHub.connect(login, newGithubToken);
         if(github.getMyself() == null){
             throw new IllegalAccessException("Token invalido");
@@ -99,7 +105,7 @@ public class GVRepoService {
         try {
             GVUser user = this.gvUserRepository.findByUsername(login).get();
             String tokenToUse = Objects.requireNonNullElse(token, user.getGithubToken());
-            
+
             GitHub gitHub = GitHub.connect(login, tokenToUse);
             GHRepository ghRepository = gitHub.getRepository(repositoryName);
             GVRepo gvRepo = new GVRepo();
@@ -109,24 +115,24 @@ public class GVRepoService {
             gvRepo.setUser(user);
             gvRepoRepository.save(gvRepo);
         } catch (Exception e) {
-            
+
         }
-        
+
     }
 
     @Transactional
     public void linkRepositoryWithWorkspace(String repositoryName, String workspaceName, Long userId) throws Exception{
         if(!gvUserRepository.existsById(userId))
             throw new ResourceNotFoundException("User", "ID", userId);
-        
+
         GVRepo gvRepo = gvRepoRepository.findByNameAndUser_Id(repositoryName, userId).orElseThrow(() -> new ResourceNotFoundException("UserRepo not found"));;
-        
+
         if(gvRepo.hasLinkedWorkspace()){
             throw new IllegalAccessError("No se puede enlazar más de un workspace a un repositorio");
         }
 
         GVWorkspace gvWorkspace = gvWorkspaceRepository.findByNameAndUser_Id(workspaceName, userId).orElseThrow(() -> new ResourceNotFoundException("UserWorkspace not found"));;
-        
+
         if(Objects.equals(gvRepo.getWorkspace(), gvWorkspace)){
             throw new Exception("Relation exist");
         }

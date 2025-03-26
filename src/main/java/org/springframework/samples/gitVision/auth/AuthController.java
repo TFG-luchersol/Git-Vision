@@ -37,83 +37,72 @@ import jakarta.validation.Valid;
 @Tag(name = "Authentication")
 public class AuthController {
 
-	private final AuthenticationManager authenticationManager;
-	private final GVUserService userService;
-	private final JwtUtils jwtUtils;
-	private final AuthService authService;
+    private final AuthenticationManager authenticationManager;
+    private final GVUserService userService;
+    private final JwtUtils jwtUtils;
+    private final AuthService authService;
 
-	public AuthController(AuthenticationManager authenticationManager, GVUserService userService, 
-			JwtUtils jwtUtils, AuthService authService) {
-		this.userService = userService;
-		this.jwtUtils = jwtUtils;
-		this.authenticationManager = authenticationManager;
-		this.authService = authService;
-	}
+    public AuthController(AuthenticationManager authenticationManager, GVUserService userService,
+            JwtUtils jwtUtils, AuthService authService) {
+        this.userService = userService;
+        this.jwtUtils = jwtUtils;
+        this.authenticationManager = authenticationManager;
+        this.authService = authService;
+    }
 
-	@PostMapping("/signin")
-	public MessageResponse authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
-		try {
-			String username = loginRequest.getUsername();
-			String password = loginRequest.getPassword();
-			if(!userService.existsUserByUsername(username)){
-				 new ResourceNotFoundException("User", "username", username);
-			}
-			
-			UsernamePasswordAuthenticationToken authenticationToken =
-				new UsernamePasswordAuthenticationToken(username, password);
-			
-			Authentication authentication = authenticationManager.authenticate(authenticationToken);
-			SecurityContextHolder.getContext().setAuthentication(authentication);
-			String jwt = jwtUtils.generateJwtToken(authentication);
+    @PostMapping("/signin")
+    public MessageResponse authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+        String username = loginRequest.getUsername();
+        String password = loginRequest.getPassword();
+        if(!userService.existsUserByUsername(username)){
+                new ResourceNotFoundException("User", "username", username);
+        }
 
-			UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-			GVUser user = this.userService.findUserById(userDetails.getId());
-			Information information = Information.create("jwt", new JwtResponse(jwt, user));
-			return OkResponse.of(information);
-		} catch(ResourceNotFoundException exception) {
-			return BadResponse.of(exception);
-		} catch(Exception exception) {
-			return BadResponse.of("¡Credenciales incorrectas!");
-		} 
-	}
+        UsernamePasswordAuthenticationToken authenticationToken =
+            new UsernamePasswordAuthenticationToken(username, password);
 
-	@GetMapping("/validate")
-	public ResponseEntity<Boolean> validateToken(@RequestParam String token) {
-		Boolean isValid = jwtUtils.validateJwtToken(token);
-		return ResponseEntity.ok(isValid);
-	}
+        Authentication authentication = authenticationManager.authenticate(authenticationToken);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        String jwt = jwtUtils.generateJwtToken(authentication);
 
-	
-	@PostMapping("/signup")	
-	public MessageResponse registerUser(@Valid @RequestBody SignupRequest signUpRequest, BindingResult result) {
-		try {
-			if (result.hasErrors()) {
-				FieldError firstError = result.getFieldErrors().get(0);
-				String field = firstError.getField().substring(0, 1).toUpperCase() + 
-							   firstError.getField().substring(1).toLowerCase(),
-					   defaultMessage = firstError.getDefaultMessage(),
-				       message = field + " " + defaultMessage;
-				return BadResponse.of(message);
-			}
-			String username = signUpRequest.getUsername();
-			String token = signUpRequest.getGithubToken();
-            GitHub gitHub = GitHub.connect(username, token);
-			signUpRequest.setGithubToken(token);
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        GVUser user = this.userService.findUserById(userDetails.getId());
+        Information information = Information.create("jwt", new JwtResponse(jwt, user));
+        return OkResponse.of(information);
+    }
 
-            GHUser user = gitHub.getMyself();
-			if(user == null || !user.getLogin().equals(username))
-				return BadResponse.of("Error: Username or token is incorrect");
-			if (userService.existsUserByUsername(username)) 
-				return BadResponse.of("Error: Username is already taken!");
+    @GetMapping("/validate")
+    public ResponseEntity<Boolean> validateToken(@RequestParam String token) {
+        Boolean isValid = jwtUtils.validateJwtToken(token);
+        return ResponseEntity.ok(isValid);
+    }
 
 
-			authService.createUser(user, signUpRequest);
-			return OkResponse.of("User registered successfully!");
+    @PostMapping("/signup")
+    public MessageResponse registerUser(@Valid @RequestBody SignupRequest signUpRequest, BindingResult result) throws Exception {
+        if (result.hasErrors()) {
+            FieldError firstError = result.getFieldErrors().get(0);
+            String field = firstError.getField().substring(0, 1).toUpperCase() +
+                            firstError.getField().substring(1).toLowerCase(),
+                    defaultMessage = firstError.getDefaultMessage(),
+                    message = field + " " + defaultMessage;
+            return BadResponse.of(message);
+        }
+        String username = signUpRequest.getUsername();
+        String token = signUpRequest.getGithubToken();
+        GitHub gitHub = GitHub.connect(username, token);
+        signUpRequest.setGithubToken(token);
 
-		} catch (Exception e) {
-			return BadResponse.of("Error: Connection to github failed");
-		}
-		
+        GHUser user = gitHub.getMyself();
+        if(user == null || !user.getLogin().equals(username))
+            return BadResponse.of("Error: Username or token is incorrect");
+        if (userService.existsUserByUsername(username))
+            return BadResponse.of("Error: Username is already taken!");
+
+
+        authService.createUser(user, signUpRequest);
+        return OkResponse.of("User registered successfully!");
+
 	}
 
 }

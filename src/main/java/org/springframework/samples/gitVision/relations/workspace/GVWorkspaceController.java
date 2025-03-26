@@ -2,7 +2,6 @@ package org.springframework.samples.gitvision.relations.workspace;
 
 import java.util.List;
 
-import org.springframework.samples.gitvision.auth.payload.response.BadResponse;
 import org.springframework.samples.gitvision.auth.payload.response.MessageResponse;
 import org.springframework.samples.gitvision.auth.payload.response.OkResponse;
 import org.springframework.samples.gitvision.configuration.services.UserDetailsImpl;
@@ -23,7 +22,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @Tag(name = "Relation workspace")
 @SecurityRequirement(name = "bearerAuth")
 public class GVWorkspaceController {
-    
+
     GVWorkspaceService gvWorkspaceService;
 
     public GVWorkspaceController(GVWorkspaceService gvRepoService) {
@@ -39,30 +38,21 @@ public class GVWorkspaceController {
     }
 
     @PostMapping
-    public MessageResponse linkUserWithWorkspace(@RequestParam String workspaceId, 
+    public MessageResponse linkUserWithWorkspace(@RequestParam String workspaceId,
                                                  @RequestParam String name,
                                                  @AuthenticationPrincipal UserDetailsImpl userDetailsImpl){
-        try {
-            Long userId = userDetailsImpl.getId();
-            gvWorkspaceService.linkUserWithWorkspace(workspaceId, name, userId);
-            return OkResponse.of("Workspace creado");
-        } catch (Exception e) {
-            return BadResponse.of(e);
-        }
-         
+        Long userId = userDetailsImpl.getId();
+        gvWorkspaceService.linkUserWithWorkspace(workspaceId, name, userId);
+        return OkResponse.of("Workspace creado");
     }
 
     @GetMapping("/{workspaceId}/timeByUser")
-    public MessageResponse getTimeByUser(@RequestParam String workspaceId, 
+    public MessageResponse getTimeByUser(@RequestParam String workspaceId,
                                          @AuthenticationPrincipal UserDetailsImpl userDetailsImpl) {
-        try {
-            var x = gvWorkspaceService.getTimeByUser(workspaceId, userDetailsImpl.getId());
-            Information information = Information.create("x", x);
-            return OkResponse.of(information);
-        } catch (Exception e) {
-            return BadResponse.of(e);
-        }
+        var x = gvWorkspaceService.getTimeByUser(workspaceId, userDetailsImpl.getId());
+        Information information = Information.create("x", x);
+        return OkResponse.of(information);
     }
-    
+
 
 }

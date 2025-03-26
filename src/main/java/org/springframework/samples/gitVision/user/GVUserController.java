@@ -16,7 +16,6 @@
 package org.springframework.samples.gitvision.user;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.samples.gitvision.auth.payload.response.BadResponse;
 import org.springframework.samples.gitvision.auth.payload.response.MessageResponse;
 import org.springframework.samples.gitvision.auth.payload.response.OkResponse;
 import org.springframework.samples.gitvision.configuration.services.UserDetailsImpl;
@@ -74,29 +73,21 @@ public class GVUserController {
 
 	@PutMapping("/user/token/github")
 	public MessageResponse updateGithubToken(@RequestBody String githubToken,
-											 @AuthenticationPrincipal UserDetailsImpl userDetailsImpl) {
-		try {
-			String username = userDetailsImpl.getUsername();
-			userService.updateGithubToken(username, githubToken);
-			Information information = Information.create("message", "Github Token has been updated")
-											   .put("githubToken", githubToken);
-			return OkResponse.of(information);
-		} catch (Exception e) {
-			return BadResponse.of(e);
-		}
+											 @AuthenticationPrincipal UserDetailsImpl userDetailsImpl) throws Exception {
+        String username = userDetailsImpl.getUsername();
+        userService.updateGithubToken(username, githubToken);
+        Information information = Information.create("message", "Github Token has been updated")
+                                            .put("githubToken", githubToken);
+        return OkResponse.of(information);
 	}
 
 	@PutMapping("/user/token/clockify")
 	public MessageResponse updateClockifyToken(@RequestBody String clockifyToken,
-											   @AuthenticationPrincipal UserDetailsImpl userDetailsImpl) {
-		try {
-			String username = userDetailsImpl.getUsername();
-			userService.updateClockifyToken(username, clockifyToken);
-			Information information = Information.create("message", "Github Token has been updated").put("clockifyToken", clockifyToken);
-			return OkResponse.of(information);
-		} catch (Exception e) {
-			return BadResponse.of(e);
-		}
+											   @AuthenticationPrincipal UserDetailsImpl userDetailsImpl) throws Exception {
+        String username = userDetailsImpl.getUsername();
+        userService.updateClockifyToken(username, clockifyToken);
+        Information information = Information.create("message", "Github Token has been updated").put("clockifyToken", clockifyToken);
+        return OkResponse.of(information);
 	}
 
 	@DeleteMapping("/{id}")

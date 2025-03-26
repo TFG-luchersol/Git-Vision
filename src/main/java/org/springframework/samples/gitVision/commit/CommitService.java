@@ -1,5 +1,6 @@
 package org.springframework.samples.gitvision.commit;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -32,14 +33,14 @@ public class CommitService {
     }
 
     @Transactional(readOnly = true)
-    public List<Commit> getCommitsByRepository(String repositoryName, String login, Integer page) throws Exception {
+    public List<Commit> getCommitsByRepository(String repositoryName, String login, Integer page)  {
         GVRepo gvRepo = this.gvRepoRepository.findByNameAndUser_Username(repositoryName, login).get();
         String tokenToUse = gvRepo.getToken();
         return GithubApi.getCommitsByPage(repositoryName, page, 30, tokenToUse);
     }
 
     @Transactional(readOnly = true)
-    public Commit getCommitByRepositoryNameAndSha(GHRepository ghRepository, String sha) throws Exception {
+    public Commit getCommitByRepositoryNameAndSha(GHRepository ghRepository, String sha) throws IOException {
         GHCommit ghCommit = ghRepository.getCommit(sha);
         Commit commit = Commit.parse(ghCommit);
         for (Integer issueNumber : commit.getIssueNumbers()) {
