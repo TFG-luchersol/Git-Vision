@@ -7,11 +7,13 @@ import java.util.Map;
 import java.util.Objects;
 
 import org.kohsuke.github.GHRepository;
+import org.kohsuke.github.GHRepository.Contributor;
 import org.kohsuke.github.GitHub;
 import org.springframework.samples.gitvision.exceptions.ConnectionGithubException;
 import org.springframework.samples.gitvision.exceptions.ResourceNotFoundException;
 import org.springframework.samples.gitvision.githubUser.model.GithubUser;
 import org.springframework.samples.gitvision.relations.repository.model.GVRepo;
+import org.springframework.samples.gitvision.relations.repository.model.GVRepoUserConfiguration;
 import org.springframework.samples.gitvision.relations.workspace.GVWorkspaceRepository;
 import org.springframework.samples.gitvision.relations.workspace.model.GVWorkspace;
 import org.springframework.samples.gitvision.user.GVUser;
@@ -36,7 +38,7 @@ public class GVRepoService {
 
     @Transactional(readOnly = true)
     public Map<String, List<String>> getAllRepositories(Long userId) {
-        List<String> nameRepositories = this.gvRepoRepository.findNameByUser_Id(userId);
+        var nameRepositories = this.gvRepoRepository.findNamesByUser_Id(userId);
         Map<String, List<String>> dict = new HashMap<>();
         for (String name : nameRepositories) {
             String[] pieces = name.split("/");
@@ -54,7 +56,7 @@ public class GVRepoService {
 
     @Transactional(readOnly = true)
     public List<String> getAllOwnersByUserId(Long userId) {
-        List<String> nameRepositories = this.gvRepoRepository.findNameByUser_Id(userId);
+        List<String> nameRepositories = this.gvRepoRepository.findNamesByUser_Id(userId);
         List<String> owners = nameRepositories.stream().map(i -> i.split("/")[0]).toList();
         return owners;
     }
@@ -113,7 +115,10 @@ public class GVRepoService {
             gvRepo.setRepositoryId(ghRepository.getId());
             gvRepo.setToken(tokenToUse);
             gvRepo.setUser(user);
-            gvRepoRepository.save(gvRepo);
+            final GVRepo savedGvRepo = gvRepoRepository.save(gvRepo);
+            List<Contributor> ghContributors = ghRepository.listContributors().toList();
+            List<GVRepoUserConfiguration> ghConfigurations = new ArrayList<>(ghContributors.size());
+            ghContributors.forEach(contributor -> ghConfigurations.add(GVRepoUserConfiguration.of(savedGvRepo, contributor)));
         } catch (Exception e) {
 
         }

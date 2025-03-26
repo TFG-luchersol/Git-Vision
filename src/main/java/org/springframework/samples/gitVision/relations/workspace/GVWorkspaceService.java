@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class GVWorkspaceService {
-    
+
     GVWorkspaceRepository gvWorkspaceRepository;
     GVUserRepository gvUserRepository;
 
@@ -26,7 +26,7 @@ public class GVWorkspaceService {
 
 
     public List<GVWorkspace> getAllWorkspaceByUserId(Long userId) {
-        List<GVWorkspace> gvWorkspaces = this.gvWorkspaceRepository.findAllUserWorkspacesByUser_Id(userId);
+        List<GVWorkspace> gvWorkspaces = this.gvWorkspaceRepository.findAllByUser_Id(userId);
         return gvWorkspaces;
     }
 
@@ -41,8 +41,8 @@ public class GVWorkspaceService {
             String name = user.getName();
             Long time = Arrays.stream(timeEntries).mapToLong(entry -> entry.getTimeInterval().getDuration().getNano()).sum();
             res.put(name, time);
-        } 
-        
+        }
+
         return res;
     }
 

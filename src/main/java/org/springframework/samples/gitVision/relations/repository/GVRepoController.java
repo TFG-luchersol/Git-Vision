@@ -5,7 +5,6 @@ import java.util.Map;
 
 import org.kohsuke.github.GHRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.samples.gitvision.auth.payload.response.BadResponse;
 import org.springframework.samples.gitvision.auth.payload.response.MessageResponse;
 import org.springframework.samples.gitvision.auth.payload.response.OkResponse;
 import org.springframework.samples.gitvision.configuration.services.UserDetailsImpl;
@@ -29,25 +28,20 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @RequestMapping("/api/v1/relation/repository")
 @Tag(name = "Relation repository")
 public class GVRepoController {
-    
+
     @Autowired
     GVRepoService gvRepoService;
-    
+
     @Autowired
     GVUserService userService;
 
     @GetMapping
     public MessageResponse getAllRepositoriesByUserId(@AuthenticationPrincipal UserDetailsImpl userDetailsImpl) {
-        try {
-            Long userId = userDetailsImpl.getId();
-            Map<String, List<String>> owner_repositories = this.gvRepoService.getAllRepositories(userId);
-            Information information = Information.create("repositories", owner_repositories);
-            return OkResponse.of(information);
-        } catch (Exception e) {
-            return BadResponse.of(e);
-        }
-
-    }
+        Long userId = userDetailsImpl.getId();
+        Map<String, List<String>> owner_repositories = this.gvRepoService.getAllRepositories(userId);
+        Information information = Information.create("repositories", owner_repositories);
+        return OkResponse.of(information);
+}
 
     @GetMapping("/owners")
     public MessageResponse getAllOwnersByUserId(@AuthenticationPrincipal UserDetailsImpl userDetailsImpl) {
@@ -58,60 +52,46 @@ public class GVRepoController {
     }
 
     @GetMapping("/{owner}/{repo}/contributors")
-    public MessageResponse getContributors(@PathVariable String owner, 
+    public MessageResponse getContributors(@PathVariable String owner,
                                            @PathVariable String repo,
-                                           @AuthenticationPrincipal UserDetailsImpl userDetailsImpl) {
-        try {
-            String login = userDetailsImpl.getUsername();
-            GHRepository ghRepository = this.gvRepoService.getRepository(owner, repo, login);
-            List<GithubUser> contributors = this.gvRepoService.getContributors(ghRepository);
-            Information information = Information.create("contributors", contributors);
-            return OkResponse.of(information);
-        } catch (Exception e) {
-            return BadResponse.of(e);
-        }
-
+                                           @AuthenticationPrincipal UserDetailsImpl userDetailsImpl) throws Exception {
+        String login = userDetailsImpl.getUsername();
+        GHRepository ghRepository = this.gvRepoService.getRepository(owner, repo, login);
+        List<GithubUser> contributors = this.gvRepoService.getContributors(ghRepository);
+        Information information = Information.create("contributors", contributors);
+        return OkResponse.of(information);
     }
 
     @PutMapping("/{owner}/{repo}/token")
-    public MessageResponse updateGithubToken(@PathVariable String owner, 
+    public MessageResponse updateGithubToken(@PathVariable String owner,
                                     @PathVariable String repo,
                                     @RequestBody String newGithubToken,
-                                    @AuthenticationPrincipal UserDetailsImpl userDetailsImpl) {
-        try {
-            String login = userDetailsImpl.getUsername();
-            String repositoryName = owner + "/" + repo;
-            this.gvRepoService.updateGithubToken(repositoryName, login, newGithubToken);
-            return OkResponse.of("Token cambiado");
-        } catch (Exception e) {
-            return BadResponse.of(e);
-        }
-        
+                                    @AuthenticationPrincipal UserDetailsImpl userDetailsImpl) throws Exception {
+        String login = userDetailsImpl.getUsername();
+        String repositoryName = owner + "/" + repo;
+        this.gvRepoService.updateGithubToken(repositoryName, login, newGithubToken);
+        return OkResponse.of("Token cambiado");
     }
 
     @PostMapping("/{owner}/{repo}")
-    public void linkUserWithRepository(@PathVariable String repo, 
+    public void linkUserWithRepository(@PathVariable String repo,
                                        @PathVariable String owner,
                                        @RequestParam(required = false) String token,
                                        @AuthenticationPrincipal UserDetailsImpl userDetailsImpl) {
         String login = userDetailsImpl.getUsername();
-        String repositoryName = owner + "/" + repo; 
+        String repositoryName = owner + "/" + repo;
         this.gvRepoService.linkUserWithRepository(login, repositoryName, token);
     }
 
     @PostMapping
-    public MessageResponse linkRepositoryWithWorkspace(@RequestParam String repositoryName, 
-                                            @RequestParam String workspaceName, 
-                                            @AuthenticationPrincipal UserDetailsImpl userDetailsImpl) {
-        try {
-            Long userId = userDetailsImpl.getId();
-            this.gvRepoService.linkRepositoryWithWorkspace(repositoryName, workspaceName, userId);
-            return OkResponse.of("Repositorio "+ repositoryName + " enlazado con Workspace" + workspaceName);
-        } catch (Exception e) {
-            return BadResponse.of(e);
-        }
+    public MessageResponse linkRepositoryWithWorkspace(@RequestParam String repositoryName,
+                                            @RequestParam String workspaceName,
+                                            @AuthenticationPrincipal UserDetailsImpl userDetailsImpl) throws Exception {
+        Long userId = userDetailsImpl.getId();
+        this.gvRepoService.linkRepositoryWithWorkspace(repositoryName, workspaceName, userId);
+        return OkResponse.of("Repositorio "+ repositoryName + " enlazado con Workspace" + workspaceName);
     }
-    
+
 
 }
 

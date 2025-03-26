@@ -9,11 +9,11 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface GVWorkspaceRepository extends RepositoryIdLong<GVWorkspace> {
-    
-    List<GVWorkspace> findAllUserWorkspacesByUser_Id(Long userId);
 
-    boolean  existsByNameAndUser_Id(String name, Long userId);
+    List<GVWorkspace> findAllByUser_Id(Long userId);
+
+    boolean existsByNameAndUser_Id(String name, Long userId);
 
     Optional<GVWorkspace> findByNameAndUser_Id(String repositoryName, Long userId);
-    
+
 }

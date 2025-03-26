@@ -28,7 +28,7 @@ import lombok.Setter;
     @UniqueConstraint(columnNames = {"user_id", "repositoryId"})
 })
 public class GVRepo extends EntityIdSequential {
-    
+
     @ManyToOne(optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private GVUser user;
