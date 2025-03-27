@@ -1,4 +1,7 @@
 # React Petclinic
+
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/b6edcd0b2f5d47bca62b9425589ea372)](https://app.codacy.com/gh/TFG-luchersol/Git-Vision?utm_source=github.com&utm_medium=referral&utm_content=TFG-luchersol/Git-Vision&utm_campaign=Badge_Grade)
+
 Small project based on spring-petclinic for teaching SPA architectures with React, Java and Spring. Originally developed for DP1 and adapted for the PSG2 course at the Software Engineering degree of University of Sevilla.
 
 This is a fork of https://github.com/spring-projects/spring-petclinic  The main changes that have been performed were:
