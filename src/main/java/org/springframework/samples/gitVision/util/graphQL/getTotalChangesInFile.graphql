@@ -1,0 +1,19 @@
+query ($owner: String!, $repo: String!, $filePath: String!) {
+  repository(owner: $owner, name: $repo) {
+    defaultBranchRef {
+      name
+    }
+    object(expression: "${defaultBranchRef.name}:$filePath") {
+      ... on Blob {
+        blame {
+          ranges {
+            commit {
+              additions
+              deletions
+            }
+          }
+        }
+      }
+    }
+  }
+}

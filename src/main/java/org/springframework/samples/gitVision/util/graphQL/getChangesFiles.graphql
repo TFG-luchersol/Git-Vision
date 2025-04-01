@@ -1,18 +1,25 @@
-query ($owner: String!, $repo: String!, $filePath: String, $cursor: String) {
+query (
+  $owner: String!
+  $repo: String!
+  $author: String!
+  $filePath: String!
+  $cursor: String
+) {
   repository(owner: $owner, name: $repo) {
     defaultBranchRef {
-      name
       target {
         ... on Commit {
-          history(first: 100, after: $cursor, path: $filePath) {
+          history(
+            first: 100
+            after: $cursor
+            author: { name: $author }
+            path: $filePath
+          ) {
             edges {
               node {
                 committedDate
                 additions
                 deletions
-                author {
-                  name
-                }
               }
             }
             pageInfo {
@@ -23,11 +30,5 @@ query ($owner: String!, $repo: String!, $filePath: String, $cursor: String) {
         }
       }
     }
-  }
-  rateLimit {
-    limit
-    cost
-    remaining
-    resetAt
   }
 }

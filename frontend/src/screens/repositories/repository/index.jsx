@@ -22,15 +22,14 @@ export default function Repository() {
     const [selectedOptions, setSelectedOptions] = useState([]);
 
     useEffect(() => {
-        getFiles()
-        getPercentajeLanguajes()
-        getExtensionCounter()
+        getFiles();
+        getPercentajeLanguajes();
+        getExtensionCounter();
     }, [])
 
     const getFiles = async () => {
         try {
-            const id = `${owner}/${repo}`;
-            let newFiles = await fetchWithToken(`/api/v1/files/repository/${id}`)
+            let newFiles = await fetchWithToken(`/api/v1/files/repository/${owner}/${repo}`)
             const {tree} = await getBody(newFiles);
             setFiles(tree)
         } catch (e) {
@@ -40,8 +39,7 @@ export default function Repository() {
 
     const getExtensionCounter = async () => {
         try {
-            const id = `${owner}/${repo}`;
-            let newFiles = await fetchWithToken(`/api/v1/files/repository/${id}/extension_counter`)
+            let newFiles = await fetchWithToken(`/api/v1/files/repository/${owner}/${repo}/extension_counter`)
             const {extensionCounter} = await getBody(newFiles)
             const numFiles = Object.values(extensionCounter).reduce((acc, next) => acc + next, 0);
             setNumFiles(numFiles);
@@ -53,8 +51,7 @@ export default function Repository() {
     
     const getPercentajeLanguajes = async () => {
         try {
-            const id = `${owner}/${repo}`;
-            let newPercentageLanguages = await fetchWithToken(`/api/v1/files/languajes/repository/${id}`)
+            let newPercentageLanguages = await fetchWithToken(`/api/v1/files/languajes/repository/${owner}/${repo}`)
             const {percentageLanguages} = await getBody(newPercentageLanguages)
             setPercentajeLanguajes(percentageLanguages.percentages)
             setNumBytes(percentageLanguages.numBytes);

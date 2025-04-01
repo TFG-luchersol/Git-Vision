@@ -10,6 +10,7 @@ import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GHRepository.Contributor;
 import org.kohsuke.github.GitHub;
 import org.springframework.samples.gitvision.exceptions.ConnectionGithubException;
+import org.springframework.samples.gitvision.exceptions.LinkedException;
 import org.springframework.samples.gitvision.exceptions.ResourceNotFoundException;
 import org.springframework.samples.gitvision.githubUser.model.GithubUser;
 import org.springframework.samples.gitvision.relations.repository.model.GVRepo;
@@ -120,7 +121,7 @@ public class GVRepoService {
             List<GVRepoUserConfiguration> ghConfigurations = new ArrayList<>(ghContributors.size());
             ghContributors.forEach(contributor -> ghConfigurations.add(GVRepoUserConfiguration.of(savedGvRepo, contributor)));
         } catch (Exception e) {
-
+            throw LinkedException.linkGithub();
         }
 
     }
