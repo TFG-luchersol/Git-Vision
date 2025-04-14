@@ -8,7 +8,6 @@ import org.springframework.samples.gitvision.configuration.services.UserDetailsI
 import org.springframework.samples.gitvision.file.model.PercentageLanguages;
 import org.springframework.samples.gitvision.file.model.TreeFiles.TreeNode;
 import org.springframework.samples.gitvision.relations.repository.GVRepoService;
-import org.springframework.samples.gitvision.util.Information;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,14 +29,13 @@ public class FileController {
     }
 
     @GetMapping("/repository/{owner}/{repo}")
-    public ResponseEntity<?> getFileTreeByRepositoryId(@PathVariable String owner,
+    public ResponseEntity<TreeNode> getFileTreeByRepositoryId(@PathVariable String owner,
                                                      @PathVariable String repo,
                                                      @AuthenticationPrincipal UserDetailsImpl userDetailsImpl) throws Exception{
         String login = userDetailsImpl.getUsername();
         GHRepository ghRepository = this.gvRepoService.getRepository(owner, repo, login);
         TreeNode treeNode = this.fileService.getFileTreeByRepositoryName(ghRepository);
-        Information information = Information.create("tree", treeNode);
-        return ResponseEntity.ok(information);
+        return ResponseEntity.ok(treeNode);
     }
 
     @GetMapping("/repository/{owner}/{repo}/blob/content")
