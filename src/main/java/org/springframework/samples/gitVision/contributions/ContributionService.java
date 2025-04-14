@@ -1,7 +1,10 @@
 package org.springframework.samples.gitvision.contributions;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.kohsuke.github.GHContent;
@@ -9,18 +12,22 @@ import org.kohsuke.github.GHRepository;
 import org.springframework.samples.gitvision.contributions.model.Contribution;
 import org.springframework.samples.gitvision.exceptions.ResourceNotFoundException;
 import org.springframework.samples.gitvision.relations.repository.GVRepoRepository;
+import org.springframework.samples.gitvision.relations.repository.GVRepoUserConfigurationRepository;
 import org.springframework.samples.gitvision.relations.repository.model.GVRepo;
+import org.springframework.samples.gitvision.relations.repository.model.GVRepoUserConfiguration;
 import org.springframework.samples.gitvision.util.GithubGraphQLApi;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ContributionService {
-    
-    private final GVRepoRepository gvRepoRepository;
 
-    public ContributionService(GVRepoRepository gvRepoRepository){
+    private final GVRepoRepository gvRepoRepository;
+    private final GVRepoUserConfigurationRepository gvRepoUserConfigurationRepository;
+
+    public ContributionService(GVRepoRepository gvRepoRepository, GVRepoUserConfigurationRepository gvRepoUserConfigurationRepository){
         this.gvRepoRepository = gvRepoRepository;
+        this.gvRepoUserConfigurationRepository = gvRepoUserConfigurationRepository;
     }
 
     @Transactional(readOnly = true)
@@ -30,8 +37,9 @@ public class ContributionService {
             .orElseThrow(() -> new ResourceNotFoundException("Not found repository"));
         String tokenToUse = gvRepo.getToken();
         GithubGraphQLApi githubGraphQLApi = GithubGraphQLApi.connect(tokenToUse);
-        List<Contribution> contribution = githubGraphQLApi.getContributionsBetweenDates(repositoryName, filePath, startDate, endDate);
-        return contribution;
+        List<Contribution> contributions = githubGraphQLApi.getContributionsBetweenDates(repositoryName, filePath, startDate, endDate);
+        simplifyContributors(contributions, gvRepo);
+        return contributions;
     }
 
 
@@ -53,9 +61,28 @@ public class ContributionService {
                     return Stream.empty();
                 }
             })
-            .toList();
+            .collect(Collectors.toList());
+        simplifyContributors(contributions, gvRepo);
         return contributions;
-        
+
+    }
+
+    private void simplifyContributors(List<Contribution> contributions, GVRepo gvRepo){
+        List<GVRepoUserConfiguration> alias = gvRepoUserConfigurationRepository.findByGvRepo(gvRepo);
+
+        Map<String, String> resultado = new HashMap<>();
+        for (GVRepoUserConfiguration gvRepoUserConfiguration : alias) {
+            resultado.putAll(gvRepoUserConfiguration.toOriginal());
+        }
+
+        for (Contribution contribution : contributions) {
+            String contributionName = contribution.getAuthorName();
+            if(resultado.containsKey(contributionName)) {
+                String newContributionName = resultado.get(contributionName);
+                contribution.setAuthorName(newContributionName);
+            }
+        }
+
     }
 
 }
