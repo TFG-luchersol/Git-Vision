@@ -48,7 +48,7 @@ export default function FileContent() {
     async function getContent() {
         try {
             const response = await fetchWithToken(`/api/v1/files/repository/${owner}/${repo}/blob/content?path=${path}`);
-            const { content } = await getBody(response);
+            const content  = await getBody(response);
             if(isImage(path)){
                 setContentFile(prev => displayImageFromBytes(content));
                 setLanguage("image");

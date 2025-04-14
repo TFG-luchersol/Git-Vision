@@ -24,8 +24,7 @@ export default function Issue() {
 
     const getIssue = async () => {
         try {
-            const id = `${owner}/${repo}`;
-            const newIssues = await fetchWithToken(`/api/v1/issues/${id}/${issueNumber}`)
+            const newIssues = await fetchWithToken(`/api/v1/issues/${owner}/${repo}/${issueNumber}`)
             const {issue, commits, files, changesByUser, assigness} = await getBody(newIssues)
             setIssue(issue)
             setCommits(commits)
@@ -83,29 +82,24 @@ export default function Issue() {
     }
 
     return (
-        <div style={{ position: "fixed", top: 0, zIndex: -1, left: 0, right: 0, bottom: 0, backgroundColor: "#dcdcdc" }}>
+        <div style={{ display: "flex", justifyContent: "center", flexDirection: "column", position: "absolute", top: "15%", width: "87%" }} className='issue-container'>
 
-            <div style={{ display: "flex", justifyContent: "center", flexDirection: "column", position: "absolute", top: "15%", width: "87%" }} className='issue-container'>
-
-                <span className="issue-message">
-                    <div style={{ display: "flex", flexDirection: "row" }}>
-                        <span style={{ marginRight: 10 }}>
-                            {issue.state?.toUpperCase() === "CLOSED" ?
-                                <GoIssueClosed color='purple' /> :
-                                <GoIssueOpened color='green' />
-                            }
-                        </span>
-                        <p style={{ marginTop: 1 }}>{issue.title}</p>
-                    </div>
-                    <span className="number">#{issue.number}</span>
-                </span>
-
-                <div style={{ marginTop: "10px" }}>
-                    <FolderTabs sections={sections} />
+            <span className="issue-message">
+                <div style={{ display: "flex", flexDirection: "row" }}>
+                    <span style={{ marginRight: 10 }}>
+                        {issue.state?.toUpperCase() === "CLOSED" ?
+                            <GoIssueClosed color='purple' /> :
+                            <GoIssueOpened color='green' />
+                        }
+                    </span>
+                    <p style={{ marginTop: 1 }}>{issue.title}</p>
                 </div>
+                <span className="number">#{issue.number}</span>
+            </span>
+
+            <div style={{ marginTop: "10px" }}>
+                <FolderTabs sections={sections} />
             </div>
-
         </div>
-
     );
 }

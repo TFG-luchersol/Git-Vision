@@ -176,7 +176,7 @@ export default function Contributions({ owner, repo, path = null, isFolder=false
 
     try {
       const response = await fetchWithToken(urlObj.toString());
-      const result = (await getBody(response)).contributions;
+      const result = await getBody(response);
       if (minYear === null && result.length !== 0) {
         minYear = result.reduce((earliest, current) => {
           const currentDate = new Date(current.committedDate);

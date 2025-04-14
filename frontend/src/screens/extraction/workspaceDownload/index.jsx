@@ -50,7 +50,7 @@ export default function WorkspaceDownload(){
     }
 
     return (
-        <div className="home-page-container">
+        <div className='center-screen'>
             <LoadingModal isLoading={isLoading} />
             <Alert isOpen={message} color="danger" style={{position:'absolute', top:'30px'}}>{message}</Alert>
                 

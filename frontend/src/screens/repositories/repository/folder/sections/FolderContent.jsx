@@ -18,7 +18,7 @@ export default function FolderContent() {
     async function getFiles() {
         try {
             const response = await fetchWithToken(`/api/v1/files/repository/${owner}/${repo}/tree/files?path=${path}`)
-            const { tree } = await getBody(response);
+            const tree = await getBody(response);
             setFiles(tree.children);
         } catch (error) {
             alert(error)

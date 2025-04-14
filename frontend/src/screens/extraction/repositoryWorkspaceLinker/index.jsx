@@ -27,8 +27,8 @@ export default function RepositoryWorkspaceLinker() {
     useEffect(() => {
         const loadRepositories = async () => {
             try {
-                const response = await fetchWithToken(`/api/v1/relation/repository/repositories`)
-                const {repositories} = await getBody(response);
+                const response = await fetchWithToken(`/api/v1/relation/repository`)
+                const repositories = await getBody(response);
                 setRepositories(repositories)
             } catch (error) {
                 setMessage(error.message)
@@ -37,7 +37,7 @@ export default function RepositoryWorkspaceLinker() {
         const loadWorkspaces = async () => {
             try {
                 const response = await fetchWithToken(`/api/v1/relation/workspace/workspaces`)
-                const {workspaces} = await getBody(response);
+                const workspaces = await getBody(response);
                 setWorkspaces(workspaces)
             } catch (error) {
                 setMessage(error.message)
@@ -74,7 +74,7 @@ export default function RepositoryWorkspaceLinker() {
     }
 
     return (
-        <div className="home-page-container">
+        <div className='center-screen'>
             <Alert isOpen={message} color="danger" style={{ position: 'fixed', top: '11%'}}>{message}</Alert>
 
             <Form onSubmit={handleSubmit} className='auth-form-container' >
@@ -83,7 +83,7 @@ export default function RepositoryWorkspaceLinker() {
                         <h1>Link Github/Clockify</h1>
                     </title>
                     <div style={{ display:"flex", alignItems: "center", flexDirection: "column"}}>
-                        <FormGroup>
+                        <FormGroup style={{width: "80%"}}>
                             <Dropdown isOpen={dropdownOwnerOpen} toggle={toggleOwner} >
                                 <DropdownToggle caret>
                                     Owner
@@ -95,7 +95,7 @@ export default function RepositoryWorkspaceLinker() {
                             </Dropdown>
                             <Input value={owner || "Select a Owner"} readOnly/>
                         </FormGroup>
-                        <FormGroup>
+                        <FormGroup style={{width: "80%"}}>
                             <Dropdown isOpen={dropdownRepositoryOpen} toggle={toggleRepository}>
                                 <DropdownToggle caret>
                                     Repository
@@ -107,7 +107,7 @@ export default function RepositoryWorkspaceLinker() {
                             </Dropdown>
                             <Input value={values.repository || "Select a Repository"} readOnly/>
                         </FormGroup>
-                        <FormGroup>
+                        <FormGroup style={{width: "80%"}}>
                             <Dropdown isOpen={dropdownWorkspaceOpen} toggle={toggleWorkspace}>
                                 <DropdownToggle caret>
                                     Workspace

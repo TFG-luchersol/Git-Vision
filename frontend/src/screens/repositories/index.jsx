@@ -28,7 +28,7 @@ export default function Repositories() {
     const getRepositories = async () => {
         try {
             let newRepositories = await fetchWithToken("/api/v1/relation/repository")
-            const {repositories} = await getBody(newRepositories)
+            const repositories = await getBody(newRepositories)
             setRepositories(repositories)
         } catch (e) {
             alert(e.message)
@@ -37,8 +37,8 @@ export default function Repositories() {
 
     const getWorkspaces = async () => {
         try {
-            let newWorkspaces = await fetchWithToken(`/api/v1/relation/workspace/workspaces?userId=${tokenService.getUser().id}`)
-            const {workspaces} = await getBody(newWorkspaces)
+            let response = await fetchWithToken(`/api/v1/relation/workspace/workspaces?userId=${tokenService.getUser().id}`)
+            const workspaces = await getBody(response)
             setWorkspaces(workspaces)
         } catch (e) {
             
@@ -47,8 +47,8 @@ export default function Repositories() {
 
     const getRelation = async () => {
         try {
-            let newRelation = await fetchWithToken(`/api/v1/linker?userId=${tokenService.getUser().id}`)
-            const {workspace_repository} = await getBody(newRelation)
+            let response = await fetchWithToken(`/api/v1/linker?userId=${tokenService.getUser().id}`)
+            const workspace_repository = await getBody(response)
             setRelation(workspace_repository)
         } catch (e) {
             
@@ -57,60 +57,62 @@ export default function Repositories() {
 
 
     return (
-        <div className='grey-cover'>
-            <div style={{ zIndex: 200, display: 'flex', justifyContent: 'space-around', height: '100%' }}>
-
-                <div style={{ position: 'relative', top: "100px" }}>
-                    <h1>Repositorios <IoLogoGithub /></h1>
-                    <div className='contenedor-rutas'>
-                        {Object.keys(repositories).length > 0 ?
-                            Object.keys(repositories).map(owner =>
-                                <AccordionItem title={owner}>
-                                    {repositories[owner].map(repo =>
-                                        <div onClick={() => window.location.href = `/repository/${owner + "/" + repo}`}>
-                                            <AccordionItem title={repo} leaf />
-                                        </div>
-                                    )
-                                    }
-                                </AccordionItem>
-                            ) : <h6 style={{margin: 20}} >NO HAY REPOSITORIOS DESCARGADOS</h6>
-                        }
-                    </div>
-                    <h1 style={{ marginTop: 10 }}>Workspace <SiClockify color='blue' /></h1>
-                    <div className='contenedor-rutas'>
-                        {workspaces.length > 0 ?
-                            workspaces.map(workspace => 
-                                    <div style={{display: "flex", flexDirection: "row"}}>
-                                        <AccordionItem leaf title={workspace.name} />
-                                        <div style={{display: "flex", flexDirection: "column"}}>
-                                        {relation[workspace.name] && 
-                                            relation[workspace.name].map(r => 
-                                                <div style={{ marginLeft: '20px', marginTop: '10px' }}>
-                                                    <FaLink style={{marginRight: "20px"}}/>{r}
-                                                </div>
-                                            )
-                                        }
-                                        </div>
-                                            
+        <div style={{ display: 'flex', justifyContent: 'space-around' }}>
+            <div style={{display: "flex", flexDirection: "column", justifyContent: "center"}}>
+                <h1>Repositorios <IoLogoGithub /></h1>
+                <div className='contenedor-rutas'>
+                    {Object.keys(repositories).length > 0 ?
+                        Object.keys(repositories).map(owner =>
+                            <AccordionItem title={owner}>
+                                {repositories[owner].map(repo =>
+                                    <div onClick={() => window.location.href = `/repository/${owner + "/" + repo}`}>
+                                        <AccordionItem title={repo} leaf />
                                     </div>
-                                ) :
-                            <h6 style={{margin: 20}}>NO HAY REPOSITORIOS DESCARGADOS</h6>}
-                    </div>
+                                )
+                                }
+                            </AccordionItem>
+                        ) : <h6 style={{margin: 20}} >NO HAY REPOSITORIOS DESCARGADOS</h6>
+                    }
                 </div>
+                {tokenService.hasClockifyToken() && <>    
+                <h1 style={{ marginTop: 10 }}>Workspace <SiClockify color='blue' /></h1>
+                <div className='contenedor-rutas'>
+                    {workspaces.length > 0 ?
+                        workspaces.map(workspace => 
+                                <div style={{display: "flex", flexDirection: "row"}}>
+                                    <AccordionItem leaf title={workspace.name} />
+                                    <div style={{display: "flex", flexDirection: "column"}}>
+                                    {relation[workspace.name] && 
+                                        relation[workspace.name].map(r => 
+                                            <div style={{ marginLeft: '20px', marginTop: '10px' }}>
+                                                <FaLink style={{marginRight: "20px"}}/>{r}
+                                            </div>
+                                        )
+                                    }
+                                    </div>
+                                        
+                                </div>
+                            ) :
+                        <h6 style={{margin: 20}}>NO HAY WORKSPACES DESCARGADOS</h6>}
+                </div>
+                </>}
+            </div>
 
-                <div className='button-group' style={{ justifyContent: "center" }}>
-                    <Button >
-                        <Link className='custom-link' to={"/repository/download"}>Añadir repositorio</Link>
-                    </Button>
+            <div className='button-group' style={{ justifyContent: "center", height: "70vh" }}>
+                <Button >
+                    <Link className='custom-link' to={"/repository/download"}>Añadir repositorio</Link>
+                </Button>
+                
+                {tokenService.hasClockifyToken() && <>
                     <Button >
                         <Link className='custom-link' to={"/workspace/download"}>Añadir workspace</Link>
                     </Button>
                     <Button style={{ marginTop: 10 }} >
-                        <Link className='custom-link' to={"/repository/workspace/linker"}>Enlazar proyecto con workspace</Link>
+                        <Link className='custom-link' to={"/linker/repository/workspace/"}>Enlazar proyecto con workspace</Link>
                     </Button>
-                </div>
-
+                </>}
             </div>
+
         </div>
     );
 }

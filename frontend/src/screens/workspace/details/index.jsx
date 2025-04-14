@@ -31,8 +31,7 @@ export default function Workspace() {
   
     };
 
-    return <div className="home-page-container">
-        <div className="details-container">
+    return (<div className="details-container">
           <div className="profile-container">
             <div className="profile-image">
               <img
@@ -55,6 +54,5 @@ export default function Workspace() {
               button={saveTokenGithubButton}
             />
           </div>
-        </div>
-        </div>
+        </div>);
 }

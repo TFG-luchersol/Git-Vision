@@ -32,7 +32,6 @@ export default function RepositoryDetails() {
   };
 
   return (
-    <div className="home-page-container">
     <div className="details-container">
       <div className="profile-container">
         <div className="profile-image">
@@ -56,7 +55,6 @@ export default function RepositoryDetails() {
           button={saveTokenGithubButton}
         />
       </div>
-    </div>
     </div>
   );
 }

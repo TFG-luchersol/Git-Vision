@@ -16,8 +16,8 @@ export default function ContributorProfiles() {
     const getContributors = async () => {
         try {
             let response = await fetchWithToken(`/api/v1/relation/repository/${owner}/${repo}/contributors`)
-            const result = await getBody(response);
-            setContributors(result.contributors)
+            const contributors = await getBody(response);
+            setContributors(contributors)
         } catch (e) {
             alert(e)
         }

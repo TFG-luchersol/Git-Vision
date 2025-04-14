@@ -30,7 +30,7 @@ export default function Login() {
                 body: reqBody,
             });
             
-            const {jwt} = await getBody(response);
+            const jwt = await getBody(response);
             tokenService.setLocalAccessToken(jwt.token)
             tokenService.setUser(jwt.user);
             window.location.href = "/";
@@ -48,8 +48,7 @@ export default function Login() {
     }
 
     return (
-        <div className="home-page-container">
-
+        <div className='center-screen'>
             <Alert isOpen={message} color="danger" style={{ position: 'fixed', top: '15%' }}>{message}</Alert>
 
             <Form onSubmit={handleSubmit} className='auth-form-container' >
@@ -88,6 +87,5 @@ export default function Login() {
                 </div>
             </Form>
         </div>
-
     );
 }

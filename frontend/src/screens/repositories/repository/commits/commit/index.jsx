@@ -18,8 +18,8 @@ export default function Commit() {
     const getCommit = async () => {
         try {
             const repositorName = `${owner}/${repo}`;
-            const newCommit = await fetchWithToken(`/api/v1/commits/${repositorName}/${sha}`)
-            const {commit} = await getBody(newCommit)
+            const response = await fetchWithToken(`/api/v1/commits/${repositorName}/${sha}`)
+            const commit = await getBody(response)
             setCommit(commit)
         } catch (e) {
             alert(e.message)
@@ -52,14 +52,12 @@ export default function Commit() {
     }
 
     return (
-        <div style={{ position: "fixed", top: 0, zIndex: -1, left: 0, right: 0, bottom: 0, backgroundColor: "#dcdcdc"}}>
-            <div style={{display: "flex", justifyContent:"center", flexDirection: "column", position:"absolute", top: "15%", width: "87%"}}>
-                <div className='commit-message'>
-                    {commit.message}
-                </div>
-                <div style={{marginTop: "10px"}}>
-                    <FolderTabs sections={sections}/>
-                </div>
+        <div style={{display: "flex", justifyContent:"center", flexDirection: "column", position:"absolute", top: "15%", width: "87%"}}>
+            <div className='commit-message'>
+                {commit.message}
+            </div>
+            <div style={{marginTop: "10px"}}>
+                <FolderTabs sections={sections}/>
             </div>
         </div>
     );

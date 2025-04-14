@@ -64,9 +64,9 @@ export default function Register() {
     }
 
     return (
-        <div className="home-page-container">
+        <div className='center-screen'>
             <Alert isOpen={message} color="danger" style={{ position: 'fixed', top: '15%' }}>{message}</Alert>
-            <Form style={{marginTop: "20%"}} onSubmit={handleSubmit} className='auth-form-container'>
+            <Form onSubmit={handleSubmit} className='auth-form-container'>
                 <div style={{ margin: "30px" }}>
                     <title className='center-title'><h1>Register</h1></title>
                     <FormGroup>

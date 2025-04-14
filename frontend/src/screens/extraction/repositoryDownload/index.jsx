@@ -62,11 +62,11 @@ export default function RepositoryDownload() {
     }
 
     return (
-        <div className="home-page-container">
+        <div className='center-screen'>
             <LoadingModal isLoading={isLoading} />
             <AlertMessage message={message}/>
 
-            <Form onSubmit={handleSubmit} className='auth-form-container' style={{ position: 'relative', top: 35}} >
+            <Form onSubmit={handleSubmit} className='auth-form-container' >
                 <div style={{ margin: "30px" }}>
                     <title className='center-title'>
                         <h1>Download Repository</h1>
