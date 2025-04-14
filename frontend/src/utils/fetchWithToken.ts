@@ -8,7 +8,7 @@ export default async function fetchWithToken(
     const headers = new Headers(init.headers);
     if (token)
         headers.set("Authorization", "Bearer " + token);
-
+    
     return await fetch(url, {
         ...init,
         headers,

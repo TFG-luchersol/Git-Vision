@@ -7,6 +7,7 @@
     --red-shadow-color: rgba(229, 46, 46, 0.4);
 }
 
+
 @font-face {
     font-family: 'american-typewriter'; /*a name to be used later*/
     src: url('../../../src/static/fonts/American\ Typewriter\ Bold.ttf'); /*URL to font*/
