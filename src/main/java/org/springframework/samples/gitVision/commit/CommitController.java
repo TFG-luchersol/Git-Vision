@@ -3,8 +3,7 @@ package org.springframework.samples.gitvision.commit;
 import java.util.List;
 
 import org.kohsuke.github.GHRepository;
-import org.springframework.samples.gitvision.auth.payload.response.MessageResponse;
-import org.springframework.samples.gitvision.auth.payload.response.OkResponse;
+import org.springframework.http.ResponseEntity;
 import org.springframework.samples.gitvision.commit.model.Commit;
 import org.springframework.samples.gitvision.configuration.services.UserDetailsImpl;
 import org.springframework.samples.gitvision.relations.repository.GVRepoService;
@@ -33,7 +32,7 @@ public class CommitController {
     }
 
     @GetMapping("/{owner}/{repo}")
-    public MessageResponse getCommitsByRepository(@PathVariable String owner,
+    public ResponseEntity<Information> getCommitsByRepository(@PathVariable String owner,
                                                   @PathVariable String repo,
                                                   @RequestParam(defaultValue = "1") Integer page,
                                                   @AuthenticationPrincipal UserDetailsImpl userDetailsImpl ){
@@ -42,20 +41,19 @@ public class CommitController {
         List<Commit> commits = this.commitService.getCommitsByRepository(repositoryName, login, page);
         Information information = Information.create("commits", commits)
                                                 .put("page", page);
-        return OkResponse.of(information);
+        return ResponseEntity.ok(information);
 
     }
 
     @GetMapping("/{owner}/{repo}/{sha}")
-    public MessageResponse getCommitByRepositoryNameAndSha(@PathVariable String owner,
+    public ResponseEntity<Commit> getCommitByRepositoryNameAndSha(@PathVariable String owner,
                                                   @PathVariable String repo,
                                                   @PathVariable String sha,
                                                   @AuthenticationPrincipal UserDetailsImpl userDetailsImpl) throws Exception{
-            String login = userDetailsImpl.getUsername();
-            GHRepository ghRepository = this.gvRepoService.getRepository(owner, repo, login);
-            Commit commit = this.commitService.getCommitByRepositoryNameAndSha(ghRepository, sha);
-            Information information = Information.create("commit", commit);
-            return OkResponse.of(information);
+        String login = userDetailsImpl.getUsername();
+        GHRepository ghRepository = this.gvRepoService.getRepository(owner, repo, login);
+        Commit commit = this.commitService.getCommitByRepositoryNameAndSha(ghRepository, sha);
+        return ResponseEntity.ok(commit);
     }
 
     // @GetMapping("/{owner}/{repo}/byTime")
@@ -66,9 +64,6 @@ public class CommitController {
     //     } catch (Exception e) {
     //         return null;
     //     }
-
     // }
-
-
 
 }

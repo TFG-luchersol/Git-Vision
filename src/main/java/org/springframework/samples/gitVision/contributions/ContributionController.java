@@ -5,12 +5,10 @@ import java.util.Date;
 import java.util.List;
 
 import org.kohsuke.github.GHRepository;
-import org.springframework.samples.gitvision.auth.payload.response.MessageResponse;
-import org.springframework.samples.gitvision.auth.payload.response.OkResponse;
+import org.springframework.http.ResponseEntity;
 import org.springframework.samples.gitvision.configuration.services.UserDetailsImpl;
 import org.springframework.samples.gitvision.contributions.model.Contribution;
 import org.springframework.samples.gitvision.relations.repository.GVRepoService;
-import org.springframework.samples.gitvision.util.Information;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,7 +32,7 @@ public class ContributionController {
     }
 
     @GetMapping("/{owner}/{repo}/between_time")
-    public MessageResponse getCommitsByUserBetweenDates(@PathVariable String owner,
+    public ResponseEntity<List<Contribution>> getCommitsByUserBetweenDates(@PathVariable String owner,
                                                         @PathVariable String repo,
                                                         @RequestParam(defaultValue = "false") String isFolder,
                                                         @RequestParam(required = false) String path,
@@ -50,8 +48,7 @@ public class ContributionController {
         List<Contribution> contributions = isFolder == "" ?
             this.contributionService.getContributionsInFolderByDateBetweenDates(ghRepository, repositoryName, login, path, d1, d2) :
             this.contributionService.getContributionsByDateBetweenDates(repositoryName, login, path, d1, d2);
-        Information information = Information.create("contributions", contributions);
-        return OkResponse.of(information);
+        return ResponseEntity.ok(contributions);
     }
 
 }

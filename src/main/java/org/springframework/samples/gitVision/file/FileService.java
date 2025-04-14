@@ -18,18 +18,11 @@ import org.springframework.samples.gitvision.file.model.File;
 import org.springframework.samples.gitvision.file.model.PercentageLanguages;
 import org.springframework.samples.gitvision.file.model.TreeFiles;
 import org.springframework.samples.gitvision.file.model.TreeFiles.TreeNode;
-import org.springframework.samples.gitvision.relations.repository.GVRepoRepository;
 import org.springframework.samples.gitvision.util.EntityUtils;
 import org.springframework.stereotype.Service;
 
 @Service
 public class FileService {
-
-    private final GVRepoRepository gvRepoRepository;
-
-    public FileService(GVRepoRepository gvRepoRepository) {
-        this.gvRepoRepository = gvRepoRepository;
-    }
 
     public PercentageLanguages getPercentageExtensionsByRespositoryName(GHRepository ghRepository) throws Exception{
         Map<String, Long> contLanguajes = ghRepository.listLanguages();
@@ -88,7 +81,7 @@ public class FileService {
                 int deletions = file.getLinesDeleted();
 
                 fileChangesMap
-                        .computeIfAbsent(filePath, k -> new Change())
+                        .computeIfAbsent(filePath, _ -> new Change())
                         .addChanges(additions, deletions);
             });
         }

@@ -1,12 +1,11 @@
 package org.springframework.samples.gitvision.relations.workspace;
 
 import java.util.List;
+import java.util.Map;
 
-import org.springframework.samples.gitvision.auth.payload.response.MessageResponse;
-import org.springframework.samples.gitvision.auth.payload.response.OkResponse;
+import org.springframework.http.ResponseEntity;
 import org.springframework.samples.gitvision.configuration.services.UserDetailsImpl;
 import org.springframework.samples.gitvision.relations.workspace.model.GVWorkspace;
-import org.springframework.samples.gitvision.util.Information;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,28 +29,26 @@ public class GVWorkspaceController {
     }
 
     @GetMapping("/workspaces")
-    public MessageResponse getAllWorkspacesByUserId(@AuthenticationPrincipal UserDetailsImpl userDetailsImpl) {
+    public ResponseEntity<List<GVWorkspace>> getAllWorkspacesByUserId(@AuthenticationPrincipal UserDetailsImpl userDetailsImpl) {
         Long userId = userDetailsImpl.getId();
         List<GVWorkspace> gvWorkspaces = this.gvWorkspaceService.getAllWorkspaceByUserId(userId);
-        Information information = Information.create("workspaces", gvWorkspaces);
-        return OkResponse.of(information);
+        return ResponseEntity.ok(gvWorkspaces);
     }
 
     @PostMapping
-    public MessageResponse linkUserWithWorkspace(@RequestParam String workspaceId,
+    public ResponseEntity<String> linkUserWithWorkspace(@RequestParam String workspaceId,
                                                  @RequestParam String name,
                                                  @AuthenticationPrincipal UserDetailsImpl userDetailsImpl){
         Long userId = userDetailsImpl.getId();
         gvWorkspaceService.linkUserWithWorkspace(workspaceId, name, userId);
-        return OkResponse.of("Workspace creado");
+        return ResponseEntity.ok("Workspace creado");
     }
 
     @GetMapping("/{workspaceId}/timeByUser")
-    public MessageResponse getTimeByUser(@RequestParam String workspaceId,
+    public ResponseEntity<Map<String, Long>> getTimeByUser(@RequestParam String workspaceId,
                                          @AuthenticationPrincipal UserDetailsImpl userDetailsImpl) {
-        var x = gvWorkspaceService.getTimeByUser(workspaceId, userDetailsImpl.getId());
-        Information information = Information.create("x", x);
-        return OkResponse.of(information);
+        Map<String, Long> timeByUser = gvWorkspaceService.getTimeByUser(workspaceId, userDetailsImpl.getId());
+        return ResponseEntity.ok(timeByUser);
     }
 
 

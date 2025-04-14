@@ -27,5 +27,5 @@ public class MessageResponse extends ResponseEntity<Information> {
         return of(exception.getMessage(), status);
     }
 
-	
+
 }

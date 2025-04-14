@@ -19,6 +19,7 @@ import org.kohsuke.github.GitHub;
 import org.springframework.beans.BeanUtils;
 import org.springframework.dao.DataAccessException;
 import org.springframework.samples.gitvision.exceptions.ResourceNotFoundException;
+import org.springframework.samples.gitvision.util.Checker;
 import org.springframework.samples.gitvision.util.ClockifyApi;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -75,10 +76,12 @@ public class GVUserService {
 		return toUpdate;
 	}
 
-	@Transactional 
+	@Transactional
 	public void updateGithubToken(String username, String githubToken) throws Exception{
+        Checker.checkOrThrow(gvUserRepository.existsByUsername(username),
+                             ResourceNotFoundException.of("User", "username", username));
 		GitHub gitHub = GitHub.connect(username, githubToken);
-	
+
 		if(gitHub.getMyself() == null)
 			throw new IllegalAccessError("Error: fail to connect Github with new token");
 		GVUser user = findUserByUsername(username);
@@ -86,15 +89,15 @@ public class GVUserService {
 		gvUserRepository.save(user);
 	}
 
-	@Transactional 
+	@Transactional
 	public void updateClockifyToken(String username, String clockifyToken) throws Exception{
-		
+
 		try {
 			ClockifyApi.getCurrentUser(clockifyToken);
 		} catch (Exception e) {
 			throw new IllegalAccessError("Error en conexión a clockify con token");
 		}
-			
+
 		GVUser user = findUserByUsername(username);
 		user.setClockifyToken(clockifyToken);
 		gvUserRepository.save(user);
@@ -109,6 +112,8 @@ public class GVUserService {
 
 	@Transactional
 	public void deleteUserById(Long id) {
+        Checker.checkOrThrow(gvUserRepository.existsById(id),
+                             ResourceNotFoundException.of("User", "ID", id));
 		GVUser toDelete = findUserById(id);
 		this.gvUserRepository.delete(toDelete);
 	}

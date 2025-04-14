@@ -29,25 +29,17 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Commit {
 
-    String sha;
-    
-    String message;
+    private String sha;
+    private String message;
+    private String body;
+    private LocalDateTime date;
+    private int additions;
+    private int deletions;
 
-    String body;
-
-    LocalDateTime date;
-
-    int additions;
-
-    int deletions;
-
-    CommitType commitType;
-
-    GithubUser author;
-
-    List<File> files;
-
-    List<Issue> issues;
+    private CommitType commitType;
+    private GithubUser author;
+    private List<File> files;
+    private List<Issue> issues;
 
     public Change getChange(){
         return Change.of(additions, deletions);
