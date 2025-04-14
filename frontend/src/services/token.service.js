@@ -1,4 +1,14 @@
 class TokenService {
+
+    isAuthenticated() {
+        return !!localStorage.getItem("user");
+    }
+
+    hasClockifyToken() {
+        const user = this.getUser();
+        return !!user?.clockifyToken;
+    }
+
     getLocalRefreshToken() {
         const user = JSON.parse(localStorage.getItem("user"));
         return user?.refreshToken;
