@@ -2,12 +2,16 @@ package org.springframework.samples.gitvision.relations.repository;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.kohsuke.github.GHRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.samples.gitvision.configuration.services.UserDetailsImpl;
 import org.springframework.samples.gitvision.githubUser.model.GithubUser;
+import org.springframework.samples.gitvision.relations.repository.model.AliasesDTO;
+import org.springframework.samples.gitvision.relations.repository.model.GVRepoUserConfiguration;
 import org.springframework.samples.gitvision.user.GVUserService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,7 +38,7 @@ public class GVRepoController {
     GVUserService userService;
 
     @GetMapping
-    public ResponseEntity< Map<String, List<String>>> getAllRepositoriesByUserId(@AuthenticationPrincipal UserDetailsImpl userDetailsImpl) {
+    public ResponseEntity<Map<String, List<String>>> getAllRepositoriesByUserId(@AuthenticationPrincipal UserDetailsImpl userDetailsImpl) {
         Long userId = userDetailsImpl.getId();
         Map<String, List<String>>ownerRepositories = this.gvRepoService.getAllRepositories(userId);
         return ResponseEntity.ok(ownerRepositories);
@@ -56,6 +60,37 @@ public class GVRepoController {
         List<GithubUser> contributors = this.gvRepoService.getContributors(ghRepository);
         return ResponseEntity.ok(contributors);
     }
+
+    @GetMapping("/{owner}/{repo}/user_alias")
+    public ResponseEntity<Map<String, Set<String>>> getRepositoryConfiguration(
+            @PathVariable String owner, @PathVariable String repo,
+            @AuthenticationPrincipal UserDetailsImpl userDetailsImpl) {
+        String repositoryName = owner + "/" + repo;
+        List<GVRepoUserConfiguration> gvRepoUserConfiguration = gvRepoService.getRepositoryConfiguration(repositoryName, userDetailsImpl.getId());
+        Map<String, Set<String>> aliases = gvRepoUserConfiguration.stream()
+            .collect(Collectors.toMap(GVRepoUserConfiguration::getUsername, GVRepoUserConfiguration::getAliases));
+        return ResponseEntity.ok(aliases);
+    }
+
+    @PutMapping("/{owner}/{repo}/user_alias")
+    public ResponseEntity<?> updateAliases(
+            @PathVariable String owner, @PathVariable String repo,
+            @RequestBody AliasesDTO aliasesDTO,
+            @AuthenticationPrincipal UserDetailsImpl userDetailsImpl) {
+        String repositoryName = owner + "/" + repo;
+        gvRepoService.updateAliaUserConfigurations(repositoryName, userDetailsImpl.getId(), aliasesDTO);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/{owner}/{repo}/user_alias/refresh")
+    public ResponseEntity<Map<String, Set<String>>> refreshRepositoryConfiguration(
+            @PathVariable String owner, @PathVariable String repo,
+            @AuthenticationPrincipal UserDetailsImpl userDetailsImpl) throws Exception {
+        GHRepository ghRepository = gvRepoService.getRepository(owner, repo, userDetailsImpl.getUsername());
+        Map<String, Set<String>> aliases = gvRepoService.refreshRepositoryConfiguration(ghRepository, userDetailsImpl.getId());
+        return ResponseEntity.ok(aliases);
+    }
+
 
     @PutMapping("/{owner}/{repo}/token")
     public ResponseEntity<String> updateGithubToken(@PathVariable String owner,

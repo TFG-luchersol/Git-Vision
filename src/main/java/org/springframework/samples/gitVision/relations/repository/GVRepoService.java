@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GHRepository.Contributor;
@@ -13,6 +15,7 @@ import org.springframework.samples.gitvision.exceptions.ConnectionGithubExceptio
 import org.springframework.samples.gitvision.exceptions.LinkedException;
 import org.springframework.samples.gitvision.exceptions.ResourceNotFoundException;
 import org.springframework.samples.gitvision.githubUser.model.GithubUser;
+import org.springframework.samples.gitvision.relations.repository.model.AliasesDTO;
 import org.springframework.samples.gitvision.relations.repository.model.GVRepo;
 import org.springframework.samples.gitvision.relations.repository.model.GVRepoUserConfiguration;
 import org.springframework.samples.gitvision.relations.workspace.GVWorkspaceRepository;
@@ -28,13 +31,16 @@ public class GVRepoService {
     private final GVRepoRepository gvRepoRepository;
     private final GVWorkspaceRepository gvWorkspaceRepository;
     private final GVUserRepository gvUserRepository;
+    private final GVRepoUserConfigurationRepository gvRepoUserConfigurationRepository;
 
     public GVRepoService(GVRepoRepository gvRepoRepository,
-                         GVWorkspaceRepository gvWorkspaceRepository,
-                         GVUserRepository gvUserRepository){
+            GVWorkspaceRepository gvWorkspaceRepository,
+            GVUserRepository gvUserRepository,
+            GVRepoUserConfigurationRepository gvRepoUserConfigurationRepository) {
         this.gvRepoRepository = gvRepoRepository;
         this.gvWorkspaceRepository = gvWorkspaceRepository;
         this.gvUserRepository = gvUserRepository;
+        this.gvRepoUserConfigurationRepository = gvRepoUserConfigurationRepository;
     }
 
     @Transactional(readOnly = true)
@@ -44,7 +50,7 @@ public class GVRepoService {
         for (String name : nameRepositories) {
             String[] pieces = name.split("/");
             String owner = pieces[0], repo = pieces[1];
-            if(dict.containsKey(owner)){
+            if (dict.containsKey(owner)) {
                 dict.get(owner).add(repo);
             } else {
                 List<String> ls = new ArrayList<>();
@@ -92,11 +98,69 @@ public class GVRepoService {
         return ghRepository.listContributors().toList().stream().map(GithubUser::parseContributor).toList();
     }
 
+    public List<GVRepoUserConfiguration> getRepositoryConfiguration(String repositoryName, Long userId) {
+        List<GVRepoUserConfiguration> gvRepoUserConfigurations = this.gvRepoUserConfigurationRepository
+                .findByGvRepo_NameAndGvRepo_User_Id(repositoryName, userId);
+        return gvRepoUserConfigurations;
+    }
+
+    public GVRepoUserConfiguration updateAliaUserConfigurations(String repositoryName, Long userId, AliasesDTO aliasesDTO) {
+        GVRepoUserConfiguration gvRepoUserConfiguration = this.gvRepoUserConfigurationRepository
+                .findByGvRepo_NameAndGvRepo_User_IdAndUsername(repositoryName, userId, aliasesDTO.username())
+                .orElseThrow(() -> ResourceNotFoundException.of(GVRepoUserConfiguration.class));
+        if(!aliasesDTO.aliases().equals(gvRepoUserConfiguration.getAliases())) {
+            gvRepoUserConfiguration.setAliases(aliasesDTO.aliases());
+            gvRepoUserConfigurationRepository.save(gvRepoUserConfiguration);
+        }
+
+        return gvRepoUserConfiguration;
+    }
+
+    public Map<String, Set<String>> refreshRepositoryConfiguration(GHRepository ghRepository, Long userId)
+            throws Exception {
+        List<String> contributors = ghRepository.listContributors().toList().stream()
+                .map(Contributor::getLogin)
+                .toList();
+
+        List<GVRepoUserConfiguration> existingConfigurations = getRepositoryConfiguration(ghRepository.getFullName(), userId);
+        Set<String> existingUsernames = existingConfigurations.stream()
+                .map(GVRepoUserConfiguration::getUsername)
+                .collect(Collectors.toSet());
+
+        GVRepo gvRepo = this.gvRepoRepository.findByNameAndUser_Id(ghRepository.getFullName(), userId)
+                .orElseThrow(() -> ResourceNotFoundException.of(GVRepo.class));
+
+        List<GVRepoUserConfiguration> newConfigurations = contributors.stream()
+                .filter(contributor -> !existingUsernames.contains(contributor))
+                .map(contributor -> GVRepoUserConfiguration.of(gvRepo, contributor))
+                .toList();
+
+        List<GVRepoUserConfiguration> validConfigurations = existingConfigurations.stream()
+                .filter(config -> contributors.contains(config.getUsername()))
+                .toList();
+
+        List<GVRepoUserConfiguration> deletedConfigurations = existingConfigurations.stream()
+                .filter(config -> !contributors.contains(config.getUsername()))
+                .toList();
+
+        newConfigurations = gvRepoUserConfigurationRepository.saveAll(newConfigurations);
+
+        gvRepoUserConfigurationRepository.deleteAll(deletedConfigurations);
+
+        List<GVRepoUserConfiguration> updatedConfigurations = new ArrayList<>();
+        updatedConfigurations.addAll(validConfigurations);
+        updatedConfigurations.addAll(newConfigurations);
+
+        return updatedConfigurations.stream()
+        .collect(Collectors.toMap(GVRepoUserConfiguration::getUsername, GVRepoUserConfiguration::getAliases));
+    }
+
     @Transactional
     public void updateGithubToken(String repositoryName, String login, String newGithubToken) throws Exception {
-        GVRepo gvRepo = this.gvRepoRepository.findByNameAndUser_Username(repositoryName, login).orElseThrow(() -> new ResourceNotFoundException("Not found repository"));
+        GVRepo gvRepo = this.gvRepoRepository.findByNameAndUser_Username(repositoryName, login)
+                .orElseThrow(() -> new ResourceNotFoundException("Not found repository"));
         GitHub github = GitHub.connect(login, newGithubToken);
-        if(github.getMyself() == null){
+        if (github.getMyself() == null) {
             throw new IllegalAccessException("Token invalido");
         }
         gvRepo.setToken(newGithubToken);
@@ -104,7 +168,7 @@ public class GVRepoService {
     }
 
     @Transactional
-    public void linkUserWithRepository(String login, String repositoryName, String token){
+    public void linkUserWithRepository(String login, String repositoryName, String token) {
         try {
             GVUser user = this.gvUserRepository.findByUsername(login).get();
             String tokenToUse = Objects.requireNonNullElse(token, user.getGithubToken());
@@ -116,10 +180,11 @@ public class GVRepoService {
             gvRepo.setRepositoryId(ghRepository.getId());
             gvRepo.setToken(tokenToUse);
             gvRepo.setUser(user);
-            final GVRepo savedGvRepo = gvRepoRepository.save(gvRepo);
+            GVRepo savedGvRepo = gvRepoRepository.save(gvRepo);
             List<Contributor> ghContributors = ghRepository.listContributors().toList();
             List<GVRepoUserConfiguration> ghConfigurations = new ArrayList<>(ghContributors.size());
-            ghContributors.forEach(contributor -> ghConfigurations.add(GVRepoUserConfiguration.of(savedGvRepo, contributor)));
+            ghContributors
+                    .forEach(contributor -> ghConfigurations.add(GVRepoUserConfiguration.of(savedGvRepo, contributor)));
         } catch (Exception e) {
             throw LinkedException.linkGithub();
         }
@@ -127,19 +192,23 @@ public class GVRepoService {
     }
 
     @Transactional
-    public void linkRepositoryWithWorkspace(String repositoryName, String workspaceName, Long userId) throws Exception{
-        if(!gvUserRepository.existsById(userId))
+    public void linkRepositoryWithWorkspace(String repositoryName, String workspaceName, Long userId) throws Exception {
+        if (!gvUserRepository.existsById(userId))
             throw new ResourceNotFoundException("User", "ID", userId);
 
-        GVRepo gvRepo = gvRepoRepository.findByNameAndUser_Id(repositoryName, userId).orElseThrow(() -> new ResourceNotFoundException("UserRepo not found"));;
+        GVRepo gvRepo = gvRepoRepository.findByNameAndUser_Id(repositoryName, userId)
+                .orElseThrow(() -> new ResourceNotFoundException("UserRepo not found"));
+        ;
 
-        if(gvRepo.hasLinkedWorkspace()){
+        if (gvRepo.hasLinkedWorkspace()) {
             throw new IllegalAccessError("No se puede enlazar más de un workspace a un repositorio");
         }
 
-        GVWorkspace gvWorkspace = gvWorkspaceRepository.findByNameAndUser_Id(workspaceName, userId).orElseThrow(() -> new ResourceNotFoundException("UserWorkspace not found"));;
+        GVWorkspace gvWorkspace = gvWorkspaceRepository.findByNameAndUser_Id(workspaceName, userId)
+                .orElseThrow(() -> new ResourceNotFoundException("UserWorkspace not found"));
+        ;
 
-        if(Objects.equals(gvRepo.getWorkspace(), gvWorkspace)){
+        if (Objects.equals(gvRepo.getWorkspace(), gvWorkspace)) {
             throw new Exception("Relation exist");
         }
         gvRepo.setWorkspace(gvWorkspace);

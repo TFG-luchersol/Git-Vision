@@ -1,12 +1,17 @@
 package org.springframework.samples.gitvision.relations.repository.model;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Set;
 
 import org.kohsuke.github.GHRepository.Contributor;
+import org.springframework.samples.gitvision.model.entity.EntityIdSequential;
 
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -18,23 +23,44 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Table(name = "gv_repo_configurations")
-public class GVRepoUserConfiguration {
+@Entity
+public class GVRepoUserConfiguration extends EntityIdSequential {
 
     @ManyToOne
     private GVRepo gvRepo;
 
-    Long userId;
+    private String username;
 
     @ElementCollection
     @CollectionTable(name = "gv_repo_user_aliases", joinColumns = @JoinColumn(name = "user_id"))
-    private List<String> alias;
+    private Set<String> aliases;
 
     public static GVRepoUserConfiguration of(GVRepo gvRepo, Contributor contributor){
+        return of(gvRepo, contributor.getLogin());
+    }
+
+    public static GVRepoUserConfiguration of(GVRepo gvRepo, String contributor){
         GVRepoUserConfiguration gvRepoUserConfiguration = new GVRepoUserConfiguration();
         gvRepoUserConfiguration.setGvRepo(gvRepo);
-        gvRepoUserConfiguration.setUserId(contributor.getId());
-        gvRepoUserConfiguration.setAlias(Arrays.asList(contributor.getLogin()));
+        gvRepoUserConfiguration.setUsername(contributor);
+        gvRepoUserConfiguration.setAliases(new LinkedHashSet<>());
         return gvRepoUserConfiguration;
+    }
+
+    public Set<String> getAllOptions() {
+        Set<String> options = new HashSet<>(aliases.size() + 1);
+        options.addAll(aliases);
+        options.add(username);
+        return options;
+    }
+
+    public Map<String, String> toOriginal() {
+        Map<String, String> res = new HashMap<>();
+        for (String alias : aliases) {
+            res.put(alias, username);
+        }
+        res.put(username, username);
+        return res;
     }
 
 }
