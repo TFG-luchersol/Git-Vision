@@ -1,8 +1,10 @@
 package org.springframework.samples.gitvision.file;
 
-import java.io.IOException;
+import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -11,11 +13,12 @@ import org.kohsuke.github.GHContent;
 import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GHTree;
 import org.springframework.samples.gitvision.change.model.Change;
-import org.springframework.samples.gitvision.file.model.ChangesByUser;
+import org.springframework.samples.gitvision.file.model.ChangesInFile;
 import org.springframework.samples.gitvision.file.model.File;
 import org.springframework.samples.gitvision.file.model.PercentageLanguages;
 import org.springframework.samples.gitvision.file.model.TreeFiles;
 import org.springframework.samples.gitvision.file.model.TreeFiles.TreeNode;
+import org.springframework.samples.gitvision.util.EntityUtils;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -56,40 +59,37 @@ public class FileService {
         return cont;
     }
 
-    public ChangesByUser getChangeByUserInPath(GHRepository ghRepository, String path) throws Exception{
-        ChangesByUser changesByUser = new ChangesByUser();
-        for (GHCommit ghCommit : ghRepository.queryCommits().path(path).list()) {
-            for(var file: ghCommit.listFiles()){
+    // public List<ChangesInFile> getChangesInFilesByUser(String repositoryName, String author, String login) throws IOException {
+    //     GVRepo gvRepo = this.gvRepoRepository.findByNameAndUser_Username(repositoryName, login)
+    //         .orElseThrow(() -> new ResourceNotFoundException("Not found repository"));
+    //     String tokenToUse = gvRepo.getToken();
+    //     GithubGraphQLApi githubGraphQLApi = GithubGraphQLApi.connect(tokenToUse);
+    //     List<ChangesInFile> changesInFiles = githubGraphQLApi.getChangesInFilesByUser(repositoryName, author);
+    //     return changesInFiles;
+    // }
 
-                // Hay que comprobar si un archivo anterior tenía el mismo nombre, 
-                // ya que en dicho caso puede suceder que este haya sido renombrado
-                if(file.getPreviousFilename() != null && file.getPreviousFilename().equals(path)){
-                    innerGetChangeByUserInPath(changesByUser, ghRepository, path);
-                    break;
-                } else if(path.equals(file.getFileName())){
-                    Change change = Change.of(file.getLinesAdded(), file.getLinesDeleted());
-                    changesByUser.add(ghCommit.getAuthor().getLogin(), change);
-                    break;
-                }
-            }
+    public List<ChangesInFile> getChangesInFilesByUser(GHRepository ghRepository, String author, LocalDate startDate, LocalDate endDate) throws Exception{
+        Map<String, Change> fileChangesMap = new HashMap<>();
+        var ghCommits = ghRepository.queryCommits().author(author);
+        if(Objects.nonNull(startDate)) ghCommits = ghCommits.since(EntityUtils.parseLocalDateUTCToDate(startDate));
+        if(Objects.nonNull(endDate)) ghCommits = ghCommits.until(EntityUtils.parseLocalDateUTCToDate(endDate));
+
+        for (GHCommit ghCommit : ghCommits.list()) {
+            ghCommit.listFiles().forEach(file -> {
+                String filePath = file.getFileName();
+                int additions = file.getLinesAdded();
+                int deletions = file.getLinesDeleted();
+
+                fileChangesMap
+                        .computeIfAbsent(filePath, _ -> new Change())
+                        .addChanges(additions, deletions);
+            });
         }
 
-        return changesByUser;
-    }
-
-    private void innerGetChangeByUserInPath(ChangesByUser changesByUser, GHRepository ghRepository, String path) throws IOException{        
-        for (GHCommit ghCommit : ghRepository.queryCommits().path(path).list()) {
-            for(GHCommit.File file: ghCommit.listFiles()){
-                if(file.getPreviousFilename() != null && file.getPreviousFilename().equals(path)){
-                    innerGetChangeByUserInPath(changesByUser, ghRepository, path);
-                    break;
-                } else if(path.equals(file.getFileName())){
-                    Change change = Change.of(file.getLinesAdded(), file.getLinesDeleted());
-                    changesByUser.add(ghCommit.getAuthor().getLogin(), change);
-                    break;
-                }
-            }
-        }
+        return fileChangesMap.entrySet()
+                    .stream()
+                    .map(entry -> ChangesInFile.of(entry.getKey(), entry.getValue()))
+                    .collect(Collectors.toList());
     }
 
 }

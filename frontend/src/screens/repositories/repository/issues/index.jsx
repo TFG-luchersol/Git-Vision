@@ -1,3 +1,4 @@
+import { useNotification } from '@context/NotificationContext';
 import "@css/repositories/repository/issues";
 import fetchWithToken from '@utils/fetchWithToken.ts';
 import getBody from '@utils/getBody.ts';
@@ -7,6 +8,7 @@ import { useParams } from 'react-router-dom';
 import { Button, Input } from 'reactstrap';
 
 export default function Issues() {
+    const { showMessage } = useNotification();
     const { owner, repo } = useParams();
 
     const [issues, setIssues] = useState([])
@@ -20,15 +22,16 @@ export default function Issues() {
     const getIssues = async (page) => {
         if(page < 1) return;
         try {
-            const repositorName = `${owner}/${repo}`;
-            const newIssues = await fetchWithToken(`/api/v1/issues/${repositorName}?page=${page}`)
-            const {issues} = await getBody(newIssues)
+            const newIssues = await fetchWithToken(`/api/v1/issues/${owner}/${repo}?page=${page}`)
+            const issues = await getBody(newIssues)
             if(issues.length > 0){
                 setIssues(issues)
                 setPage(page)
             } 
-        } catch (e) {
-            alert(e.message)
+        } catch (error) {
+            showMessage({
+                message: error.message
+            })
         }
     }
 
@@ -36,7 +39,6 @@ export default function Issues() {
     const previousPage = () => getIssues(page <= 1 ? 1 : page - 1)
 
     return (
-        <div style={{ position: "fixed", top: 0, zIndex: -1, left: 0, right: 0, bottom: 0, backgroundColor: "#dcdcdc" }}>
             <div style={{ display: "flex", flexDirection: "column", position: "absolute", top: "15%", width: "87%" }}>
                 {
                     issues.length === 0 ? <p style={{margin: "5%"} }> NO HAY ISSUES</p> :
@@ -72,6 +74,5 @@ export default function Issues() {
                             </div>
                         </>}
             </div>
-        </div>
     );
 }

@@ -1,0 +1,34 @@
+query (
+  $owner: String!
+  $repo: String!
+  $author: String!
+  $filePath: String!
+  $cursor: String
+) {
+  repository(owner: $owner, name: $repo) {
+    defaultBranchRef {
+      target {
+        ... on Commit {
+          history(
+            first: 100
+            after: $cursor
+            author: { name: $author }
+            path: $filePath
+          ) {
+            edges {
+              node {
+                committedDate
+                additions
+                deletions
+              }
+            }
+            pageInfo {
+              endCursor
+              hasNextPage
+            }
+          }
+        }
+      }
+    }
+  }
+}

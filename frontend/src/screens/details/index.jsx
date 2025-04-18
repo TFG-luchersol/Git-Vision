@@ -1,7 +1,9 @@
 import CustomInput from '@components/CustomInput';
+import { useNotification } from '@context/NotificationContext';
 import '@css/details';
 import tokenService from '@services/token.service.js';
 import fetchWithToken from '@utils/fetchWithToken.ts';
+
 import getBody from '@utils/getBody.ts';
 import React, { useEffect, useState } from 'react';
 import { FaGithub, FaRegUserCircle } from "react-icons/fa";
@@ -11,6 +13,8 @@ import { SiClockify } from "react-icons/si";
 import { Button, Modal, ModalBody, ModalHeader } from 'reactstrap';
 
 export default function Details() {
+  const {showMessage} = useNotification();
+
   const userIcon = <FaRegUserCircle />
   const githubIcon = <FaGithub />
   const clockifyIcon = <SiClockify />
@@ -44,17 +48,19 @@ export default function Details() {
         const response = await fetchWithToken('/api/v1/users/user/token/github', 
           {method: "PUT", body: githubToken}
         );
-        const result = await getBody(response)
-        tokenService.setUser({...user, githubToken: result.githubToken})
+        const newGithubToken = await getBody(response)
+        tokenService.setUser({...user, githubToken: newGithubToken})
       } else if (tokenType === 'clockify') {
         const response = await fetchWithToken('/api/v1/users/user/token/clockify', 
           {method: "PUT", body: clockifyToken}
         );
-        const result = await getBody(response)
-        tokenService.setUser({...user, clockifyToken: result.clockifyToken})
+        const newClockifyToken = await getBody(response)
+        tokenService.setUser({...user, clockifyToken: newClockifyToken})
       }
     } catch (error) {
-      alert(error)
+      showMessage({
+        message: error.message
+      })
     }
   };
 
@@ -66,13 +72,15 @@ export default function Details() {
                   tokenService.removeUser()
                   window.location.href = "/"
                 } else {
-                  alert("Error en borrado de usuario")
+                  showMessage({
+                    message: "Error en borrado de usuario"
+                  })
                 }
               })
   };
 
   return (
-    <div className="home-page-container">
+    
     <div className="details-container">
       <div className="profile-container">
         <Modal style={{position:'absolute', top: "50%", left: "50%", transform: "translate(-50%, -50%)", padding: "20px"}} isOpen={deleteModal}>
@@ -137,7 +145,6 @@ export default function Details() {
           Clockify será opcional, siendo la única inconveniencia la inaccesibilidad a ciertas funciones.
         </p>
       </div>
-    </div>
     </div>
   );
 }

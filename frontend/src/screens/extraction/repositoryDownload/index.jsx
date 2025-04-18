@@ -1,21 +1,22 @@
-import AlertMessage from '@components/AlertMessage';
 import CustomInput from '@components/CustomInput';
 import LoadingModal from '@components/LoadingModal';
+import { useNotification } from '@context/NotificationContext';
 import '@css';
 import "@css/auth/authPage.css";
 import '@css/home';
 import Preconditions from '@utils/check.js';
 import fetchWithToken from '@utils/fetchWithToken.ts';
+import getBody from '@utils/getBody';
 import React, { useState } from 'react';
 import { FaGithub, FaRegUserCircle } from "react-icons/fa";
 import { Link } from 'react-router-dom';
 import { Button, Form, FormGroup, Input, Label } from 'reactstrap';
 
 export default function RepositoryDownload() {
+    const { showMessage } = useNotification();
     const userIcon = <FaRegUserCircle />
     const githubIcon = <FaGithub />
     
-    const [message, setMessage] = useState(null);
     const [values, setValues] = useState({owner: "", repo: "", token: "" });
     const [validateToken, setValidateToken] = useState(false);
     const [isLoading, setIsLoading] = useState(false)
@@ -23,12 +24,11 @@ export default function RepositoryDownload() {
     async function handleSubmit(event) {
         event.preventDefault()
         
-        setMessage(null);
         try {
             Preconditions.checkNotBlank(values.owner, "Owner");
             Preconditions.checkNotBlank(values.repo, "Repository");
             Preconditions.if(validateToken).checkNotBlank(values.token, "Token");
-            let url = `/api/v1/relation/user_repository/${values.owner}/${values.repo}`
+            let url = `/api/v1/relation/repository/${values.owner}/${values.repo}`
             if(values.validOtherToken) 
                 url += `?token=${values.token}`;
             
@@ -43,11 +43,13 @@ export default function RepositoryDownload() {
             if (response.status === 200) {
                 window.location.href = "/";
             } else {
-                const error = await response.json();
-                setMessage(error.message)
+                const error = await getBody(response);
+                throw new Error(error);
             }
         } catch (error) {
-            setMessage(error.message);
+            showMessage({
+                message: error.message
+            })
         } finally {
             setIsLoading(false);
         }
@@ -62,11 +64,9 @@ export default function RepositoryDownload() {
     }
 
     return (
-        <div className="home-page-container">
+        <div className='center-screen'>
             <LoadingModal isLoading={isLoading} />
-            <AlertMessage message={message}/>
-
-            <Form onSubmit={handleSubmit} className='auth-form-container' style={{ position: 'relative', top: 35}} >
+            <Form onSubmit={handleSubmit} className='auth-form-container' >
                 <div style={{ margin: "30px" }}>
                     <title className='center-title'>
                         <h1>Download Repository</h1>

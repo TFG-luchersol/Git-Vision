@@ -6,6 +6,7 @@ export default async function fetchWithToken(
 ) {
     const token: string = tokenservice.getLocalAccessToken();
     const headers = new Headers(init.headers);
+    
     if (token)
         headers.set("Authorization", "Bearer " + token);
 

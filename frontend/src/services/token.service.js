@@ -1,4 +1,14 @@
 class TokenService {
+
+    isAuthenticated() {
+        return !!localStorage.getItem("user");
+    }
+
+    hasClockifyToken() {
+        const user = this.getUser();
+        return !!user?.clockifyToken;
+    }
+
     getLocalRefreshToken() {
         const user = JSON.parse(localStorage.getItem("user"));
         return user?.refreshToken;
@@ -28,6 +38,11 @@ class TokenService {
     removeUser() {
         window.localStorage.removeItem("user");
         window.localStorage.removeItem("jwt");
+    }
+
+    hasAnyAuthority(...authorities) {
+        const roles = new Set(this.getUser().roles);
+        return authorities.some(item => roles.has(item));
     }
 
 }

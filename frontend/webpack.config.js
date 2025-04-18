@@ -24,8 +24,9 @@ module.exports = {
       rewrites: [{ from: /./, to: "/index.html" }], // 🔹 Redirige todo a index.html
     },
     proxy: [
+      
       {
-        context: ["/api"], // 🔹 Define qué rutas quieres redirigir
+        context: ["/api", "/v3/api-docs"], // 🔹 Define qué rutas quieres redirigir
         target: "http://localhost:8080",
         changeOrigin: true,
         secure: false,
@@ -63,6 +64,7 @@ module.exports = {
       "@css": path.resolve(__dirname, "src/static/css"),
       "@fonts": path.resolve(__dirname, "src/static/fonts"),
       "@services": path.resolve(__dirname, "src/services"),
+      "@context": path.resolve(__dirname, "src/context"),
     },
   },
 };

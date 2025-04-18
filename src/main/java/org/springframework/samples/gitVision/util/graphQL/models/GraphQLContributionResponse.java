@@ -2,11 +2,22 @@ package org.springframework.samples.gitvision.util.graphQL.models;
 
 import java.util.List;
 
+import org.springframework.samples.gitvision.util.graphQL.models.GraphQLContributionResponse.DataWrapper.Repository.CommitHistory.CommitEdge;
+
 import lombok.Data;
 
 @Data
 public class GraphQLContributionResponse {
     private DataWrapper data;
+
+    public List<CommitEdge> getEdges() {
+        return this.getData()
+                .getRepository()
+                .getDefaultBranchRef()
+                .getTarget()
+                .getHistory()
+                .getEdges();
+    }
 
     @Data
     public static class DataWrapper {
@@ -65,8 +76,8 @@ public class GraphQLContributionResponse {
             private int remaining;
             private String resetAt;
         }
-    
+
     }
 
-  
+
 }

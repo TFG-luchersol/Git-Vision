@@ -1,5 +1,6 @@
 import CounterChanges from '@components/CounterChanges.jsx';
 import FolderTabs from '@components/FolderTabs.jsx';
+import { useNotification } from '@context/NotificationContext';
 import '@css/repositories/repository/issues/issue';
 import fetchWithToken from '@utils/fetchWithToken.ts';
 import getBody from '@utils/getBody.ts';
@@ -10,6 +11,7 @@ import { useParams } from 'react-router-dom';
 import { Input } from 'reactstrap';
 
 export default function Issue() {
+    const { showMessage } = useNotification();
     const { owner, repo, issueNumber } = useParams();
 
     const [issue, setIssue] = useState({});
@@ -24,16 +26,17 @@ export default function Issue() {
 
     const getIssue = async () => {
         try {
-            const id = `${owner}/${repo}`;
-            const newIssues = await fetchWithToken(`/api/v1/issues/${id}/${issueNumber}`)
+            const newIssues = await fetchWithToken(`/api/v1/issues/${owner}/${repo}/${issueNumber}`)
             const {issue, commits, files, changesByUser, assigness} = await getBody(newIssues)
             setIssue(issue)
             setCommits(commits)
             setFiles(files)
             setChangesByUser(changesByUser)
             setAssigness(assigness)
-        } catch (e) {
-            alert(e.message)
+        } catch (error) {
+            showMessage({
+                message: error.message
+            })
         }
     }
 
@@ -83,29 +86,24 @@ export default function Issue() {
     }
 
     return (
-        <div style={{ position: "fixed", top: 0, zIndex: -1, left: 0, right: 0, bottom: 0, backgroundColor: "#dcdcdc" }}>
+        <div style={{ display: "flex", justifyContent: "center", flexDirection: "column", position: "absolute", top: "15%", width: "87%" }} className='issue-container'>
 
-            <div style={{ display: "flex", justifyContent: "center", flexDirection: "column", position: "absolute", top: "15%", width: "87%" }} className='issue-container'>
-
-                <span className="issue-message">
-                    <div style={{ display: "flex", flexDirection: "row" }}>
-                        <span style={{ marginRight: 10 }}>
-                            {issue.state?.toUpperCase() === "CLOSED" ?
-                                <GoIssueClosed color='purple' /> :
-                                <GoIssueOpened color='green' />
-                            }
-                        </span>
-                        <p style={{ marginTop: 1 }}>{issue.title}</p>
-                    </div>
-                    <span className="number">#{issue.number}</span>
-                </span>
-
-                <div style={{ marginTop: "10px" }}>
-                    <FolderTabs sections={sections} />
+            <span className="issue-message">
+                <div style={{ display: "flex", flexDirection: "row" }}>
+                    <span style={{ marginRight: 10 }}>
+                        {issue.state?.toUpperCase() === "CLOSED" ?
+                            <GoIssueClosed color='purple' /> :
+                            <GoIssueOpened color='green' />
+                        }
+                    </span>
+                    <p style={{ marginTop: 1 }}>{issue.title}</p>
                 </div>
+                <span className="number">#{issue.number}</span>
+            </span>
+
+            <div style={{ marginTop: "10px" }}>
+                <FolderTabs sections={sections} />
             </div>
-
         </div>
-
     );
 }

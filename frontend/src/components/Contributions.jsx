@@ -1,3 +1,4 @@
+import { useNotification } from '@context/NotificationContext';
 import '@css/components/contributions';
 import fetchWithToken from '@utils/fetchWithToken.ts';
 import getBody from '@utils/getBody.ts';
@@ -31,6 +32,8 @@ ChartJS.register(
 );
 
 export default function Contributions({ owner, repo, path = null, isFolder=false }) {
+  const {showMessage } = useNotification();
+
   const [isLoading, setIsLoading] = useState(false);
   const [data_, setData_] = useState({ datasets: [] });
   const [startDate, setStartDate] = useState(null);
@@ -155,7 +158,7 @@ export default function Contributions({ owner, repo, path = null, isFolder=false
   async function getContributions() {
     let url = `/api/v1/contributions/${owner}/${repo}/between_time`;
     let urlObj = new URL(url, window.location.origin);
-    console.log(1)
+    
     let searchParams = new URLSearchParams(urlObj.search);
     if (path !== null) {
       searchParams.set("path", path)
@@ -176,7 +179,7 @@ export default function Contributions({ owner, repo, path = null, isFolder=false
 
     try {
       const response = await fetchWithToken(urlObj.toString());
-      const result = (await getBody(response)).contributions;
+      const result = await getBody(response);
       if (minYear === null && result.length !== 0) {
         minYear = result.reduce((earliest, current) => {
           const currentDate = new Date(current.committedDate);
@@ -226,33 +229,30 @@ export default function Contributions({ owner, repo, path = null, isFolder=false
             start <= new Date(committedDate) && new Date(committedDate) <= end
           );
         } else {
-          bool = new Date(committedDate).getMonth() === concreteSample;
+          const month = new Date(committedDate).getMonth() + 1;
+          bool = month === Number(concreteSample);
         }
       }
 
       return bool;
     };
-
     contributions
       .filter(({ committedDate }) => filtroFecha(committedDate))
       .forEach(({ committedDate, additions, deletions, authorName }) => {
         const date = new Date(committedDate);
-
         let period;
+
+        // Se marca en period la agrupación que se realiza (eje x)
         if (selectedAgrupation === "month") {
           if (concreteSample !== null) {
-            // Si concreteSample indica un mes concreto, agrupar por días de ese mes
-            period = getDiasEnMes();
+            period = date.getDate();
           } else {
-            // Agrupar por el mes completo si x es null
             period = meses[date.getMonth() + 1];
           }
         } else if (selectedAgrupation === "week") {
           if (concreteSample !== null) {
-            // Agrupar por días de esa semana
             period = diasSemana[date.getDay() % 7];
           } else {
-            // Agrupar por semana completa si concreteSample es null
             period = String(getWeekOfYear(date));
           }
         }
@@ -272,11 +272,12 @@ export default function Contributions({ owner, repo, path = null, isFolder=false
           grouped[authorName] = [];
         }
 
+        
         // Buscar si ya existe un registro para el mismo período
         const existing = grouped[authorName].find(
           (entry) => entry.x === period
         );
-
+        
         if (existing) {
           existing.y += value;
         } else {

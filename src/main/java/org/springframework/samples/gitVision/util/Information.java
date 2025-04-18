@@ -15,7 +15,7 @@ public class Information extends HashMap<String, Object> {
     public Information(Map<String, Object> information){
         super(information);
     }
-    
+
     public static Information empty(){
         return new Information();
     }
@@ -35,5 +35,9 @@ public class Information extends HashMap<String, Object> {
 
     public static Information create(String key, Object value){
         return empty().put(key, value);
+    }
+
+    public <T> T getAs(String key, Class<T> clazz) {
+        return clazz.cast(this.get(key));
     }
 }

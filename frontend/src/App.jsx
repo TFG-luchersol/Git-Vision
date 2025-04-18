@@ -23,7 +23,10 @@ import Folder from "@screens/repositories/repository/folder";
 import Issues from "@screens/repositories/repository/issues";
 import Issue from "@screens/repositories/repository/issues/issue";
 import RepositoryDetails from "@screens/repositories/repository/repositoryDetails";
+import UserConfiguration from "@screens/repositories/repository/userConfiguration";
 import tokenService from "@services/token.service";
+import { NotificationProvider } from "./context/NotificationContext";
+import WorkspaceUsers from "./screens/workspace/details";
 
 function ErrorFallback({ error, resetErrorBoundary }) {
   return (
@@ -50,14 +53,9 @@ function App() {
       <Route path="/repository/:owner/:repo" element={<Repository />} />
       <Route path="/repository/:owner/:repo/blob/*" element={<File />} />
       <Route path="/repository/:owner/:repo/tree/*" element={<Folder />} />
-      <Route
-        path="/repository/:owner/:repo/details"
-        element={<RepositoryDetails />}
-      />
-      <Route
-        path="/repository/:owner/:repo/contributors"
-        element={<Contributors />}
-      />
+      <Route path="/repository/:owner/:repo/details" element={<RepositoryDetails />}/>
+      <Route path="/repository/:owner/:repo/contributors"element={<Contributors />}/>
+      <Route path="/repository/:owner/:repo/configuration"element={<UserConfiguration />}/>
       <Route path="/repository/:owner/:repo/commits" element={<Commits />} />
       <Route
         path="/repository/:owner/:repo/commits/:sha"
@@ -68,10 +66,11 @@ function App() {
         path="/repository/:owner/:repo/issues/:issueNumber"
         element={<Issue />}
       />
+      <Route path="/workspace/:name" element={<WorkspaceUsers />} />
       <Route path="/workspace/download" element={<WorkspaceDownload />} />
       <Route path="/repository/download" element={<RepositoryDownload />} />
       <Route
-        path="/repository/workspace/linker"
+        path="/linker/repository/workspace/"
         element={<RepositoryWorkspaceLinker />}
       />
     </>
@@ -79,15 +78,17 @@ function App() {
 
   return (
     <div>
-      <ErrorBoundary FallbackComponent={ErrorFallback}>
-        <AppNavbar />
-        <Routes>
-          <Route path="/" exact={true} element={<Home />} />
-          <Route path="/swagger" element={<SwaggerDocs />} />
-          {publicRoutes}
-          {jwt && userRoutes}
-        </Routes>
-      </ErrorBoundary>
+      <NotificationProvider>
+        <ErrorBoundary FallbackComponent={ErrorFallback}>
+          <AppNavbar />
+          <Routes>
+            <Route path="/" exact={true} element={<Home />} />
+            <Route path="/swagger" element={<SwaggerDocs />} />
+            {publicRoutes}
+            {jwt && userRoutes}
+          </Routes>
+        </ErrorBoundary>
+      </NotificationProvider>
     </div>
   );
 }

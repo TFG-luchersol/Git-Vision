@@ -1,8 +1,8 @@
 package org.springframework.samples.gitvision.configuration.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.samples.gitvision.user.User;
-import org.springframework.samples.gitvision.user.UserRepository;
+import org.springframework.samples.gitvision.user.GVUserRepository;
+import org.springframework.samples.gitvision.user.model.GVUser;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -11,14 +11,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
-	
+
 	@Autowired
-	UserRepository userRepository;
+	GVUserRepository gvUserRepository;
 
 	@Override
 	@Transactional
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		User user = userRepository.findByUsername(username)
+		GVUser user = gvUserRepository.findByUsername(username)
 				.orElseThrow(() -> new UsernameNotFoundException("User Not Found with username: " + username));
 		return UserDetailsImpl.build(user);
 	}

@@ -1,10 +1,11 @@
+import { useNotification } from '@context/NotificationContext';
 import fetchWithToken from '@utils/fetchWithToken.ts';
 import getBody from '@utils/getBody.ts';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 export default function ContributorProfiles() {
-
+const { showMessage } = useNotification();
     const { owner, repo } = useParams();
 
     const [contributors, setContributors] = useState([]);
@@ -15,11 +16,13 @@ export default function ContributorProfiles() {
 
     const getContributors = async () => {
         try {
-            let response = await fetchWithToken(`/api/v1/relation/user_repository/${owner}/${repo}/contributors`)
-            const result = await getBody(response);
-            setContributors(result.contributors)
-        } catch (e) {
-            alert(e)
+            let response = await fetchWithToken(`/api/v1/relation/repository/${owner}/${repo}/contributors`)
+            const contributors = await getBody(response);
+            setContributors(contributors)
+        } catch (error) {
+            showMessage({
+                message: error.message
+            })
         }
     }
 

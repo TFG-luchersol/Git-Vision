@@ -1,14 +1,18 @@
 import CustomInput from '@components/CustomInput';
+import { useNotification } from '@context/NotificationContext';
 import '@css';
 import '@css/auth/authPage.css';
 import '@css/home';
 import tokenService from "@services/token.service.js";
+import getBody from '@utils/getBody';
 import React, { useState } from 'react';
 import { FaEnvelope, FaGithub, FaLock, FaRegUserCircle, FaUnlock } from "react-icons/fa";
 import { Link } from 'react-router-dom';
-import { Alert, Button, Form, FormGroup } from 'reactstrap';
+import { Button, Form, FormGroup } from 'reactstrap';
+
 
 export default function Register() {
+    const { showMessage } = useNotification();
 
     const userIcon = <FaRegUserCircle />;
     const githubIcon = <FaGithub />;
@@ -16,7 +20,6 @@ export default function Register() {
     const passwordLockIcon = <FaLock onClick={() => setShowPassword(prev => !prev)} />;
     const passwordUnlockIcon = <FaUnlock onClick={() => setShowPassword(prev => !prev)} />;
 
-    const [message, setMessage] = useState(null)
     const [values, setValues] = useState({ username: "", email: "", password: "", githubToken: "" })
     const [showPassword, setShowPassword] = useState(false);
 
@@ -24,7 +27,6 @@ export default function Register() {
         event.preventDefault()
         const reqBodySignup = JSON.stringify(values);
         const reqBodySignin = JSON.stringify({username: values.username, password: values.password});
-        setMessage(null);
         try {
             const dataRegister = await fetch("/api/v1/auth/signup", {
                 headers: { "Content-Type": "application/json" },
@@ -32,7 +34,7 @@ export default function Register() {
                 body: reqBodySignup,
             });
             if(dataRegister.status !== 200) { 
-                const {message} = await dataRegister.json()
+                const message = await getBody(dataRegister)
                 throw Error(message)
             } else {
                 const dataSignin = await fetch("/api/v1/auth/signin", {
@@ -41,17 +43,19 @@ export default function Register() {
                     body: reqBodySignin,
                 });
                 if (dataSignin.status !== 200) {
-                    const {message} = await dataSignin.json()
+                    const message = await getBody(dataSignin)
                     throw Error(message)
                 } else {
-                    const response = await dataSignin.json()
+                    const response = await getBody(dataSignin)
                     tokenService.setUser(response.user);
                     tokenService.updateLocalAccessToken(response.token);
                     window.location.href = "/";
                 }
             }
         } catch (error) {
-            setMessage(error.message);
+            showMessage({
+                message: error.message
+            });
         }
     }
 
@@ -64,9 +68,8 @@ export default function Register() {
     }
 
     return (
-        <div className="home-page-container">
-            <Alert isOpen={message} color="danger" style={{ position: 'fixed', top: '15%' }}>{message}</Alert>
-            <Form style={{marginTop: "20%"}} onSubmit={handleSubmit} className='auth-form-container'>
+        <div className='center-screen'>
+            <Form onSubmit={handleSubmit} className='auth-form-container'>
                 <div style={{ margin: "30px" }}>
                     <title className='center-title'><h1>Register</h1></title>
                     <FormGroup>

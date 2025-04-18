@@ -57,3 +57,21 @@
   text-align: center;
 }
 
+body {
+  background-color: #f0f2f5;
+}
+
+.center-screen {
+  display: flex;
+  justify-content: center;  /* Centra horizontalmente */
+  align-items: center;      /* Centra verticalmente */
+  height: 100vh;            /* Ocupa toda la altura de la pantalla */
+  background-color: #f0f2f5; /* Fondo gris claro opcional */
+}
+
+.center-vertical-screen {
+  display: flex;
+  align-items: center;      /* Centra verticalmente */
+  height: 100vh;            /* Ocupa toda la altura de la pantalla */
+  background-color: #f0f2f5; /* Fondo gris claro opcional */
+}

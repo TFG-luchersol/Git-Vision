@@ -1,6 +1,8 @@
 import CustomInput from '@components/CustomInput.jsx';
+import { useNotification } from '@context/NotificationContext';
 import "@css/repositories/repository/repositoryDetails";
 import fetchWithToken from '@utils/fetchWithToken.ts';
+import getBody from '@utils/getBody';
 import React, { useEffect, useState } from 'react';
 import { FaGithub } from 'react-icons/fa';
 import { IoPersonCircleOutline } from 'react-icons/io5';
@@ -8,6 +10,7 @@ import { useParams } from 'react-router-dom';
 import { Button } from 'reactstrap';
 
 export default function RepositoryDetails() {
+  const { showMessage } = useNotification();
   const saveTokenGithubButton = <Button className='save-button' onClick={() => handleSave()}>Guardar</Button>;
   const githubIcon = <FaGithub />
   const [githubToken, setGithubToken] = useState('');
@@ -23,16 +26,21 @@ export default function RepositoryDetails() {
   const handleGithubTokenChange = (e) => setGithubToken(e.target.value);
 
   const handleSave = async () => {
-    await fetchWithToken(`/api/v1/relation/user_repository/${owner}/${repo}/token`, {
-      method: "PUT", 
-      body: githubToken
-    }
-    ).then(response => console.log(response));
-
+    try{
+      const response = await fetchWithToken(`/api/v1/relation/repository/${owner}/${repo}/token`, {
+          method: "PUT", 
+          body: githubToken
+        }
+      )
+      await getBody(response);
+  } catch (error) {
+    showMessage({
+        message: error.message
+    })
+}
   };
 
   return (
-    <div className="home-page-container">
     <div className="details-container">
       <div className="profile-container">
         <div className="profile-image">
@@ -56,7 +64,6 @@ export default function RepositoryDetails() {
           button={saveTokenGithubButton}
         />
       </div>
-    </div>
     </div>
   );
 }
