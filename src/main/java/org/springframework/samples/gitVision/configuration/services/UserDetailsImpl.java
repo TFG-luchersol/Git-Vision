@@ -5,9 +5,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
-import org.springframework.samples.gitvision.user.User;
+import org.springframework.samples.gitvision.configuration.authority.Authorization;
+import org.springframework.samples.gitvision.user.model.GVUser;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -28,15 +28,18 @@ public class UserDetailsImpl implements UserDetails {
 
 	private Collection<? extends GrantedAuthority> authorities;
 
-	public UserDetailsImpl(Long id, String username, String password) {
+	public UserDetailsImpl(Long id, String username, String password, Collection<? extends GrantedAuthority> authorities) {
 		this.id = id;
 		this.username = username;
 		this.password = password;
-		this.authorities = List.of();
+		this.authorities = authorities;
 	}
 
-	public static UserDetailsImpl build(User user) {
-		return new UserDetailsImpl(user.getId(), user.getUsername(), user.getPassword());
+	public static UserDetailsImpl build(GVUser user) {
+		List<GrantedAuthority> authorities = new ArrayList<>();
+		if(user.hasClockifyToken())
+			authorities.add(Authorization.CLOCKIFY_USER.getAuthority());
+		return new UserDetailsImpl(user.getId(), user.getUsername(), user.getPassword(), authorities);
 	}
 
 

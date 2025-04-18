@@ -1,9 +1,6 @@
 package org.springframework.samples.gitvision.issue.model;
 
-import java.util.List;
-
 import org.kohsuke.github.GHIssue;
-import org.springframework.samples.gitvision.commit.model.Commit;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
@@ -30,6 +27,7 @@ public class Issue {
 
     public static Issue parseJson(JsonNode jsonNode){
         Issue issue = new Issue();
+        System.out.println(jsonNode);
         issue.setTitle(jsonNode.get("title").textValue());
         issue.setNumber(jsonNode.get("number").intValue());
         issue.setState(jsonNode.get("state").textValue());

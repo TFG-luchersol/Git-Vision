@@ -1,9 +1,7 @@
 package org.springframework.samples.gitvision.util;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -11,14 +9,16 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.samples.gitvision.project.model.Project;
 import org.springframework.samples.gitvision.task.model.Task;
-import org.springframework.samples.gitvision.workspace.model.Workspace;
+import org.springframework.samples.gitvision.workspace.model.UserProfile;
 import org.springframework.web.client.RestTemplate;
+
+import com.fasterxml.jackson.databind.JsonNode;
 
 public class ClockifyApi {
     
     static RestTemplate restTemplate = new RestTemplate();
 
-    private static <T> T requestClockify(String url, String clockifyToken, Class<T> clazz) {
+    public static <T> T requestClockify(String url, String clockifyToken, Class<T> clazz) {
         String url_template = "https://api.clockify.me/api" + url;
 
         HttpHeaders headers = new HttpHeaders();
@@ -31,33 +31,33 @@ public class ClockifyApi {
         return response.getBody();
     }
 
-    public static Map<String, String> getCurrentUser(String clockifyToken){
+    public static JsonNode getCurrentUser(String clockifyToken){
         String url = "/v1/user";
-        Map<String, String> map = requestClockify(url, clockifyToken, HashMap.class);
-        return map;
+        JsonNode json = requestClockify(url, clockifyToken, JsonNode.class);
+        return json;
     }
 
-    public static Workspace getWorkspace(String workspaceId, String clockifyToken) {
+    public static JsonNode getWorkspace(String workspaceId, String clockifyToken) {
         String url = String.format("/v1/workspaces/%s", workspaceId);
-        Workspace workspace = requestClockify(url, clockifyToken, Workspace.class);
+        JsonNode workspace = requestClockify(url, clockifyToken, JsonNode.class);
         return workspace;
     }
 
-    public static List<Project> getProjectsByWorkspaceId(String workspaceId, String clockifyToken) {
+    public static List<UserProfile> getUsers(String workspaceId, String clockifyToken) {
+        String url = String.format("/v1/workspaces/%s/users", workspaceId);
+        UserProfile[] users = requestClockify(url, clockifyToken, UserProfile[].class);
+        return Arrays.asList(users);
+    }
+    public static List<Project> getProjects(String workspaceId, String clockifyToken) {
         String url = String.format("/v1/workspaces/%s/projects", workspaceId);
         Project[] projects = requestClockify(url, clockifyToken, Project[].class);
         return Arrays.asList(projects);
     }
 
-    public static List<Task> getTasksByWorkspaceIdAndProjectId(String workspaceId, String projectId, String clockifyToken) {
+    public static List<Task> getTasks(String workspaceId, String projectId, String clockifyToken) {
         String url = String.format("/v1/workspaces/%s/projects/%s/tasks", workspaceId, projectId);
         Task[] tasks = requestClockify(url, clockifyToken, Task[].class);
         return Arrays.asList(tasks);
-    }
-
-    public static Task getTaskByWorkspaceIdAndProjectIdAndTaksName(String workspaceId, String projectId, String taskName, String clockifyToken) {
-        List<Task> tasks = getTasksByWorkspaceIdAndProjectId(workspaceId, projectId, clockifyToken);
-        return tasks.stream().filter(task -> task.getName().equals("#"+taskName)).findFirst().orElse(null);
     }
     
 }

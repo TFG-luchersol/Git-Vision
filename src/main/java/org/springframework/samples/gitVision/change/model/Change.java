@@ -4,15 +4,19 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@JsonIgnoreProperties(ignoreUnknown = true) 
-@JsonInclude(JsonInclude.Include.NON_NULL) 
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @Getter
 @Setter
-@NoArgsConstructor
 public class Change {
+
+    public Change(){
+        this.additions = 0;
+        this.deletions = 0;
+        this.totalChanges = 0;
+    }
 
     private Integer additions;
 
@@ -22,6 +26,21 @@ public class Change {
 
     public void calcTotalChanges(){
         this.totalChanges = this.additions + this.deletions;
+    }
+
+    public void addAdditions(int count){
+        this.additions += count;
+        this.totalChanges += count;
+    }
+
+    public void addDeletions(int count) {
+        this.deletions += count;
+        this.totalChanges += count;
+    }
+
+    public void addChanges(int additions, int deletions) {
+        this.addAdditions(additions);
+        this.addDeletions(deletions);
     }
 
     public boolean withChanges(){
@@ -60,5 +79,5 @@ public class Change {
                                   .append("]").toString();
     }
 
-    
+
 }

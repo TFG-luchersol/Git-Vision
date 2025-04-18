@@ -19,13 +19,9 @@ package org.springframework.samples.gitvision.util;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.Base64;
 import java.util.Collection;
 import java.util.Date;
-
-import javax.crypto.Cipher;
-import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
+import java.util.Set;
 
 import org.springframework.orm.ObjectRetrievalFailureException;
 import org.springframework.samples.gitvision.model.entity.BaseEntity;
@@ -45,7 +41,7 @@ public abstract class EntityUtils {
 	/**
 	 * Look up the entity of the given class with the given id in the given
 	 * collection.
-	 * 
+	 *
 	 * @param entities    the collection to search
 	 * @param entityClass the entity class to look up
 	 * @param entityId    the entity id to look up
@@ -77,5 +73,14 @@ public abstract class EntityUtils {
 	public static Date parseLocalDateUTCToDate(LocalDate localDate) {
 		return Date.from(localDate.atStartOfDay().atZone(ZoneOffset.UTC).toInstant());
 	}
-	
+
+    public static <T> boolean areDisjoint(Set<T> set1, Set<T> set2) {
+        for (T element : set1) {
+            if (set2.contains(element)) {
+                return false; // Encontró un elemento en común
+            }
+        }
+        return true; // No hay elementos en común
+    }
+
 }

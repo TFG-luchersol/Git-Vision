@@ -10,7 +10,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.kohsuke.github.GHCommit;
-import org.kohsuke.github.GHUser;
 import org.kohsuke.github.GHCommit.File;
 import org.springframework.samples.gitvision.change.model.Change;
 import org.springframework.samples.gitvision.githubUser.model.GithubUser;
@@ -30,25 +29,17 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Commit {
 
-    String sha;
-    
-    String message;
+    private String sha;
+    private String message;
+    private String body;
+    private LocalDateTime date;
+    private int additions;
+    private int deletions;
 
-    String body;
-
-    LocalDateTime date;
-
-    int additions;
-
-    int deletions;
-
-    CommitType commitType;
-
-    GithubUser author;
-
-    List<File> files;
-
-    List<Issue> issues;
+    private CommitType commitType;
+    private GithubUser author;
+    private List<File> files;
+    private List<Issue> issues;
 
     public Change getChange(){
         return Change.of(additions, deletions);
@@ -90,7 +81,7 @@ public class Commit {
         GithubUser githubUser = new GithubUser();
         Commit commit = new Commit();
         try {
-            githubUser = GithubUser.parse(ghCommit.getAuthor());
+            githubUser = GithubUser.parseGitUser(ghCommit.getCommitShortInfo().getAuthor());
             commit.setFiles(ghCommit.listFiles().toList());
             commit.setIssues(new ArrayList<>());
             commit.setSha(ghCommit.getSHA1());

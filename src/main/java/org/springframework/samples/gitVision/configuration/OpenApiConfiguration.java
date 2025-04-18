@@ -23,6 +23,7 @@ import io.swagger.v3.oas.annotations.servers.Server;
     termsOfService = "${tos.uri}",
     description = "${api.description}"
   ),
+  // security = @SecurityRequirement(name = "bearerAuth"),
   servers = {@Server(url = "/", description = "Default Server URL")}
 )
 @SecurityScheme(

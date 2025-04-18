@@ -1,25 +1,33 @@
-query($owner: String!, $repo: String!, $startDate: GitTimestamp, $endDate: GitTimestamp, $cursor: String) {
+query ($owner: String!, $repo: String!, $filePath: String, $cursor: String) {
   repository(owner: $owner, name: $repo) {
-    object(expression: "main") {
-      ... on Commit {
-        history(since: $startDate, until: $endDate, first: 100, after: $cursor) {
-          edges {
-            node {
-              committedDate
-              additions
-              deletions
-              author {
-                name
-                email
+    defaultBranchRef {
+      name
+      target {
+        ... on Commit {
+          history(first: 100, after: $cursor, path: $filePath) {
+            edges {
+              node {
+                committedDate
+                additions
+                deletions
+                author {
+                  name
+                }
               }
             }
-          }
-          pageInfo {
-            endCursor
-            hasNextPage
+            pageInfo {
+              endCursor
+              hasNextPage
+            }
           }
         }
       }
     }
+  }
+  rateLimit {
+    limit
+    cost
+    remaining
+    resetAt
   }
 }

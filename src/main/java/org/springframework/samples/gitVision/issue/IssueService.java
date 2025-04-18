@@ -10,28 +10,28 @@ import java.util.stream.Collectors;
 import org.kohsuke.github.GHIssue;
 import org.kohsuke.github.GHIssueEvent;
 import org.kohsuke.github.GHRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.gitvision.change.model.Change;
 import org.springframework.samples.gitvision.commit.model.Commit;
 import org.springframework.samples.gitvision.githubUser.model.GithubUser;
 import org.springframework.samples.gitvision.issue.model.Issue;
-import org.springframework.samples.gitvision.relations.userRepo.UserRepoRepository;
-import org.springframework.samples.gitvision.relations.userRepo.model.UserRepo;
-import org.springframework.samples.gitvision.user.UserRepository;
+import org.springframework.samples.gitvision.relations.repository.GVRepoRepository;
+import org.springframework.samples.gitvision.relations.repository.model.GVRepo;
 import org.springframework.samples.gitvision.util.GithubApi;
 import org.springframework.stereotype.Service;
 
 @Service
 public class IssueService {
 
-    @Autowired
-    private UserRepoRepository userRepoRepository;
+    private final GVRepoRepository gvRepoRepository;
+
+    public IssueService(GVRepoRepository gvRepoRepository){
+        this.gvRepoRepository = gvRepoRepository;
+    }
 
     public List<Issue> getAllIssuesByRepositoryName(String repositoryName, String login, Integer page)
             throws Exception {
-        UserRepo userRepo = this.userRepoRepository.findByNameAndUser_Username(repositoryName, login).get();
-        String tokenToUse = userRepo.getDecryptedToken();
-
+        GVRepo gvRepo = this.gvRepoRepository.findByNameAndUser_Username(repositoryName, login).get();
+        String tokenToUse = gvRepo.getToken();
         return GithubApi.getIssuesByPage(repositoryName, page, 30, tokenToUse);
     }
 

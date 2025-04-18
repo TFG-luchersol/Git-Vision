@@ -9,19 +9,19 @@ import lombok.Setter;
 @Getter
 @Setter
 public class SignupRequest {
-	
-	@NotBlank
-	private String username;
 
-	@NotBlank
-	@Email
-	private String email;
+    @NotBlank(message = "{auth.payload.request.login_request.username.not_blank}")
+    private String username;
 
-	@NotBlank
-	@Pattern(regexp = "^[a-zA-Z]{4,}$")
-	private String password;
-	
-	@NotBlank
-	private String githubToken;
+    @NotBlank(message = "{auth.payload.request.login_request.email.not_blank}")
+    @Email(message = "{auth.payload.request.login_request.email.email}")
+    private String email;
+
+    @NotBlank(message = "{auth.payload.request.login_request.password.not_blank}")
+    @Pattern(regexp = "^[a-zA-Z]{4,}$", message = "{auth.payload.request.login_request.password.pattern}")
+    private String password;
+
+    @NotBlank(message = "{auth.payload.request.login_request.githubToken.not_blank}")
+    private String githubToken;
 
 }
