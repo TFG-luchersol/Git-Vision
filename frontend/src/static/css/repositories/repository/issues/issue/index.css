@@ -8,6 +8,7 @@
   height: 80%;
   overflow-y: auto;
   display: flex;
+  border: 1px solid black;
   justify-content: space-between;
 }
 
