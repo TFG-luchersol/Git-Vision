@@ -1,0 +1,39 @@
+query ($owner: String!, $repo: String!, $issueNumber: Int!, $cursor: String) {
+  repository(owner: $owner, name: $repo) {
+    issue(number: $issueNumber) {
+      title
+      timelineItems(first: 50, after: $cursor, itemTypes: [REFERENCED_EVENT]) {
+        pageInfo {
+          endCursor
+          hasNextPage
+        }
+        nodes {
+          __typename
+          ... on ReferencedEvent {
+            createdAt
+            commit {
+              oid
+              message
+              committedDate
+              url
+              author {
+                name
+                email
+              }
+              # 👇 Agregamos los archivos del commit
+              fileCount
+              additions
+              deletions
+              changedFiles
+              files(first: 100) {
+                path
+                additions
+                deletions
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

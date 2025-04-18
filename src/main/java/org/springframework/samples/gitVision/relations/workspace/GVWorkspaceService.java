@@ -1,7 +1,5 @@
 package org.springframework.samples.gitvision.relations.workspace;
 
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -17,7 +15,6 @@ import org.springframework.samples.gitvision.relations.workspace.model.GVWorkspa
 import org.springframework.samples.gitvision.user.GVUserRepository;
 import org.springframework.samples.gitvision.user.model.GVUser;
 import org.springframework.samples.gitvision.util.ClockifyApi;
-import org.springframework.samples.gitvision.workspace.model.TimeEntry;
 import org.springframework.samples.gitvision.workspace.model.UserProfile;
 import org.springframework.stereotype.Service;
 
@@ -53,19 +50,12 @@ public class GVWorkspaceService {
 
     public Map<String, Long> getTimeByUser(String workspaceId, Long userId) {
         String token = this.gvUserRepository.findById(userId).orElseThrow().getClockifyToken();
-        String url = String.format("/v1/workspaces/%s/users", workspaceId);
-        List<UserProfile> users = ClockifyApi.getUsers(workspaceId, token);
-        Map<String, Long> res = new HashMap<>();
-        for (UserProfile user : users) {
-            url = String.format("/v1/workspaces/%s/user/%s/time-entries", workspaceId, user.getId());
-            TimeEntry[] timeEntries = ClockifyApi.requestClockify(url, token, TimeEntry[].class);
-            String name = user.getName();
-            Long time = Arrays.stream(timeEntries).mapToLong(entry -> entry.getTimeInterval().getDuration().getNano())
-                    .sum();
-            res.put(name, time);
-        }
+        return ClockifyApi.getTimeByUser(workspaceId, token);
+    }
 
-        return res;
+    public Map<String, Long> getTimeByUserInTask(String workspaceId, String taskName, Long userId) {
+        String token = this.gvUserRepository.findById(userId).orElseThrow().getClockifyToken();
+        return ClockifyApi.getTimeByUserByTaskName(workspaceId, taskName, token);
     }
 
     public void linkUserWithWorkspace(String workspaceId, String name, Long userId) {
@@ -74,7 +64,7 @@ public class GVWorkspaceService {
         ClockifyApi.getWorkspace(workspaceId, token);
         GVWorkspace gvWorkspace = new GVWorkspace();
         gvWorkspace.setName(name);
-        // gvWorkspace.setUser(user);
+        gvWorkspace.setUser(user);
         gvWorkspace.setWorkspaceId(workspaceId);
         gvWorkspaceRepository.save(gvWorkspace);
     }

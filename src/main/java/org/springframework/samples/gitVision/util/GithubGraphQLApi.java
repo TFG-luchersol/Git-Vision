@@ -124,6 +124,41 @@ public class GithubGraphQLApi {
         return allContributions;
     }
 
+    public List<Contribution> getContributionsByIssueNumber(String repositoryName, Long issueNumber) throws IOException {
+        String[] owner_repo = repositoryName.split("/");
+        String query = readGraphQLQuery("getContributionsBetweenDates.graphql");
+        Map<String, Object> vars = new HashMap<>();
+        vars.put("owner", owner_repo[0]);
+        vars.put("repo", owner_repo[1]);
+        vars.put("issueNumber", issueNumber);
+        vars.put("cursor", null);
+        List<Contribution> allContributions = new ArrayList<>();
+        boolean hasNextPage = true;
+        while (hasNextPage) {
+            var response = this.requestGithubGraphQL(query, vars,GraphQLContributionResponse.class);
+            List<Contribution> contributions = response.getNodes()
+                    .stream()
+                    .map(node -> {
+                        Contribution contribution = new Contribution();
+                        contribution.setCommittedDate(node.getCommittedDate());
+                        contribution.setAdditions(node.getAdditions());
+                        contribution.setDeletions(node.getDeletions());
+                        contribution.setAuthorName(node.getAuthor().getName());
+                        return contribution;
+                    })
+                    .collect(Collectors.toList());
+
+            allContributions.addAll(contributions);
+
+            var pageInfo = response.getPageInfo();
+            hasNextPage = pageInfo.isHasNextPage();
+            String cursor = pageInfo.getEndCursor();
+
+            vars.put("cursor", cursor);
+        }
+        return allContributions;
+    }
+
     public List<ChangesInFile> getChangesInFilesByUser(String repositoryName, String authorName) throws IOException {
         // Separar owner y repo
         String[] ownerRepo = repositoryName.split("/");
@@ -213,6 +248,9 @@ public class GithubGraphQLApi {
 
         return change;
     }
+
+
+
 
     private static String readGraphQLQuery(String filePath) throws IOException {
         String relativePath = "./src/main/java/org/springframework/samples/gitvision/util/graphQL";

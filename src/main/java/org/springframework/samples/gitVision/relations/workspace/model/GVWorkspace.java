@@ -6,7 +6,7 @@ import org.springframework.samples.gitvision.model.entity.EntityIdSequential;
 import org.springframework.samples.gitvision.user.model.GVUser;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.NotBlank;
@@ -27,7 +27,7 @@ public class GVWorkspace extends EntityIdSequential {
     @NotBlank
     private String name;
 
-    @ManyToOne(optional = false)
+    @OneToOne(optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private GVUser user;
 

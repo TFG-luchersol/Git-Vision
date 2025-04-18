@@ -2,7 +2,9 @@ package org.springframework.samples.gitvision.util.graphQL.models;
 
 import java.util.List;
 
+import org.springframework.samples.gitvision.util.graphQL.models.GraphQLContributionResponse.DataWrapper.Repository.PageInfo;
 import org.springframework.samples.gitvision.util.graphQL.models.GraphQLContributionResponse.DataWrapper.Repository.CommitHistory.CommitEdge;
+import org.springframework.samples.gitvision.util.graphQL.models.GraphQLContributionResponse.DataWrapper.Repository.CommitHistory.CommitNode;
 
 import lombok.Data;
 
@@ -17,6 +19,27 @@ public class GraphQLContributionResponse {
                 .getTarget()
                 .getHistory()
                 .getEdges();
+    }
+
+    public PageInfo getPageInfo() {
+        return this.getData()
+                .getRepository()
+                .getDefaultBranchRef()
+                .getTarget()
+                .getHistory()
+                .getPageInfo();
+    }
+
+    public List<CommitNode> getNodes() {
+        return this.getData()
+                .getRepository()
+                .getDefaultBranchRef()
+                .getTarget()
+                .getHistory()
+                .getEdges()
+                .stream()
+                .map(edge -> edge.getNode())
+                .toList();
     }
 
     @Data

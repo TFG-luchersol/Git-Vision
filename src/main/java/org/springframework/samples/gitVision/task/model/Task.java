@@ -13,7 +13,9 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Task {
-    
+
+    private String id;
+
     private String name;
 
     @DurationFormat(value = DurationStyle.ISO8601)
@@ -22,5 +24,7 @@ public class Task {
     private Project project;
 
     private Workspace workspace;
+
+    private String[] userGroupIds;
 
 }

@@ -98,10 +98,17 @@ public class GVRepoService {
     }
 
     @Transactional(readOnly = true)
+    public GVRepo getGvRepoByNameAndUser_Id(String repositoryName, Long userId) {
+        return this.gvRepoRepository.findByNameAndUser_Id(repositoryName, userId)
+        .orElseThrow(() -> ResourceNotFoundException.of(GVRepo.class));
+    }
+
+    @Transactional(readOnly = true)
     public GVRepo getGvRepoByWorkspaceNameAndUser_Username(String workspaceName, String username) {
         return this.gvRepoRepository.findByWorkspace_NameAndUser_Username(workspaceName, username)
             .orElseThrow(() -> ResourceNotFoundException.of(GVRepo.class));
     }
+
 
     @Transactional(readOnly = true)
     public GitHub connect(String repositoryName, String login) throws ConnectionGithubException {

@@ -13,7 +13,9 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Project {
- 
+
+    private String id;
+
     private String name;
 
     @DurationFormat(value = DurationStyle.ISO8601)
@@ -21,5 +23,5 @@ public class Project {
 
     @ManyToOne
     private Workspace workspace;
-   
+
 }

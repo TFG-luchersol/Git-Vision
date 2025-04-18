@@ -11,7 +11,6 @@ import org.springframework.samples.gitvision.util.AESConverter;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
@@ -29,7 +28,7 @@ import lombok.Setter;
 })
 public class GVRepo extends EntityIdSequential {
 
-    @ManyToOne(optional = false)
+    @OneToOne(optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private GVUser user;
 
