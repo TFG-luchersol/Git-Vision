@@ -1,5 +1,6 @@
 import CounterChanges from '@components/CounterChanges.jsx';
 import FolderTabs from '@components/FolderTabs.jsx';
+import { useNotification } from '@context/NotificationContext';
 import '@css/repositories/repository/issues/issue';
 import fetchWithToken from '@utils/fetchWithToken.ts';
 import getBody from '@utils/getBody.ts';
@@ -10,6 +11,7 @@ import { useParams } from 'react-router-dom';
 import { Input } from 'reactstrap';
 
 export default function Issue() {
+    const { showMessage } = useNotification();
     const { owner, repo, issueNumber } = useParams();
 
     const [issue, setIssue] = useState({});
@@ -31,8 +33,10 @@ export default function Issue() {
             setFiles(files)
             setChangesByUser(changesByUser)
             setAssigness(assigness)
-        } catch (e) {
-            alert(e.message)
+        } catch (error) {
+            showMessage({
+                message: error.message
+            })
         }
     }
 

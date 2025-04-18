@@ -1,3 +1,4 @@
+import { useNotification } from '@context/NotificationContext';
 import "@css/repositories/repository/commits";
 import fetchWithToken from '@utils/fetchWithToken.ts';
 import getBody from '@utils/getBody.ts';
@@ -6,6 +7,7 @@ import { useParams } from 'react-router-dom';
 import { Button, Input } from 'reactstrap';
 
 export default function Commits() {
+    const { showMessage } = useNotification();
     const { owner, repo } = useParams();
 
     const [commits, setCommits] = useState([])
@@ -22,8 +24,10 @@ export default function Commits() {
             const response = await fetchWithToken(`/api/v1/commits/${repositorName}?page=${page}`)
             const { commits } = await getBody(response)
             setCommits(commits)
-        } catch (e) {
-            alert(e)
+        } catch (error) {
+            showMessage({
+                message: error.message
+            })
         }
     }
 

@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Objects;
 
 import org.springframework.samples.gitvision.configuration.authority.Authorization;
-import org.springframework.samples.gitvision.user.GVUser;
+import org.springframework.samples.gitvision.user.model.GVUser;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 

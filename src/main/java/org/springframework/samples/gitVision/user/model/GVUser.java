@@ -1,7 +1,8 @@
-package org.springframework.samples.gitvision.user;
+package org.springframework.samples.gitvision.user.model;
 
 import java.util.Objects;
 
+import org.hibernate.validator.constraints.URL;
 import org.kohsuke.github.GHUser;
 import org.springframework.samples.gitvision.model.entity.Person;
 import org.springframework.samples.gitvision.util.AESConverter;
@@ -9,6 +10,8 @@ import org.springframework.samples.gitvision.util.AESConverter;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,14 +22,21 @@ import lombok.Setter;
 @Table(name = "gv_users")
 public class GVUser extends Person {
 
-    @Pattern(regexp = ".+")
-    String password;
+    @Email(message = "{user.model.gv_user.email.email}")
+    private String email;
+
+    @URL(message = "{user.model.gv_user.avatarUrl.url}")
+    private String avatarUrl;
+
+    @Pattern(regexp = ".+", message = "{user.model.gv_user.password.pattern}")
+    private String password;
+
+    @Convert(converter = AESConverter.class)
+    @NotBlank(message = "{user.model.gv_user.githubToken.not_blank}")
+    private String githubToken;
 
 	@Convert(converter = AESConverter.class)
-	String githubToken;
-
-	@Convert(converter = AESConverter.class)
-	String clockifyToken;
+	private String clockifyToken;
 
     public boolean hasClockifyToken(){
         return clockifyToken != null;

@@ -1,7 +1,9 @@
 import CustomInput from '@components/CustomInput';
+import { useNotification } from '@context/NotificationContext';
 import '@css/details';
 import tokenService from '@services/token.service.js';
 import fetchWithToken from '@utils/fetchWithToken.ts';
+
 import getBody from '@utils/getBody.ts';
 import React, { useEffect, useState } from 'react';
 import { FaGithub, FaRegUserCircle } from "react-icons/fa";
@@ -11,6 +13,8 @@ import { SiClockify } from "react-icons/si";
 import { Button, Modal, ModalBody, ModalHeader } from 'reactstrap';
 
 export default function Details() {
+  const {showMessage} = useNotification();
+
   const userIcon = <FaRegUserCircle />
   const githubIcon = <FaGithub />
   const clockifyIcon = <SiClockify />
@@ -54,7 +58,9 @@ export default function Details() {
         tokenService.setUser({...user, clockifyToken: newClockifyToken})
       }
     } catch (error) {
-      alert(error)
+      showMessage({
+        message: error.message
+      })
     }
   };
 
@@ -66,7 +72,9 @@ export default function Details() {
                   tokenService.removeUser()
                   window.location.href = "/"
                 } else {
-                  alert("Error en borrado de usuario")
+                  showMessage({
+                    message: "Error en borrado de usuario"
+                  })
                 }
               })
   };

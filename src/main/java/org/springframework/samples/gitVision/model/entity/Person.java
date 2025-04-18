@@ -5,6 +5,7 @@ import org.hibernate.validator.constraints.URL;
 import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,14 +13,16 @@ import lombok.Setter;
 @Setter
 @MappedSuperclass
 public class Person extends EntityIdLong {
- 
-    @Column(unique = true)
-	String username;
-	
-	@Email
-	String email;
 
-    @URL
-	String avatarUrl;
+    @Column(unique = true)
+    @NotBlank(message = "model.entity.person.username.not_blank")
+	protected String username;
+
+    @Email(message = "{model.entity.person.email.email}")
+    private String email;
+
+    @URL(message = "{model.entity.person.avatarUrl.url}")
+    private String avatarUrl;
+
 
 }

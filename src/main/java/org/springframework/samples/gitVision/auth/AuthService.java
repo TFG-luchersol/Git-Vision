@@ -2,8 +2,8 @@ package org.springframework.samples.gitvision.auth;
 
 import org.kohsuke.github.GHUser;
 import org.springframework.samples.gitvision.auth.payload.request.SignupRequest;
-import org.springframework.samples.gitvision.user.GVUser;
 import org.springframework.samples.gitvision.user.GVUserService;
+import org.springframework.samples.gitvision.user.model.GVUser;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

@@ -4,12 +4,24 @@ import java.util.Set;
 
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotBlank;
+import lombok.Getter;
 
-public record AliasesDTO(@NotBlank String username, Set<String> aliases){
+@Getter
+public class AliasesDTO {
 
-    @AssertTrue(message = "No debe de existir alias en blanco")
+    @NotBlank(message = "{relations.repository.model.aliases_dto.username.not_blank}")
+    private String username;
+
+    private Set<String> aliases;
+
+    public AliasesDTO(String username, Set<String> aliases) {
+        this.username = username;
+        this.aliases = aliases;
+    }
+
+    @AssertTrue(message = "{relations.repository.model.aliases_dto.aliases.assert_true}")
     public boolean isValid() {
-        return aliases.isEmpty() || aliases.stream().allMatch(i -> !i.isBlank());
+        return aliases == null || aliases.stream().allMatch(alias -> !alias.isBlank());
     }
 
 }

@@ -22,8 +22,8 @@ import org.springframework.samples.gitvision.relations.repository.model.GVRepo;
 import org.springframework.samples.gitvision.relations.repository.model.GVRepoUserConfig;
 import org.springframework.samples.gitvision.relations.workspace.GVWorkspaceRepository;
 import org.springframework.samples.gitvision.relations.workspace.model.GVWorkspace;
-import org.springframework.samples.gitvision.user.GVUser;
 import org.springframework.samples.gitvision.user.GVUserRepository;
+import org.springframework.samples.gitvision.user.model.GVUser;
 import org.springframework.samples.gitvision.util.EntityUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -144,14 +144,14 @@ public class GVRepoService {
             .orElseThrow(() -> ResourceNotFoundException.of(GVRepo.class));
 
         GVRepoUserConfig gvRepoUserConfiguration = this.gvRepoUserConfigurationRepository
-                .findByGvRepoAndUsername(gvRepo, aliasesDTO.username())
+                .findByGvRepoAndUsername(gvRepo, aliasesDTO.getUsername())
                 .orElseThrow(() -> ResourceNotFoundException.of(GVRepoUserConfig.class));
 
         GVRepoUserConfig aliasUsed = this.gvRepoUserConfigurationRepository
             .findByGvRepo(gvRepo)
             .stream()
-            .filter(config -> !aliasesDTO.username().equals(config.getUsername()))
-            .filter(config -> !EntityUtils.areDisjoint(config.getAliases(), aliasesDTO.aliases()))
+            .filter(config -> !aliasesDTO.getUsername().equals(config.getUsername()))
+            .filter(config -> !EntityUtils.areDisjoint(config.getAliases(), aliasesDTO.getAliases()))
             .findFirst()
             .orElse(null);
 
@@ -160,8 +160,8 @@ public class GVRepoService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, message);
         }
 
-        if(!aliasesDTO.aliases().equals(gvRepoUserConfiguration.getAliases())) {
-            gvRepoUserConfiguration.setAliases(aliasesDTO.aliases());
+        if(!aliasesDTO.getAliases().equals(gvRepoUserConfiguration.getAliases())) {
+            gvRepoUserConfiguration.setAliases(aliasesDTO.getAliases());
             gvRepoUserConfigurationRepository.save(gvRepoUserConfiguration);
         }
 

@@ -11,10 +11,11 @@ import org.springframework.samples.gitvision.auth.payload.response.JwtResponse;
 import org.springframework.samples.gitvision.configuration.jwt.JwtUtils;
 import org.springframework.samples.gitvision.configuration.services.UserDetailsImpl;
 import org.springframework.samples.gitvision.exceptions.ResourceNotFoundException;
-import org.springframework.samples.gitvision.user.GVUser;
 import org.springframework.samples.gitvision.user.GVUserService;
+import org.springframework.samples.gitvision.user.model.GVUser;
 import org.springframework.samples.gitvision.util.Checker;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -50,22 +51,28 @@ public class AuthController {
 
     @PostMapping("/signin")
     public ResponseEntity<JwtResponse> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) throws Exception {
-        String username = loginRequest.getUsername();
-        String password = loginRequest.getPassword();
-        Checker.checkOrThrow(userService.existsUserByUsername(username),
-                             ResourceNotFoundException.of("User", "username", username));
+        try {
+            String username = loginRequest.getUsername();
+            String password = loginRequest.getPassword();
+            Checker.checkOrThrow(userService.existsUserByUsername(username),
+                                ResourceNotFoundException.of("User", "username", username));
 
-        UsernamePasswordAuthenticationToken authenticationToken =
-            new UsernamePasswordAuthenticationToken(username, password);
+            UsernamePasswordAuthenticationToken authenticationToken =
+                new UsernamePasswordAuthenticationToken(username, password);
 
-        Authentication authentication = authenticationManager.authenticate(authenticationToken);
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = jwtUtils.generateJwtToken(authentication);
+            Authentication authentication = authenticationManager.authenticate(authenticationToken);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            String jwt = jwtUtils.generateJwtToken(authentication);
 
-        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-        GVUser user = this.userService.findUserById(userDetails.getId());
-        JwtResponse jwtResponse = new JwtResponse(jwt, user);
-        return ResponseEntity.ok(jwtResponse);
+            UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+            GVUser user = this.userService.findUserById(userDetails.getId());
+            JwtResponse jwtResponse = new JwtResponse(jwt, user);
+            return ResponseEntity.ok(jwtResponse);
+        } catch (Exception e) {
+            throw new BadCredentialsException("Credenciales incorrectas");
+        }
+
+
     }
 
     @GetMapping("/validate")

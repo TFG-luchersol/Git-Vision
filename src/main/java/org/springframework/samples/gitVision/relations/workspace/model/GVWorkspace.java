@@ -3,7 +3,7 @@ package org.springframework.samples.gitvision.relations.workspace.model;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.samples.gitvision.model.entity.EntityIdSequential;
-import org.springframework.samples.gitvision.user.GVUser;
+import org.springframework.samples.gitvision.user.model.GVUser;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;

@@ -19,6 +19,7 @@ import org.kohsuke.github.GitHub;
 import org.springframework.beans.BeanUtils;
 import org.springframework.dao.DataAccessException;
 import org.springframework.samples.gitvision.exceptions.ResourceNotFoundException;
+import org.springframework.samples.gitvision.user.model.GVUser;
 import org.springframework.samples.gitvision.util.Checker;
 import org.springframework.samples.gitvision.util.ClockifyApi;
 import org.springframework.security.core.Authentication;

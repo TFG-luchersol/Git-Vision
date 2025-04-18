@@ -1,5 +1,6 @@
 import CounterChanges from '@components/CounterChanges.jsx';
 import FolderTabs from '@components/FolderTabs.jsx';
+import { useNotification } from '@context/NotificationContext';
 import "@css/repositories/repository/commits/commit";
 import fetchWithToken from '@utils/fetchWithToken.ts';
 import getBody from '@utils/getBody.ts';
@@ -7,6 +8,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 export default function Commit() {
+    const { showMessage } = useNotification();
     const { owner, repo, sha } = useParams();
 
     const [commit, setCommit] = useState([])
@@ -21,8 +23,10 @@ export default function Commit() {
             const response = await fetchWithToken(`/api/v1/commits/${repositorName}/${sha}`)
             const commit = await getBody(response)
             setCommit(commit)
-        } catch (e) {
-            alert(e.message)
+        } catch (error) {
+            showMessage({
+                message: error.message
+            })
         }
     }
 

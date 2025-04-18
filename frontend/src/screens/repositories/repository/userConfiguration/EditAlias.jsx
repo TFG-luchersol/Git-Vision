@@ -1,10 +1,11 @@
+import { useNotification } from '@context/NotificationContext';
 import fetchWithToken from "@utils/fetchWithToken";
 import { Button, Input, List, Modal, Space } from "antd";
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 
 const EditAlias = ({ state, setState, keyName, visible, onClose }) => {
-
+const { showMessage } = useNotification();
     const {owner, repo} = useParams();
 
     const [localValues, setLocalValues] = useState(state[keyName] || []);
@@ -46,7 +47,9 @@ const EditAlias = ({ state, setState, keyName, visible, onClose }) => {
             setState({ ...state, [keyName]: localValues });
             onClose();
         } catch (error) {
-            console.error(error)
+            showMessage({
+                message: error.message
+            })
         }
     };
 

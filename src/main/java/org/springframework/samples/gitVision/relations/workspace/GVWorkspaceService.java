@@ -14,8 +14,8 @@ import org.springframework.samples.gitvision.relations.repository.model.GVRepo;
 import org.springframework.samples.gitvision.relations.workspace.model.AliasWorkspaceDTO;
 import org.springframework.samples.gitvision.relations.workspace.model.GVWorkspace;
 import org.springframework.samples.gitvision.relations.workspace.model.GVWorkspaceUserConfig;
-import org.springframework.samples.gitvision.user.GVUser;
 import org.springframework.samples.gitvision.user.GVUserRepository;
+import org.springframework.samples.gitvision.user.model.GVUser;
 import org.springframework.samples.gitvision.util.ClockifyApi;
 import org.springframework.samples.gitvision.workspace.model.TimeEntry;
 import org.springframework.samples.gitvision.workspace.model.UserProfile;
@@ -80,13 +80,13 @@ public class GVWorkspaceService {
     }
 
     public GVWorkspaceUserConfig updateAliaUserConfigurations(String workspaceName, Long userId, AliasWorkspaceDTO aliasesDTO) {
-        GVWorkspace gvWorkspace = this.gvWorkspaceRepository.findByNameAndUser_Id(workspaceName, userId)
+        this.gvWorkspaceRepository.findByNameAndUser_Id(workspaceName, userId)
             .orElseThrow(() -> ResourceNotFoundException.of(GVWorkspace.class));
 
-        var gvWorkspaceUserConfiguration = this.gvWorkspaceUserConfigRepository.findById(aliasesDTO.id())
-        .orElseThrow(() -> ResourceNotFoundException.of("Workspace User Configuration", "ID", aliasesDTO.id()));
+        var gvWorkspaceUserConfiguration = this.gvWorkspaceUserConfigRepository.findById(aliasesDTO.getId())
+            .orElseThrow(() -> ResourceNotFoundException.of("Workspace User Configuration", "ID", aliasesDTO.getId()));
 
-        gvWorkspaceUserConfiguration.setAlias(aliasesDTO.githubUser());
+        gvWorkspaceUserConfiguration.setAlias(aliasesDTO.getGithubUser());
 
         return this.gvWorkspaceUserConfigRepository.save(gvWorkspaceUserConfiguration);
     }

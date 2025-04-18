@@ -64,6 +64,7 @@ module.exports = {
       "@css": path.resolve(__dirname, "src/static/css"),
       "@fonts": path.resolve(__dirname, "src/static/fonts"),
       "@services": path.resolve(__dirname, "src/services"),
+      "@context": path.resolve(__dirname, "src/context"),
     },
   },
 };

@@ -3,8 +3,8 @@ package org.springframework.samples.gitvision.task;
 import java.util.List;
 
 import org.springframework.samples.gitvision.task.model.Task;
-import org.springframework.samples.gitvision.user.GVUser;
 import org.springframework.samples.gitvision.user.GVUserRepository;
+import org.springframework.samples.gitvision.user.model.GVUser;
 import org.springframework.samples.gitvision.util.ClockifyApi;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +16,7 @@ public class TaskService {
     public TaskService(GVUserRepository gvUserRepository){
         this.gvUserRepository = gvUserRepository;
     }
-    
+
     public Long timeByName(String workspaceId, String projectId, String name, Long userId){
         GVUser user = gvUserRepository.findById(userId).orElseThrow();
         String clockifyToken = user.getClockifyToken();

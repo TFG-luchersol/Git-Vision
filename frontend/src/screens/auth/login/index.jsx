@@ -1,4 +1,5 @@
 import CustomInput from '@components/CustomInput';
+import { useNotification } from '@context/NotificationContext';
 import '@css';
 import "@css/auth/authPage.css";
 import '@css/home';
@@ -6,36 +7,46 @@ import tokenService from "@services/token.service.js";
 import getBody from '@utils/getBody.ts';
 import React, { useState } from 'react';
 import { FaLock, FaRegUserCircle, FaUnlock } from "react-icons/fa";
-import { Link } from 'react-router-dom';
-import { Alert, Button, Form, FormGroup } from 'reactstrap';
-
+import { Link, useNavigate } from 'react-router-dom';
+import { Button, Form, FormGroup } from 'reactstrap';
+ 
 export default function Login() {
+    
+    const navigate = useNavigate();
+    const { showMessage } = useNotification();
+
     const userIcon = <FaRegUserCircle />
     const passwordLockIcon = <FaLock onClick={() => setShowPassword(prev => !prev)} />;
     const passwordUnlockIcon = <FaUnlock onClick={() => setShowPassword(prev => !prev)} />;
 
-    const [message, setMessage] = useState(null)
     const [values, setValues] = useState({ username: "", password: "" })
     const [showPassword, setShowPassword] = useState(false);
-
 
     async function handleSubmit(event) {
         event.preventDefault()
         const reqBody = JSON.stringify(values);
-        setMessage(null);
         try {
             const response = await fetch("/api/v1/auth/signin", {
-                headers: { "Content-Type": "application/json" },
+                headers: { 
+                    "Content-Type": "application/json",
+                },
                 method: "POST",
                 body: reqBody,
             });
-            
             const jwt = await getBody(response);
             tokenService.setLocalAccessToken(jwt.token)
             tokenService.setUser(jwt.user);
-            window.location.href = "/";
+            showMessage({
+                message: "Credenciales correctas",
+                type: "success"
+            })
+            await new Promise(resolve => setTimeout(resolve, 500));
+            navigate(0);
         } catch (error) {
-            setMessage(error.message);
+            showMessage({
+                message: error.message
+            })
+            
         }
     }
 
@@ -49,8 +60,6 @@ export default function Login() {
 
     return (
         <div className='center-screen'>
-            <Alert isOpen={message} color="danger" style={{ position: 'fixed', top: '15%' }}>{message}</Alert>
-
             <Form onSubmit={handleSubmit} className='auth-form-container' >
                 <div style={{ margin: "30px" }}>
                     <title className='center-title'>

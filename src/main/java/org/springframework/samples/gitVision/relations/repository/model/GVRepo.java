@@ -5,7 +5,7 @@ import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.validator.constraints.URL;
 import org.springframework.samples.gitvision.model.entity.EntityIdSequential;
 import org.springframework.samples.gitvision.relations.workspace.model.GVWorkspace;
-import org.springframework.samples.gitvision.user.GVUser;
+import org.springframework.samples.gitvision.user.model.GVUser;
 import org.springframework.samples.gitvision.util.AESConverter;
 
 import jakarta.persistence.Column;

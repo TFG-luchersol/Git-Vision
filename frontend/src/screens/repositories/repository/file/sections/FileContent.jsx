@@ -1,3 +1,4 @@
+import { useNotification } from '@context/NotificationContext';
 import fetchWithToken from '@utils/fetchWithToken.ts';
 import getBody from '@utils/getBody.ts';
 import hljs from "highlight.js";
@@ -7,6 +8,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 export default function FileContent() {
+    const { showMessage } = useNotification();
     const { owner, repo, "*": path } = useParams();
 
     const [contentFile, setContentFile] = useState("");
@@ -64,7 +66,9 @@ export default function FileContent() {
             }
 
         } catch (error) {
-            alert(error.message);
+            showMessage({
+                message: error.message
+            })
         }
     }
 

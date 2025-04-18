@@ -25,6 +25,7 @@ import Issue from "@screens/repositories/repository/issues/issue";
 import RepositoryDetails from "@screens/repositories/repository/repositoryDetails";
 import UserConfiguration from "@screens/repositories/repository/userConfiguration";
 import tokenService from "@services/token.service";
+import { NotificationProvider } from "./context/NotificationContext";
 import WorkspaceUsers from "./screens/workspace/details";
 
 function ErrorFallback({ error, resetErrorBoundary }) {
@@ -77,15 +78,17 @@ function App() {
 
   return (
     <div>
-      <ErrorBoundary FallbackComponent={ErrorFallback}>
-        <AppNavbar />
-        <Routes>
-          <Route path="/" exact={true} element={<Home />} />
-          <Route path="/swagger" element={<SwaggerDocs />} />
-          {publicRoutes}
-          {jwt && userRoutes}
-        </Routes>
-      </ErrorBoundary>
+      <NotificationProvider>
+        <ErrorBoundary FallbackComponent={ErrorFallback}>
+          <AppNavbar />
+          <Routes>
+            <Route path="/" exact={true} element={<Home />} />
+            <Route path="/swagger" element={<SwaggerDocs />} />
+            {publicRoutes}
+            {jwt && userRoutes}
+          </Routes>
+        </ErrorBoundary>
+      </NotificationProvider>
     </div>
   );
 }

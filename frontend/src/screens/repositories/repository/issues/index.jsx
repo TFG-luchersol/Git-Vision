@@ -1,3 +1,4 @@
+import { useNotification } from '@context/NotificationContext';
 import "@css/repositories/repository/issues";
 import fetchWithToken from '@utils/fetchWithToken.ts';
 import getBody from '@utils/getBody.ts';
@@ -7,6 +8,7 @@ import { useParams } from 'react-router-dom';
 import { Button, Input } from 'reactstrap';
 
 export default function Issues() {
+    const { showMessage } = useNotification();
     const { owner, repo } = useParams();
 
     const [issues, setIssues] = useState([])
@@ -26,8 +28,10 @@ export default function Issues() {
                 setIssues(issues)
                 setPage(page)
             } 
-        } catch (e) {
-            alert(e.message)
+        } catch (error) {
+            showMessage({
+                message: error.message
+            })
         }
     }
 

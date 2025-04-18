@@ -1,6 +1,8 @@
+import { useNotification } from '@context/NotificationContext';
 import "@css/repositories/repository/userConfiguration";
 import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import fetchWithToken from '@utils/fetchWithToken.ts';
+import getBody from "@utils/getBody";
 import React, { useEffect, useState } from 'react';
 import { IoMdRefresh } from "react-icons/io";
 import { MdEdit } from "react-icons/md";
@@ -8,6 +10,8 @@ import { useParams } from 'react-router-dom';
 import EditAlias from './EditAlias';
 
 export default function UserConfiguration(){
+
+    const { showMessage } = useNotification();
     const [users, setUsers] = useState({});
     const [editAliasModal, setEditAliasModal] = useState({})
     const {owner, repo} = useParams();
@@ -16,11 +20,13 @@ export default function UserConfiguration(){
         const fetchUsers = async () => {
             try {
                 const response = await fetchWithToken(`/api/v1/relation/repository/${owner}/${repo}/user_alias`);
-                const data = await response.json();
+                const data = await getBody(response);
                 setUsers(data);
                 setEditAliasModal(Object.fromEntries(data.map(item => [item, false])));
             } catch (error) {
-                console.error('Error fetching users:', error);
+                showMessage({
+                    message: error.message
+                })
             }
         };
 
@@ -32,10 +38,12 @@ export default function UserConfiguration(){
             const response = await fetchWithToken(`/api/v1/relation/repository/${owner}/${repo}/user_alias/refresh`, {
                 method: "PUT",
             });
-            const data = await response.json();
+            const data = await getBody(response);
             setUsers(data);
         } catch (error) {
-            console.error('Error fetching users:', error);
+            showMessage({
+                message: error.message
+            })
         }
     };
 

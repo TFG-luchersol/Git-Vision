@@ -1,6 +1,8 @@
+import { useNotification } from '@context/NotificationContext';
 import "@css/workspace/details";
 import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import fetchWithToken from '@utils/fetchWithToken.ts';
+import getBody from "@utils/getBody";
 import React, { useEffect, useState } from 'react';
 import { IoMdRefresh } from "react-icons/io";
 import { MdEdit } from "react-icons/md";
@@ -8,6 +10,8 @@ import { useParams } from 'react-router-dom';
 import { Input } from "reactstrap";
 
 export default function WorkspaceUsers() {
+const { showMessage } = useNotification();
+
     const [users, setUsers] = useState([]);
     const [editedAlias, setEditedAlias] = useState({});  // Para manejar los alias editados
     const { name } = useParams();
@@ -16,10 +20,12 @@ export default function WorkspaceUsers() {
         const fetchUsers = async () => {
             try {
                 const response = await fetchWithToken(`/api/v1/relation/workspace/${name}/user_alias`);
-                const data = await response.json();
+                const data = await getBody(response);
                 setUsers(data);
             } catch (error) {
-                console.error('Error fetching users:', error);
+                showMessage({
+                    message: error.message
+                })
             }
         };
 
@@ -31,10 +37,12 @@ export default function WorkspaceUsers() {
             const response = await fetchWithToken(`/api/v1/relation/workspace/${name}/user_alias/refresh`, {
                 method: "PUT",
             });
-            const data = await response.json();
+            const data = await getBody(response);
             setUsers(data);
         } catch (error) {
-            console.error('Error refreshing users:', error);
+            showMessage({
+                message: error.message
+            })
         }
     };
 
@@ -50,7 +58,7 @@ export default function WorkspaceUsers() {
                 }
             });
 
-            const data = await response.json();
+            const data = await getBody(response);
             setUsers(data);
             setEditedAlias(prevState => {
                 const newState = { ...prevState };
@@ -58,7 +66,9 @@ export default function WorkspaceUsers() {
                 return newState;
             });
         } catch (error) {
-            console.error('Error updating user:', error);
+            showMessage({
+                message: error.message
+            })
         }
     };
 

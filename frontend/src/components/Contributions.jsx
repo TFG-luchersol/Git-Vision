@@ -1,3 +1,4 @@
+import { useNotification } from '@context/NotificationContext';
 import '@css/components/contributions';
 import fetchWithToken from '@utils/fetchWithToken.ts';
 import getBody from '@utils/getBody.ts';
@@ -31,6 +32,8 @@ ChartJS.register(
 );
 
 export default function Contributions({ owner, repo, path = null, isFolder=false }) {
+  const {showMessage } = useNotification();
+
   const [isLoading, setIsLoading] = useState(false);
   const [data_, setData_] = useState({ datasets: [] });
   const [startDate, setStartDate] = useState(null);

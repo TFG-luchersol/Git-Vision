@@ -1,6 +1,7 @@
 import MultiSelectDropdown from '@components/MultiSelectDropdown.jsx';
 import PieChart from '@components/PieChart.jsx';
 import TreeFiles from '@components/TreeFiles.jsx';
+import { useNotification } from '@context/NotificationContext';
 import '@css/repositories/repository';
 import fetchWithToken from '@utils/fetchWithToken.ts';
 import getBody from '@utils/getBody.ts';
@@ -10,6 +11,7 @@ import { Button, ButtonGroup, Input } from 'reactstrap';
 
 
 export default function Repository() {
+    const { showMessage } = useNotification();
     const { owner, repo } = useParams();
 
     const [files, setFiles] = useState({});
@@ -31,10 +33,11 @@ export default function Repository() {
         try {
             let response = await fetchWithToken(`/api/v1/files/repository/${owner}/${repo}`)
             const tree = await getBody(response);
-            console.log(tree)
             setFiles(tree)
-        } catch (e) {
-            alert(e.message)
+        } catch (error) {
+            showMessage({
+                message: error.message
+            })
         }
     }
 
@@ -45,8 +48,10 @@ export default function Repository() {
             const numFiles = Object.values(extensionCounter).reduce((acc, next) => acc + next, 0);
             setNumFiles(numFiles);
             setExtensionCounter(extensionCounter);
-        } catch (e) {
-            alert(e.message)
+        } catch (error) {
+            showMessage({
+                message: error.message
+            })
         }
     }
     
@@ -56,8 +61,10 @@ export default function Repository() {
             const percentageLanguages = await getBody(response)
             setPercentajeLanguajes(percentageLanguages.percentages)
             setNumBytes(percentageLanguages.numBytes);
-        } catch (e) {
-            alert(e.message)
+        } catch (error) {
+            showMessage({
+                message: error.message
+            })
         }
     }
 

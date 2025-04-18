@@ -1,3 +1,4 @@
+import { useNotification } from '@context/NotificationContext';
 import '@css';
 import "@css/auth/authPage.css";
 import '@css/extraction/repositoryWorkspaceLinker';
@@ -6,11 +7,12 @@ import fetchWithToken from '@utils/fetchWithToken.ts';
 import getBody from '@utils/getBody.ts';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Alert, Button, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Form, FormGroup, Input } from 'reactstrap';
+import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Form, FormGroup, Input } from 'reactstrap';
 
 export default function RepositoryWorkspaceLinker() {
 
-    const [message, setMessage] = useState(null);
+    const {showMessage} = useNotification();
+
     const [values, setValues] = useState({ repository: "", workspace: "" });
     const [owner, setOwner] = useState("");
     const [repositories, setRepositories] = useState({});
@@ -30,7 +32,9 @@ export default function RepositoryWorkspaceLinker() {
                 const repositories = await getBody(response);
                 setRepositories(repositories)
             } catch (error) {
-                setMessage(error.message)
+                showMessage({
+                    message: error.message
+                });
             }
         };
         const loadWorkspaces = async () => {
@@ -39,7 +43,9 @@ export default function RepositoryWorkspaceLinker() {
                 const workspaces = await getBody(response);
                 setWorkspaces(workspaces)
             } catch (error) {
-                setMessage(error.message)
+                showMessage({
+                    message: error.message
+                })
             }
         };
         loadRepositories();
@@ -49,7 +55,6 @@ export default function RepositoryWorkspaceLinker() {
 
     async function handleSubmit(event) {
         event.preventDefault()
-        setMessage(null);
         try {
             let url = new URL(`/api/v1/relation/repository/${owner}/${values.repository}/linker`, "http://localhost:8080");
             url.searchParams.set("workspaceName", encodeURIComponent(values.workspace.name))
@@ -64,7 +69,9 @@ export default function RepositoryWorkspaceLinker() {
                 await response.json(); // Por defecto lanza una excepción con el error
             }
         } catch (error) {
-            setMessage(error.message);
+            showMessage({
+                message: error.message
+            })
         }
     }
 
@@ -81,8 +88,6 @@ export default function RepositoryWorkspaceLinker() {
 
     return (
         <div className='center-screen'>
-            <Alert isOpen={message} color="danger" style={{ position: 'fixed', top: '11%'}}>{message}</Alert>
-
             <Form onSubmit={handleSubmit} className='auth-form-container' >
                 <div className='flex-container'>
                     <title className='center-title'>
