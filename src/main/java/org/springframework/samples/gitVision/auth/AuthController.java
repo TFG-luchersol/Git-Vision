@@ -14,6 +14,7 @@ import org.springframework.samples.gitvision.exceptions.ResourceNotFoundExceptio
 import org.springframework.samples.gitvision.user.GVUserService;
 import org.springframework.samples.gitvision.user.model.GVUser;
 import org.springframework.samples.gitvision.util.Checker;
+import org.springframework.samples.gitvision.util.MessageResolver;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -40,13 +41,15 @@ public class AuthController {
     private final GVUserService userService;
     private final JwtUtils jwtUtils;
     private final AuthService authService;
+    private final MessageResolver msg;
 
     public AuthController(AuthenticationManager authenticationManager, GVUserService userService,
-            JwtUtils jwtUtils, AuthService authService) {
+            JwtUtils jwtUtils, AuthService authService, MessageResolver msg) {
         this.userService = userService;
         this.jwtUtils = jwtUtils;
         this.authenticationManager = authenticationManager;
         this.authService = authService;
+        this.msg = msg;
     }
 
     @PostMapping("/signin")
@@ -69,7 +72,7 @@ public class AuthController {
             JwtResponse jwtResponse = new JwtResponse(jwt, user);
             return ResponseEntity.ok(jwtResponse);
         } catch (Exception e) {
-            throw new BadCredentialsException("Credenciales incorrectas");
+            throw new BadCredentialsException(msg.get("auth.auth_controller.authenticate_user.bad_credentials"));
         }
 
 

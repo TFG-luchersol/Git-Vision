@@ -10,6 +10,7 @@ import org.springframework.samples.gitvision.relations.repository.model.GVRepo;
 import org.springframework.samples.gitvision.relations.workspace.model.AliasWorkspaceDTO;
 import org.springframework.samples.gitvision.relations.workspace.model.GVWorkspace;
 import org.springframework.samples.gitvision.relations.workspace.model.GVWorkspaceUserConfig;
+import org.springframework.samples.gitvision.util.MessageResolver;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,12 +31,15 @@ import jakarta.validation.Valid;
 @SecurityRequirement(name = "bearerAuth")
 public class GVWorkspaceController {
 
-    GVWorkspaceService gvWorkspaceService;
-    GVRepoService gvRepoService;
+    private final GVWorkspaceService gvWorkspaceService;
+    private final GVRepoService gvRepoService;
+    private final MessageResolver msg;
 
-    public GVWorkspaceController(GVWorkspaceService gvWorkspaceService, GVRepoService gvRepoService) {
+    public GVWorkspaceController(GVWorkspaceService gvWorkspaceService, GVRepoService gvRepoService,
+            MessageResolver msg) {
         this.gvWorkspaceService = gvWorkspaceService;
         this.gvRepoService = gvRepoService;
+        this.msg = msg;
     }
 
     @GetMapping
@@ -77,12 +81,14 @@ public class GVWorkspaceController {
     }
 
     @PutMapping("/{workspaceName}/user_alias")
-    public ResponseEntity<?> updateAliases(
+    public ResponseEntity<String> updateAliases(
             @PathVariable String workspaceName,
             @RequestBody @Valid AliasWorkspaceDTO aliasDTO,
             @AuthenticationPrincipal UserDetailsImpl userDetailsImpl) {
-        gvWorkspaceService.updateAliaUserConfigurations(workspaceName, userDetailsImpl.getId(), aliasDTO);
-        return ResponseEntity.ok().build();
+        var gvWorkspaceUserConfig = gvWorkspaceService.updateAliaUserConfigurations(workspaceName, userDetailsImpl.getId(), aliasDTO);
+        String message = msg.get("relations.workspace.gv_workspace_controller.update_aliases.response",
+                                 gvWorkspaceUserConfig.getUserProfile().getName());
+        return ResponseEntity.ok(message);
     }
 
     @PutMapping("/{workspaceName}/user_alias/refresh")

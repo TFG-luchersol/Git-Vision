@@ -10,10 +10,10 @@ import { useParams } from 'react-router-dom';
 import { Input } from "reactstrap";
 
 export default function WorkspaceUsers() {
-const { showMessage } = useNotification();
+    const { showMessage } = useNotification();
 
     const [users, setUsers] = useState([]);
-    const [editedAlias, setEditedAlias] = useState({});  // Para manejar los alias editados
+    const [editedAlias, setEditedAlias] = useState({});
     const { name } = useParams();
 
     useEffect(() => {
@@ -22,10 +22,11 @@ const { showMessage } = useNotification();
                 const response = await fetchWithToken(`/api/v1/relation/workspace/${name}/user_alias`);
                 const data = await getBody(response);
                 setUsers(data);
+                setEditedAlias(arrayToObject(data));
             } catch (error) {
                 showMessage({
                     message: error.message
-                })
+                });
             }
         };
 
@@ -39,16 +40,17 @@ const { showMessage } = useNotification();
             });
             const data = await getBody(response);
             setUsers(data);
+            setEditedAlias(arrayToObject(data));
         } catch (error) {
             showMessage({
                 message: error.message
-            })
+            });
         }
     };
 
     const updateUser = async (id) => {
         try {
-            const aliasToUpdate = editedAlias[id] || "";  // Si no hay alias editado, toma el valor vacío
+            const aliasToUpdate = editedAlias[id] || "";
 
             const response = await fetchWithToken(`/api/v1/relation/workspace/${name}/user_alias`, {
                 method: "PUT",
@@ -58,24 +60,31 @@ const { showMessage } = useNotification();
                 }
             });
 
-            const data = await getBody(response);
-            setUsers(data);
-            setEditedAlias(prevState => {
-                const newState = { ...prevState };
-                delete newState[id];  // Eliminar el alias editado para que vuelva a su estado inicial
-                return newState;
-            });
+            const message = await getBody(response);
+
+            showMessage({
+                type: "info",
+                message
+            })
+            await refreshAlias();
         } catch (error) {
             showMessage({
                 message: error.message
-            })
+            });
         }
+    };
+
+    const arrayToObject = (arr) => {
+        return arr.reduce((acc, item) => {
+            acc[item.id] = item.alias ?? "";
+            return acc;
+        }, {});
     };
 
     const handleAliasChange = (id, value) => {
         setEditedAlias(prevState => ({
             ...prevState,
-            [id]: value,  // Guardar el alias editado para ese usuario
+            [id]: value,
         }));
     };
 
@@ -104,8 +113,9 @@ const { showMessage } = useNotification();
                                 <TableCell className="alias-cell">
                                     <Input
                                         className="alias-content"
-                                        value={editedAlias[id] || alias}  // Mostrar el alias editado o el valor original
-                                        onChange={(e) => handleAliasChange(id, e.target.value)}  // Actualizar el alias en el estado
+                                        value={editedAlias[id] ?? ""}
+                                        placeholder={alias ?? ""}
+                                        onChange={(e) => handleAliasChange(id, e.target.value)}
                                     />
                                 </TableCell>
                                 <TableCell>
