@@ -2,7 +2,6 @@ import '@css';
 import "@css/auth/authPage.css";
 import '@css/extraction/repositoryWorkspaceLinker';
 import '@css/home';
-import tokenService from "@services/token.service.js";
 import fetchWithToken from '@utils/fetchWithToken.ts';
 import getBody from '@utils/getBody.ts';
 import React, { useEffect, useState } from 'react';
@@ -27,7 +26,7 @@ export default function RepositoryWorkspaceLinker() {
     useEffect(() => {
         const loadRepositories = async () => {
             try {
-                const response = await fetchWithToken(`/api/v1/relation/repository`)
+                const response = await fetchWithToken(`/api/v1/relation/repository/not_linked`)
                 const repositories = await getBody(response);
                 setRepositories(repositories)
             } catch (error) {
@@ -36,7 +35,7 @@ export default function RepositoryWorkspaceLinker() {
         };
         const loadWorkspaces = async () => {
             try {
-                const response = await fetchWithToken(`/api/v1/relation/workspace/workspaces`)
+                const response = await fetchWithToken(`/api/v1/relation/workspace/not_linked`)
                 const workspaces = await getBody(response);
                 setWorkspaces(workspaces)
             } catch (error) {
@@ -52,11 +51,13 @@ export default function RepositoryWorkspaceLinker() {
         event.preventDefault()
         setMessage(null);
         try {
-            const repositoryName = `${owner}/${values.repository}`
-            const response = await fetchWithToken(`/api/v1/linker?repositoryName=${repositoryName}&workspaceName=${values.workspace.name}&userId=${tokenService.getUser().id}`, {
+            let url = new URL(`/api/v1/relation/repository/${owner}/${values.repository}/linker`, "http://localhost:8080");
+            url.searchParams.set("workspaceName", encodeURIComponent(values.workspace.name))
+            
+            const response = await fetchWithToken(url, {
                 method: "POST",
             });
-
+            
             if (response.status === 200) {
                 window.location.href = "/";
             } else {
@@ -71,6 +72,11 @@ export default function RepositoryWorkspaceLinker() {
         let newValues = { ...values };
         newValues[property] = value;
         setValues(newValues)
+    }
+
+    function handleOwner(owner) {
+        setOwner(owner)
+        setValues({...values, repository: ""})
     }
 
     return (
@@ -90,7 +96,7 @@ export default function RepositoryWorkspaceLinker() {
                                 </DropdownToggle>
                                 <div class="mb-1"/>
                                 <DropdownMenu>
-                                    {Object.keys(repositories).map(owner => <DropdownItem onClick={() => setOwner(owner)}>{owner}</DropdownItem>)}
+                                    {Object.keys(repositories).map(owner => <DropdownItem onClick={() => handleOwner(owner)}>{owner}</DropdownItem>)}
                                 </DropdownMenu>
                             </Dropdown>
                             <Input value={owner || "Select a Owner"} readOnly/>
@@ -121,7 +127,7 @@ export default function RepositoryWorkspaceLinker() {
                         </FormGroup>
                     </div>
                     <div className='button-group'>
-                        <Button type='submit'>Link</Button>
+                        <Button disabled={!(owner && values.repository && values.workspace)} type='submit'>Link</Button>
                         <Button type='button'>
                             <Link className='custom-link' to={"/repositories"}>Cancel</Link>
                         </Button>

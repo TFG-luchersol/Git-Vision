@@ -25,6 +25,7 @@ import Issue from "@screens/repositories/repository/issues/issue";
 import RepositoryDetails from "@screens/repositories/repository/repositoryDetails";
 import UserConfiguration from "@screens/repositories/repository/userConfiguration";
 import tokenService from "@services/token.service";
+import WorkspaceUsers from "./screens/workspace/details";
 
 function ErrorFallback({ error, resetErrorBoundary }) {
   return (
@@ -64,6 +65,7 @@ function App() {
         path="/repository/:owner/:repo/issues/:issueNumber"
         element={<Issue />}
       />
+      <Route path="/workspace/:name" element={<WorkspaceUsers />} />
       <Route path="/workspace/download" element={<WorkspaceDownload />} />
       <Route path="/repository/download" element={<RepositoryDownload />} />
       <Route

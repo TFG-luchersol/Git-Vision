@@ -28,26 +28,26 @@ const EditAlias = ({ state, setState, keyName, visible, onClose }) => {
     };
 
     const updateAlias = async () => {
-        try {
-            await fetchWithToken(`/api/v1/relation/repository/${owner}/${repo}/user_alias`, {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    "username": keyName,
-                    "aliases": localValues
-                })
-            });
-        } catch (error) {
-            console.error('Error fetching users:', error);
-        }
+        await fetchWithToken(`/api/v1/relation/repository/${owner}/${repo}/user_alias`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                "username": keyName,
+                "aliases": localValues
+            })
+        });
     }
 
     const handleAccept = () => {
-        updateAlias();
-        setState({ ...state, [keyName]: localValues });
-        onClose();
+        try {
+            updateAlias();
+            setState({ ...state, [keyName]: localValues });
+            onClose();
+        } catch (error) {
+            console.error(error)
+        }
     };
 
     return (

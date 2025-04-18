@@ -6,12 +6,12 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.kohsuke.github.GHRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.samples.gitvision.configuration.services.UserDetailsImpl;
 import org.springframework.samples.gitvision.githubUser.model.GithubUser;
 import org.springframework.samples.gitvision.relations.repository.model.AliasesDTO;
-import org.springframework.samples.gitvision.relations.repository.model.GVRepoUserConfiguration;
+import org.springframework.samples.gitvision.relations.repository.model.GVRepo;
+import org.springframework.samples.gitvision.relations.repository.model.GVRepoUserConfig;
 import org.springframework.samples.gitvision.user.GVUserService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 
 
 @RestController
@@ -31,11 +32,13 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @Tag(name = "Relation repository")
 public class GVRepoController {
 
-    @Autowired
-    GVRepoService gvRepoService;
+    private final GVRepoService gvRepoService;
+    private final GVUserService gvUserService;
 
-    @Autowired
-    GVUserService userService;
+    public GVRepoController(GVRepoService gvRepoService, GVUserService gvUserService) {
+        this.gvRepoService = gvRepoService;
+        this.gvUserService = gvUserService;
+    }
 
     @GetMapping
     public ResponseEntity<Map<String, List<String>>> getAllRepositoriesByUserId(@AuthenticationPrincipal UserDetailsImpl userDetailsImpl) {
@@ -43,6 +46,23 @@ public class GVRepoController {
         Map<String, List<String>>ownerRepositories = this.gvRepoService.getAllRepositories(userId);
         return ResponseEntity.ok(ownerRepositories);
     }
+
+    @GetMapping("/workspace")
+    public ResponseEntity<Map<String, GVRepo>> getAllRepositoriesRelations(
+            @AuthenticationPrincipal UserDetailsImpl userDetailsImpl)
+        {
+        Long userId = userDetailsImpl.getId();
+        Map<String, GVRepo> relations = this.gvRepoService.getAllRepositoriesRelations(userId);
+        return ResponseEntity.ok(relations);
+    }
+
+    @GetMapping("/not_linked")
+    public ResponseEntity<Map<String, List<String>>> getAllRepositoriesByUserIdAndNotLinked(@AuthenticationPrincipal UserDetailsImpl userDetailsImpl) {
+        Long userId = userDetailsImpl.getId();
+        Map<String, List<String>>ownerRepositories = this.gvRepoService.getAllRepositoriesNotLinked(userId);
+        return ResponseEntity.ok(ownerRepositories);
+    }
+
 
     @GetMapping("/owners")
     public ResponseEntity<List<String>> getAllOwnersByUserId(@AuthenticationPrincipal UserDetailsImpl userDetailsImpl) {
@@ -66,16 +86,16 @@ public class GVRepoController {
             @PathVariable String owner, @PathVariable String repo,
             @AuthenticationPrincipal UserDetailsImpl userDetailsImpl) {
         String repositoryName = owner + "/" + repo;
-        List<GVRepoUserConfiguration> gvRepoUserConfiguration = gvRepoService.getRepositoryConfiguration(repositoryName, userDetailsImpl.getId());
+        List<GVRepoUserConfig> gvRepoUserConfiguration = gvRepoService.getRepositoryConfiguration(repositoryName, userDetailsImpl.getId());
         Map<String, Set<String>> aliases = gvRepoUserConfiguration.stream()
-            .collect(Collectors.toMap(GVRepoUserConfiguration::getUsername, GVRepoUserConfiguration::getAliases));
+            .collect(Collectors.toMap(GVRepoUserConfig::getUsername, GVRepoUserConfig::getAliases));
         return ResponseEntity.ok(aliases);
     }
 
     @PutMapping("/{owner}/{repo}/user_alias")
     public ResponseEntity<?> updateAliases(
             @PathVariable String owner, @PathVariable String repo,
-            @RequestBody AliasesDTO aliasesDTO,
+            @RequestBody @Valid AliasesDTO aliasesDTO,
             @AuthenticationPrincipal UserDetailsImpl userDetailsImpl) {
         String repositoryName = owner + "/" + repo;
         gvRepoService.updateAliaUserConfigurations(repositoryName, userDetailsImpl.getId(), aliasesDTO);
@@ -113,11 +133,14 @@ public class GVRepoController {
         this.gvRepoService.linkUserWithRepository(login, repositoryName, token);
     }
 
-    @PostMapping
-    public ResponseEntity<String> linkRepositoryWithWorkspace(@RequestParam String repositoryName,
+    @PostMapping("/{owner}/{repo}/linker")
+    public ResponseEntity<String> linkRepositoryWithWorkspace(
+                                            @PathVariable String repo,
+                                            @PathVariable String owner,
                                             @RequestParam String workspaceName,
                                             @AuthenticationPrincipal UserDetailsImpl userDetailsImpl) throws Exception {
         Long userId = userDetailsImpl.getId();
+        String repositoryName = owner + "/" + repo;
         this.gvRepoService.linkRepositoryWithWorkspace(repositoryName, workspaceName, userId);
         String message = String.format("Repositorio % enlazado con workspace %s", repositoryName, workspaceName);
         return ResponseEntity.ok(message);

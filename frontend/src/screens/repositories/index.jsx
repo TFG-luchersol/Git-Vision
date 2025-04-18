@@ -10,10 +10,12 @@ import React, { useEffect, useState } from 'react';
 import { FaLink } from "react-icons/fa6";
 import { IoLogoGithub } from "react-icons/io5";
 import { SiClockify } from "react-icons/si";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button } from 'reactstrap';
 
 export default function Repositories() {
+
+    const navigate = useNavigate();
 
     const [repositories, setRepositories] = useState({})
     const [workspaces, setWorkspaces] = useState({})
@@ -37,7 +39,7 @@ export default function Repositories() {
 
     const getWorkspaces = async () => {
         try {
-            let response = await fetchWithToken(`/api/v1/relation/workspace/workspaces?userId=${tokenService.getUser().id}`)
+            let response = await fetchWithToken(`/api/v1/relation/workspace`)
             const workspaces = await getBody(response)
             setWorkspaces(workspaces)
         } catch (e) {
@@ -47,11 +49,18 @@ export default function Repositories() {
 
     const getRelation = async () => {
         try {
-            let response = await fetchWithToken(`/api/v1/linker?userId=${tokenService.getUser().id}`)
+            let response = await fetchWithToken(`/api/v1/relation/repository/workspace`)
             const workspace_repository = await getBody(response)
+            console.log(workspace_repository)
             setRelation(workspace_repository)
         } catch (e) {
-            
+            alert(e)
+        }
+    }
+
+    function goToConfigurations(workspaceName) {
+        if(relation[workspaceName]) {
+            navigate(`/workspace/${workspaceName}`)
         }
     }
 
@@ -79,16 +88,17 @@ export default function Repositories() {
                 <div className='contenedor-rutas'>
                     {workspaces.length > 0 ?
                         workspaces.map(workspace => 
-                                <div style={{display: "flex", flexDirection: "row"}}>
-                                    <AccordionItem leaf title={workspace.name} />
-                                    <div style={{display: "flex", flexDirection: "column"}}>
-                                    {relation[workspace.name] && 
-                                        relation[workspace.name].map(r => 
-                                            <div style={{ marginLeft: '20px', marginTop: '10px' }}>
-                                                <FaLink style={{marginRight: "20px"}}/>{r}
-                                            </div>
-                                        )
-                                    }
+                                <div style={{display: "flex", flexDirection: "row"}} 
+                                     onClick={() => goToConfigurations(workspace.name)}>
+                                    <div className={relation[workspace.name] && 'text-hover'} 
+                                         style={{display: "flex", flexDirection: "row", margin: "10px", 
+                                                cursor: relation[workspace.name] && "pointer"}}>
+                                        <div>{workspace.name}</div>
+                                        {relation[workspace.name] && <>
+                                            <FaLink style={{marginInline: "15px", marginTop: "3px"}}/>
+                                            {relation[workspace.name].name}
+                                            </>
+                                        }
                                     </div>
                                         
                                 </div>

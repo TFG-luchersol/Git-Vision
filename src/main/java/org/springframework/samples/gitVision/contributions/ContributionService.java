@@ -12,9 +12,9 @@ import org.kohsuke.github.GHRepository;
 import org.springframework.samples.gitvision.contributions.model.Contribution;
 import org.springframework.samples.gitvision.exceptions.ResourceNotFoundException;
 import org.springframework.samples.gitvision.relations.repository.GVRepoRepository;
-import org.springframework.samples.gitvision.relations.repository.GVRepoUserConfigurationRepository;
+import org.springframework.samples.gitvision.relations.repository.GVRepoUserConfigRepository;
 import org.springframework.samples.gitvision.relations.repository.model.GVRepo;
-import org.springframework.samples.gitvision.relations.repository.model.GVRepoUserConfiguration;
+import org.springframework.samples.gitvision.relations.repository.model.GVRepoUserConfig;
 import org.springframework.samples.gitvision.util.GithubGraphQLApi;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,9 +23,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class ContributionService {
 
     private final GVRepoRepository gvRepoRepository;
-    private final GVRepoUserConfigurationRepository gvRepoUserConfigurationRepository;
+    private final GVRepoUserConfigRepository gvRepoUserConfigurationRepository;
 
-    public ContributionService(GVRepoRepository gvRepoRepository, GVRepoUserConfigurationRepository gvRepoUserConfigurationRepository){
+    public ContributionService(GVRepoRepository gvRepoRepository, GVRepoUserConfigRepository gvRepoUserConfigurationRepository){
         this.gvRepoRepository = gvRepoRepository;
         this.gvRepoUserConfigurationRepository = gvRepoUserConfigurationRepository;
     }
@@ -68,10 +68,10 @@ public class ContributionService {
     }
 
     private void simplifyContributors(List<Contribution> contributions, GVRepo gvRepo){
-        List<GVRepoUserConfiguration> alias = gvRepoUserConfigurationRepository.findByGvRepo(gvRepo);
+        List<GVRepoUserConfig> alias = gvRepoUserConfigurationRepository.findByGvRepo(gvRepo);
 
         Map<String, String> resultado = new HashMap<>();
-        for (GVRepoUserConfiguration gvRepoUserConfiguration : alias) {
+        for (GVRepoUserConfig gvRepoUserConfiguration : alias) {
             resultado.putAll(gvRepoUserConfiguration.toOriginal());
         }
 

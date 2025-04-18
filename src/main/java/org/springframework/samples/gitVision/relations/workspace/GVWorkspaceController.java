@@ -5,16 +5,24 @@ import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.samples.gitvision.configuration.services.UserDetailsImpl;
+import org.springframework.samples.gitvision.relations.repository.GVRepoService;
+import org.springframework.samples.gitvision.relations.repository.model.GVRepo;
+import org.springframework.samples.gitvision.relations.workspace.model.AliasWorkspaceDTO;
 import org.springframework.samples.gitvision.relations.workspace.model.GVWorkspace;
+import org.springframework.samples.gitvision.relations.workspace.model.GVWorkspaceUserConfig;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/v1/relation/workspace")
@@ -23,15 +31,24 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 public class GVWorkspaceController {
 
     GVWorkspaceService gvWorkspaceService;
+    GVRepoService gvRepoService;
 
-    public GVWorkspaceController(GVWorkspaceService gvRepoService) {
-        this.gvWorkspaceService = gvRepoService;
+    public GVWorkspaceController(GVWorkspaceService gvWorkspaceService, GVRepoService gvRepoService) {
+        this.gvWorkspaceService = gvWorkspaceService;
+        this.gvRepoService = gvRepoService;
     }
 
-    @GetMapping("/workspaces")
+    @GetMapping
     public ResponseEntity<List<GVWorkspace>> getAllWorkspacesByUserId(@AuthenticationPrincipal UserDetailsImpl userDetailsImpl) {
         Long userId = userDetailsImpl.getId();
         List<GVWorkspace> gvWorkspaces = this.gvWorkspaceService.getAllWorkspaceByUserId(userId);
+        return ResponseEntity.ok(gvWorkspaces);
+    }
+
+    @GetMapping("/not_linked")
+    public ResponseEntity<List<GVWorkspace>> getAllWorkspacesByUserIdNotLinked(@AuthenticationPrincipal UserDetailsImpl userDetailsImpl) {
+        Long userId = userDetailsImpl.getId();
+        List<GVWorkspace> gvWorkspaces = this.gvWorkspaceService.getAllWorkspaceByUserIdNotLinked(userId);
         return ResponseEntity.ok(gvWorkspaces);
     }
 
@@ -49,6 +66,32 @@ public class GVWorkspaceController {
                                          @AuthenticationPrincipal UserDetailsImpl userDetailsImpl) {
         Map<String, Long> timeByUser = gvWorkspaceService.getTimeByUser(workspaceId, userDetailsImpl.getId());
         return ResponseEntity.ok(timeByUser);
+    }
+
+    @GetMapping("/{workspaceName}/user_alias")
+    public ResponseEntity<List<GVWorkspaceUserConfig>> getRepositoryConfiguration(
+            @PathVariable String workspaceName,
+            @AuthenticationPrincipal UserDetailsImpl userDetailsImpl) {
+        List<GVWorkspaceUserConfig> gvWorkspaceUserConfigurations = gvWorkspaceService.getWorkspaceConfiguration(workspaceName, userDetailsImpl.getId());
+        return ResponseEntity.ok(gvWorkspaceUserConfigurations);
+    }
+
+    @PutMapping("/{workspaceName}/user_alias")
+    public ResponseEntity<?> updateAliases(
+            @PathVariable String workspaceName,
+            @RequestBody @Valid AliasWorkspaceDTO aliasDTO,
+            @AuthenticationPrincipal UserDetailsImpl userDetailsImpl) {
+        gvWorkspaceService.updateAliaUserConfigurations(workspaceName, userDetailsImpl.getId(), aliasDTO);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/{workspaceName}/user_alias/refresh")
+    public ResponseEntity<List<GVWorkspaceUserConfig>> refreshWorkspaceConfiguration(
+            @PathVariable String workspaceName,
+            @AuthenticationPrincipal UserDetailsImpl userDetailsImpl) throws Exception {
+        GVRepo gvRepo = this.gvRepoService.getGvRepoByWorkspaceNameAndUser_Username(workspaceName, userDetailsImpl.getUsername());
+        List<GVWorkspaceUserConfig> aliases = gvWorkspaceService.refreshWorkspaceConfiguration(gvRepo);
+        return ResponseEntity.ok(aliases);
     }
 
 

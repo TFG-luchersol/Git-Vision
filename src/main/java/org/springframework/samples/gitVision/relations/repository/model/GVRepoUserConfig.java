@@ -9,7 +9,10 @@ import java.util.Set;
 import org.kohsuke.github.GHRepository.Contributor;
 import org.springframework.samples.gitvision.model.entity.EntityIdSequential;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CollectionTable;
+import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
@@ -24,7 +27,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Table(name = "gv_repo_configurations")
 @Entity
-public class GVRepoUserConfiguration extends EntityIdSequential {
+public class GVRepoUserConfig extends EntityIdSequential {
 
     @ManyToOne
     private GVRepo gvRepo;
@@ -33,20 +36,22 @@ public class GVRepoUserConfiguration extends EntityIdSequential {
 
     @ElementCollection
     @CollectionTable(name = "gv_repo_user_aliases", joinColumns = @JoinColumn(name = "user_id"))
+    @Column(name = "alias")
     private Set<String> aliases;
 
-    public static GVRepoUserConfiguration of(GVRepo gvRepo, Contributor contributor){
+    public static GVRepoUserConfig of(GVRepo gvRepo, Contributor contributor){
         return of(gvRepo, contributor.getLogin());
     }
 
-    public static GVRepoUserConfiguration of(GVRepo gvRepo, String contributor){
-        GVRepoUserConfiguration gvRepoUserConfiguration = new GVRepoUserConfiguration();
+    public static GVRepoUserConfig of(GVRepo gvRepo, String contributor){
+        GVRepoUserConfig gvRepoUserConfiguration = new GVRepoUserConfig();
         gvRepoUserConfiguration.setGvRepo(gvRepo);
         gvRepoUserConfiguration.setUsername(contributor);
         gvRepoUserConfiguration.setAliases(new LinkedHashSet<>());
         return gvRepoUserConfiguration;
     }
 
+    @JsonIgnore
     public Set<String> getAllOptions() {
         Set<String> options = new HashSet<>(aliases.size() + 1);
         options.addAll(aliases);

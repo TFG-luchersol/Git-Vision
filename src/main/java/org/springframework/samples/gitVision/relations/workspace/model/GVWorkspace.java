@@ -26,7 +26,7 @@ public class GVWorkspace extends EntityIdSequential {
 
     @NotBlank
     private String name;
-        
+
     @ManyToOne(optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private GVUser user;
