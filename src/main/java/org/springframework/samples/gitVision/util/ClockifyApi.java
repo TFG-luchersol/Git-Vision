@@ -71,12 +71,12 @@ public class ClockifyApi {
         List<Project> projects = getProjects(workspaceId, clockifyToken);
         List<Task> tasks = new ArrayList<>();
         for (Project project : projects) {
-            String url = String.format("/v1/workspaces/%s/projects/%s/tasks?name=%s&strict-name-search=true",
-                                       workspaceId, project.getId(), name);
+            String url = String.format("/v1/workspaces/%s/projects/%s/tasks",
+                                       workspaceId, project.getId());
             Task[] tasksSlot = requestClockify(url, clockifyToken, Task[].class);
             Collections.addAll(tasks, tasksSlot);
         }
-        return tasks;
+        return tasks.stream().filter(i -> name.equals(i.getName())).toList();
     }
 
     public static Map<String, Long> getTimeByUser(String workspaceId, String clockifyToken) {
@@ -87,7 +87,7 @@ public class ClockifyApi {
             url = String.format("/v1/workspaces/%s/user/%s/time-entries", workspaceId, user.getId());
             TimeEntry[] timeEntries = ClockifyApi.requestClockify(url, clockifyToken, TimeEntry[].class);
             String name = user.getName();
-            Long time = Arrays.stream(timeEntries).mapToLong(entry -> entry.getTimeInterval().getDuration().getNano())
+            Long time = Arrays.stream(timeEntries).mapToLong(entry -> entry.getTimeInterval().getDuration().toNanos())
                     .sum();
             res.put(name, time);
         }
@@ -96,14 +96,14 @@ public class ClockifyApi {
     }
 
     /**
-     * Obtiene un mapa que asocia a cada usuario con el tiempo total (en nanosegundos)
+     * Obtiene un mapa que asocia a cada id de usuario con el tiempo total (en nanosegundos)
      * que ha aportado a todas las tareas con un nombre específico dentro de un workspace.
      *
      * @param workspaceId    ID del workspace de Clockify.
      * @param taskName       Nombre de la tarea a filtrar.
      * @param clockifyToken  Token de autenticación para la API de Clockify.
-     * @return Un mapa donde la clave es el nombre o ID del usuario y el valor es
-     *         el tiempo total registrado (en nanosegundos) en tareas con el nombre especificado.
+     * @return Un mapa donde la clave es el ID del usuario y el valor es el tiempo total
+     *         registrado (en nanosegundos) en tareas con el nombre especificado.
      */
     public static Map<String, Long> getTimeByUserByTaskName(String workspaceId, String taskName, String clockifyToken) {
         List<UserProfile> users = ClockifyApi.getUsers(workspaceId, clockifyToken);
@@ -114,14 +114,14 @@ public class ClockifyApi {
                                 .collect(Collectors.toSet());
         for (UserProfile user : users) {
             Long time = 0L;
-            String name = user.getName();
+            String name = user.getId();
             for (String taskId : tasks) {
                 String url = String.format("/v1/workspaces/%s/user/%s/time-entries?task=%s",
                                            workspaceId, user.getId(), taskId);
                 TimeEntry[] timeEntries = ClockifyApi.requestClockify(url, clockifyToken, TimeEntry[].class);
                 time += Arrays.stream(timeEntries)
                         .filter(entry -> tasks.contains(entry.getTaskId()))
-                        .mapToLong(entry -> entry.getTimeInterval().getDuration().getNano())
+                        .mapToLong(entry -> entry.getTimeInterval().getDuration().toNanos())
                         .sum();
 
             }

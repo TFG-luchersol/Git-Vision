@@ -9,10 +9,12 @@ import org.kohsuke.github.GHRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.samples.gitvision.configuration.services.UserDetailsImpl;
 import org.springframework.samples.gitvision.contributions.model.Contribution;
+import org.springframework.samples.gitvision.contributions.model.ContributionByTime;
 import org.springframework.samples.gitvision.relations.repository.GVRepoService;
 import org.springframework.samples.gitvision.relations.repository.model.GVRepo;
 import org.springframework.samples.gitvision.task.TaskService;
 import org.springframework.samples.gitvision.util.Checker;
+import org.springframework.samples.gitvision.util.MessageResolver;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,12 +34,14 @@ public class ContributionController {
     private final ContributionService contributionService;
     private final GVRepoService gvRepoService;
     private final TaskService taskService;
+    private final MessageResolver msg;
 
     public ContributionController(ContributionService contributionService, GVRepoService gvRepoService,
-            TaskService taskService){
+            TaskService taskService, MessageResolver msg){
         this.contributionService = contributionService;
         this.gvRepoService = gvRepoService;
         this.taskService = taskService;
+        this.msg = msg;
     }
 
     @GetMapping("/{owner}/{repo}/between_time")
@@ -61,20 +65,26 @@ public class ContributionController {
     }
 
     @GetMapping("/{owner}/{repo}/time")
-    public ResponseEntity<?> time(@PathVariable String owner,
+    public ResponseEntity<?> getGvRepoByNameAndUser_Id(@PathVariable String owner,
                                 @PathVariable String repo,
-                                @RequestParam(required = false) Long id,
+                                @RequestParam(required = false) Long issueNumber,
                                 @RequestParam(required = false) String name,
+                                @RequestParam(required = false) String taskName,
                                 @AuthenticationPrincipal UserDetailsImpl userDetailsImpl) throws Exception {
         Long userId = 93008812L;
         String repositoryName = owner + "/" + repo;
-        Checker.checkOrBadRequest((id == null) ^ (name == null),
-                          "Debe proporcionar solo un ID o un nombre, no ambos.");
-        String taskName = name != null ? name : "#"+id;
+        String message = msg.get("api.v1.contributions.owner.repo.time.check_issue_number_and_name");
+        Checker.checkOrBadRequest((issueNumber == null) ^ (name == null || name.isBlank()), message);
         GVRepo gvRepo = gvRepoService.getGvRepoByNameAndUser_Id(repositoryName, userId);
 
-        Map<String, Long> duration = this.taskService.timeByNameGroupByUserId(gvRepo, taskName, userId);
-        return ResponseEntity.ok(duration);
+        if(taskName == null)
+            taskName = name != null ? name : "#" + issueNumber;
+
+        Map<String, ContributionByTime> body = issueNumber != null ?
+            this.taskService.getContributionByTime(gvRepo, issueNumber, taskName, userId) :
+            this.taskService.getContributionByTime(gvRepo, name, taskName, userId);
+
+        return ResponseEntity.ok(body);
     }
 
 }

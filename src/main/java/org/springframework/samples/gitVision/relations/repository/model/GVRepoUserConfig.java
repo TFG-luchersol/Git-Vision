@@ -18,6 +18,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -25,8 +26,10 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "gv_repo_configurations")
 @Entity
+@Table(name = "gv_repo_configurations", uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"gv_repo_id", "username"})
+})
 public class GVRepoUserConfig extends EntityIdSequential {
 
     @ManyToOne

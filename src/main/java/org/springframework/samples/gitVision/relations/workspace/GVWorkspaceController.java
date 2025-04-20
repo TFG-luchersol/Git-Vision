@@ -86,7 +86,7 @@ public class GVWorkspaceController {
             @RequestBody @Valid AliasWorkspaceDTO aliasDTO,
             @AuthenticationPrincipal UserDetailsImpl userDetailsImpl) {
         var gvWorkspaceUserConfig = gvWorkspaceService.updateAliaUserConfigurations(workspaceName, userDetailsImpl.getId(), aliasDTO);
-        String message = msg.get("relations.workspace.gv_workspace_controller.update_aliases.response",
+        String message = msg.get("api.v1.relation.workspace.workspace_name.user_alias.put.response",
                                  gvWorkspaceUserConfig.getUserProfile().getName());
         return ResponseEntity.ok(message);
     }

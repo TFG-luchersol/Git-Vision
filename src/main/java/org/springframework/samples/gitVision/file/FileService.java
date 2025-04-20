@@ -81,7 +81,7 @@ public class FileService {
                 int deletions = file.getLinesDeleted();
 
                 fileChangesMap
-                        .computeIfAbsent(filePath, _ -> new Change())
+                        .computeIfAbsent(filePath, i -> new Change())
                         .addChanges(additions, deletions);
             });
         }
