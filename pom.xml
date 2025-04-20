@@ -21,8 +21,8 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-		<lombok.version>1.18.28</lombok.version>
-		<mapstruct.version>1.5.5.Final</mapstruct.version>
+		<lombok.version>1.18.38</lombok.version>
+		<mapstruct.version>1.6.3</mapstruct.version>
 
 		<jacoco.version>0.8.8</jacoco.version>
 		<spring-format.version>0.0.19</spring-format.version>
