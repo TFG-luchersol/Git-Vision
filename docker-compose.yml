@@ -3,10 +3,16 @@ services:
     build: .
     ports:
       - "8080:8080"
+    env_file:
+      - .env
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://database:3306/mydb
-      SPRING_DATASOURCE_USERNAME: user
-      SPRING_DATASOURCE_PASSWORD: password
+      SPRING_USER: ${SPRING_USER}
+      SPRING_PASSWORD: ${SPRING_PASSWORD}
+      DB_URL: ${DB_URL}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRATION: ${JWT_EXPIRATION}
     depends_on:
       - database
     networks:
@@ -17,7 +23,7 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
     ports:
-      - "3000:80"                   # Asume Nginx en el contenedor
+      - "3000:3000"      
     depends_on:
       - backend
     networks:
