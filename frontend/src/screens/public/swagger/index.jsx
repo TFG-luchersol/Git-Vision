@@ -1,4 +1,5 @@
 import { useNotification } from '@context/NotificationContext';
+import fetchBackend from '@utils/fetchBackend';
 import getBody from "@utils/getBody";
 import React, { useEffect, useState } from "react";
 import SwaggerUI from "swagger-ui-react";
@@ -14,7 +15,7 @@ export default function SwaggerDocs(){
 
     async function loadDocs() {
         try {
-            const response = await fetch('http://localhost:8080/v3/api-docs');
+            const response = await fetchBackend('/v3/api-docs');
             const mydocs = await getBody(response);
             setDocs(mydocs);
         } catch (error) {

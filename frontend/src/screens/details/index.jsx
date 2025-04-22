@@ -2,7 +2,7 @@ import CustomInput from '@components/CustomInput';
 import { useNotification } from '@context/NotificationContext';
 import '@css/details';
 import tokenService from '@services/token.service.js';
-import fetchWithToken from '@utils/fetchWithToken.ts';
+import fetchBackend from '@utils/fetchBackend.ts';
 
 import getBody from '@utils/getBody.ts';
 import React, { useEffect, useState } from 'react';
@@ -45,13 +45,13 @@ export default function Details() {
     const user = tokenService.getUser();
     try {
       if (tokenType === 'github') {
-        const response = await fetchWithToken('/api/v1/users/user/token/github', 
+        const response = await fetchBackend('/api/v1/users/user/token/github', 
           {method: "PUT", body: githubToken}
         );
         const newGithubToken = await getBody(response)
         tokenService.setUser({...user, githubToken: newGithubToken})
       } else if (tokenType === 'clockify') {
-        const response = await fetchWithToken('/api/v1/users/user/token/clockify', 
+        const response = await fetchBackend('/api/v1/users/user/token/clockify', 
           {method: "PUT", body: clockifyToken}
         );
         const newClockifyToken = await getBody(response)
@@ -65,7 +65,7 @@ export default function Details() {
   };
 
   const handleDeleteAccount = async () => {
-    await fetchWithToken(`/api/v1/users/${userId}`, {method: "DELETE"})
+    await fetchBackend(`/api/v1/users/${userId}`, {method: "DELETE"})
               .then(response => {
                 setDeleteModal(false)
                 if(response.status === 200) {

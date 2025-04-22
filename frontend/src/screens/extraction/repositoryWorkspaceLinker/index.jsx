@@ -3,7 +3,7 @@ import '@css';
 import "@css/auth/authPage.css";
 import '@css/extraction/repositoryWorkspaceLinker';
 import '@css/home';
-import fetchWithToken from '@utils/fetchWithToken.ts';
+import fetchBackend from '@utils/fetchBackend.ts';
 import getBody from '@utils/getBody.ts';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -28,7 +28,7 @@ export default function RepositoryWorkspaceLinker() {
     useEffect(() => {
         const loadRepositories = async () => {
             try {
-                const response = await fetchWithToken(`/api/v1/relation/repository/not_linked`)
+                const response = await fetchBackend(`/api/v1/relation/repository/not_linked`)
                 const repositories = await getBody(response);
                 setRepositories(repositories)
             } catch (error) {
@@ -39,7 +39,7 @@ export default function RepositoryWorkspaceLinker() {
         };
         const loadWorkspaces = async () => {
             try {
-                const response = await fetchWithToken(`/api/v1/relation/workspace/not_linked`)
+                const response = await fetchBackend(`/api/v1/relation/workspace/not_linked`)
                 const workspaces = await getBody(response);
                 setWorkspaces(workspaces)
             } catch (error) {
@@ -59,7 +59,7 @@ export default function RepositoryWorkspaceLinker() {
             let url = new URL(`/api/v1/relation/repository/${owner}/${values.repository}/linker`, "http://localhost:8080");
             url.searchParams.set("workspaceName", encodeURIComponent(values.workspace.name))
             
-            const response = await fetchWithToken(url, {
+            const response = await fetchBackend(url, {
                 method: "POST",
             });
             

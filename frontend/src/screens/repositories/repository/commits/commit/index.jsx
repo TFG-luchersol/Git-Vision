@@ -2,7 +2,7 @@ import CounterChanges from '@components/CounterChanges.jsx';
 import FolderTabs from '@components/FolderTabs.jsx';
 import { useNotification } from '@context/NotificationContext';
 import "@css/repositories/repository/commits/commit";
-import fetchWithToken from '@utils/fetchWithToken.ts';
+import fetchBackend from '@utils/fetchBackend.ts';
 import getBody from '@utils/getBody.ts';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
@@ -20,7 +20,7 @@ export default function Commit() {
     const getCommit = async () => {
         try {
             const repositorName = `${owner}/${repo}`;
-            const response = await fetchWithToken(`/api/v1/commits/${repositorName}/${sha}`)
+            const response = await fetchBackend(`/api/v1/commits/${repositorName}/${sha}`)
             const commit = await getBody(response)
             setCommit(commit)
         } catch (error) {

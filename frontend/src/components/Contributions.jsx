@@ -1,6 +1,6 @@
 import { useNotification } from '@context/NotificationContext';
 import '@css/components/contributions';
-import fetchWithToken from '@utils/fetchWithToken.ts';
+import fetchBackend from '@utils/fetchBackend.ts';
 import getBody from '@utils/getBody.ts';
 import { darkenColor, stringToColor } from '@utils/tools.js';
 import {
@@ -178,7 +178,7 @@ export default function Contributions({ owner, repo, path = null, isFolder=false
     urlObj.search = searchParams.toString()
 
     try {
-      const response = await fetchWithToken(urlObj.toString());
+      const response = await fetchBackend(urlObj.toString());
       const result = await getBody(response);
       if (minYear === null && result.length !== 0) {
         minYear = result.reduce((earliest, current) => {

@@ -1,5 +1,5 @@
 import { useNotification } from '@context/NotificationContext';
-import fetchWithToken from '@utils/fetchWithToken.ts';
+import fetchBackend from '@utils/fetchBackend.ts';
 import getBody from '@utils/getBody.ts';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
@@ -16,7 +16,7 @@ const { showMessage } = useNotification();
 
     const getContributors = async () => {
         try {
-            let response = await fetchWithToken(`/api/v1/relation/repository/${owner}/${repo}/contributors`)
+            let response = await fetchBackend(`/api/v1/relation/repository/${owner}/${repo}/contributors`)
             const contributors = await getBody(response);
             setContributors(contributors)
         } catch (error) {

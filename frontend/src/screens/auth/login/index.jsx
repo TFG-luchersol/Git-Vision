@@ -4,6 +4,7 @@ import '@css';
 import "@css/auth/authPage.css";
 import '@css/home';
 import tokenService from "@services/token.service.js";
+import fetchBackend from '@utils/fetchBackend';
 import getBody from '@utils/getBody.ts';
 import React, { useState } from 'react';
 import { FaLock, FaRegUserCircle, FaUnlock } from "react-icons/fa";
@@ -26,7 +27,7 @@ export default function Login() {
         event.preventDefault()
         const reqBody = JSON.stringify(values);
         try {
-            const response = await fetch("/api/v1/auth/signin", {
+            const response = await fetchBackend("/api/v1/auth/signin", {
                 headers: { 
                     "Content-Type": "application/json",
                 },

@@ -5,7 +5,7 @@ import '@css';
 import "@css/auth/authPage.css";
 import '@css/home';
 import Preconditions from '@utils/check.js';
-import fetchWithToken from '@utils/fetchWithToken.ts';
+import fetchBackend from '@utils/fetchBackend.ts';
 import getBody from '@utils/getBody';
 import React, { useState } from 'react';
 import { FaGithub, FaRegUserCircle } from "react-icons/fa";
@@ -33,7 +33,7 @@ export default function RepositoryDownload() {
                 url += `?token=${values.token}`;
             
             setIsLoading(true);
-            const response = await fetchWithToken(url, {
+            const response = await fetchBackend(url, {
                 method: "POST",
                 headers: { 
                     "Content-Type": "application/json"

@@ -1,7 +1,7 @@
 import { useNotification } from '@context/NotificationContext';
 import "@css/repositories/repository/userConfiguration";
 import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
-import fetchWithToken from '@utils/fetchWithToken.ts';
+import fetchBackend from '@utils/fetchBackend.ts';
 import getBody from "@utils/getBody";
 import React, { useEffect, useState } from 'react';
 import { IoMdRefresh } from "react-icons/io";
@@ -19,7 +19,7 @@ export default function UserConfiguration(){
     useEffect(() => {
         const fetchUsers = async () => {
             try {
-                const response = await fetchWithToken(`/api/v1/relation/repository/${owner}/${repo}/user_alias`);
+                const response = await fetchBackend(`/api/v1/relation/repository/${owner}/${repo}/user_alias`);
                 const data = await getBody(response);
                 setUsers(data);
                 setEditAliasModal(Object.fromEntries(data.map(item => [item, false])));
@@ -35,7 +35,7 @@ export default function UserConfiguration(){
 
     const refreshAlias = async () => {
         try {
-            const response = await fetchWithToken(`/api/v1/relation/repository/${owner}/${repo}/user_alias/refresh`, {
+            const response = await fetchBackend(`/api/v1/relation/repository/${owner}/${repo}/user_alias/refresh`, {
                 method: "PUT",
             });
             const data = await getBody(response);

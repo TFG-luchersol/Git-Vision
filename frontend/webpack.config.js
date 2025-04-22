@@ -1,4 +1,5 @@
 const path = require('path');
+const Dotenv = require("dotenv-webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = {
@@ -13,6 +14,7 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: "./public/index.html", // Asegúrate de que este archivo existe
     }),
+    new Dotenv(),
   ],
   devServer: {
     static: "./dist",
@@ -23,15 +25,6 @@ module.exports = {
       disableDotRule: true, // 🔹 Permite rutas con puntos sin tratarlas como archivos
       rewrites: [{ from: /./, to: "/index.html" }], // 🔹 Redirige todo a index.html
     },
-    proxy: [
-      
-      {
-        context: ["/api", "/v3/api-docs"], // 🔹 Define qué rutas quieres redirigir
-        target: "http://localhost:8080",
-        changeOrigin: true,
-        secure: false,
-      },
-    ],
   },
   module: {
     rules: [

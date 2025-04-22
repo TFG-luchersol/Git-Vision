@@ -1,7 +1,7 @@
 import { useNotification } from '@context/NotificationContext';
 import "@css/workspace/details";
 import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
-import fetchWithToken from '@utils/fetchWithToken.ts';
+import fetchBackend from '@utils/fetchBackend.ts';
 import getBody from "@utils/getBody";
 import React, { useEffect, useState } from 'react';
 import { IoMdRefresh } from "react-icons/io";
@@ -19,7 +19,7 @@ export default function WorkspaceUsers() {
     useEffect(() => {
         const fetchUsers = async () => {
             try {
-                const response = await fetchWithToken(`/api/v1/relation/workspace/${name}/user_alias`);
+                const response = await fetchBackend(`/api/v1/relation/workspace/${name}/user_alias`);
                 const data = await getBody(response);
                 setUsers(data);
                 setEditedAlias(arrayToObject(data));
@@ -35,7 +35,7 @@ export default function WorkspaceUsers() {
 
     const refreshAlias = async () => {
         try {
-            const response = await fetchWithToken(`/api/v1/relation/workspace/${name}/user_alias/refresh`, {
+            const response = await fetchBackend(`/api/v1/relation/workspace/${name}/user_alias/refresh`, {
                 method: "PUT",
             });
             const data = await getBody(response);
@@ -52,7 +52,7 @@ export default function WorkspaceUsers() {
         try {
             const aliasToUpdate = editedAlias[id] || "";
 
-            const response = await fetchWithToken(`/api/v1/relation/workspace/${name}/user_alias`, {
+            const response = await fetchBackend(`/api/v1/relation/workspace/${name}/user_alias`, {
                 method: "PUT",
                 body: JSON.stringify({ id, githubUser: aliasToUpdate }),
                 headers: {

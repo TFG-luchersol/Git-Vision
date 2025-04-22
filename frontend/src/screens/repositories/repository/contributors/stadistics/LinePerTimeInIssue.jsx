@@ -6,6 +6,7 @@ import {
     TextField,
     Typography,
 } from "@mui/material";
+import fetchBackend from "@utils/fetchBackend";
 import {
     BarElement,
     CategoryScale,
@@ -27,7 +28,7 @@ const LinePerTimeInIssue = () => {
     const [queryParamValue, setQueryParamValue] = useState("");
     const [taskName, setTaskName] = useState("");
     const [dataType, setDataType] = useState("additions");
-    const [timeUnit, setTimeUnit] = useState("hours"); // 👈 NUEVO
+    const [timeUnit, setTimeUnit] = useState("hours");
 
     const [rawData, setRawData] = useState(null);
     const [chartData, setChartData] = useState(null);
@@ -39,7 +40,7 @@ const LinePerTimeInIssue = () => {
         if (taskName) queryParams.append("taskName", taskName);
 
         try {
-            const response = await fetch(
+            const response = await fetchBackend(
                 `/api/v1/contributions/${owner}/${repo}/time?${queryParams.toString()}`
             );
             const result = await response.json();
@@ -54,9 +55,8 @@ const LinePerTimeInIssue = () => {
 
         const usernames = Object.keys(rawData);
 
-        // 👉 Convertimos tiempo según la unidad
         const times = usernames.map((username) => {
-            const baseTime = rawData[username].time / 3_600_000_000_000.0; // horas
+            const baseTime = rawData[username].time / 3_600_000_000_000.0;
             return timeUnit === "minutes" ? baseTime * 60 : baseTime;
         });
 

@@ -1,5 +1,5 @@
 import { useNotification } from '@context/NotificationContext';
-import fetchWithToken from '@utils/fetchWithToken.ts';
+import fetchBackend from '@utils/fetchBackend.ts';
 import getBody from '@utils/getBody.ts';
 import hljs from "highlight.js";
 import "highlight.js/styles/default.css";
@@ -49,7 +49,7 @@ export default function FileContent() {
 
     async function getContent() {
         try {
-            const response = await fetchWithToken(`/api/v1/files/repository/${owner}/${repo}/blob/content?path=${path}`);
+            const response = await fetchBackend(`/api/v1/files/repository/${owner}/${repo}/blob/content?path=${path}`);
             const content  = await getBody(response);
             if(isImage(path)){
                 setContentFile(prev => displayImageFromBytes(content));

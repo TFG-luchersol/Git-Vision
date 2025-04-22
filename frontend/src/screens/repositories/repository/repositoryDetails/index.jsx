@@ -1,7 +1,7 @@
 import CustomInput from '@components/CustomInput.jsx';
 import { useNotification } from '@context/NotificationContext';
 import "@css/repositories/repository/repositoryDetails";
-import fetchWithToken from '@utils/fetchWithToken.ts';
+import fetchBackend from '@utils/fetchBackend.ts';
 import getBody from '@utils/getBody';
 import React, { useEffect, useState } from 'react';
 import { FaGithub } from 'react-icons/fa';
@@ -27,7 +27,7 @@ export default function RepositoryDetails() {
 
   const handleSave = async () => {
     try{
-      const response = await fetchWithToken(`/api/v1/relation/repository/${owner}/${repo}/token`, {
+      const response = await fetchBackend(`/api/v1/relation/repository/${owner}/${repo}/token`, {
           method: "PUT", 
           body: githubToken
         }

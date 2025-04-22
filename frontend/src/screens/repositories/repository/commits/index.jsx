@@ -1,6 +1,6 @@
 import { useNotification } from '@context/NotificationContext';
 import "@css/repositories/repository/commits";
-import fetchWithToken from '@utils/fetchWithToken.ts';
+import fetchBackend from '@utils/fetchBackend.ts';
 import getBody from '@utils/getBody.ts';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
@@ -21,7 +21,7 @@ export default function Commits() {
     const getCommits = async () => {
         try {
             const repositorName = `${owner}/${repo}`;
-            const response = await fetchWithToken(`/api/v1/commits/${repositorName}?page=${page}`)
+            const response = await fetchBackend(`/api/v1/commits/${repositorName}?page=${page}`)
             const { commits } = await getBody(response)
             setCommits(commits)
         } catch (error) {
