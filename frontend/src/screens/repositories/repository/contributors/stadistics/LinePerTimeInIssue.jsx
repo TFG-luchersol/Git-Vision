@@ -148,12 +148,13 @@ const LinePerTimeInIssue = () => {
                     <div style={{borderRadius: "10px", 
                               border: "1px solid black", 
                               padding: "7px", 
-                              marginLeft: "5px"}}>
-                        <Typography variant="body1">
-                            Total Time: {summary.totalTime.toFixed(2)} {timeUnit}
+                              marginLeft: "5px",
+                              fontSize: 10}}>
+                        <Typography variant="body2">
+                            {summary.totalValues} {dataType} / {summary.totalTime.toFixed(2)} {timeUnit}
                         </Typography>
-                        <Typography variant="body1">
-                            All {dataType}: {summary.totalValues}
+                        <Typography variant="body2">
+                            {(summary.totalValues/summary.totalTime).toFixed(2)} {dataType}/{timeUnit}
                         </Typography>
                     </div>
                 )}
