@@ -8,7 +8,7 @@ import fetchBackend from '@utils/fetchBackend';
 import getBody from '@utils/getBody';
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Input } from 'reactstrap';
+import { Input, Label } from 'reactstrap';
 
 export default function FilesChangesByUser() {
     const { showMessage } = useNotification();
@@ -19,6 +19,7 @@ export default function FilesChangesByUser() {
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
     const [limit, setLimit] = useState(10);
+    const [useAll, setUseAll] = useState(false); // Nueva bandera
 
     const [selectedFile, setSelectedFile] = useState(null);
 
@@ -29,7 +30,7 @@ export default function FilesChangesByUser() {
                 author: user,
                 startDate: startDate ? new Date(startDate).toISOString() : null,
                 endDate: endDate ? new Date(endDate).toISOString() : null,
-                limit
+                limit: useAll ? null : limit
             };
             const url = `/api/v1/github_users/${owner}/${repo}/files`;
             const response = await fetchBackend(url, {}, queryParams);
@@ -56,9 +57,18 @@ export default function FilesChangesByUser() {
                     style={{ marginInline: "20px", width: "20%" }}
                     type='number'
                     min={0}
-                    value={limit}
+                    value={limit ?? ''}
                     onChange={e => setLimit(Number(e.target.value))}
+                    disabled={useAll}
                 />
+                <div style={{ marginLeft: "10px", display: "flex", alignItems: "center" }}>
+                    <Input
+                        type="checkbox"
+                        checked={useAll}
+                        onChange={() => setUseAll(!useAll)}
+                    />
+                    <Label style={{marginLeft: "5px"}} check>Usar todos</Label>
+                </div>
                 <DelayedButton
                     onClick={getChangedFiles}
                     disabled={isLoading}
@@ -91,4 +101,4 @@ export default function FilesChangesByUser() {
             )}
         </>
     );
-};
+}
