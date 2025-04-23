@@ -12,7 +12,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @MappedSuperclass
-public class Person extends EntityIdLong {
+public class Person extends EntityIdSequential {
 
     @Column(unique = true)
     @NotBlank(message = "model.entity.person.username.not_blank")

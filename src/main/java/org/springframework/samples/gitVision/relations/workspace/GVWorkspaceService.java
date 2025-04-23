@@ -62,11 +62,17 @@ public class GVWorkspaceService {
         GVUser user = gvUserRepository.findById(userId).get();
         String token = user.getClockifyToken();
         ClockifyApi.getWorkspace(workspaceId, token);
+        List<UserProfile> userProfiles = ClockifyApi.getUsers(workspaceId, token);
         GVWorkspace gvWorkspace = new GVWorkspace();
         gvWorkspace.setName(name);
         gvWorkspace.setUser(user);
         gvWorkspace.setWorkspaceId(workspaceId);
         gvWorkspaceRepository.save(gvWorkspace);
+
+        var configs = userProfiles.stream()
+                                  .map(profile -> GVWorkspaceUserConfig.of(gvWorkspace, profile))
+                                  .toList();
+        gvWorkspaceUserConfigRepository.saveAll(configs);
     }
 
     public GVWorkspaceUserConfig updateAliaUserConfigurations(String workspaceName, Long userId, AliasWorkspaceDTO aliasesDTO) {

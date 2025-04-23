@@ -241,9 +241,10 @@ public class GVRepoService {
             gvRepo.setUser(user);
             GVRepo savedGvRepo = gvRepoRepository.save(gvRepo);
             List<Contributor> ghContributors = ghRepository.listContributors().toList();
-            List<GVRepoUserConfig> ghConfigurations = new ArrayList<>(ghContributors.size());
-            ghContributors
-                    .forEach(contributor -> ghConfigurations.add(GVRepoUserConfig.of(savedGvRepo, contributor)));
+            List<GVRepoUserConfig> ghConfigurations = ghContributors.stream()
+                    .map(contributor -> GVRepoUserConfig.of(savedGvRepo, contributor))
+                    .toList();
+            gvRepoUserConfigurationRepository.saveAll(ghConfigurations);
         } catch (Exception e) {
             throw LinkedException.linkGithub();
         }

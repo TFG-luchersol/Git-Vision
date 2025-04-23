@@ -27,4 +27,11 @@ public class GVWorkspaceUserConfig extends EntityIdSequential {
 
     private String alias;
 
+    public static GVWorkspaceUserConfig of(GVWorkspace gvWorkspace, UserProfile userProfile) {
+        GVWorkspaceUserConfig config = new GVWorkspaceUserConfig();
+        config.setGvWorkspace(gvWorkspace);
+        config.setUserProfile(userProfile);
+        return config;
+    }
+
 }

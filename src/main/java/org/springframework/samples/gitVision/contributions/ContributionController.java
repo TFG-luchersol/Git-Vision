@@ -65,7 +65,7 @@ public class ContributionController {
     }
 
     @GetMapping("/{owner}/{repo}/time")
-    public ResponseEntity<?> getGvRepoByNameAndUser_Id(@PathVariable String owner,
+    public ResponseEntity<Map<String, ContributionByTime>> getGvRepoByNameAndUser_Id(@PathVariable String owner,
                                 @PathVariable String repo,
                                 @RequestParam(required = false) Long issueNumber,
                                 @RequestParam(required = false) String name,
@@ -73,7 +73,7 @@ public class ContributionController {
                                 @AuthenticationPrincipal UserDetailsImpl userDetailsImpl) throws Exception {
         Long userId = 93008812L;
         String repositoryName = owner + "/" + repo;
-        String message = msg.get("api.v1.contributions.owner.repo.time.check_issue_number_and_name");
+        String message = msg.get("api.v1.contributions.owner.repo.time.get.check_issue_number_and_name");
         Checker.checkOrBadRequest((issueNumber == null) ^ (name == null || name.isBlank()), message);
         GVRepo gvRepo = gvRepoService.getGvRepoByNameAndUser_Id(repositoryName, userId);
 

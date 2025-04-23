@@ -2,7 +2,6 @@ package org.springframework.samples.gitvision.user.model;
 
 import java.util.Objects;
 
-import org.hibernate.validator.constraints.URL;
 import org.kohsuke.github.GHUser;
 import org.springframework.samples.gitvision.model.entity.Person;
 import org.springframework.samples.gitvision.util.AESConverter;
@@ -10,7 +9,6 @@ import org.springframework.samples.gitvision.util.AESConverter;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
@@ -21,12 +19,6 @@ import lombok.Setter;
 @Entity
 @Table(name = "gv_users")
 public class GVUser extends Person {
-
-    @Email(message = "{user.model.gv_user.email.email}")
-    private String email;
-
-    @URL(message = "{user.model.gv_user.avatarUrl.url}")
-    private String avatarUrl;
 
     @Pattern(regexp = ".+", message = "{user.model.gv_user.password.pattern}")
     private String password;
