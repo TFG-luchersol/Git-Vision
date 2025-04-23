@@ -2,30 +2,38 @@ import tokenservice from "@services/token.service.js";
 
 export default async function fetchBackend(
     url: string | RequestInfo | URL,
-    init: RequestInit = {}
+    init: RequestInit = {},
+    queryParams: Record<string, any> = {}
 ) {
     const token: string = tokenservice.getLocalAccessToken();
     const headers = new Headers(init.headers);
-    console.log(process.env.BACKEND_URL);
     if (token) headers.set("Authorization", "Bearer " + token);
 
-    let fullUrl: string | URL;
+    let fullUrl: URL;
     const baseUrl = process.env.BACKEND_URL || "http://localhost:8080";
     const isAbsoluteUrl = (url: string): boolean =>
         url.startsWith("http://") || url.startsWith("https://");
 
     if (typeof url === "string") {
-        fullUrl = isAbsoluteUrl(url) ? url : new URL(url, baseUrl);
+        fullUrl = isAbsoluteUrl(url) 
+            ? new URL(url) 
+            : new URL(url, baseUrl);
     } else if (url instanceof URL) {
-        fullUrl = url;
+        fullUrl = new URL(url);
     } else if (url instanceof Request) {
         const requestUrl = url.url;
         fullUrl = isAbsoluteUrl(requestUrl)
-            ? requestUrl
+            ? new URL(requestUrl)
             : new URL(requestUrl, baseUrl);
     } else {
         throw new Error("Tipo de URL no soportado");
     }
+
+    Object.entries(queryParams).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+            fullUrl.searchParams.append(key, String(value));
+        }
+    });
 
     return await fetch(fullUrl, {
         ...init,

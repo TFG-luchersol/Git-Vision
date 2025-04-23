@@ -22,7 +22,9 @@ export default function UserConfiguration(){
                 const response = await fetchBackend(`/api/v1/relation/repository/${owner}/${repo}/user_alias`);
                 const data = await getBody(response);
                 setUsers(data);
-                setEditAliasModal(Object.fromEntries(data.map(item => [item, false])));
+                if(Object.keys(data) > 0) {
+                    setEditAliasModal(Object.fromEntries(data.map(item => [item, false])));
+                }
             } catch (error) {
                 showMessage({
                     message: error.message

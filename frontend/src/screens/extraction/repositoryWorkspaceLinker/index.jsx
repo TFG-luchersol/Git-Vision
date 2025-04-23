@@ -56,17 +56,17 @@ export default function RepositoryWorkspaceLinker() {
     async function handleSubmit(event) {
         event.preventDefault()
         try {
-            let url = new URL(`/api/v1/relation/repository/${owner}/${values.repository}/linker`, "http://localhost:8080");
-            url.searchParams.set("workspaceName", encodeURIComponent(values.workspace.name))
+            const url = `/api/v1/relation/repository/${owner}/${values.repository}/linker`;
+            let queryParams = {"workspaceName": encodeURIComponent(values.workspace.name)}
             
             const response = await fetchBackend(url, {
                 method: "POST",
-            });
+            }, queryParams);
             
             if (response.status === 200) {
                 window.location.href = "/";
             } else {
-                await response.json(); // Por defecto lanza una excepción con el error
+                await getBody(response);
             }
         } catch (error) {
             showMessage({

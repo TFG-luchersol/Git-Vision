@@ -157,28 +157,28 @@ export default function Contributions({ owner, repo, path = null, isFolder=false
 
   async function getContributions() {
     let url = `/api/v1/contributions/${owner}/${repo}/between_time`;
-    let urlObj = new URL(url, window.location.origin);
     
-    let searchParams = new URLSearchParams(urlObj.search);
+    
+    let queryParams = {}
     if (path !== null) {
-      searchParams.set("path", path)
-      searchParams.set("isFolder", isFolder)
+      queryParams["path"] = path;
+      queryParams["isFolder"] = isFolder;
     }
     let minYear, maxYear;
     if (startDate !== null) {
-      searchParams.set("startDate",new Date(startDate).toISOString())
+      queryParams["startDate"] = new Date(startDate).toISOString();
       minYear = new Date(startDate).getFullYear();
     }
     if (endDate !== null) {
-      searchParams.set("endDate", new Date(endDate).toISOString())
+      queryParams["endDate"] = new Date(endDate).toISOString();
       maxYear = new Date(endDate).getFullYear();
     } else {
       maxYear = new Date().getFullYear();
     }
-    urlObj.search = searchParams.toString()
 
     try {
-      const response = await fetchBackend(urlObj.toString());
+      console.log(queryParams)
+      const response = await fetchBackend(url, queryParams);
       const result = await getBody(response);
       if (minYear === null && result.length !== 0) {
         minYear = result.reduce((earliest, current) => {
@@ -208,7 +208,7 @@ export default function Contributions({ owner, repo, path = null, isFolder=false
   function groupContributionsByAuthorAndTime(contributions = []) {
     const grouped = {};
     const years = new Set();
-
+    
     contributions.forEach(({ committedDate }) => {
       const date = new Date(committedDate);
       years.add(date.getFullYear());
