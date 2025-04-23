@@ -24,6 +24,10 @@ public class ResourceNotFoundException extends ResponseStatusException {
         this(String.format("%s not found", clazz.getSimpleName()));
 	}
 
+    public static ResourceNotFoundException of(Class<?> clazz, String fieldName, Object fieldValue) {
+        return new ResourceNotFoundException(clazz.getSimpleName(), fieldName, fieldValue);
+    }
+
     public static ResourceNotFoundException of(String resourceName, String fieldName, Object fieldValue) {
         return new ResourceNotFoundException(resourceName, fieldName, fieldValue);
     }

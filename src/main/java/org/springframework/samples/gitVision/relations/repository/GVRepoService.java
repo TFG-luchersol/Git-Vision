@@ -229,7 +229,9 @@ public class GVRepoService {
     @Transactional
     public void linkUserWithRepository(String login, String repositoryName, String token) {
         try {
-            GVUser user = this.gvUserRepository.findByUsername(login).get();
+            GVUser user = this.gvUserRepository.findByUsername(login).orElseThrow(
+                () -> ResourceNotFoundException.of(GVUser.class, "Username", login)
+            );
             String tokenToUse = Objects.requireNonNullElse(token, user.getGithubToken());
 
             GitHub gitHub = GitHub.connect(login, tokenToUse);
@@ -239,7 +241,7 @@ public class GVRepoService {
             gvRepo.setRepositoryId(ghRepository.getId());
             gvRepo.setToken(tokenToUse);
             gvRepo.setUser(user);
-            GVRepo savedGvRepo = gvRepoRepository.save(gvRepo);
+            GVRepo savedGvRepo = gvRepoRepository.saveAndFlush(gvRepo);
             List<Contributor> ghContributors = ghRepository.listContributors().toList();
             List<GVRepoUserConfig> ghConfigurations = ghContributors.stream()
                     .map(contributor -> GVRepoUserConfig.of(savedGvRepo, contributor))
