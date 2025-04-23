@@ -1,3 +1,4 @@
+import { useNotification } from '@context/NotificationContext';
 import {
     Box,
     Button,
@@ -19,11 +20,12 @@ import {
 import React, { useEffect, useState } from "react";
 import { Bar } from "react-chartjs-2";
 import { useParams } from "react-router-dom";
-
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 const LinePerTimeInIssue = () => {
     const { owner, repo } = useParams();
+    const { showMessage } = useNotification();
+
     const [queryParamType, setQueryParamType] = useState("name");
     const [queryParamValue, setQueryParamValue] = useState("");
     const [taskName, setTaskName] = useState("");
@@ -46,7 +48,9 @@ const LinePerTimeInIssue = () => {
             const result = await response.json();
             setRawData(result);
         } catch (error) {
-            console.error("Error fetching data:", error);
+            showMessage({
+                message: error.message
+            })
         }
     };
 
@@ -61,7 +65,7 @@ const LinePerTimeInIssue = () => {
         });
 
         const values = usernames.map((username) =>
-            dataType === "total"
+            dataType === "changes"
                 ? rawData[username].additions + rawData[username].deletions
                 : rawData[username][dataType]
         );
@@ -92,10 +96,6 @@ const LinePerTimeInIssue = () => {
 
     return (
         <Box sx={{ padding: 2 }}>
-            <Typography variant="h5" gutterBottom>
-                Lines / Time Statistics
-            </Typography>
-
             <Box sx={{ display: "flex", gap: 2, marginBottom: 2, flexWrap: "wrap" }}>
                 <Select
                     value={queryParamType}
@@ -127,7 +127,7 @@ const LinePerTimeInIssue = () => {
                 >
                     <MenuItem value="additions">Additions</MenuItem>
                     <MenuItem value="deletions">Deletions</MenuItem>
-                    <MenuItem value="total">Total</MenuItem>
+                    <MenuItem value="changes">Changes</MenuItem>
                 </Select>
 
                 {/* 👉 Nuevo selector de unidad de tiempo */}
@@ -143,10 +143,27 @@ const LinePerTimeInIssue = () => {
                 <Button variant="contained" onClick={fetchData}>
                     Fetch Data
                 </Button>
+
+                {summary && (
+                    <div style={{borderRadius: "10px", 
+                              border: "1px solid black", 
+                              padding: "7px", 
+                              marginLeft: "5px"}}>
+                        <Typography variant="body1">
+                            Total Time: {summary.totalTime.toFixed(2)} {timeUnit}
+                        </Typography>
+                        <Typography variant="body1">
+                            All {dataType}: {summary.totalValues}
+                        </Typography>
+                    </div>
+                )}
+                
             </Box>
 
+
+
             {chartData && (
-                <Box sx={{ height: "60vh", marginBottom: 2 }}>
+                <Box sx={{ height: "55vh", marginBottom: 2 }}>
                     <Bar
                         data={chartData}
                         options={{
@@ -156,26 +173,12 @@ const LinePerTimeInIssue = () => {
                                 legend: {
                                     position: "top",
                                 },
-                                title: {
-                                    display: true,
-                                    text: "Lines / Time Chart",
-                                },
                             },
                         }}
                     />
                 </Box>
             )}
 
-            {summary && (
-                <Box>
-                    <Typography variant="body1">
-                        Total Time: {summary.totalTime.toFixed(2)} {timeUnit}
-                    </Typography>
-                    <Typography variant="body1">
-                        Total {dataType}: {summary.totalValues}
-                    </Typography>
-                </Box>
-            )}
         </Box>
     );
 };
