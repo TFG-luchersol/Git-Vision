@@ -41,40 +41,38 @@ function ErrorFallback({ error, resetErrorBoundary }) {
 function App() {
   const jwt = tokenService.getLocalAccessToken();
 
-  let userRoutes = <></>;
-  let publicRoutes = <></>;
+  let userRoutes = <>
+    <Route path="/details" element={<Details />} />
+    <Route path="/repositories" element={<Repositories />} />
+    <Route path="/repository/:owner/:repo" element={<Repository />} />
+    <Route path="/repository/:owner/:repo/blob/*" element={<File />} />
+    <Route path="/repository/:owner/:repo/tree/*" element={<Folder />} />
+    <Route path="/repository/:owner/:repo/details" element={<RepositoryDetails />}/>
+    <Route path="/repository/:owner/:repo/contributors"element={<Contributors />}/>
+    <Route path="/repository/:owner/:repo/configuration"element={<UserConfiguration />}/>
+    <Route path="/repository/:owner/:repo/commits" element={<Commits />} />
+    <Route
+      path="/repository/:owner/:repo/commits/:sha"
+      element={<Commit />}
+    />
+    <Route path="/repository/:owner/:repo/issues" element={<Issues />} />
+    <Route
+      path="/repository/:owner/:repo/issues/:issueNumber"
+      element={<Issue />}
+    />
+    <Route path="/workspace/:name" element={<WorkspaceUsers />} />
+    <Route path="/workspace/download" element={<WorkspaceDownload />} />
+    <Route path="/repository/download" element={<RepositoryDownload />} />
+    <Route
+      path="/linker/repository/workspace/"
+      element={<RepositoryWorkspaceLinker />}
+    />
+  </>;
 
-  userRoutes = (
-    <>
-      <Route path="/register" element={<Register />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/details" element={<Details />} />
-      <Route path="/repositories" element={<Repositories />} />
-      <Route path="/repository/:owner/:repo" element={<Repository />} />
-      <Route path="/repository/:owner/:repo/blob/*" element={<File />} />
-      <Route path="/repository/:owner/:repo/tree/*" element={<Folder />} />
-      <Route path="/repository/:owner/:repo/details" element={<RepositoryDetails />}/>
-      <Route path="/repository/:owner/:repo/contributors"element={<Contributors />}/>
-      <Route path="/repository/:owner/:repo/configuration"element={<UserConfiguration />}/>
-      <Route path="/repository/:owner/:repo/commits" element={<Commits />} />
-      <Route
-        path="/repository/:owner/:repo/commits/:sha"
-        element={<Commit />}
-      />
-      <Route path="/repository/:owner/:repo/issues" element={<Issues />} />
-      <Route
-        path="/repository/:owner/:repo/issues/:issueNumber"
-        element={<Issue />}
-      />
-      <Route path="/workspace/:name" element={<WorkspaceUsers />} />
-      <Route path="/workspace/download" element={<WorkspaceDownload />} />
-      <Route path="/repository/download" element={<RepositoryDownload />} />
-      <Route
-        path="/linker/repository/workspace/"
-        element={<RepositoryWorkspaceLinker />}
-      />
-    </>
-  );
+  let publicRoutes = <>
+    <Route path="/register" element={<Register />} />
+    <Route path="/login" element={<Login />} />
+  </>;
 
   return (
     <div>
