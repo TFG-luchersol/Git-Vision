@@ -5,6 +5,7 @@ export default async function fetchBackend(
     init: RequestInit = {},
     queryParams: Record<string, any> = {}
 ) {
+    console.log(queryParams)
     const token: string = tokenservice.getLocalAccessToken();
     const headers = new Headers(init.headers);
     if (token) headers.set("Authorization", "Bearer " + token);
@@ -34,7 +35,7 @@ export default async function fetchBackend(
             fullUrl.searchParams.append(key, String(value));
         }
     });
-
+    
     return await fetch(fullUrl, {
         ...init,
         headers,

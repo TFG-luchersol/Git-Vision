@@ -26,7 +26,8 @@ public class CommitService {
     public List<Commit> getCommitsByRepository(String repositoryName, String login, Integer page)  {
         GVRepo gvRepo = this.gvRepoRepository.findByNameAndUser_Username(repositoryName, login).get();
         String tokenToUse = gvRepo.getToken();
-        return GithubApi.getCommitsByPage(repositoryName, page, 30, tokenToUse);
+        return GithubApi.connect(repositoryName, tokenToUse)
+                        .getCommitsByPage(page, 30);
     }
 
     @Transactional(readOnly = true)

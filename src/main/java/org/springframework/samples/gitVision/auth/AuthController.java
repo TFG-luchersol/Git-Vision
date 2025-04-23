@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
@@ -35,6 +36,7 @@ import jakarta.validation.Valid;
 @RestController
 @RequestMapping("/api/v1/auth")
 @Tag(name = "Authentication")
+@SecurityRequirement(name = "bearerAuth")
 public class AuthController {
 
     private final AuthenticationManager authenticationManager;

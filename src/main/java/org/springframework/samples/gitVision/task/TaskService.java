@@ -47,9 +47,8 @@ public class TaskService {
     }
 
     public Map<String, ContributionByTime> getContributionByTime(GVRepo gvRepo, String issueName, String taskName, Long userId) throws Exception{
-        GVUser user = gvUserRepository.findById(userId).orElseThrow();
-        String githubToken = user.getGithubToken();
-        Issue issue = GithubApi.getIssueByExactTitle(gvRepo.getName(), issueName, githubToken);
+        Issue issue = GithubApi.connect(gvRepo)
+                               .getIssueByExactTitle(issueName);
         Long issueNumber = issue.getNumber().longValue();
         return getContributionByTime(gvRepo, issueNumber, taskName, userId);
     }

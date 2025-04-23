@@ -31,8 +31,8 @@ public class IssueService {
     public List<Issue> getAllIssuesByRepositoryName(String repositoryName, String login, Integer page)
             throws Exception {
         GVRepo gvRepo = this.gvRepoRepository.findByNameAndUser_Username(repositoryName, login).get();
-        String tokenToUse = gvRepo.getToken();
-        return GithubApi.getIssuesByPage(repositoryName, page, 30, tokenToUse);
+        return GithubApi.connect(gvRepo)
+                        .getIssuesByPage(page, 30);
     }
 
     private List<Commit> getCommitsByIssueNumber(GHRepository ghRepository, Integer issueNumber) throws Exception {

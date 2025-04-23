@@ -12,15 +12,31 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.samples.gitvision.commit.model.Commit;
 import org.springframework.samples.gitvision.exceptions.ResourceNotFoundException;
 import org.springframework.samples.gitvision.issue.model.Issue;
+import org.springframework.samples.gitvision.relations.repository.model.GVRepo;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
 public class GithubApi {
 
-    static RestTemplate restTemplate = new RestTemplate();
+    private RestTemplate restTemplate = new RestTemplate();
+    private String githubToken;
+    private String repositoryName;
 
-    private static <T> T requestGithub(String url, String githubToken, Class<T> clazz) {
+    private GithubApi(String repositoryName, String githubToken) {
+        this.githubToken = githubToken;
+        this.repositoryName = repositoryName;
+    }
+
+    public static GithubApi connect(String repositoryName, String githubToken) {
+        return new GithubApi(repositoryName, githubToken);
+    }
+
+    public static GithubApi connect(GVRepo gvRepo) {
+        return new GithubApi(gvRepo.getName(), gvRepo.getToken());
+    }
+
+    private <T> T requestGithub(String url, Class<T> clazz) {
         String url_template =  "https://api.github.com" + url;
 
         HttpHeaders headers = new HttpHeaders();
@@ -33,38 +49,44 @@ public class GithubApi {
         return response.getBody();
     }
 
-    public static List<Commit> getCommitsByPage(String repositoryName, Integer page, Integer perPage, String githubToken){
+    public List<Commit> getCommitsByPage(Integer page, Integer perPage){
         String url = String.format("/repos/%s/commits?page=%d&per_page=%d", repositoryName, page, perPage);
-        JsonNode[] commits = requestGithub(url, githubToken, JsonNode[].class);
+        JsonNode[] commits = requestGithub(url, JsonNode[].class);
         return Arrays.stream(commits).map(Commit::parseJson).toList();
     }
 
-    public static List<Issue> getIssuesByPage(String repositoryName, Integer page, Integer perPage, String githubToken){
+    public List<Commit> getCommitsByPageAndAuthor(Integer page, Integer perPage){
+        String url = String.format("/repos/%s/commits?page=%d&per_page=%d", repositoryName, page, perPage);
+        JsonNode[] commits = requestGithub(url, JsonNode[].class);
+        return Arrays.stream(commits).map(Commit::parseJson).toList();
+    }
+
+    public List<Issue> getIssuesByPage(Integer page, Integer perPage){
         String url = String.format("/repos/%s/issues?state=all&page=%d&per_page=%d", repositoryName, page, perPage);
-        JsonNode[] issues = requestGithub(url, githubToken, JsonNode[].class);
+        JsonNode[] issues = requestGithub(url, JsonNode[].class);
         return Arrays.stream(issues).map(Issue::parseJson).toList();
     }
 
-    public static Issue getIssueByExactTitle(String repositoryName, String title, String githubToken) {
-    try {
-        String encodedTitle = URLEncoder.encode("\"" + title + "\"", StandardCharsets.UTF_8);
-        String url = String.format("/search/issues?q=repo:%s+type:issue+in:title+%s", repositoryName, encodedTitle);
+    public Issue getIssueByExactTitle(String title) {
+        try {
+            String encodedTitle = URLEncoder.encode("\"" + title + "\"", StandardCharsets.UTF_8);
+            String url = String.format("/search/issues?q=repo:%s+type:issue+in:title+%s", repositoryName, encodedTitle);
 
-        JsonNode response = requestGithub(url, githubToken, JsonNode.class);
-        JsonNode items = response.get("items");
+            JsonNode response = requestGithub(url, JsonNode.class);
+            JsonNode items = response.get("items");
 
-        if (items != null && items.isArray()) {
-            for (JsonNode item : items) {
-                String issueTitle = item.get("title").asText();
-                if (issueTitle.equals(title)) {
-                    return Issue.parseJson(item);
+            if (items != null && items.isArray()) {
+                for (JsonNode item : items) {
+                    String issueTitle = item.get("title").asText();
+                    if (issueTitle.equals(title)) {
+                        return Issue.parseJson(item);
+                    }
                 }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-    } catch (Exception e) {
-        e.printStackTrace();
+        throw ResourceNotFoundException.of("No se ha encontrado issue con titulo " + title);
     }
-    throw ResourceNotFoundException.of("No se ha encontrado issue con titulo " + title);
-}
 
 }

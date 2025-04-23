@@ -1,10 +1,10 @@
 package org.springframework.samples.gitvision.file;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -15,6 +15,7 @@ import org.kohsuke.github.GHTree;
 import org.springframework.samples.gitvision.change.model.Change;
 import org.springframework.samples.gitvision.file.model.ChangesInFile;
 import org.springframework.samples.gitvision.file.model.File;
+import org.springframework.samples.gitvision.file.model.FileChangeDetail;
 import org.springframework.samples.gitvision.file.model.PercentageLanguages;
 import org.springframework.samples.gitvision.file.model.TreeFiles;
 import org.springframework.samples.gitvision.file.model.TreeFiles.TreeNode;
@@ -68,28 +69,46 @@ public class FileService {
     //     return changesInFiles;
     // }
 
-    public List<ChangesInFile> getChangesInFilesByUser(GHRepository ghRepository, String author, LocalDate startDate, LocalDate endDate) throws Exception{
+    public List<ChangesInFile> getChangesInFilesByUser(GHRepository ghRepository, String author, LocalDate startDate, LocalDate endDate, Integer limit) throws Exception{
         Map<String, Change> fileChangesMap = new HashMap<>();
-        var ghCommits = ghRepository.queryCommits().author(author);
-        if(Objects.nonNull(startDate)) ghCommits = ghCommits.since(EntityUtils.parseLocalDateUTCToDate(startDate));
-        if(Objects.nonNull(endDate)) ghCommits = ghCommits.until(EntityUtils.parseLocalDateUTCToDate(endDate));
+        Map<String, List<FileChangeDetail>> filePatchMap = new HashMap<>();
 
-        for (GHCommit ghCommit : ghCommits.list()) {
-            ghCommit.listFiles().forEach(file -> {
+        var ghCommits = ghRepository.queryCommits().author(author);
+        if (startDate != null) ghCommits = ghCommits.since(EntityUtils.parseLocalDateUTCToDate(startDate));
+        if (endDate != null) ghCommits = ghCommits.until(EntityUtils.parseLocalDateUTCToDate(endDate));
+        if (limit != null) ghCommits = ghCommits.pageSize(limit);
+
+        int count = 0;
+        for (GHCommit commit : ghCommits.list()) {
+            if (limit != null && count >= limit) break;
+            count++;
+
+            for (GHCommit.File file : commit.listFiles()) {
                 String filePath = file.getFileName();
                 int additions = file.getLinesAdded();
                 int deletions = file.getLinesDeleted();
+                String patch = file.getPatch();
 
                 fileChangesMap
-                        .computeIfAbsent(filePath, i -> new Change())
+                        .computeIfAbsent(filePath, _ -> new Change())
                         .addChanges(additions, deletions);
-            });
+
+                if (patch != null) {
+                    filePatchMap
+                            .computeIfAbsent(filePath, _ -> new ArrayList<>())
+                            .add(new FileChangeDetail(commit.getSHA1(), patch, additions, deletions));
+                }
+            }
         }
 
         return fileChangesMap.entrySet()
-                    .stream()
-                    .map(entry -> ChangesInFile.of(entry.getKey(), entry.getValue()))
-                    .collect(Collectors.toList());
+                .stream()
+                .map(entry -> new ChangesInFile(
+                        entry.getKey(),
+                        entry.getValue(),
+                        filePatchMap.getOrDefault(entry.getKey(), new ArrayList<>())
+                ))
+                .toList();
     }
 
 }

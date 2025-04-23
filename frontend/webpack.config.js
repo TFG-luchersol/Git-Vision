@@ -38,6 +38,18 @@ module.exports = {
         use: ['style-loader', 'css-loader'], // Usa los loaders para CSS
       },
       {
+        test: /\.module\.css$/,
+        use: [
+          'style-loader',
+          {
+            loader: 'css-loader',
+            options: {
+              modules: true
+            }
+          }
+        ]
+      },
+      {
         test: /\.(ts|tsx)$/, // Para procesar archivos TypeScript (.ts, .tsx)
         exclude: /node_modules/,
         use: 'ts-loader', // Usa ts-loader para archivos TypeScript
@@ -58,6 +70,7 @@ module.exports = {
       "@fonts": path.resolve(__dirname, "src/static/fonts"),
       "@services": path.resolve(__dirname, "src/services"),
       "@context": path.resolve(__dirname, "src/context"),
+      "@static": path.resolve(__dirname, "src/static"),
     },
   },
 };
