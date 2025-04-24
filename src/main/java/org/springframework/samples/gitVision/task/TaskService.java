@@ -55,9 +55,8 @@ public class TaskService {
 
     public Map<String, ContributionByTime> getContributionByTime(GVRepo gvRepo, Long issueNumber, String taskName, Long userId) throws Exception{
         GVUser user = gvUserRepository.findById(userId).orElseThrow();
-        String githubToken = user.getGithubToken(), clockifyToken = user.getClockifyToken();
+        String githubToken = gvRepo.getToken(), clockifyToken = user.getClockifyToken();
         GVWorkspace gvWorkspace = gvRepo.getWorkspace();
-        String workspaceId = gvWorkspace.getWorkspaceId();
 
         var configsRepository = gvRepoUserConfigRepository.findByGvRepo(gvRepo);
         List<Contribution> contributions = GithubGraphQLApi.connect(githubToken)
@@ -76,15 +75,17 @@ public class TaskService {
             }
         }
 
-        Map<String, Long> associationUserTime = ClockifyApi.getTimeByUserByTaskName(workspaceId, taskName, clockifyToken);
-
-        var configsWorkspace = this.gvWorkspaceUserConfigRepository.findByGvWorkspace(gvWorkspace);
-        for (GVWorkspaceUserConfig gvWorkspaceUserConfig : configsWorkspace) {
-            String userClockifyId = gvWorkspaceUserConfig.getUserProfile().getId();
-            String githubUserName = gvWorkspaceUserConfig.getAlias();
-            if(githubUserName == null || !res.containsKey(githubUserName)) continue;
-            Long time = associationUserTime.getOrDefault(userClockifyId, 0L);
-            res.get(githubUserName).mergeTime(time);
+        if(gvWorkspace != null && user.getClockifyToken() != null) {
+            String workspaceId = gvWorkspace.getWorkspaceId();
+            Map<String, Long> associationUserTime = ClockifyApi.getTimeByUserByTaskName(workspaceId, taskName, clockifyToken);
+            var configsWorkspace = this.gvWorkspaceUserConfigRepository.findByGvWorkspace(gvWorkspace);
+            for (GVWorkspaceUserConfig gvWorkspaceUserConfig : configsWorkspace) {
+                String userClockifyId = gvWorkspaceUserConfig.getUserProfile().getId();
+                String githubUserName = gvWorkspaceUserConfig.getAlias();
+                if(githubUserName == null || !res.containsKey(githubUserName)) continue;
+                Long time = associationUserTime.getOrDefault(userClockifyId, 0L);
+                res.get(githubUserName).mergeTime(time);
+            }
         }
 
         return res;

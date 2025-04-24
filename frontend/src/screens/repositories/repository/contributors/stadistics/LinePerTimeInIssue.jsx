@@ -1,13 +1,15 @@
+import DelayedButton from '@components/DelayedButton';
 import { useNotification } from '@context/NotificationContext';
 import {
     Box,
-    Button,
     MenuItem,
     Select,
     TextField,
-    Typography,
+    Typography
 } from "@mui/material";
+import tokenService from '@services/token.service';
 import fetchBackend from "@utils/fetchBackend";
+import getBody from '@utils/getBody';
 import {
     BarElement,
     CategoryScale,
@@ -31,34 +33,62 @@ const LinePerTimeInIssue = () => {
     const [taskName, setTaskName] = useState("");
     const [dataType, setDataType] = useState("additions");
     const [timeUnit, setTimeUnit] = useState("hours");
+    const [showByTime, setShowByTime] = useState(false);
+    const [isButtonDisabled, setIsButtonDisabled] = useState(false);
 
     const [rawData, setRawData] = useState(null);
     const [chartData, setChartData] = useState(null);
     const [summary, setSummary] = useState(null);
 
+    function getSingularTimeUnit() {
+        if(timeUnit === "hours")
+            return "hour";
+        if(timeUnit === "minutes")
+            return "minute";
+    }
+
     const fetchData = async () => {
-        const queryParams = new URLSearchParams();
-        queryParams.append(queryParamType, queryParamValue);
-        if (taskName) queryParams.append("taskName", taskName);
+        const queryParams = {[queryParamType]: queryParamValue};
+        if (taskName)
+            queryParams["taskName"] = taskName;
 
         try {
+            setIsButtonDisabled(prev => true);
             const response = await fetchBackend(
-                `/api/v1/contributions/${owner}/${repo}/time?${queryParams.toString()}`
+                `/api/v1/contributions/${owner}/${repo}/issue`, {}, queryParams
             );
-            const result = await response.json();
+            const result = await getBody(response);
             setRawData(result);
         } catch (error) {
             showMessage({
                 message: error.message
-            })
+            });
+        } finally {
+            setIsButtonDisabled(prev => false);
         }
     };
+
+    const colorsGraph = {
+        additions: {
+            backgroundColor: "rgba(76, 175, 80, 0.6)", // Verde claro
+            borderColor: "rgba(76, 175, 80, 1)" // Verde fuerte
+        },
+        deletions: {
+            backgroundColor: "rgba(255, 99, 132, 0.6)", // Rojo claro
+            borderColor: "rgba(255, 99, 132, 1)" // Rojo fuerte
+        },
+        changes: {
+            backgroundColor: "rgba(255, 165, 0, 0.6)", // Naranja claro
+            borderColor: "rgba(255, 165, 0, 1)" // Naranja fuerte
+        },
+    }
 
     useEffect(() => {
         if (!rawData) return;
 
         const usernames = Object.keys(rawData);
 
+        // Calcular el tiempo y los valores según la opción seleccionada
         const times = usernames.map((username) => {
             const baseTime = rawData[username].time / 3_600_000_000_000.0;
             return timeUnit === "minutes" ? baseTime * 60 : baseTime;
@@ -73,17 +103,18 @@ const LinePerTimeInIssue = () => {
         const totalTime = times.reduce((acc, time) => acc + time, 0);
         const totalValues = values.reduce((acc, value) => acc + value, 0);
 
+        // Configurar los datos de la gráfica según si estamos mostrando por tiempo o por total
         setChartData({
             labels: usernames,
             datasets: [
                 {
-                    label: `${dataType} / ${timeUnit}`,
+                    label: `${dataType} ${showByTime ? `/ ${getSingularTimeUnit()}` : ""}`,
                     data: values.map((value, index) =>
-                        times[index] === 0 ? 0 : value / times[index]
+                        showByTime && times[index] === 0 ? 0 : showByTime ? value / times[index] : value
                     ),
-                    backgroundColor: "rgba(75, 192, 192, 0.6)",
-                    borderColor: "rgba(75, 192, 192, 1)",
                     borderWidth: 1,
+                    maxBarThickness: 40,
+                    ...colorsGraph[dataType],
                 },
             ],
         });
@@ -92,7 +123,7 @@ const LinePerTimeInIssue = () => {
             totalTime,
             totalValues,
         });
-    }, [rawData, dataType, timeUnit]);
+    }, [rawData, dataType, timeUnit, showByTime]); // Añadir showByTime a las dependencias
 
     return (
         <Box sx={{ padding: 2 }}>
@@ -130,7 +161,6 @@ const LinePerTimeInIssue = () => {
                     <MenuItem value="changes">Changes</MenuItem>
                 </Select>
 
-                {/* 👉 Nuevo selector de unidad de tiempo */}
                 <Select
                     value={timeUnit}
                     onChange={(e) => setTimeUnit(e.target.value)}
@@ -140,28 +170,38 @@ const LinePerTimeInIssue = () => {
                     <MenuItem value="minutes">Minutos</MenuItem>
                 </Select>
 
-                <Button variant="contained" onClick={fetchData}>
-                    Fetch Data
-                </Button>
+                <Select
+                    value={showByTime ? "time" : "total"}
+                    onChange={(e) => setShowByTime(e.target.value === "time")}
+                    size="small"
+                >
+                    {
+                        tokenService.hasClockifyToken() && <MenuItem value="time">Por Tiempo</MenuItem>
+                    }
+                    <MenuItem value="total">Total</MenuItem>
+                </Select>
+
+                <DelayedButton text={"Buscar"} onClick={fetchData} disabled={isButtonDisabled}/>
 
                 {summary && (
                     <div style={{borderRadius: "10px", 
                               border: "1px solid black", 
-                              padding: "7px", 
+                              padding: "3px", 
                               marginLeft: "5px",
                               fontSize: 10}}>
-                        <Typography variant="body2">
-                            {summary.totalValues} {dataType} / {summary.totalTime.toFixed(2)} {timeUnit}
-                        </Typography>
-                        <Typography variant="body2">
-                            {(summary.totalValues/summary.totalTime).toFixed(2)} {dataType}/{timeUnit}
-                        </Typography>
+                        {summary.totalTime > 0 ? <> 
+                            <Typography variant="body2">
+                                {summary.totalValues} {dataType} / {summary.totalTime.toFixed(2)} {timeUnit}
+                            </Typography>
+                            <Typography variant="body2">
+                                {(summary.totalValues/summary.totalTime).toFixed(2)} {dataType}/{timeUnit}
+                            </Typography>
+                        </> : <Typography variant="body2">
+                            {summary.totalValues} {dataType}
+                        </Typography>}
                     </div>
                 )}
-                
             </Box>
-
-
 
             {chartData && (
                 <Box sx={{ height: "55vh", marginBottom: 2 }}>
@@ -179,9 +219,9 @@ const LinePerTimeInIssue = () => {
                     />
                 </Box>
             )}
-
         </Box>
     );
 };
 
 export default LinePerTimeInIssue;
+

@@ -18,6 +18,7 @@ package org.springframework.samples.gitvision.user;
 import org.springframework.http.ResponseEntity;
 import org.springframework.samples.gitvision.configuration.services.UserDetailsImpl;
 import org.springframework.samples.gitvision.user.model.GVUser;
+import org.springframework.samples.gitvision.util.MessageResolver;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,9 +41,11 @@ import jakarta.validation.Valid;
 public class GVUserController {
 
 	private final GVUserService userService;
+    private final MessageResolver msg;
 
-	public GVUserController(GVUserService userService) {
+	public GVUserController(GVUserService userService, MessageResolver msg) {
 		this.userService = userService;
+        this.msg = msg;
 	}
 
 	@GetMapping("/{id}")
@@ -80,10 +83,20 @@ public class GVUserController {
         return ResponseEntity.ok(clockifyToken);
 	}
 
+    @DeleteMapping("/user/token/clockify")
+	public ResponseEntity<String> deleteClockifyToken(
+            @AuthenticationPrincipal UserDetailsImpl userDetailsImpl) throws Exception {
+        String username = userDetailsImpl.getUsername();
+        userService.deleteClockifyToken(username);
+        String message = msg.get("api.v1.users.user.token.clockify.delete.response");
+        return ResponseEntity.ok(message);
+	}
+
 	@DeleteMapping("/{id}")
 	public ResponseEntity<String> delete(@PathVariable Long id) {
 		userService.deleteUserById(id);
-		return ResponseEntity.ok("User deleted!");
+        String message = msg.get("api.v1.users.id.delete.response");
+		return ResponseEntity.ok(message);
 	}
 
 }

@@ -25,6 +25,7 @@ import org.springframework.samples.gitvision.contributions.model.Contribution;
 import org.springframework.samples.gitvision.file.model.ChangesInFile;
 import org.springframework.samples.gitvision.util.graphQL.models.GraphQLChangesFiles;
 import org.springframework.samples.gitvision.util.graphQL.models.GraphQLContributionResponse;
+import org.springframework.samples.gitvision.util.graphQL.models.GraphQLContributionsByIssueNumber;
 import org.springframework.samples.gitvision.util.graphQL.models.GraphQLTotalChangesInFile;
 import org.springframework.web.client.RestTemplate;
 
@@ -126,7 +127,7 @@ public class GithubGraphQLApi {
 
     public List<Contribution> getContributionsByIssueNumber(String repositoryName, Long issueNumber) throws IOException {
         String[] owner_repo = repositoryName.split("/");
-        String query = readGraphQLQuery("getContributionsBetweenDates.graphql");
+        String query = readGraphQLQuery("getContributionsByIssueNumber.graphql");
         Map<String, Object> vars = new HashMap<>();
         vars.put("owner", owner_repo[0]);
         vars.put("repo", owner_repo[1]);
@@ -135,24 +136,20 @@ public class GithubGraphQLApi {
         List<Contribution> allContributions = new ArrayList<>();
         boolean hasNextPage = true;
         while (hasNextPage) {
-            var response = this.requestGithubGraphQL(query, vars,GraphQLContributionResponse.class);
+            GraphQLContributionsByIssueNumber response = this.requestGithubGraphQL(query, vars,GraphQLContributionsByIssueNumber.class);
             List<Contribution> contributions = response.getNodes()
                     .stream()
                     .map(node -> {
                         Contribution contribution = new Contribution();
-                        contribution.setCommittedDate(node.getCommittedDate());
                         contribution.setAdditions(node.getAdditions());
                         contribution.setDeletions(node.getDeletions());
-                        contribution.setAuthorName(node.getAuthor().getName());
+                        contribution.setAuthorName(node.getAuthorName());
                         return contribution;
                     })
                     .collect(Collectors.toList());
-
             allContributions.addAll(contributions);
-
-            var pageInfo = response.getPageInfo();
-            hasNextPage = pageInfo.isHasNextPage();
-            String cursor = pageInfo.getEndCursor();
+            hasNextPage = response.hasNextPage();
+            String cursor = response.getEndCursor();
 
             vars.put("cursor", cursor);
         }

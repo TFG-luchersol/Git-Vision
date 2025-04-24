@@ -104,6 +104,14 @@ public class GVUserService {
 		gvUserRepository.save(user);
 	}
 
+    @Transactional
+	public void deleteClockifyToken(String username) throws Exception{
+		GVUser user = findUserByUsername(username);
+		user.setClockifyToken(null);
+		gvUserRepository.save(user);
+	}
+
+
 
 	@Transactional
 	public GVUser saveUser(GVUser user) throws DataAccessException {

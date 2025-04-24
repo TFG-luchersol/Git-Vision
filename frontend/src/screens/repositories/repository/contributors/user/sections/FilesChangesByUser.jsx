@@ -73,6 +73,7 @@ export default function FilesChangesByUser() {
                     onClick={getChangedFiles}
                     disabled={isLoading}
                     className="button"
+                    style={{marginLeft: 100}}
                     text={"Buscar"}
                 />    
             </div>

@@ -64,14 +64,14 @@ public class ContributionController {
         return ResponseEntity.ok(contributions);
     }
 
-    @GetMapping("/{owner}/{repo}/time")
+    @GetMapping("/{owner}/{repo}/issue")
     public ResponseEntity<Map<String, ContributionByTime>> getGvRepoByNameAndUser_Id(@PathVariable String owner,
                                 @PathVariable String repo,
                                 @RequestParam(required = false) Long issueNumber,
                                 @RequestParam(required = false) String name,
                                 @RequestParam(required = false) String taskName,
                                 @AuthenticationPrincipal UserDetailsImpl userDetailsImpl) throws Exception {
-        Long userId = 93008812L;
+        Long userId = userDetailsImpl.getId();
         String repositoryName = owner + "/" + repo;
         String message = msg.get("api.v1.contributions.owner.repo.time.get.check_issue_number_and_name");
         Checker.checkOrBadRequest((issueNumber == null) ^ (name == null || name.isBlank()), message);

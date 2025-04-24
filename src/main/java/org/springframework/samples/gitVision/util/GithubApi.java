@@ -1,7 +1,5 @@
 package org.springframework.samples.gitvision.util;
 
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
 
@@ -69,8 +67,7 @@ public class GithubApi {
 
     public Issue getIssueByExactTitle(String title) {
         try {
-            String encodedTitle = URLEncoder.encode("\"" + title + "\"", StandardCharsets.UTF_8);
-            String url = String.format("/search/issues?q=repo:%s+type:issue+in:title+%s", repositoryName, encodedTitle);
+            String url = String.format("/search/issues?q=repo:%s+type:issue+in:title+%s", repositoryName, title);
 
             JsonNode response = requestGithub(url, JsonNode.class);
             JsonNode items = response.get("items");
@@ -78,7 +75,7 @@ public class GithubApi {
             if (items != null && items.isArray()) {
                 for (JsonNode item : items) {
                     String issueTitle = item.get("title").asText();
-                    if (issueTitle.equals(title)) {
+                    if (issueTitle.trim().equals(title.trim())) {
                         return Issue.parseJson(item);
                     }
                 }
