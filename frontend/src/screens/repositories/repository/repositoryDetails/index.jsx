@@ -6,12 +6,12 @@ import getBody from '@utils/getBody';
 import React, { useEffect, useState } from 'react';
 import { FaGithub } from 'react-icons/fa';
 import { IoPersonCircleOutline } from 'react-icons/io5';
+import { LuSave } from "react-icons/lu";
 import { useParams } from 'react-router-dom';
-import { Button } from 'reactstrap';
 
 export default function RepositoryDetails() {
   const { showMessage } = useNotification();
-  const saveTokenGithubButton = <Button className='save-button' onClick={() => handleSave()}>Guardar</Button>;
+  const saveTokenGithubButton = <LuSave className='save-button-repository-details' onClick={() => handleSave()} />;
   const githubIcon = <FaGithub />
   const [githubToken, setGithubToken] = useState('');
   const {owner, repo} = useParams();
@@ -20,7 +20,7 @@ export default function RepositoryDetails() {
   }, []);
 
   const getRepositoryDetails = async () => {
-
+    // TODO: Completar esto y que se ponga la imagen
   }
   
   const handleGithubTokenChange = (e) => setGithubToken(e.target.value);

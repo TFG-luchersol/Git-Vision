@@ -33,27 +33,17 @@
   margin: 10px;
 }
 
-.delete-button.btn.btn-secondary {
+.save-button-repository-details {
   margin: 10px;
   border-radius: 10px;
-  width: 90%;
-  background-color: #cd0a0a;
-  text-decoration-color: whitesmoke;
+  padding: 5px;
+  color: white;
+  font-size: 30px;
+  background-color: #2e2e92 ;
+  transition: background-color 0.3s ease;
 }
 
-.delete-button.btn.btn-secondary:hover {
-  background-color: #dd3232;
-}
-
-.save-button.btn.btn-secondary {
-  margin: 10px;
-  border-radius: 10px;
-  width: 10%;
-  background-color: #2e2e92;
-  text-decoration-color: whitesmoke;
-}
-
-.save-button.btn.btn-secondary:hover {
+.save-button-repository-details:hover {
   background-color: rgb(46, 76, 146);
 }
 

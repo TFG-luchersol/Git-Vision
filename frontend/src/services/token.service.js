@@ -9,6 +9,11 @@ class TokenService {
         return !!user?.clockifyToken;
     }
 
+    removeClockifyToken() {
+        const user = this.getUser();
+        this.setUser({...user, clockifyToken: null})
+    }
+
     getLocalRefreshToken() {
         const user = JSON.parse(localStorage.getItem("user"));
         return user?.refreshToken;
