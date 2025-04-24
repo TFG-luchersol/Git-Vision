@@ -1,3 +1,16 @@
+# Descripción General
+
+Git-Vision es una herramienta visual para explorar repositorios Git. Permite a los usuarios analizar la historia de commits, issues y aportaciones realizadas. Además, si el usuario tiene una cuenta de Clockify enlazada, se habilitan funcionalidades adicionales para análisis de gestión del tiempo y la productividad.
+
+## Funcionalidades Principales
+
+- Visualización de la estructura del repositorio Git.
+- Exploración de commits, issues, ramas y etiquetas.
+- Integración opcional con Clockify para gestionar el tiempo dedicado a tareas relacionadas con el repositorio.
+
+
+---
+
 # Funcionalidades
 
 Git-Vision ofrece diferentes funcionalidades dependiendo de si el usuario tiene una cuenta de Clockify enlazada o no.
@@ -12,7 +25,6 @@ Git-Vision ofrece diferentes funcionalidades dependiendo de si el usuario tiene 
 - **Visualización interactiva**:
   - Gráficos que muestran la estructura del repositorio.
   - Filtros para buscar commits específicos.
-
 
 ---
 
@@ -29,20 +41,6 @@ Git-Vision ofrece diferentes funcionalidades dependiendo de si el usuario tiene 
 - **Análisis de productividad**:
   - Comparación del tiempo estimado frente al tiempo real dedicado a tareas.
   - Identificación de áreas de mejora en la gestión del tiempo.
-
-
----
-
-# Descripción General
-
-Git-Vision es una herramienta visual para explorar repositorios Git. Permite a los usuarios analizar la historia de commits, issues y aportaciones realizadas. Además, si el usuario tiene una cuenta de Clockify enlazada, se habilitan funcionalidades adicionales para análisis de gestión del tiempo y la productividad.
-
-## Funcionalidades Principales
-
-- Visualización de la estructura del repositorio Git.
-- Exploración de commits, issues, ramas y etiquetas.
-- Integración opcional con Clockify para gestionar el tiempo dedicado a tareas relacionadas con el repositorio.
-
 
 ---
 
