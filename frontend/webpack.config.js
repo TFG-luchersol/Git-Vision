@@ -17,7 +17,7 @@ module.exports = {
     new Dotenv(),
   ],
   devServer: {
-    static: "./dist",
+    static: path.resolve(__dirname, 'public'),
     port: 3000, 
     hot: true,
     open: true, 
@@ -32,6 +32,10 @@ module.exports = {
         test: /\.(js|jsx)$/, // Para procesar archivos JS/JSX
         exclude: /node_modules/,
         use: 'babel-loader',
+      },
+      {
+        test: /\.md$/,
+        type: 'asset/source',
       },
       {
         test: /\.css$/, // Para procesar archivos CSS

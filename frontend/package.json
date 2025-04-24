@@ -32,8 +32,11 @@
     "react-error-boundary": "^3.1.4",
     "react-filepond": "^7.1.2",
     "react-icons": "^4.7.1",
+    "react-markdown": "^10.1.0",
     "react-router-dom": "^6.11.0",
     "reactstrap": "^9.1.6",
+    "remark-gfm": "^4.0.1",
+    "remark-slug": "^7.0.1",
     "swagger-ui-dist": "^5.20.1",
     "swagger-ui-react": "^5.20.1",
     "web-vitals": "^3.1.1"

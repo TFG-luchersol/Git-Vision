@@ -28,6 +28,7 @@ import RepositoryDetails from "@screens/repositories/repository/repositoryDetail
 import UserConfiguration from "@screens/repositories/repository/userConfiguration";
 import WorkspaceUsers from "@screens/workspace/details";
 import tokenService from "@services/token.service";
+import Documentation from "./screens/docs";
 
 function ErrorFallback({ error, resetErrorBoundary }) {
   return (
@@ -72,6 +73,7 @@ function App() {
   </>;
 
   let publicRoutes = <>
+    <Route path="/docs" element={<Documentation />} />
     <Route path="/register" element={<Register />} />
     <Route path="/login" element={<Login />} />
   </>;
