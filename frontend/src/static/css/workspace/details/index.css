@@ -14,13 +14,13 @@
   margin-bottom: 16px;
 }
 
-.refresh-icon {
+.refresh-icon-workspace-config {
   font-size: 24px;
   cursor: pointer;
   transition: transform 0.3s ease;
 }
 
-.refresh-icon:hover {
+.refresh-icon-workspace-config:hover {
   transform: rotate(90deg);
   color: #1976d2;
 }

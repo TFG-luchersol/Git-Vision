@@ -81,7 +81,7 @@ public class TaskService {
             var configsWorkspace = this.gvWorkspaceUserConfigRepository.findByGvWorkspace(gvWorkspace);
             for (GVWorkspaceUserConfig gvWorkspaceUserConfig : configsWorkspace) {
                 String userClockifyId = gvWorkspaceUserConfig.getUserProfile().getId();
-                String githubUserName = gvWorkspaceUserConfig.getAlias();
+                String githubUserName = gvWorkspaceUserConfig.getGithubUser();
                 if(githubUserName == null || !res.containsKey(githubUserName)) continue;
                 Long time = associationUserTime.getOrDefault(userClockifyId, 0L);
                 res.get(githubUserName).mergeTime(time);

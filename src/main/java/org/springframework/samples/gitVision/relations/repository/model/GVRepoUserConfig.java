@@ -6,6 +6,8 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.kohsuke.github.GHRepository.Contributor;
 import org.springframework.samples.gitvision.model.entity.EntityIdSequential;
 
@@ -33,6 +35,7 @@ import lombok.Setter;
 public class GVRepoUserConfig extends EntityIdSequential {
 
     @ManyToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private GVRepo gvRepo;
 
     private String username;

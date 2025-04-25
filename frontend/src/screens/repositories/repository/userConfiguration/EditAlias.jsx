@@ -5,7 +5,8 @@ import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 
 const EditAlias = ({ state, setState, keyName, visible, onClose }) => {
-const { showMessage } = useNotification();
+    
+    const { showMessage } = useNotification();
     const {owner, repo} = useParams();
 
     const [localValues, setLocalValues] = useState(state[keyName] || []);

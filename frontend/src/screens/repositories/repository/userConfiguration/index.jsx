@@ -62,7 +62,7 @@ export default function UserConfiguration(){
         <div className="user-table-wrapper">
             <div className="header">
                 <h2>Lista de Usuarios</h2>
-                <IoMdRefresh onClick={refreshAlias} className="refresh-icon" />
+                <IoMdRefresh onClick={refreshAlias} className="refresh-icon-repository-config" />
             </div>
 
             <TableContainer component={Paper} className="table-container">

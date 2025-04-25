@@ -12,8 +12,9 @@ import org.springframework.samples.gitvision.githubUser.model.GithubUser;
 import org.springframework.samples.gitvision.relations.repository.model.AliasesDTO;
 import org.springframework.samples.gitvision.relations.repository.model.GVRepo;
 import org.springframework.samples.gitvision.relations.repository.model.GVRepoUserConfig;
-import org.springframework.samples.gitvision.user.GVUserService;
+import org.springframework.samples.gitvision.util.MessageResolver;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -35,11 +36,11 @@ import jakarta.validation.Valid;
 public class GVRepoController {
 
     private final GVRepoService gvRepoService;
-    private final GVUserService gvUserService;
+    private final MessageResolver msg;
 
-    public GVRepoController(GVRepoService gvRepoService, GVUserService gvUserService) {
+    public GVRepoController(GVRepoService gvRepoService, MessageResolver msg) {
         this.gvRepoService = gvRepoService;
-        this.gvUserService = gvUserService;
+        this.msg = msg;
     }
 
     @GetMapping
@@ -73,6 +74,16 @@ public class GVRepoController {
         return ResponseEntity.ok(owners);
     }
 
+    @GetMapping("/{owner}/{repo}")
+    public ResponseEntity<GVRepo> getRepository(@PathVariable String owner,
+                                           @PathVariable String repo,
+                                           @AuthenticationPrincipal UserDetailsImpl userDetailsImpl) throws Exception {
+        Long userId = userDetailsImpl.getId();
+        String respositoryName = owner + "/" + repo;
+        GVRepo gvRepo = this.gvRepoService.getGvRepoByNameAndUser_Id(respositoryName, userId);
+        return ResponseEntity.ok(gvRepo);
+    }
+
     @GetMapping("/{owner}/{repo}/contributors")
     public ResponseEntity<List<GithubUser>> getContributors(@PathVariable String owner,
                                            @PathVariable String repo,
@@ -92,6 +103,16 @@ public class GVRepoController {
         Map<String, Set<String>> aliases = gvRepoUserConfiguration.stream()
             .collect(Collectors.toMap(GVRepoUserConfig::getUsername, GVRepoUserConfig::getAliases));
         return ResponseEntity.ok(aliases);
+    }
+
+    @PutMapping("/{owner}/{repo}/url_image/refresh")
+    public ResponseEntity<String> refreshUrlImage(
+            @PathVariable String owner,
+            @PathVariable String repo,
+            @AuthenticationPrincipal UserDetailsImpl userDetailsImpl) {
+        String repositoryName = owner + "/" + repo;
+        String urlImage = gvRepoService.refreshUrlImage(userDetailsImpl.getUsername(), repositoryName);
+        return ResponseEntity.ok(urlImage);
     }
 
     @PutMapping("/{owner}/{repo}/user_alias")
@@ -144,10 +165,33 @@ public class GVRepoController {
         Long userId = userDetailsImpl.getId();
         String repositoryName = owner + "/" + repo;
         this.gvRepoService.linkRepositoryWithWorkspace(repositoryName, workspaceName, userId);
-        String message = String.format("Repositorio % enlazado con workspace %s", repositoryName, workspaceName);
+        String message = msg.get("api.v1.relation.repository.owner.repo.linker.post.response", repositoryName, workspaceName);
         return ResponseEntity.ok(message);
     }
 
+    @DeleteMapping("/{owner}/{repo}")
+    public ResponseEntity<String> deleteRepository(
+            @PathVariable String repo,
+            @PathVariable String owner,
+            @AuthenticationPrincipal UserDetailsImpl userDetailsImpl) throws Exception {
+        Long userId = userDetailsImpl.getId();
+        String repositoryName = owner + "/" + repo;
+        this.gvRepoService.deleteRepository(repositoryName, userId);
+        String message = msg.get("api.v1.relation.repository.owner.repo.delete.response");
+        return ResponseEntity.ok(message);
+    }
+
+    @DeleteMapping("/{owner}/{repo}/linker")
+    public ResponseEntity<String> deleteRelationWorkspace(
+            @PathVariable String repo,
+            @PathVariable String owner,
+            @AuthenticationPrincipal UserDetailsImpl userDetailsImpl) throws Exception {
+        Long userId = userDetailsImpl.getId();
+        String repositoryName = owner + "/" + repo;
+        this.gvRepoService.deleteRelation(repositoryName, userId);
+        String message = msg.get("api.v1.relation.repository.owner.repo.linker.delete.response");
+        return ResponseEntity.ok(message);
+    }
 
 }
 

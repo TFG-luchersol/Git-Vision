@@ -1,4 +1,5 @@
 import CustomInput from '@components/CustomInput';
+import DeleteModal from '@components/DeleteModal';
 import { useNotification } from '@context/NotificationContext';
 import '@css/details';
 import tokenService from '@services/token.service.js';
@@ -6,11 +7,10 @@ import fetchBackend from '@utils/fetchBackend.ts';
 import getBody from '@utils/getBody.ts';
 import React, { useEffect, useState } from 'react';
 import { FaGithub, FaRegUserCircle } from "react-icons/fa";
-import { IoPersonCircleOutline } from 'react-icons/io5';
 import { LuSave } from "react-icons/lu";
 import { MdDelete, MdOutlineEmail } from "react-icons/md";
 import { SiClockify } from "react-icons/si";
-import { Button, Modal, ModalBody, ModalHeader } from 'reactstrap';
+import { Button } from 'reactstrap';
 
 export default function Details() {
   const {showMessage} = useNotification();
@@ -20,7 +20,7 @@ export default function Details() {
   const clockifyIcon = <SiClockify />
   const emailIcon = <MdOutlineEmail />
   const saveTokenGithubButton = <LuSave className='save-button-user-details' onClick={() => handleSave('github')} />;
-  const deletedTokenClockifyButton = <MdDelete style={{fontSize: 30}} className='delete-button-user-details' onClick={() => handleDeleteClockifyToken()}/>;
+  const deletedTokenClockifyButton = <MdDelete style={{fontSize: 30}} className='delete-button-user-details' onClick={() => setDeleteModalClockifyToken(true)}/>;
   const saveTokenClockifyButton = <LuSave className='save-button-user-details' onClick={() => handleSave('clockify')}/>;
 
   const clockifyButtons = <>
@@ -32,7 +32,8 @@ export default function Details() {
   const [clockifyToken, setClockifyToken] = useState('');
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState({});
-  const [deleteModal, setDeleteModal] = useState(false);
+  const [deleteModalAccount, setDeleteModalAccount] = useState(false);
+  const [deleteModalClockifyToken, setDeleteModalClockifyToken] = useState(false);
   const [userId, setUserId] = useState(null);
 
   useEffect(() => {
@@ -93,13 +94,15 @@ export default function Details() {
         message: error.message,
         type: "info"
       })
+    } finally {
+      setDeleteModalClockifyToken(false);
     }
   }
 
   const handleDeleteAccount = async () => {
     await fetchBackend(`/api/v1/users/${userId}`, {method: "DELETE"})
               .then(response => {
-                setDeleteModal(false)
+                setDeleteModalAccount(false)
                 if(response.status === 200) {
                   tokenService.removeUser()
                   window.location.href = "/"
@@ -114,20 +117,25 @@ export default function Details() {
   return (
     
     <div className="details-container">
+      <DeleteModal 
+          text='¿Quieres borrar tu cuenta?'
+          handleDelete={handleDeleteAccount}
+          isOpen={deleteModalAccount}
+          onClose={() => setDeleteModalAccount(false)}
+      />
+      <DeleteModal 
+        text='¿Quieres borrar tu token de clockify?'
+        handleDelete={handleDeleteClockifyToken}
+        isOpen={deleteModalClockifyToken}
+        onClose={() => setDeleteModalClockifyToken(false)}
+      />  
       <div className="profile-container">
-        <Modal style={{position:'absolute', top: "50%", left: "50%", transform: "translate(-50%, -50%)", padding: "20px"}} isOpen={deleteModal}>
-          <ModalHeader>¿Quieres borrar tu cuenta?</ModalHeader>
-          <ModalBody style={{display: "flex", justifyContent: "space-around"}}>
-            <Button color="primary" onClick={handleDeleteAccount}>SI</Button>
-            <Button color="danger" onClick={() => setDeleteModal(false)}>NO</Button>
-          </ModalBody>
-        </Modal>
         <div className="profile-image">
           <img
             className='placeholder-image-url'
             style={{ height: 350, width: 350 }}
             src={tokenService.getUser()?.avatarUrl}
-            alt={<IoPersonCircleOutline id='avatar' title='Avatar Error' style={{ color: 'red', fontSize: 60 }} />}
+            alt="Avatar"
             id='avatar'
           />
         </div>
@@ -148,7 +156,7 @@ export default function Details() {
             value={email}
             readOnly
           />
-          <Button className="delete-button-user-details" onClick={() => setDeleteModal(true)}>Eliminar cuenta</Button>
+          <Button className="delete-button-user-details" onClick={() => setDeleteModalAccount(true)}>Eliminar cuenta</Button>
         </div>
       </div>
       <div className="token-container">

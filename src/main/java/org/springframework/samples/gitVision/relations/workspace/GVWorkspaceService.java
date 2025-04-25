@@ -82,7 +82,7 @@ public class GVWorkspaceService {
         var gvWorkspaceUserConfiguration = this.gvWorkspaceUserConfigRepository.findById(aliasesDTO.getId())
             .orElseThrow(() -> ResourceNotFoundException.of("Workspace User Configuration", "ID", aliasesDTO.getId()));
 
-        gvWorkspaceUserConfiguration.setAlias(aliasesDTO.getGithubUser());
+        gvWorkspaceUserConfiguration.setGithubUser(aliasesDTO.getGithubUser());
 
         return this.gvWorkspaceUserConfigRepository.save(gvWorkspaceUserConfiguration);
     }

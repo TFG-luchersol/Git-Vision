@@ -140,12 +140,14 @@ public class GVRepoService {
         return ghRepository.listContributors().toList().stream().map(GithubUser::parseContributor).toList();
     }
 
+    @Transactional(readOnly = true)
     public List<GVRepoUserConfig> getRepositoryConfiguration(String repositoryName, Long userId) {
         List<GVRepoUserConfig> gvRepoUserConfigurations = this.gvRepoUserConfigurationRepository
                 .findByGvRepo_NameAndGvRepo_User_Id(repositoryName, userId);
         return gvRepoUserConfigurations;
     }
 
+    @Transactional
     public GVRepoUserConfig updateAliaUserConfigurations(String repositoryName, Long userId, AliasesDTO aliasesDTO) {
         GVRepo gvRepo = this.gvRepoRepository.findByNameAndUser_Id(repositoryName, userId)
             .orElseThrow(() -> ResourceNotFoundException.of(GVRepo.class));
@@ -175,6 +177,7 @@ public class GVRepoService {
         return gvRepoUserConfiguration;
     }
 
+    @Transactional
     public Map<String, Set<String>> refreshRepositoryConfiguration(GHRepository ghRepository, Long userId)
             throws Exception {
         List<String> contributors = ghRepository.listContributors().toList().stream()
@@ -239,6 +242,7 @@ public class GVRepoService {
             GVRepo gvRepo = new GVRepo();
             gvRepo.setName(repositoryName);
             gvRepo.setRepositoryId(ghRepository.getId());
+            gvRepo.setUrlImagen(ghRepository.getOwner().getAvatarUrl());
             gvRepo.setToken(tokenToUse);
             gvRepo.setUser(user);
             GVRepo savedGvRepo = gvRepoRepository.saveAndFlush(gvRepo);
@@ -251,6 +255,21 @@ public class GVRepoService {
             throw LinkedException.linkGithub();
         }
 
+    }
+
+    @Transactional
+    public String refreshUrlImage(String login, String repositoryName) {
+        try {
+            GVRepo gvRepo = getGvRepoByNameAndUser_Username(repositoryName, login);
+            GitHub gitHub = GitHub.connect(login, gvRepo.getToken());
+            GHRepository ghRepository = gitHub.getRepository(repositoryName);
+            String avatarUrl = ghRepository.getOwner().getAvatarUrl();
+            gvRepo.setUrlImagen(avatarUrl);
+            gvRepoRepository.save(gvRepo);
+            return avatarUrl;
+        } catch (Exception e) {
+            throw LinkedException.linkGithub();
+        }
     }
 
     @Transactional
@@ -274,6 +293,25 @@ public class GVRepoService {
             throw new Exception("Relation exist");
         }
         gvRepo.setWorkspace(gvWorkspace);
+        gvRepoRepository.save(gvRepo);
+    }
+
+    @Transactional
+    public void deleteRepository(String repositoryName, Long userId) throws Exception {
+        GVRepo gvRepo = gvRepoRepository.findByNameAndUser_Id(repositoryName, userId)
+                .orElseThrow(() -> new ResourceNotFoundException("UserRepo not found"));
+        ;
+        gvRepoRepository.delete(gvRepo);
+    }
+
+    @Transactional
+    public void deleteRelation(String repositoryName, Long userId) throws Exception {
+        GVRepo gvRepo = gvRepoRepository.findByNameAndUser_Id(repositoryName, userId)
+                .orElseThrow(() -> new ResourceNotFoundException("UserRepo not found"));
+        ;
+        GVWorkspace gvWorkspace = gvRepo.getWorkspace();
+        if(gvWorkspace == null) return;
+        gvRepo.setWorkspace(null);
         gvRepoRepository.save(gvRepo);
     }
 

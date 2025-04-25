@@ -25,7 +25,7 @@ public class GVWorkspaceUserConfig extends EntityIdSequential {
     @Embedded
     private UserProfile userProfile;
 
-    private String alias;
+    private String githubUser;
 
     public static GVWorkspaceUserConfig of(GVWorkspace gvWorkspace, UserProfile userProfile) {
         GVWorkspaceUserConfig config = new GVWorkspaceUserConfig();

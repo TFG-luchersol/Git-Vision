@@ -76,7 +76,7 @@ export default function WorkspaceUsers() {
 
     const arrayToObject = (arr) => {
         return arr.reduce((acc, item) => {
-            acc[item.id] = item.alias ?? "";
+            acc[item.id] = item.githubUser ?? "";
             return acc;
         }, {});
     };
@@ -92,7 +92,7 @@ export default function WorkspaceUsers() {
         <div className="user-table-wrapper">
             <div className="header">
                 <h2>Lista de Usuarios</h2>
-                <IoMdRefresh onClick={refreshAlias} className="refresh-icon" />
+                <IoMdRefresh onClick={refreshAlias} className="refresh-icon-workspace-config" />
             </div>
 
             <TableContainer component={Paper} className="table-container">
@@ -106,7 +106,7 @@ export default function WorkspaceUsers() {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {users.map(({ id, alias, userProfile }) => (
+                        {users.map(({ id, githubUser, userProfile }) => (
                             <TableRow key={id}>
                                 <TableCell className="user-id-cell">{userProfile.name}</TableCell>
                                 <TableCell className="user-id-cell">{userProfile.email}</TableCell>
@@ -114,7 +114,7 @@ export default function WorkspaceUsers() {
                                     <Input
                                         className="alias-content"
                                         value={editedAlias[id] ?? ""}
-                                        placeholder={alias ?? ""}
+                                        placeholder={githubUser ?? ""}
                                         onChange={(e) => handleAliasChange(id, e.target.value)}
                                     />
                                 </TableCell>

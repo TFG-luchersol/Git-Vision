@@ -21,7 +21,7 @@
   width: 100px;
   height: 100px;
   border-radius: 50%;
-  background-color: #ccc;
+  background-color: #cccccc70;
 }
 
 .profile-info {
@@ -47,6 +47,20 @@
   background-color: rgb(46, 76, 146);
 }
 
+.delete-button-repository-details {
+  margin: 10px;
+  border-radius: 10px;
+  padding: 5px;
+  color: white;
+  background-color: #cd0a0a;
+  text-decoration-color: whitesmoke;
+  transition: background-color 0.3s ease;
+}
+
+.delete-button-repository-details:hover{
+  background-color: #dd3232;
+}
+
 .token-container {
   display: flex;
   flex-direction: column;
@@ -64,4 +78,15 @@
   text-align: justify;
   width: 95%;
   margin-top: 20px;
+}
+
+.refresh-icon-repository-details {
+  font-size: 24px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.refresh-icon-repository-details:hover {
+  transform: rotate(90deg);
+  color: #1976d2;
 }
