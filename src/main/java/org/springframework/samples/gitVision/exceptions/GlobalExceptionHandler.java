@@ -29,7 +29,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleGeneralException(Exception ex) {
-        return ResponseEntity.internalServerError().body(ex.getMessage());
+        return ResponseEntity.badRequest().body(ex.getMessage());
     }
 
     @ExceptionHandler(NullPointerException.class)

@@ -52,6 +52,10 @@ export default function RepositoryDetails() {
       });
       const imageUrl = await getBody(response);
       setUrlAvatar(imageUrl);
+      showMessage({
+        message: "Imagen refrescada",
+        type: "info"
+      })
     } catch (error) {
       showMessage({
         message: error.message
@@ -108,7 +112,11 @@ export default function RepositoryDetails() {
           body: githubToken
         }
       )
-      await getBody(response);
+      const message = await getBody(response);
+      showMessage({
+        message,
+        type: "info",
+      })
   } catch (error) {
     showMessage({
         message: error.message

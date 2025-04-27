@@ -192,7 +192,7 @@ const LinePerTimeInIssue = () => {
                               padding: "3px", 
                               marginLeft: "5px",
                               fontSize: 10}}>
-                        {summary.totalTime > 0 ? <> 
+                        {showByTime && summary.totalTime > 0 ? <> 
                             <Typography variant="body2">
                                 {summary.totalValues} {dataType} / {summary.totalTime.toFixed(2)} {timeUnit}
                             </Typography>
