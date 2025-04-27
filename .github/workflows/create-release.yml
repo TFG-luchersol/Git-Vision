@@ -7,7 +7,7 @@ on:
 
 jobs:
   create-pull-request:
-    if: github.ref_type == 'tag' && github.base_ref == 'develop'
+    if: github.ref_type == 'tag'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout develop branch
@@ -33,19 +33,40 @@ jobs:
         with:
           ref: main
 
-      - name: Fetch all history
+      - name: Fetch full git history
         run: git fetch --prune --unshallow
 
       - name: Get previous release tag
-        id: prev_tag
+        id: previous_tag
         run: |
           echo "PREV_TAG=$(git describe --tags --abbrev=0 $(git rev-list --tags --skip=1 --max-count=1))" >> $GITHUB_ENV
 
-      - name: Generate Changelog
+      - name: Generate grouped changelog
         id: changelog
         run: |
           echo "CHANGELOG<<EOF" >> $GITHUB_ENV
-          git log $PREV_TAG..HEAD --pretty=format:'* %s' | grep -E '^\* \[(FEAT|FIX|REFACTOR|DOCS|STYLE|CHORE)\]' >> $GITHUB_ENV
+          echo "## ✨ Features" >> $GITHUB_ENV
+          git log $PREV_TAG..HEAD --pretty=format:'- %s' | grep '^\- \[FEAT\]' | sed 's/\[FEAT\] //' >> $GITHUB_ENV || echo "No new features" >> $GITHUB_ENV
+          echo "" >> $GITHUB_ENV
+
+          echo "## 🐛 Fixes" >> $GITHUB_ENV
+          git log $PREV_TAG..HEAD --pretty=format:'- %s' | grep '^\- \[FIX\]' | sed 's/\[FIX\] //' >> $GITHUB_ENV || echo "No fixes" >> $GITHUB_ENV
+          echo "" >> $GITHUB_ENV
+
+          echo "## 🛠️ Refactors" >> $GITHUB_ENV
+          git log $PREV_TAG..HEAD --pretty=format:'- %s' | grep '^\- \[REFACTOR\]' | sed 's/\[REFACTOR\] //' >> $GITHUB_ENV || echo "No refactors" >> $GITHUB_ENV
+          echo "" >> $GITHUB_ENV
+
+          echo "## 📝 Documentation" >> $GITHUB_ENV
+          git log $PREV_TAG..HEAD --pretty=format:'- %s' | grep '^\- \[DOCS\]' | sed 's/\[DOCS\] //' >> $GITHUB_ENV || echo "No documentation updates" >> $GITHUB_ENV
+          echo "" >> $GITHUB_ENV
+
+          echo "## 🎨 Style Changes" >> $GITHUB_ENV
+          git log $PREV_TAG..HEAD --pretty=format:'- %s' | grep '^\- \[STYLE\]' | sed 's/\[STYLE\] //' >> $GITHUB_ENV || echo "No style changes" >> $GITHUB_ENV
+          echo "" >> $GITHUB_ENV
+
+          echo "## 🧹 Chores" >> $GITHUB_ENV
+          git log $PREV_TAG..HEAD --pretty=format:'- %s' | grep '^\- \[CHORE\]' | sed 's/\[CHORE\] //' >> $GITHUB_ENV || echo "No chores" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
 
       - name: Create GitHub Release
