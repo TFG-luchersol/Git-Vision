@@ -2,7 +2,7 @@ import CounterChanges from '@components/CounterChanges.jsx';
 import FolderTabs from '@components/FolderTabs.jsx';
 import { useNotification } from '@context/NotificationContext';
 import '@css/repositories/repository/issues/issue';
-import fetchWithToken from '@utils/fetchWithToken.ts';
+import fetchBackend from '@utils/fetchBackend.ts';
 import getBody from '@utils/getBody.ts';
 import React, { useEffect, useState } from 'react';
 import { GoIssueClosed, GoIssueOpened } from "react-icons/go";
@@ -26,7 +26,7 @@ export default function Issue() {
 
     const getIssue = async () => {
         try {
-            const newIssues = await fetchWithToken(`/api/v1/issues/${owner}/${repo}/${issueNumber}`)
+            const newIssues = await fetchBackend(`/api/v1/issues/${owner}/${repo}/${issueNumber}`)
             const {issue, commits, files, changesByUser, assigness} = await getBody(newIssues)
             setIssue(issue)
             setCommits(commits)

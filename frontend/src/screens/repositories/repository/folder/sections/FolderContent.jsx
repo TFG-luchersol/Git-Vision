@@ -1,7 +1,7 @@
 import TreeFiles from '@components/TreeFiles.jsx';
 import { useNotification } from '@context/NotificationContext';
 import '@css/repositories/repository/folder/sections/folderContent.css';
-import fetchWithToken from '@utils/fetchWithToken.ts';
+import fetchBackend from '@utils/fetchBackend.ts';
 import getBody from '@utils/getBody.ts';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
@@ -18,7 +18,7 @@ export default function FolderContent() {
 
     async function getFiles() {
         try {
-            const response = await fetchWithToken(`/api/v1/files/repository/${owner}/${repo}/tree/files?path=${path}`)
+            const response = await fetchBackend(`/api/v1/files/repository/${owner}/${repo}/tree/files?path=${path}`)
             const tree = await getBody(response);
             setFiles(tree.children);
         } catch (error) {

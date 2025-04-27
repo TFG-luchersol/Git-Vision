@@ -25,10 +25,9 @@ import org.springframework.samples.gitvision.contributions.model.Contribution;
 import org.springframework.samples.gitvision.file.model.ChangesInFile;
 import org.springframework.samples.gitvision.util.graphQL.models.GraphQLChangesFiles;
 import org.springframework.samples.gitvision.util.graphQL.models.GraphQLContributionResponse;
+import org.springframework.samples.gitvision.util.graphQL.models.GraphQLContributionsByIssueNumber;
 import org.springframework.samples.gitvision.util.graphQL.models.GraphQLTotalChangesInFile;
 import org.springframework.web.client.RestTemplate;
-
-import com.fasterxml.jackson.databind.JsonNode;
 
 public class GithubGraphQLApi {
 
@@ -124,52 +123,39 @@ public class GithubGraphQLApi {
         return allContributions;
     }
 
-    public List<ChangesInFile> getChangesInFilesByUser(String repositoryName, String authorName) throws IOException {
-        // Separar owner y repo
-        String[] ownerRepo = repositoryName.split("/");
-        String query = readGraphQLQuery("getChangesInFilesByUser.graphql");
-
-        // Inicializar variables para la paginación
+    public List<Contribution> getContributionsByIssueNumber(String repositoryName, Long issueNumber) throws IOException {
+        String[] owner_repo = repositoryName.split("/");
+        String query = readGraphQLQuery("getContributionsByIssueNumber.graphql");
         Map<String, Object> vars = new HashMap<>();
-        vars.put("owner", ownerRepo[0]);
-        vars.put("repo", ownerRepo[1]);
+        vars.put("owner", owner_repo[0]);
+        vars.put("repo", owner_repo[1]);
+        vars.put("issueNumber", issueNumber);
         vars.put("cursor", null);
-        vars.put("authorName", authorName);
+        List<Contribution> allContributions = new ArrayList<>();
         boolean hasNextPage = true;
-        Map<String, Change> fileChangesMap = new HashMap<>();
-
         while (hasNextPage) {
-            // Realizar la consulta a GitHub GraphQL
-            var response = this.requestGithubGraphQL(query, vars,
-            JsonNode.class);
+            GraphQLContributionsByIssueNumber response = this.requestGithubGraphQL(query, vars,GraphQLContributionsByIssueNumber.class);
 
-            // Procesar cada archivo modificado en cada commit
-            // response.getNodes().forEach(commit -> {
-            //     commit.getFiles().getEdges().stream().map(g -> g.getNode()).forEach(file -> {
-            //         String filePath = file.getPath();
-            //         int additions = file.getAdditions();
-            //         int deletions = file.getDeletions();
+            if(response.hasErrors()) {
+                throw new RuntimeException(response.getErrorMessage());
+            }
+            List<Contribution> contributions = response.getNodes()
+                    .stream()
+                    .map(node -> {
+                        Contribution contribution = new Contribution();
+                        contribution.setAdditions(node.getAdditions());
+                        contribution.setDeletions(node.getDeletions());
+                        contribution.setAuthorName(node.getAuthorName());
+                        return contribution;
+                    })
+                    .collect(Collectors.toList());
+            allContributions.addAll(contributions);
+            hasNextPage = response.hasNextPage();
+            String cursor = response.getEndCursor();
 
-            //         fileChangesMap
-            //                 .computeIfAbsent(filePath, k -> new Change())
-            //                 .addChanges(additions, deletions);
-            //     });
-
-            // });
-
-            // // Obtener información de paginación
-            // var pageInfo = response.getPageInfo();
-            // hasNextPage = pageInfo.isHasNextPage();
-            // vars.put("cursor", pageInfo.getEndCursor());
-            int x = 0;
-            break;
+            vars.put("cursor", cursor);
         }
-
-        // Convertimos los datos en una lista de ChangesInFile
-        return fileChangesMap.entrySet()
-                .stream()
-                .map(entry -> ChangesInFile.of(entry.getKey(), entry.getValue()))
-                .collect(Collectors.toList());
+        return allContributions;
     }
 
     public ChangesInFile getChangesByUserInFile(String repositoryName, String filePath) throws IOException {
@@ -213,6 +199,9 @@ public class GithubGraphQLApi {
 
         return change;
     }
+
+
+
 
     private static String readGraphQLQuery(String filePath) throws IOException {
         String relativePath = "./src/main/java/org/springframework/samples/gitvision/util/graphQL";

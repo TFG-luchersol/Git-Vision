@@ -1,16 +1,16 @@
 import CustomInput from '@components/CustomInput';
+import DeleteModal from '@components/DeleteModal';
 import { useNotification } from '@context/NotificationContext';
 import '@css/details';
 import tokenService from '@services/token.service.js';
-import fetchWithToken from '@utils/fetchWithToken.ts';
-
+import fetchBackend from '@utils/fetchBackend.ts';
 import getBody from '@utils/getBody.ts';
 import React, { useEffect, useState } from 'react';
 import { FaGithub, FaRegUserCircle } from "react-icons/fa";
-import { IoPersonCircleOutline } from 'react-icons/io5';
-import { MdOutlineEmail } from "react-icons/md";
+import { LuSave } from "react-icons/lu";
+import { MdDelete, MdOutlineEmail } from "react-icons/md";
 import { SiClockify } from "react-icons/si";
-import { Button, Modal, ModalBody, ModalHeader } from 'reactstrap';
+import { Button } from 'reactstrap';
 
 export default function Details() {
   const {showMessage} = useNotification();
@@ -19,14 +19,21 @@ export default function Details() {
   const githubIcon = <FaGithub />
   const clockifyIcon = <SiClockify />
   const emailIcon = <MdOutlineEmail />
-  const saveTokenGithubButton = <Button className='save-button' onClick={() => handleSave('github')}>Guardar</Button>;
-  const saveTokenClockifyButton = <Button className='save-button' onClick={() => handleSave('clockify')}>Guardar</Button>;
+  const saveTokenGithubButton = <LuSave className='save-button-user-details' onClick={() => handleSave('github')} />;
+  const deletedTokenClockifyButton = <MdDelete style={{fontSize: 30}} className='delete-button-user-details' onClick={() => setDeleteModalClockifyToken(true)}/>;
+  const saveTokenClockifyButton = <LuSave className='save-button-user-details' onClick={() => handleSave('clockify')}/>;
+
+  const clockifyButtons = <>
+    {deletedTokenClockifyButton}
+    {saveTokenClockifyButton}
+  </>
 
   const [githubToken, setGithubToken] = useState('');
   const [clockifyToken, setClockifyToken] = useState('');
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState({});
-  const [deleteModal, setDeleteModal] = useState(false);
+  const [deleteModalAccount, setDeleteModalAccount] = useState(false);
+  const [deleteModalClockifyToken, setDeleteModalClockifyToken] = useState(false);
   const [userId, setUserId] = useState(null);
 
   useEffect(() => {
@@ -45,17 +52,25 @@ export default function Details() {
     const user = tokenService.getUser();
     try {
       if (tokenType === 'github') {
-        const response = await fetchWithToken('/api/v1/users/user/token/github', 
+        const response = await fetchBackend('/api/v1/users/user/token/github', 
           {method: "PUT", body: githubToken}
         );
         const newGithubToken = await getBody(response)
         tokenService.setUser({...user, githubToken: newGithubToken})
+        showMessage({
+          message: "Token de GitHub actualizado",
+          type: "info",
+        })
       } else if (tokenType === 'clockify') {
-        const response = await fetchWithToken('/api/v1/users/user/token/clockify', 
+        const response = await fetchBackend('/api/v1/users/user/token/clockify', 
           {method: "PUT", body: clockifyToken}
         );
         const newClockifyToken = await getBody(response)
         tokenService.setUser({...user, clockifyToken: newClockifyToken})
+        showMessage({
+          message: "Token de Clockify actualizado",
+          type: "info",
+        })
       }
     } catch (error) {
       showMessage({
@@ -64,10 +79,30 @@ export default function Details() {
     }
   };
 
+  const handleDeleteClockifyToken = async () => {
+    try {
+      const response = await fetchBackend(`/api/v1/users/user/token/clockify`, {method: "DELETE"});
+      const message = await getBody(response);
+      tokenService.removeClockifyToken();
+      setClockifyToken("");
+      showMessage({
+        message: message,
+        type: "info"
+      })
+    } catch (error) {
+      showMessage({
+        message: error.message,
+        type: "info"
+      })
+    } finally {
+      setDeleteModalClockifyToken(false);
+    }
+  }
+
   const handleDeleteAccount = async () => {
-    await fetchWithToken(`/api/v1/users/${userId}`, {method: "DELETE"})
+    await fetchBackend(`/api/v1/users/${userId}`, {method: "DELETE"})
               .then(response => {
-                setDeleteModal(false)
+                setDeleteModalAccount(false)
                 if(response.status === 200) {
                   tokenService.removeUser()
                   window.location.href = "/"
@@ -82,20 +117,25 @@ export default function Details() {
   return (
     
     <div className="details-container">
+      <DeleteModal 
+          text='¿Quieres borrar tu cuenta?'
+          handleDelete={handleDeleteAccount}
+          isOpen={deleteModalAccount}
+          onClose={() => setDeleteModalAccount(false)}
+      />
+      <DeleteModal 
+        text='¿Quieres borrar tu token de clockify?'
+        handleDelete={handleDeleteClockifyToken}
+        isOpen={deleteModalClockifyToken}
+        onClose={() => setDeleteModalClockifyToken(false)}
+      />  
       <div className="profile-container">
-        <Modal style={{position:'absolute', top: "50%", left: "50%", transform: "translate(-50%, -50%)", padding: "20px"}} isOpen={deleteModal}>
-          <ModalHeader>¿Quieres borrar tu cuenta?</ModalHeader>
-          <ModalBody style={{display: "flex", justifyContent: "space-around"}}>
-            <Button color="primary" onClick={handleDeleteAccount}>SI</Button>
-            <Button color="danger" onClick={() => setDeleteModal(false)}>NO</Button>
-          </ModalBody>
-        </Modal>
         <div className="profile-image">
           <img
             className='placeholder-image-url'
             style={{ height: 350, width: 350 }}
-            src={'https://avatars.githubusercontent.com/u/93008812?v=4'}
-            alt={<IoPersonCircleOutline id='avatar' title='Avatar Error' style={{ color: 'red', fontSize: 60 }} />}
+            src={tokenService.getUser()?.avatarUrl}
+            alt="Avatar"
             id='avatar'
           />
         </div>
@@ -116,7 +156,7 @@ export default function Details() {
             value={email}
             readOnly
           />
-          <Button className="delete-button" onClick={() => setDeleteModal(true)}>Eliminar cuenta</Button>
+          <Button className="delete-button-user-details" onClick={() => setDeleteModalAccount(true)}>Eliminar cuenta</Button>
         </div>
       </div>
       <div className="token-container">
@@ -136,7 +176,7 @@ export default function Details() {
           id="clockify-token"
           value={clockifyToken}
           onChange={handleClockifyTokenChange}
-          button={saveTokenClockifyButton}
+          button={clockifyButtons}
         />
         <p className="note">
           Nota: Estos tokens serán utiliza por defecto a las horas de realizar las peticiones en Github o Clockify

@@ -98,10 +98,17 @@ public class GVRepoService {
     }
 
     @Transactional(readOnly = true)
+    public GVRepo getGvRepoByNameAndUser_Id(String repositoryName, Long userId) {
+        return this.gvRepoRepository.findByNameAndUser_Id(repositoryName, userId)
+        .orElseThrow(() -> ResourceNotFoundException.of(GVRepo.class));
+    }
+
+    @Transactional(readOnly = true)
     public GVRepo getGvRepoByWorkspaceNameAndUser_Username(String workspaceName, String username) {
         return this.gvRepoRepository.findByWorkspace_NameAndUser_Username(workspaceName, username)
             .orElseThrow(() -> ResourceNotFoundException.of(GVRepo.class));
     }
+
 
     @Transactional(readOnly = true)
     public GitHub connect(String repositoryName, String login) throws ConnectionGithubException {
@@ -133,12 +140,14 @@ public class GVRepoService {
         return ghRepository.listContributors().toList().stream().map(GithubUser::parseContributor).toList();
     }
 
+    @Transactional(readOnly = true)
     public List<GVRepoUserConfig> getRepositoryConfiguration(String repositoryName, Long userId) {
         List<GVRepoUserConfig> gvRepoUserConfigurations = this.gvRepoUserConfigurationRepository
                 .findByGvRepo_NameAndGvRepo_User_Id(repositoryName, userId);
         return gvRepoUserConfigurations;
     }
 
+    @Transactional
     public GVRepoUserConfig updateAliaUserConfigurations(String repositoryName, Long userId, AliasesDTO aliasesDTO) {
         GVRepo gvRepo = this.gvRepoRepository.findByNameAndUser_Id(repositoryName, userId)
             .orElseThrow(() -> ResourceNotFoundException.of(GVRepo.class));
@@ -168,6 +177,7 @@ public class GVRepoService {
         return gvRepoUserConfiguration;
     }
 
+    @Transactional
     public Map<String, Set<String>> refreshRepositoryConfiguration(GHRepository ghRepository, Long userId)
             throws Exception {
         List<String> contributors = ghRepository.listContributors().toList().stream()
@@ -211,8 +221,9 @@ public class GVRepoService {
     public void updateGithubToken(String repositoryName, String login, String newGithubToken) throws Exception {
         GVRepo gvRepo = this.gvRepoRepository.findByNameAndUser_Username(repositoryName, login)
                 .orElseThrow(() -> new ResourceNotFoundException("Not found repository"));
-        GitHub github = GitHub.connect(login, newGithubToken);
-        if (github.getMyself() == null) {
+        try {
+            GitHub.connect(login, newGithubToken).getMyself();
+        } catch (Exception e) {
             throw new IllegalAccessException("Token invalido");
         }
         gvRepo.setToken(newGithubToken);
@@ -222,7 +233,9 @@ public class GVRepoService {
     @Transactional
     public void linkUserWithRepository(String login, String repositoryName, String token) {
         try {
-            GVUser user = this.gvUserRepository.findByUsername(login).get();
+            GVUser user = this.gvUserRepository.findByUsername(login).orElseThrow(
+                () -> ResourceNotFoundException.of(GVUser.class, "Username", login)
+            );
             String tokenToUse = Objects.requireNonNullElse(token, user.getGithubToken());
 
             GitHub gitHub = GitHub.connect(login, tokenToUse);
@@ -230,17 +243,34 @@ public class GVRepoService {
             GVRepo gvRepo = new GVRepo();
             gvRepo.setName(repositoryName);
             gvRepo.setRepositoryId(ghRepository.getId());
+            gvRepo.setUrlImagen(ghRepository.getOwner().getAvatarUrl());
             gvRepo.setToken(tokenToUse);
             gvRepo.setUser(user);
-            GVRepo savedGvRepo = gvRepoRepository.save(gvRepo);
+            GVRepo savedGvRepo = gvRepoRepository.saveAndFlush(gvRepo);
             List<Contributor> ghContributors = ghRepository.listContributors().toList();
-            List<GVRepoUserConfig> ghConfigurations = new ArrayList<>(ghContributors.size());
-            ghContributors
-                    .forEach(contributor -> ghConfigurations.add(GVRepoUserConfig.of(savedGvRepo, contributor)));
+            List<GVRepoUserConfig> ghConfigurations = ghContributors.stream()
+                    .map(contributor -> GVRepoUserConfig.of(savedGvRepo, contributor))
+                    .toList();
+            gvRepoUserConfigurationRepository.saveAll(ghConfigurations);
         } catch (Exception e) {
             throw LinkedException.linkGithub();
         }
 
+    }
+
+    @Transactional
+    public String refreshUrlImage(String login, String repositoryName) {
+        try {
+            GVRepo gvRepo = getGvRepoByNameAndUser_Username(repositoryName, login);
+            GitHub gitHub = GitHub.connect(login, gvRepo.getToken());
+            GHRepository ghRepository = gitHub.getRepository(repositoryName);
+            String avatarUrl = ghRepository.getOwner().getAvatarUrl();
+            gvRepo.setUrlImagen(avatarUrl);
+            gvRepoRepository.save(gvRepo);
+            return avatarUrl;
+        } catch (Exception e) {
+            throw LinkedException.linkGithub();
+        }
     }
 
     @Transactional
@@ -264,6 +294,25 @@ public class GVRepoService {
             throw new Exception("Relation exist");
         }
         gvRepo.setWorkspace(gvWorkspace);
+        gvRepoRepository.save(gvRepo);
+    }
+
+    @Transactional
+    public void deleteRepository(String repositoryName, Long userId) throws Exception {
+        GVRepo gvRepo = gvRepoRepository.findByNameAndUser_Id(repositoryName, userId)
+                .orElseThrow(() -> new ResourceNotFoundException("UserRepo not found"));
+        ;
+        gvRepoRepository.delete(gvRepo);
+    }
+
+    @Transactional
+    public void deleteRelation(String repositoryName, Long userId) throws Exception {
+        GVRepo gvRepo = gvRepoRepository.findByNameAndUser_Id(repositoryName, userId)
+                .orElseThrow(() -> new ResourceNotFoundException("UserRepo not found"));
+        ;
+        GVWorkspace gvWorkspace = gvRepo.getWorkspace();
+        if(gvWorkspace == null) return;
+        gvRepo.setWorkspace(null);
         gvRepoRepository.save(gvRepo);
     }
 

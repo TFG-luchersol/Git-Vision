@@ -3,7 +3,7 @@ import PieChart from '@components/PieChart.jsx';
 import TreeFiles from '@components/TreeFiles.jsx';
 import { useNotification } from '@context/NotificationContext';
 import '@css/repositories/repository';
-import fetchWithToken from '@utils/fetchWithToken.ts';
+import fetchBackend from '@utils/fetchBackend.ts';
 import getBody from '@utils/getBody.ts';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
@@ -31,7 +31,7 @@ export default function Repository() {
 
     const getFiles = async () => {
         try {
-            let response = await fetchWithToken(`/api/v1/files/repository/${owner}/${repo}`)
+            let response = await fetchBackend(`/api/v1/files/repository/${owner}/${repo}`)
             const tree = await getBody(response);
             setFiles(tree)
         } catch (error) {
@@ -43,7 +43,7 @@ export default function Repository() {
 
     const getExtensionCounter = async () => {
         try {
-            let response = await fetchWithToken(`/api/v1/files/repository/${owner}/${repo}/extension_counter`)
+            let response = await fetchBackend(`/api/v1/files/repository/${owner}/${repo}/extension_counter`)
             const extensionCounter = await getBody(response)
             const numFiles = Object.values(extensionCounter).reduce((acc, next) => acc + next, 0);
             setNumFiles(numFiles);
@@ -57,7 +57,7 @@ export default function Repository() {
     
     const getPercentajeLanguajes = async () => {
         try {
-            let response = await fetchWithToken(`/api/v1/files/languajes/repository/${owner}/${repo}`)
+            let response = await fetchBackend(`/api/v1/files/repository/${owner}/${repo}/languajes`)
             const percentageLanguages = await getBody(response)
             setPercentajeLanguajes(percentageLanguages.percentages)
             setNumBytes(percentageLanguages.numBytes);

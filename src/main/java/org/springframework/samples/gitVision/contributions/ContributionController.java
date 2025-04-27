@@ -3,12 +3,18 @@ package org.springframework.samples.gitvision.contributions;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.kohsuke.github.GHRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.samples.gitvision.configuration.services.UserDetailsImpl;
 import org.springframework.samples.gitvision.contributions.model.Contribution;
+import org.springframework.samples.gitvision.contributions.model.ContributionByTime;
 import org.springframework.samples.gitvision.relations.repository.GVRepoService;
+import org.springframework.samples.gitvision.relations.repository.model.GVRepo;
+import org.springframework.samples.gitvision.task.TaskService;
+import org.springframework.samples.gitvision.util.Checker;
+import org.springframework.samples.gitvision.util.MessageResolver;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,19 +22,26 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/api/v1/contributions")
-@Tag(name = "Commit")
+@Tag(name = "Contributions")
+@SecurityRequirement(name = "bearerAuth")
 public class ContributionController {
 
     private final ContributionService contributionService;
     private final GVRepoService gvRepoService;
+    private final TaskService taskService;
+    private final MessageResolver msg;
 
-    public ContributionController(ContributionService contributionService, GVRepoService gvRepoService){
+    public ContributionController(ContributionService contributionService, GVRepoService gvRepoService,
+            TaskService taskService, MessageResolver msg){
         this.contributionService = contributionService;
         this.gvRepoService = gvRepoService;
+        this.taskService = taskService;
+        this.msg = msg;
     }
 
     @GetMapping("/{owner}/{repo}/between_time")
@@ -49,6 +62,29 @@ public class ContributionController {
             this.contributionService.getContributionsInFolderByDateBetweenDates(ghRepository, repositoryName, login, path, d1, d2) :
             this.contributionService.getContributionsByDateBetweenDates(repositoryName, login, path, d1, d2);
         return ResponseEntity.ok(contributions);
+    }
+
+    @GetMapping("/{owner}/{repo}/issue")
+    public ResponseEntity<Map<String, ContributionByTime>> getGvRepoByNameAndUser_Id(@PathVariable String owner,
+                                @PathVariable String repo,
+                                @RequestParam(required = false) Long issueNumber,
+                                @RequestParam(required = false) String name,
+                                @RequestParam(required = false) String taskName,
+                                @AuthenticationPrincipal UserDetailsImpl userDetailsImpl) throws Exception {
+        Long userId = userDetailsImpl.getId();
+        String repositoryName = owner + "/" + repo;
+        String message = msg.get("api.v1.contributions.owner.repo.time.get.check_issue_number_and_name");
+        Checker.checkOrBadRequest((issueNumber == null) ^ (name == null || name.isBlank()), message);
+        GVRepo gvRepo = gvRepoService.getGvRepoByNameAndUser_Id(repositoryName, userId);
+
+        if(taskName == null)
+            taskName = name != null ? name : "#" + issueNumber;
+
+        Map<String, ContributionByTime> body = issueNumber != null ?
+            this.taskService.getContributionByTime(gvRepo, issueNumber, taskName, userId) :
+            this.taskService.getContributionByTime(gvRepo, name, taskName, userId);
+
+        return ResponseEntity.ok(body);
     }
 
 }

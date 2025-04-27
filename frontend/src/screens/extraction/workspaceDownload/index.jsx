@@ -6,7 +6,7 @@ import "@css/auth/authPage.css";
 import '@css/home';
 import tokenService from '@services/token.service.js';
 import Preconditions from '@utils/check.js';
-import fetchWithToken from '@utils/fetchWithToken.ts';
+import fetchBackend from '@utils/fetchBackend.ts';
 import getBody from '@utils/getBody';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -23,7 +23,7 @@ const { showMessage } = useNotification();
             Preconditions.checkNotBlank(values.id, "Id")
             Preconditions.checkNotBlank(values.name, "Name")
             setIsLoading(true);
-            const response = await fetchWithToken(`/api/v1/relation/workspace?workspaceId=${values.id}&name=${values.name}`, {
+            const response = await fetchBackend(`/api/v1/relation/workspace?workspaceId=${values.id}&name=${values.name}`, {
                 method: "POST",
                 body: tokenService.getUser().username
             });

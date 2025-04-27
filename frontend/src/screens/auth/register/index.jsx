@@ -4,6 +4,7 @@ import '@css';
 import '@css/auth/authPage.css';
 import '@css/home';
 import tokenService from "@services/token.service.js";
+import fetchBackend from '@utils/fetchBackend';
 import getBody from '@utils/getBody';
 import React, { useState } from 'react';
 import { FaEnvelope, FaGithub, FaLock, FaRegUserCircle, FaUnlock } from "react-icons/fa";
@@ -28,7 +29,7 @@ export default function Register() {
         const reqBodySignup = JSON.stringify(values);
         const reqBodySignin = JSON.stringify({username: values.username, password: values.password});
         try {
-            const dataRegister = await fetch("/api/v1/auth/signup", {
+            const dataRegister = await fetchBackend("/api/v1/auth/signup", {
                 headers: { "Content-Type": "application/json" },
                 method: "POST",
                 body: reqBodySignup,
@@ -37,7 +38,7 @@ export default function Register() {
                 const message = await getBody(dataRegister)
                 throw Error(message)
             } else {
-                const dataSignin = await fetch("/api/v1/auth/signin", {
+                const dataSignin = await fetchBackend("/api/v1/auth/signin", {
                     headers: { "Content-Type": "application/json" },
                     method: "POST",
                     body: reqBodySignin,

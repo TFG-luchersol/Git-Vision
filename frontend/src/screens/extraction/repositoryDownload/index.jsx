@@ -5,7 +5,7 @@ import '@css';
 import "@css/auth/authPage.css";
 import '@css/home';
 import Preconditions from '@utils/check.js';
-import fetchWithToken from '@utils/fetchWithToken.ts';
+import fetchBackend from '@utils/fetchBackend.ts';
 import getBody from '@utils/getBody';
 import React, { useState } from 'react';
 import { FaGithub, FaRegUserCircle } from "react-icons/fa";
@@ -29,17 +29,15 @@ export default function RepositoryDownload() {
             Preconditions.checkNotBlank(values.repo, "Repository");
             Preconditions.if(validateToken).checkNotBlank(values.token, "Token");
             let url = `/api/v1/relation/repository/${values.owner}/${values.repo}`
-            if(values.validOtherToken) 
-                url += `?token=${values.token}`;
+            let queryParams = {}
+            console.log()
+            if(validateToken) {
+                queryParams["token"] = values.token;
+            }
             
             setIsLoading(true);
-            const response = await fetchWithToken(url, {
-                method: "POST",
-                headers: { 
-                    "Content-Type": "application/json"
-                }
-            }
-            );
+            const response = await fetchBackend(url, { method: "POST" }, queryParams);
+            
             if (response.status === 200) {
                 window.location.href = "/";
             } else {

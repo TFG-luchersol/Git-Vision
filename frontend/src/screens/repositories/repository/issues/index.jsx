@@ -1,6 +1,6 @@
 import { useNotification } from '@context/NotificationContext';
 import "@css/repositories/repository/issues";
-import fetchWithToken from '@utils/fetchWithToken.ts';
+import fetchBackend from '@utils/fetchBackend.ts';
 import getBody from '@utils/getBody.ts';
 import React, { useEffect, useState } from 'react';
 import { GoIssueClosed, GoIssueOpened } from 'react-icons/go';
@@ -22,7 +22,7 @@ export default function Issues() {
     const getIssues = async (page) => {
         if(page < 1) return;
         try {
-            const newIssues = await fetchWithToken(`/api/v1/issues/${owner}/${repo}?page=${page}`)
+            const newIssues = await fetchBackend(`/api/v1/issues/${owner}/${repo}?page=${page}`)
             const issues = await getBody(newIssues)
             if(issues.length > 0){
                 setIssues(issues)

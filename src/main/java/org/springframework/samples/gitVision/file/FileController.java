@@ -15,9 +15,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 
 @RestController
 @RequestMapping("/api/v1/files")
+@Tag(name = "Files")
+@SecurityRequirement(name = "bearerAuth")
 public class FileController {
 
     private final FileService fileService;
@@ -70,7 +75,7 @@ public class FileController {
         return ResponseEntity.ok(extensionCounter);
     }
 
-    @GetMapping("/languajes/repository/{owner}/{repo}")
+    @GetMapping("/repository/{owner}/{repo}/languajes")
     public ResponseEntity<PercentageLanguages> getPercentageExtensionsByRespositoryId(@PathVariable String owner,
                                                                   @PathVariable String repo,
                                                                   @AuthenticationPrincipal UserDetailsImpl userDetailsImpl) throws Exception{

@@ -2,13 +2,13 @@ import React from "react";
 
 import '@css/components/delayedButton.css';
 
-export default function DelayedButton({ onClick, disabled, text = "" }) {
+export default function DelayedButton({style = {}, onClick, disabled, text = "" }) {
   return (
     <button
       onClick={onClick}
       disabled={disabled}
       className="button"
-      style={{ marginLeft: 100 }}
+      style={{...style }}
     >
       {disabled ? <div className="spinner" /> : text}
     </button>

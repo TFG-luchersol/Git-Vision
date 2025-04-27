@@ -21,7 +21,7 @@
   width: 100px;
   height: 100px;
   border-radius: 50%;
-  background-color: #ccc;
+  background-color: #cccccc70;
 }
 
 .profile-info {
@@ -33,28 +33,32 @@
   margin: 10px;
 }
 
-.delete-button.btn.btn-secondary {
+.save-button-repository-details {
   margin: 10px;
   border-radius: 10px;
-  width: 90%;
+  padding: 5px;
+  color: white;
+  font-size: 30px;
+  background-color: #2e2e92 ;
+  transition: background-color 0.3s ease;
+}
+
+.save-button-repository-details:hover {
+  background-color: rgb(46, 76, 146);
+}
+
+.delete-button-repository-details {
+  margin: 10px;
+  border-radius: 10px;
+  padding: 5px;
+  color: white;
   background-color: #cd0a0a;
   text-decoration-color: whitesmoke;
+  transition: background-color 0.3s ease;
 }
 
-.delete-button.btn.btn-secondary:hover {
+.delete-button-repository-details:hover{
   background-color: #dd3232;
-}
-
-.save-button.btn.btn-secondary {
-  margin: 10px;
-  border-radius: 10px;
-  width: 10%;
-  background-color: #2e2e92;
-  text-decoration-color: whitesmoke;
-}
-
-.save-button.btn.btn-secondary:hover {
-  background-color: rgb(46, 76, 146);
 }
 
 .token-container {
@@ -74,4 +78,15 @@
   text-align: justify;
   width: 95%;
   margin-top: 20px;
+}
+
+.refresh-icon-repository-details {
+  font-size: 24px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.refresh-icon-repository-details:hover {
+  transform: rotate(90deg);
+  color: #1976d2;
 }

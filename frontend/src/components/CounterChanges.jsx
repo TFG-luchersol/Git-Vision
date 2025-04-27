@@ -1,13 +1,13 @@
 import React from "react";
+import { FaSquareMinus, FaSquarePlus } from "react-icons/fa6";
 import { PiPlusMinusFill } from "react-icons/pi";
-import { FaSquarePlus, FaSquareMinus } from "react-icons/fa6";
 
 
-export default function CounterChanges({ additions = 0, deletions = 0 }) {
+export default function CounterChanges({iconSize = 30, numberSize = 20, additions = 0, deletions = 0 }) {
 
     const changeStyle = { display: "flex", alignItems: "center" }
-    const iconStyle = { fontSize: 30, marginRight: 5 }
-    const numberStyle = { fontSize: 20, marginTop: 15 }
+    const iconStyle = { fontSize: iconSize, marginRight: 5 }
+    const numberStyle = { fontSize: numberSize, marginTop: 15 }
     return (<div style={{ display: "flex", justifyContent: "space-between"}}>
         {
             additions > 0 || deletions > 0 ? <>

@@ -27,10 +27,10 @@ import io.jsonwebtoken.security.Keys;
 public class JwtUtils {
 	private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
 
-	@Value("${gitVision.app.jwt.secret}")
+	@Value("${git-vision.app.jwt.secret}")
 	private String jwtSecret;
 
-	@Value("${gitVision.app.jwt.expiration}")
+	@Value("${git-vision.app.jwt.expiration}")
 	private int jwtExpirationMs;
 
 	public String generateJwtToken(Authentication authentication) {
@@ -50,14 +50,14 @@ public class JwtUtils {
 					.and()
 					.signWith(key)
 					.compact();
-					
+
 	}
 
     public Claims getClaimsFromJwtToken(String token) {
 		SecretKey key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtSecret));
         return Jwts.parser()
 				.verifyWith(key)
-				.build()  					
+				.build()
 				.parseSignedClaims(token)
 				.getPayload();
     }
@@ -74,7 +74,7 @@ public class JwtUtils {
 
 	public boolean validateJwtToken(String authToken) {
 		try {
-			SecretKey key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtSecret));  
+			SecretKey key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtSecret));
 			Jwts.parser().verifyWith(key).build().parseSignedClaims(authToken);
 			return true;
 		} catch (MalformedJwtException e) {
