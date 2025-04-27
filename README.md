@@ -20,18 +20,24 @@ Asegúrate de tener instalados los siguientes componentes en tu sistema:
 - Herramienta de línea de comandos de Git.
 - Tu IDE preferido (por ejemplo, IntelliJ IDEA, VS Code, Eclipse).
 
-## Ejecución Local del Backend
+## Ejecución Local
+
+### Configuración de la Base de Datos
+
+Puedes modificar los ajustes de la base de datos en `application.properties` para conectarte a una base de datos externa o una que mantengas en local.
+
+### Ejecución Local del Backend
 
 El backend es una aplicación Spring Boot construida con Maven. Para ejecutarlo localmente:
 
 1. Clona el repositorio:
-   ```bash
+  ```bash
    git clone https://github.com/TFG-luchersol/Git-Vision.git
    cd Git-Vision
   ```
 
-2. Construye el proyecto:
-  ```
+2. Ejecuta el proyecto:
+  ```bash
   ./mvnw package
   ```
 
@@ -47,11 +53,7 @@ Alternativamente, puedes ejecutar el backend directamente con Maven:
 ./mvnw spring-boot:run
 ```
 
-## Configuración de la Base de Datos
-
-La configuración predeterminada utiliza una base de datos H2 en memoria, precargada con datos de ejemplo desde `data.sql`. Puedes modificar los ajustes de la base de datos en `application.properties` para conectarte a una base de datos externa.
-
-## Ejecución Local del Frontend
+### Ejecución Local del Frontend
 
 El frontend es una aplicación React ubicada en la carpeta `frontend`. Para ejecutarlo:
 
@@ -71,6 +73,10 @@ El frontend es una aplicación React ubicada en la carpeta `frontend`. Para ejec
   ```
 
 4. Accede al frontend en [http://localhost:3000](http://localhost:3000).
+
+### Ejecución Local por .bat
+
+En caso de tener todo ya configurado, para futuras ocasiones puedes, en vez de ejecutar todos los comandos, ejecutar el archivo `./runner.bat`, el cuál iniciar tanto backend como frontend. En caso que querer realizar pruebas con el modo debug en backend, se recomienda iniciar el backend de forma normal y si le es más como puede ejecutar el archivo `./runner_frontend.bat` para ejecutar el frontend.
 
 ## Despliegue con Docker y Docker Compose
 
