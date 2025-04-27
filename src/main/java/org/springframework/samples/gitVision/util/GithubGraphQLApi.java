@@ -29,8 +29,6 @@ import org.springframework.samples.gitvision.util.graphQL.models.GraphQLContribu
 import org.springframework.samples.gitvision.util.graphQL.models.GraphQLTotalChangesInFile;
 import org.springframework.web.client.RestTemplate;
 
-import com.fasterxml.jackson.databind.JsonNode;
-
 public class GithubGraphQLApi {
 
     private RestTemplate restTemplate;
@@ -158,54 +156,6 @@ public class GithubGraphQLApi {
             vars.put("cursor", cursor);
         }
         return allContributions;
-    }
-
-    public List<ChangesInFile> getChangesInFilesByUser(String repositoryName, String authorName) throws IOException {
-        // Separar owner y repo
-        String[] ownerRepo = repositoryName.split("/");
-        String query = readGraphQLQuery("getChangesInFilesByUser.graphql");
-
-        // Inicializar variables para la paginación
-        Map<String, Object> vars = new HashMap<>();
-        vars.put("owner", ownerRepo[0]);
-        vars.put("repo", ownerRepo[1]);
-        vars.put("cursor", null);
-        vars.put("authorName", authorName);
-        boolean hasNextPage = true;
-        Map<String, Change> fileChangesMap = new HashMap<>();
-
-        while (hasNextPage) {
-            // Realizar la consulta a GitHub GraphQL
-            var response = this.requestGithubGraphQL(query, vars,
-            JsonNode.class);
-
-            // Procesar cada archivo modificado en cada commit
-            // response.getNodes().forEach(commit -> {
-            //     commit.getFiles().getEdges().stream().map(g -> g.getNode()).forEach(file -> {
-            //         String filePath = file.getPath();
-            //         int additions = file.getAdditions();
-            //         int deletions = file.getDeletions();
-
-            //         fileChangesMap
-            //                 .computeIfAbsent(filePath, k -> new Change())
-            //                 .addChanges(additions, deletions);
-            //     });
-
-            // });
-
-            // // Obtener información de paginación
-            // var pageInfo = response.getPageInfo();
-            // hasNextPage = pageInfo.isHasNextPage();
-            // vars.put("cursor", pageInfo.getEndCursor());
-            int x = 0;
-            break;
-        }
-
-        // Convertimos los datos en una lista de ChangesInFile
-        return fileChangesMap.entrySet()
-                .stream()
-                .map(entry -> ChangesInFile.of(entry.getKey(), entry.getValue()))
-                .collect(Collectors.toList());
     }
 
     public ChangesInFile getChangesByUserInFile(String repositoryName, String filePath) throws IOException {

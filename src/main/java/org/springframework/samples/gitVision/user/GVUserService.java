@@ -81,10 +81,12 @@ public class GVUserService {
 	public void updateGithubToken(String username, String githubToken) throws Exception{
         Checker.checkOrThrow(gvUserRepository.existsByUsername(username),
                              ResourceNotFoundException.of("User", "username", username));
-		GitHub gitHub = GitHub.connect(username, githubToken);
+		try {
+            GitHub.connect(username, githubToken).getMyself();
+        } catch (Exception e) {
+            throw new IllegalAccessException("Error: fail to connect Github with new token");
+        }
 
-		if(gitHub.getMyself() == null)
-			throw new IllegalAccessError("Error: fail to connect Github with new token");
 		GVUser user = findUserByUsername(username);
 		user.setGithubToken(githubToken);
 		gvUserRepository.save(user);

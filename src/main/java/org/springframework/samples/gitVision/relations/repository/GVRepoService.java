@@ -221,8 +221,9 @@ public class GVRepoService {
     public void updateGithubToken(String repositoryName, String login, String newGithubToken) throws Exception {
         GVRepo gvRepo = this.gvRepoRepository.findByNameAndUser_Username(repositoryName, login)
                 .orElseThrow(() -> new ResourceNotFoundException("Not found repository"));
-        GitHub github = GitHub.connect(login, newGithubToken);
-        if (github.getMyself() == null) {
+        try {
+            GitHub.connect(login, newGithubToken).getMyself();
+        } catch (Exception e) {
             throw new IllegalAccessException("Token invalido");
         }
         gvRepo.setToken(newGithubToken);

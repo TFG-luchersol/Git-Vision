@@ -1,7 +1,6 @@
 package org.springframework.samples.gitvision.util.graphQL.models;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.samples.gitvision.util.graphQL.models.GraphQLContributionResponse.DataWrapper.Repository.PageInfo;
 import org.springframework.samples.gitvision.util.graphQL.models.GraphQLContributionResponse.DataWrapper.Repository.CommitHistory.CommitEdge;
