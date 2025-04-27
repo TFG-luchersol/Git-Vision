@@ -4,16 +4,14 @@ FROM eclipse-temurin:23-jdk AS build
 # Establecer el directorio de trabajo
 WORKDIR /workspace/app
 
-# Copiar los archivos necesarios
+# Copiar los archivos necesarios y ejecutar maven
+COPY mvnw .
+COPY .mvn .mvn
 COPY pom.xml .
+RUN ./mvnw dependency:go-offline
+  
 COPY src src
-
-# Instalar Maven
-RUN apt-get update && apt-get install -y maven
-
-# Ejecutar Maven para descargar dependencias y empaquetar la aplicación
-RUN mvn dependency:go-offline
-RUN mvn package -DskipTests
+RUN ./mvnw package -DskipTests
 
 # Etapa de ejecución
 FROM eclipse-temurin:23-jre
