@@ -34,7 +34,7 @@ import lombok.Setter;
 })
 public class GVRepoUserConfig extends EntityIdSequential {
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private GVRepo gvRepo;
 
