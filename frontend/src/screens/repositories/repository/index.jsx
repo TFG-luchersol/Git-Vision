@@ -57,7 +57,7 @@ export default function Repository() {
     
     const getPercentajeLanguajes = async () => {
         try {
-            let response = await fetchBackend(`/api/v1/files/languajes/repository/${owner}/${repo}`)
+            let response = await fetchBackend(`/api/v1/files/repository/${owner}/${repo}/languajes`)
             const percentageLanguages = await getBody(response)
             setPercentajeLanguajes(percentageLanguages.percentages)
             setNumBytes(percentageLanguages.numBytes);

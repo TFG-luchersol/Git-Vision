@@ -178,7 +178,7 @@ export default function Contributions({ owner, repo, path = null, isFolder=false
 
     try {
       console.log(queryParams)
-      const response = await fetchBackend(url, queryParams);
+      const response = await fetchBackend(url, {}, queryParams);
       const result = await getBody(response);
       if (minYear === null && result.length !== 0) {
         minYear = result.reduce((earliest, current) => {

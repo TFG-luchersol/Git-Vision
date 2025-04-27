@@ -1,74 +1,114 @@
 .content-docs {
-    color: #1a1a1a;
-    line-height: 1.6;
-    padding: 20px;
-    width: 100%;
-    background-color: white;
+    color: #333;
+    line-height: 1.8;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding: 10px;
+    width: 90%;
+    margin: 0 auto;
+    background-color: #fdfdfd;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     transition: margin-left 0.3s ease;
 }
 
+/* TITULOS */
 .content-docs h1,
 .content-docs h2,
 .content-docs h3,
 .content-docs h4 {
-    margin-top: 2rem;
-    margin-bottom: 1rem;
+    margin-top: 2.5rem;
+    margin-bottom: 1.2rem;
     font-weight: 700;
     color: #2c3e50;
 }
 
 .content-docs h1 {
-    font-size: 2rem;
-    padding-bottom: 0.3rem;
+    font-size: 2.5rem;
+    border-bottom: 3px solid #3498db;
+    padding-bottom: 0.5rem;
 }
 
 .content-docs h2 {
-    font-size: 1.5rem;
-    border-left: 4px solid #3498db;
-    padding-left: 0.5rem;
+    font-size: 2rem;
+    border-left: 5px solid #3498db;
+    padding-left: 0.8rem;
 }
 
 .content-docs h3 {
-    font-size: 1.25rem;
-    color: #555;
+    font-size: 1.5rem;
+    color: #4a4a4a;
 }
 
 .content-docs h4 {
-    font-size: 1.1rem;
-    color: #777;
+    font-size: 1.25rem;
+    color: #666;
+}
+
+/* PÁRRAFOS Y LISTAS */
+.content-docs p {
+    margin-bottom: 1.2rem;
+    font-size: 1rem;
 }
 
 .content-docs ul {
-    padding-left: 1.5rem;
-    margin-bottom: 1rem;
+    padding-left: 2rem;
+    margin-bottom: 1.5rem;
 }
 
 .content-docs li {
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.7rem;
 }
 
+/* ESTILOS DE ÉNFASIS */
 .content-docs strong {
-    color: #000;
+    color: #222;
     font-weight: bold;
 }
 
+.content-docs em {
+    color: #666;
+}
+
+/* LINKS */
 .content-docs a {
-    color: inherit;
+    color: #3498db;
     text-decoration: none;
-    font-weight: 500;
-    border-bottom: 1px dashed #ccc;
+    border-bottom: 1px dotted #3498db;
 }
 
 .content-docs a:hover {
-    color: #3498db;
-    border-bottom: 1px solid #3498db;
+    color: #217dbb;
+    border-bottom: 1px solid #217dbb;
 }
 
-.content-docs p,
-.content-docs li {
-    margin-bottom: 0.75rem;
+/* BLOQUES DE INFO Y WARNING */
+.content-docs blockquote {
+    background: #eef6fb;
+    border-left: 5px solid #3498db;
+    padding: 1rem 1.5rem;
+    margin: 1.5rem 0;
+    border-radius: 8px;
+    color: #444;
+    font-style: italic;
 }
 
+/* IMÁGENES */
+.content-docs img {
+    max-width: 100%;
+    margin: 1rem 0;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* SEPARADORES --- */
+.content-docs hr {
+    border: none;
+    border-top: 2px dashed #ccc;
+    margin: 2rem 0;
+}
+
+/* SELECCIÓN */
 .content-docs ::selection {
-    background: #d6eaff;
+    background: #cce7ff;
+    color: #000;
 }

@@ -137,6 +137,10 @@ public class GithubGraphQLApi {
         boolean hasNextPage = true;
         while (hasNextPage) {
             GraphQLContributionsByIssueNumber response = this.requestGithubGraphQL(query, vars,GraphQLContributionsByIssueNumber.class);
+
+            if(response.hasErrors()) {
+                throw new RuntimeException(response.getErrorMessage());
+            }
             List<Contribution> contributions = response.getNodes()
                     .stream()
                     .map(node -> {

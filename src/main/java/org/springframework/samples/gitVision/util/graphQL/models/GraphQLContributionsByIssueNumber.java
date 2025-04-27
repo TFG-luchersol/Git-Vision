@@ -1,6 +1,7 @@
 package org.springframework.samples.gitvision.util.graphQL.models;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import lombok.Data;
 
@@ -8,6 +9,15 @@ import lombok.Data;
 public class GraphQLContributionsByIssueNumber {
 
     private DataWrapper data;
+    private List<ErrorResponse> errors;
+
+    public boolean hasErrors() {
+        return errors != null && !errors.isEmpty();
+    }
+
+    public String getErrorMessage() {
+        return this.errors.stream().map(ErrorResponse::getMessage).collect(Collectors.joining("\n"));
+    }
 
     public TimelineItems getTimelineItems() {
         return this.data.repository.issue.timelineItems;
@@ -83,6 +93,20 @@ public class GraphQLContributionsByIssueNumber {
     @Data
     public static class Author {
         private String name;
+    }
+
+    @Data
+    public static class ErrorResponse {
+        private String type;
+        private List<String> path;
+        private List<Location> locations;
+        private String message;
+    }
+
+    @Data
+    public static class Location {
+        private int line;
+        private int column;
     }
 
 }

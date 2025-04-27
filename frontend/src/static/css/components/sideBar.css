@@ -14,7 +14,7 @@
 
 .index-container {
     padding: 10px;
-    background-color: rgba(0, 0, 0, 0.6);
+    background-color: rgba(0, 0, 0, 0.25);
     border-radius: 5px;
     box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
     max-height: calc(100vh - 120px);

@@ -1,4 +1,4 @@
-import tokenservice from "@services/token.service.js";
+import tokenService from "@services/token.service.js";
 
 export default async function fetchBackend(
     url: string | RequestInfo | URL,
@@ -6,9 +6,20 @@ export default async function fetchBackend(
     queryParams: Record<string, any> = {}
 ) {
     console.log(queryParams)
-    const token: string = tokenservice.getLocalAccessToken();
+    const token: string = tokenService.getLocalAccessToken();
     const headers = new Headers(init.headers);
-    if (token) headers.set("Authorization", "Bearer " + token);
+
+    if (token) {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        const expirationTime = payload.exp * 1000;
+        const now = Date.now();
+    
+        if (now > expirationTime) {
+            tokenService.removeUser();
+        } else {
+            headers.set("Authorization", "Bearer " + token);
+        }
+    }
 
     let fullUrl: URL;
     const baseUrl = process.env.BACKEND_URL || "http://localhost:8080";

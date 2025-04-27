@@ -75,7 +75,7 @@ public class FileController {
         return ResponseEntity.ok(extensionCounter);
     }
 
-    @GetMapping("/languajes/repository/{owner}/{repo}")
+    @GetMapping("/repository/{owner}/{repo}/languajes")
     public ResponseEntity<PercentageLanguages> getPercentageExtensionsByRespositoryId(@PathVariable String owner,
                                                                   @PathVariable String repo,
                                                                   @AuthenticationPrincipal UserDetailsImpl userDetailsImpl) throws Exception{

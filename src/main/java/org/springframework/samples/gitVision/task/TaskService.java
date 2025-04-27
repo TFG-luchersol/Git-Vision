@@ -59,6 +59,7 @@ public class TaskService {
         GVWorkspace gvWorkspace = gvRepo.getWorkspace();
 
         var configsRepository = gvRepoUserConfigRepository.findByGvRepo(gvRepo);
+
         List<Contribution> contributions = GithubGraphQLApi.connect(githubToken)
                         .getContributionsByIssueNumber(gvRepo.getName(), issueNumber);
 
@@ -75,7 +76,7 @@ public class TaskService {
             }
         }
 
-        if(gvWorkspace != null && user.getClockifyToken() != null) {
+        if(gvWorkspace != null && user.hasClockifyToken()) {
             String workspaceId = gvWorkspace.getWorkspaceId();
             Map<String, Long> associationUserTime = ClockifyApi.getTimeByUserByTaskName(workspaceId, taskName, clockifyToken);
             var configsWorkspace = this.gvWorkspaceUserConfigRepository.findByGvWorkspace(gvWorkspace);

@@ -144,12 +144,14 @@ const LinePerTimeInIssue = () => {
                     onChange={(e) => setQueryParamValue(e.target.value)}
                 />
 
+                {tokenService.hasClockifyToken() && 
                 <TextField
                     size="small"
                     label="Task Name (Optional)"
                     value={taskName}
                     onChange={(e) => setTaskName(e.target.value)}
-                />
+                />}
+                
 
                 <Select
                     value={dataType}
@@ -161,6 +163,7 @@ const LinePerTimeInIssue = () => {
                     <MenuItem value="changes">Changes</MenuItem>
                 </Select>
 
+                {tokenService.hasClockifyToken() && <>
                 <Select
                     value={timeUnit}
                     onChange={(e) => setTimeUnit(e.target.value)}
@@ -170,16 +173,16 @@ const LinePerTimeInIssue = () => {
                     <MenuItem value="minutes">Minutos</MenuItem>
                 </Select>
 
+                
                 <Select
                     value={showByTime ? "time" : "total"}
                     onChange={(e) => setShowByTime(e.target.value === "time")}
                     size="small"
                 >
-                    {
-                        tokenService.hasClockifyToken() && <MenuItem value="time">Por Tiempo</MenuItem>
-                    }
+                    <MenuItem value="time">Por Tiempo</MenuItem>
                     <MenuItem value="total">Total</MenuItem>
                 </Select>
+                </>}
 
                 <DelayedButton text={"Buscar"} onClick={fetchData} disabled={isButtonDisabled}/>
 
