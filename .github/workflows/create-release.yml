@@ -1,0 +1,58 @@
+name: Release on Tag Push
+
+on:
+  push:
+    tags:
+      - '*'  # Cualquier tag
+
+jobs:
+  create-pull-request:
+    if: github.ref_type == 'tag' && github.base_ref == 'develop'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout develop branch
+        uses: actions/checkout@v4
+        with:
+          ref: develop
+
+      - name: Create Pull Request to main
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          source: develop
+          target: main
+          title: 'Release: Merge develop into main'
+          body: 'Automated Pull Request to merge develop into main after tagging.'
+
+  generate-changelog-and-release:
+    needs: create-pull-request
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main branch
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Fetch all history
+        run: git fetch --prune --unshallow
+
+      - name: Get previous release tag
+        id: prev_tag
+        run: |
+          echo "PREV_TAG=$(git describe --tags --abbrev=0 $(git rev-list --tags --skip=1 --max-count=1))" >> $GITHUB_ENV
+
+      - name: Generate Changelog
+        id: changelog
+        run: |
+          echo "CHANGELOG<<EOF" >> $GITHUB_ENV
+          git log $PREV_TAG..HEAD --pretty=format:'* %s' | grep -E '^\* \[(FEAT|FIX|REFACTOR|DOCS|STYLE|CHORE)\]' >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: ${{ github.ref_name }}
+          body: ${{ env.CHANGELOG }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
