@@ -1,0 +1,100 @@
+name: Release on Tag Push (from develop)
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  check-branch:
+    runs-on: ubuntu-latest
+    outputs:
+      is_develop: ${{ steps.check.outputs.is_develop }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Necesario para ver todas las ramas y el historial completo
+
+      - name: Check if tag is from develop
+        id: check
+        run: |
+          TAG_COMMIT=$(git rev-parse ${{ github.ref }})
+          if git branch --contains $TAG_COMMIT | grep -E 'origin/develop'; then
+            echo "is_develop=true" >> $GITHUB_OUTPUT
+          else
+            echo "is_develop=false" >> $GITHUB_OUTPUT
+          fi
+
+  create-pull-request:
+    needs: check-branch
+    if: needs.check-branch.outputs.is_develop == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout develop branch
+        uses: actions/checkout@v4
+        with:
+          ref: develop
+
+      - name: Create Pull Request to main
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          source: develop
+          target: main
+          title: 'Release: Merge develop into main'
+          body: 'Automated Pull Request to merge develop into main after tagging.'
+
+  generate-changelog-and-release:
+    needs: create-pull-request
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main branch
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Fetch full git history
+        run: git fetch --prune --unshallow
+
+      - name: Get previous release tag
+        id: previous_tag
+        run: |
+          echo "PREV_TAG=$(git describe --tags --abbrev=0 $(git rev-list --tags --skip=1 --max-count=1))" >> $GITHUB_ENV
+
+      - name: Generate grouped changelog
+        id: changelog
+        run: |
+          echo "CHANGELOG<<EOF" >> $GITHUB_ENV
+          echo "## ✨ Features" >> $GITHUB_ENV
+          git log $PREV_TAG..HEAD --pretty=format:'- %s' | grep '^\- \[FEAT\]' | sed 's/\[FEAT\] //' >> $GITHUB_ENV || echo "No new features" >> $GITHUB_ENV
+          echo "" >> $GITHUB_ENV
+
+          echo "## 🐛 Fixes" >> $GITHUB_ENV
+          git log $PREV_TAG..HEAD --pretty=format:'- %s' | grep '^\- \[FIX\]' | sed 's/\[FIX\] //' >> $GITHUB_ENV || echo "No fixes" >> $GITHUB_ENV
+          echo "" >> $GITHUB_ENV
+
+          echo "## 🛠️ Refactors" >> $GITHUB_ENV
+          git log $PREV_TAG..HEAD --pretty=format:'- %s' | grep '^\- \[REFACTOR\]' | sed 's/\[REFACTOR\] //' >> $GITHUB_ENV || echo "No refactors" >> $GITHUB_ENV
+          echo "" >> $GITHUB_ENV
+
+          echo "## 📝 Documentation" >> $GITHUB_ENV
+          git log $PREV_TAG..HEAD --pretty=format:'- %s' | grep '^\- \[DOCS\]' | sed 's/\[DOCS\] //' >> $GITHUB_ENV || echo "No documentation updates" >> $GITHUB_ENV
+          echo "" >> $GITHUB_ENV
+
+          echo "## 🎨 Style Changes" >> $GITHUB_ENV
+          git log $PREV_TAG..HEAD --pretty=format:'- %s' | grep '^\- \[STYLE\]' | sed 's/\[STYLE\] //' >> $GITHUB_ENV || echo "No style changes" >> $GITHUB_ENV
+          echo "" >> $GITHUB_ENV
+
+          echo "## 🧹 Chores" >> $GITHUB_ENV
+          git log $PREV_TAG..HEAD --pretty=format:'- %s' | grep '^\- \[CHORE\]' | sed 's/\[CHORE\] //' >> $GITHUB_ENV || echo "No chores" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: ${{ github.ref_name }}
+          body: ${{ env.CHANGELOG }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
