@@ -26,7 +26,7 @@ import Issues from "@screens/repositories/repository/issues";
 import Issue from "@screens/repositories/repository/issues/issue";
 import RepositoryDetails from "@screens/repositories/repository/repositoryDetails";
 import UserConfiguration from "@screens/repositories/repository/userConfiguration";
-import WorkspaceUsers from "@screens/workspace/details";
+import WorkspaceUsers from "@screens/workspace/configuration";
 import tokenService from "@services/token.service";
 import Documentation from "./screens/docs";
 

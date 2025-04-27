@@ -1,5 +1,5 @@
 import { useNotification } from '@context/NotificationContext';
-import "@css/workspace/details";
+import "@css/workspace/configuration";
 import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import fetchBackend from '@utils/fetchBackend.ts';
 import getBody from "@utils/getBody";

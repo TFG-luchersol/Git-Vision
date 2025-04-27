@@ -35,7 +35,6 @@ export default function RepositoryDetails() {
     try {
       const response = await fetchBackend(`/api/v1/relation/repository/${owner}/${repo}`);
       const repository = await getBody(response);
-      console.log(repository)
       setGithubToken(repository.token)
       setHasWorkspaceAsociate(!!repository.workspace)
       setUrlAvatar(repository.urlImagen)
