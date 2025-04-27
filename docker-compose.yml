@@ -1,12 +1,43 @@
-mysql:
-  image: mysql:5.7
-  ports:
-    - "3306:3306"
-  environment:
-    - MYSQL_ROOT_PASSWORD=
-    - MYSQL_ALLOW_EMPTY_PASSWORD=true
-    - MYSQL_USER=petclinic
-    - MYSQL_PASSWORD=petclinic
-    - MYSQL_DATABASE=petclinic
-  volumes:
-    - "./conf.d:/etc/mysql/conf.d:ro"
+services:
+  backend:
+    build: .
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
+    depends_on:
+      - database
+    networks:
+      - app-network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"      
+    depends_on:
+      - backend
+    networks:
+      - app-network
+
+  database:
+    image: mysql:8
+    environment:
+      MYSQL_DATABASE: mydb
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: rootpassword
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - app-network
+
+volumes:
+  mysql_data:
+
+networks:
+  app-network:
+    driver: bridge

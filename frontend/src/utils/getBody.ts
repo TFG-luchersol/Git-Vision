@@ -7,7 +7,6 @@ export default async function getBody(response: Response) {
             return t; 
         } 
     }).catch(() => `ERROR NO PROCESADO ${response.status}`);
-    
 
     /**
      * 200 -> OK

@@ -5,7 +5,7 @@ import "@css/auth/authPage.css";
 import "@css/home";
 import "@css/repositories";
 import tokenService from "@services/token.service.js";
-import fetchWithToken from "@utils/fetchWithToken.ts";
+import fetchBackend from "@utils/fetchBackend.ts";
 import getBody from "@utils/getBody.ts";
 import React, { useEffect, useState } from "react";
 import { FaLink } from "react-icons/fa6";
@@ -30,7 +30,7 @@ export default function Repositories() {
 
   const getRepositories = async () => {
     try {
-      let newRepositories = await fetchWithToken("/api/v1/relation/repository");
+      let newRepositories = await fetchBackend("/api/v1/relation/repository");
       const repositories = await getBody(newRepositories);
       setRepositories(repositories);
     } catch (error) {
@@ -42,7 +42,7 @@ export default function Repositories() {
 
   const getWorkspaces = async () => {
     try {
-      let response = await fetchWithToken(`/api/v1/relation/workspace`);
+      let response = await fetchBackend(`/api/v1/relation/workspace`);
       const workspaces = await getBody(response);
       setWorkspaces(workspaces);
     } catch (error) {
@@ -54,7 +54,7 @@ export default function Repositories() {
 
   const getRelation = async () => {
     try {
-      let response = await fetchWithToken(
+      let response = await fetchBackend(
         `/api/v1/relation/repository/workspace`
       );
       const workspace_repository = await getBody(response);

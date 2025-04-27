@@ -41,7 +41,7 @@ public class GVRepo extends EntityIdSequential {
     private Long repositoryId;
 
     @URL
-    private String url_imagen;
+    private String urlImagen;
 
     @NotBlank
     @Column(unique = true)

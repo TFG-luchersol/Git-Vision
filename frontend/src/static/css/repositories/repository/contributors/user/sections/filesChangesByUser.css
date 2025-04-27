@@ -1,0 +1,20 @@
+.file-container {
+    position: relative;
+    overflow-y: auto;
+    max-height: 60vh;
+}
+
+.file-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: row;
+    background-color: #eee7e7;
+    cursor: pointer;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease;
+}
+  

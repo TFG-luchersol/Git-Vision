@@ -24,6 +24,8 @@ public class Change {
 
     private Integer totalChanges;
 
+    private String path;
+
     public void calcTotalChanges(){
         this.totalChanges = this.additions + this.deletions;
     }
@@ -38,9 +40,10 @@ public class Change {
         this.totalChanges += count;
     }
 
-    public void addChanges(int additions, int deletions) {
+    public Change addChanges(int additions, int deletions) {
         this.addAdditions(additions);
         this.addDeletions(deletions);
+        return this;
     }
 
     public boolean withChanges(){

@@ -1,0 +1,13 @@
+# Ignorar el .env local de desarrollo
+.env
+
+# Ignorar carpetas innecesarias para el build
+node_modules
+target
+.idea
+.vscode
+*.iml
+
+# Ignorar otros archivos temporales
+*.log
+.DS_Store

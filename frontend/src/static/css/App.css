@@ -66,7 +66,6 @@ body {
   justify-content: center;  /* Centra horizontalmente */
   align-items: center;      /* Centra verticalmente */
   height: 100vh;            /* Ocupa toda la altura de la pantalla */
-  background-color: #f0f2f5; /* Fondo gris claro opcional */
 }
 
 .center-vertical-screen {
@@ -74,4 +73,16 @@ body {
   align-items: center;      /* Centra verticalmente */
   height: 100vh;            /* Ocupa toda la altura de la pantalla */
   background-color: #f0f2f5; /* Fondo gris claro opcional */
+}
+
+.center-horizontal-screen {
+  display: flex;
+  justify-content: center;      /* Centra verticalmente */
+  height: 100vh;            /* Ocupa toda la altura de la pantalla */
+  background-color: #f0f2f5; /* Fondo gris claro opcional */
+}
+
+.items-column{
+  display: flex;
+  align-items: column;
 }

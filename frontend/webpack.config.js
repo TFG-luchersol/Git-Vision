@@ -1,4 +1,5 @@
 const path = require('path');
+const Dotenv = require("dotenv-webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = {
@@ -13,9 +14,10 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: "./public/index.html", // Asegúrate de que este archivo existe
     }),
+    new Dotenv(),
   ],
   devServer: {
-    static: "./dist",
+    static: path.resolve(__dirname, 'public'),
     port: 3000, 
     hot: true,
     open: true, 
@@ -23,15 +25,6 @@ module.exports = {
       disableDotRule: true, // 🔹 Permite rutas con puntos sin tratarlas como archivos
       rewrites: [{ from: /./, to: "/index.html" }], // 🔹 Redirige todo a index.html
     },
-    proxy: [
-      
-      {
-        context: ["/api", "/v3/api-docs"], // 🔹 Define qué rutas quieres redirigir
-        target: "http://localhost:8080",
-        changeOrigin: true,
-        secure: false,
-      },
-    ],
   },
   module: {
     rules: [
@@ -41,8 +34,24 @@ module.exports = {
         use: 'babel-loader',
       },
       {
+        test: /\.md$/,
+        type: 'asset/source',
+      },
+      {
         test: /\.css$/, // Para procesar archivos CSS
         use: ['style-loader', 'css-loader'], // Usa los loaders para CSS
+      },
+      {
+        test: /\.module\.css$/,
+        use: [
+          'style-loader',
+          {
+            loader: 'css-loader',
+            options: {
+              modules: true
+            }
+          }
+        ]
       },
       {
         test: /\.(ts|tsx)$/, // Para procesar archivos TypeScript (.ts, .tsx)
@@ -65,6 +74,7 @@ module.exports = {
       "@fonts": path.resolve(__dirname, "src/static/fonts"),
       "@services": path.resolve(__dirname, "src/services"),
       "@context": path.resolve(__dirname, "src/context"),
+      "@static": path.resolve(__dirname, "src/static"),
     },
   },
 };

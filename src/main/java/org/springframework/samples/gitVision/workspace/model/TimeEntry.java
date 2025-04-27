@@ -11,6 +11,8 @@ import lombok.Data;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TimeEntry {
 
+    private String taskId;
+
     private TimeInterval timeInterval;
 
     @Data

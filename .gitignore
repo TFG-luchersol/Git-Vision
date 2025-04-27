@@ -1,7 +1,8 @@
 .env
 
 target/*
-.env
+.env*
+!.env.example
 .settings/*
 .classpath
 .project

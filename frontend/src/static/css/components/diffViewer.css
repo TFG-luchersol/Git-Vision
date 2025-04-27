@@ -1,0 +1,75 @@
+/* Contenedor del modal */
+.modal-content-diff-viewer {
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  text-align: left;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+}
+
+/* Contenedor del bloque diff */
+.diff-container {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.diff-block {
+  background-color: #f5f5f5;
+  padding: 20px;
+  font-family: monospace;
+  border-radius: 8px;
+  overflow-x: auto;
+}
+
+/* Título del archivo */
+.diff-block h3 {
+  font-size: 20px;
+  margin-bottom: 12px;
+  font-weight: bold;
+}
+
+/* Estilo base para líneas */
+.diff-line {
+  font-size: 16px;
+  padding: 4px 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* Estilos específicos de líneas */
+.line-added {
+  color: #256029;
+  background-color: #dbf0db;
+  padding-left: 10px;
+}
+
+.line-removed {
+  color: #7f1d1d;
+  background-color: #fbdada;
+  padding-left: 10px;
+}
+
+.line-hunk {
+  color: #444;
+  font-style: italic;
+  background-color: #e0e0e0;
+  padding-left: 10px;
+}
+
+/* Botón de cierre */
+.btn-close {
+  font-size: 24px;
+  font-weight: bold;
+  color: #555;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-close:hover {
+  color: #000;
+}

@@ -10,6 +10,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.server.ResponseStatusException;
 
 import jakarta.validation.ConstraintViolationException;
 
@@ -28,7 +29,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleGeneralException(Exception ex) {
-        return ResponseEntity.internalServerError().body(ex.getMessage());
+        return ResponseEntity.badRequest().body(ex.getMessage());
     }
 
     @ExceptionHandler(NullPointerException.class)
@@ -55,6 +56,11 @@ public class GlobalExceptionHandler {
             errors.put(path, violation.getMessage());
         });
         return ResponseEntity.badRequest().body(errors);
+    }
+
+    @ExceptionHandler(ResponseStatusException.class)
+    public ResponseEntity<String> handleResponseStatus(ResponseStatusException ex) {
+        return ResponseEntity.status(ex.getStatusCode()).body(ex.getReason());
     }
 
 }

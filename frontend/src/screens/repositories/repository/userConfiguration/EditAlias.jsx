@@ -1,11 +1,12 @@
 import { useNotification } from '@context/NotificationContext';
-import fetchWithToken from "@utils/fetchWithToken";
+import fetchBackend from "@utils/fetchBackend";
 import { Button, Input, List, Modal, Space } from "antd";
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 
 const EditAlias = ({ state, setState, keyName, visible, onClose }) => {
-const { showMessage } = useNotification();
+    
+    const { showMessage } = useNotification();
     const {owner, repo} = useParams();
 
     const [localValues, setLocalValues] = useState(state[keyName] || []);
@@ -29,7 +30,7 @@ const { showMessage } = useNotification();
     };
 
     const updateAlias = async () => {
-        await fetchWithToken(`/api/v1/relation/repository/${owner}/${repo}/user_alias`, {
+        await fetchBackend(`/api/v1/relation/repository/${owner}/${repo}/user_alias`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json"

@@ -1,5 +1,5 @@
 import { useNotification } from '@context/NotificationContext';
-import fetchWithToken from '@utils/fetchWithToken.ts';
+import fetchBackend from '@utils/fetchBackend.ts';
 import getBody from '@utils/getBody.ts';
 import hljs from "highlight.js";
 import "highlight.js/styles/default.css";
@@ -18,18 +18,6 @@ export default function FileContent() {
         getContent();
     }, []);
 
-    function base64ToString(base64) {
-        const binaryString = atob(base64);
-        
-        const decoder = new TextDecoder('utf-8');
-        const uint8Array = new Uint8Array(binaryString.length);
-        
-        for (let i = 0; i < binaryString.length; i++) {
-          uint8Array[i] = binaryString.charCodeAt(i);
-        }
-      
-        return decoder.decode(uint8Array);
-      }
     function displayImageFromBytes(byteArray) {
         return `data:image/png;base64,${byteArray}`;
     }
@@ -49,13 +37,13 @@ export default function FileContent() {
 
     async function getContent() {
         try {
-            const response = await fetchWithToken(`/api/v1/files/repository/${owner}/${repo}/blob/content?path=${path}`);
+            const response = await fetchBackend(`/api/v1/files/repository/${owner}/${repo}/blob/content?path=${path}`);
             const content  = await getBody(response);
             if(isImage(path)){
                 setContentFile(prev => displayImageFromBytes(content));
                 setLanguage("image");
             } else {
-                setContentFile(prev => base64ToString(content));
+                setContentFile(prev => content);
                
                 if (isMarkdownFile(path)) {
                     setLanguage("markdown")

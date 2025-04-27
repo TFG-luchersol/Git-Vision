@@ -6,6 +6,8 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.kohsuke.github.GHRepository.Contributor;
 import org.springframework.samples.gitvision.model.entity.EntityIdSequential;
 
@@ -18,6 +20,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -25,11 +28,14 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "gv_repo_configurations")
 @Entity
+@Table(name = "gv_repo_configurations", uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"gv_repo_id", "username"})
+})
 public class GVRepoUserConfig extends EntityIdSequential {
 
-    @ManyToOne
+    @ManyToOne(optional = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private GVRepo gvRepo;
 
     private String username;

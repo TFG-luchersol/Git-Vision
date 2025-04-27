@@ -1,97 +1,128 @@
+# Git-Vision
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/0686fb60bd574220ab20c0631ae47871)](https://app.codacy.com/gh/TFG-luchersol/Git-Vision/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
-# React Petclinic
-Small project based on spring-petclinic for teaching SPA architectures with React, Java and Spring. Originally developed for DP1 and adapted for the PSG2 course at the Software Engineering degree of University of Sevilla.
 
-This is a fork of https://github.com/spring-projects/spring-petclinic  The main changes that have been performed were:
-- Trimming several parts of the application to keep the example low
-- Reorganize some parts of the code according to best practices introduced in the course
-- Modifying the Controllers to work as RestControllers creating several API endpoings
-- Modifying the security configuration to use JWT
-- Creating a React frontend.
+Git-Vision es un proyecto diseñado para proporcionar una forma visual e interactiva de explorar repositorios Git. Combina un frontend en React con un backend en Spring Boot para ofrecer una experiencia fluida al analizar la historia y estructura de Git.
 
-## Understanding the Spring Petclinic application  backend with a few diagrams
-<a href="https://speakerdeck.com/michaelisvy/spring-petclinic-sample-application">See the presentation here</a>
+## Características
 
-## Running petclinic backend locally
-Petclinic is a [Spring Boot](https://spring.io/guides/gs/spring-boot) application built using [Maven](https://spring.io/guides/gs/maven/). You can build a jar file and run it from the command line:
+- Representación visual de repositorios Git.
+- Exploración interactiva de commits, ramas y etiquetas.
+- API RESTful para comunicación con el backend.
+- Autenticación basada en JWT para acceso seguro.
+- Interfaz moderna basada en React.
 
+## Requisitos Previos
 
-```
-git clone https://github.com/gii-is-psg2/react-petclinic.git
-cd spring-petclinic
-./mvnw package
-java -jar target/*.jar
-```
+Asegúrate de tener instalados los siguientes componentes en tu sistema:
 
-You can then access petclinic backend here: [http://localhost:8080/](http://localhost:8080/swagger-ui/index.html)
+- **Java 23** o una versión más reciente.
+- **Node.js 18** o una versión más reciente.
+- **Docker** y **Docker Compose**.
+- Herramienta de línea de comandos de Git.
+- Tu IDE preferido (por ejemplo, IntelliJ IDEA, VS Code, Eclipse).
 
+## Ejecución Local
 
+### Configuración de la Base de Datos
 
-Or you can run it from Maven directly using the Spring Boot Maven plugin. If you do this it will pick up changes that you make in the project immediately (changes to Java source files require a compile as well - most people use an IDE for this):
+Puedes modificar los ajustes de la base de datos en `application.properties` para conectarte a una base de datos externa o una que mantengas en local.
 
+### Ejecución Local del Backend
+
+El backend es una aplicación Spring Boot construida con Maven. Para ejecutarlo localmente:
+
+1. Clona el repositorio:
+  ```bash
+   git clone https://github.com/TFG-luchersol/Git-Vision.git
+   cd Git-Vision
+  ```
+
+2. Ejecuta el proyecto:
+  ```bash
+  ./mvnw package
+  ```
+
+3. Ejecuta la aplicación:
+  ```
+  java -jar target/*.jar
+  ```
+
+4. Accede al backend en [http://localhost:8080/swagger-ui/index.html](http://localhost:8080/swagger-ui/index.html).
+
+Alternativamente, puedes ejecutar el backend directamente con Maven:
 ```
 ./mvnw spring-boot:run
 ```
-## Database configuration
 
-In its default configuration, Petclinic uses an in-memory database (H2) which
-gets populated at startup with data. The INSERTs are specified in the file data.sql.
+### Ejecución Local del Frontend
 
-## Working with React Petclinic in your IDE
+El frontend es una aplicación React ubicada en la carpeta `frontend`. Para ejecutarlo:
 
-### Prerequisites
-The following items should be installed in your system:
-* Java 17 or newer.
-* Node.js 18 or newer.
-* git command line tool (https://help.github.com/articles/set-up-git)
-* Your preferred IDE 
-  * Eclipse with the m2e plugin. Note: when m2e is available, there is an m2 icon in `Help -> About` dialog. If m2e is
-  not there, just follow the install process here: https://www.eclipse.org/m2e/
-  * [Spring Tools Suite](https://spring.io/tools) (STS)
-  * IntelliJ IDEA
-  * [VS Code](https://code.visualstudio.com)
+1. Navega al directorio `frontend`:
+  ```
+  cd frontend
+  ```
 
-### Steps:
+2. Instala las dependencias:
+  ```
+  npm install
+  ```
 
-1) On the command line
-```
-git clone https://github.com/gii-is-psg2/react-petclinic.git
-```
-2) Inside Eclipse or STS
-```
-File -> Import -> Maven -> Existing Maven project
-```
+3. Inicia el servidor de desarrollo:
+  ```
+  npm start
+  ```
 
-Then either build on the command line `./mvnw generate-resources` or using the Eclipse launcher (right click on project and `Run As -> Maven install`) to generate the css. Run the application main method by right clicking on it and choosing `Run As -> Java Application`.
+4. Accede al frontend en [http://localhost:3000](http://localhost:3000).
 
-3) Inside IntelliJ IDEA
+### Ejecución Local por .bat
 
-In the main menu, choose `File -> Open` and select the Petclinic [pom.xml](pom.xml). Click on the `Open` button.
+En caso de tener todo ya configurado, para futuras ocasiones puedes, en vez de ejecutar todos los comandos, ejecutar el archivo `./runner.bat`, el cuál iniciar tanto backend como frontend. En caso que querer realizar pruebas con el modo debug en backend, se recomienda iniciar el backend de forma normal y si le es más como puede ejecutar el archivo `./runner_frontend.bat` para ejecutar el frontend.
 
-CSS files are generated from the Maven build. You can either build them on the command line `./mvnw generate-resources`
-or right click on the `spring-petclinic` project then `Maven -> Generates sources and Update Folders`.
+## Despliegue con Docker y Docker Compose
 
-A run configuration named `PetClinicApplication` should have been created for you if you're using a recent Ultimate
-version. Otherwise, run the application by right clicking on the `PetClinicApplication` main class and choosing
-`Run 'PetClinicApplication'`.
+Puedes desplegar tanto el backend como el frontend utilizando Docker y `docker-compose`. Sigue estos pasos:
 
-4) Navigate to Petclinic
-Visit [http://localhost:8080/swagger-ui/index.html](http://localhost:8080/swagger-ui/index.html) in your browser.
+1. Asegúrate de tener Docker y Docker Compose instalados en tu sistema.
 
+2. Clona el repositorio si aún no lo has hecho:
+  ```
+  git clone https://github.com/TFG-luchersol/Git-Vision.git
+  cd Git-Vision
+  ```
 
-## Looking for something in particular?
+3. Construye y ejecuta los contenedores:
+  ```
+  docker-compose up --build
+  ```
 
-|Spring Boot Configuration | Class or Java property files  |
-|--------------------------|---|
-|The Main Class | [PetClinicApplication](https://github.com/gii-is-psg2/react-petclinic/blob/main/src/main/java/org/springframework/samples/petclinic/PetclinicApplication.java) |
-|Properties Files | [application.properties](https://github.com/gii-is-psg2/react-petclinic/blob/main/src/main/resources/application.properties) |
+4. Accede a las aplicaciones:
+  - Backend: http://localhost:8080/swagger-ui/index.html
+  - Frontend: http://localhost:3000
 
+## Development Workflow
 
-## Starting the frontend
+### Backend
 
-The Spring Petclinic is implemented with a React frontend in the folder named "frontend".
-You can start the development server to see frontend using the command (maybe you should use the command npm insall prior to this):
-```
-npm start
-```
-You can then access the PetClinic frontend at [http://localhost:3000](http://localhost:3000)
+- Usa tu IDE para abrir el proyecto y ejecutar la clase principal `GitVisionApplication`.
+- Modifica el código del backend y reinicia la aplicación para ver los cambios
+### Frontend
+
+- Usa el servidor de desarrollo de React para recarga en vivo.
+- Modifica los componentes de React y guarda para ver los cambios al instante.
+
+## Estructura del Proyecto
+
+| Componente          | Ubicación                                                               |
+|---------------------|-------------------------------------------------------------------------|
+| Clase Principal del Backend  | [GitVisionApplication.java](https://github.com/TFG-luchersol/Git-Vision/blob/main/src/main/java/com/example/gitvision/GitVisionApplication.java) |
+| Propiedades del Backend  | [application.properties](https://github.com/TFG-luchersol/Git-Vision/blob/main/src/main/resources/application.properties) |
+| Punto de Entrada del Frontend| [index.jsx](https://github.com/TFG-luchersol/Git-Vision/blob/main/frontend/src/index.jsx) |
+
+## Contributing
+
+Contributions are welcome! Please fork the repository and submit a pull request with your changes.
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](https://github.com/TFG-luchersol/Git-Vision/blob/main/LICENSE) file for details.

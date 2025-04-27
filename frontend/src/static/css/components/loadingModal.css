@@ -1,24 +1,8 @@
-
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: rgba(0, 0, 0, 0.4); /* Fondo semitransparente opcional */
-  z-index: 1000;
-}
-
-.modal-content {
+.modal-content-loading {
   background: white;
   padding: 20px;
   border-radius: 8px;
   text-align: center;
-  max-width: 90%;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 /* Loader básico con centrado horizontal */
