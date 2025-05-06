@@ -55,10 +55,9 @@ export default function Commits() {
                 setIsFiltered(false);
                 return;
             }
-            console.log(1)
-            console.log(`/api/v1/commits/${owner}/${repo}?filter=${filterParam}&isRegex=${regexParam}`)
+
             const response = await fetchBackend(`/api/v1/commits/${owner}/${repo}?filter=${filterParam}&isRegex=${regexParam}`);
-            console.log(2)
+
             // Obtener la respuesta y actualizar el estado
             const { commits } = await getBody(response);
     
