@@ -2,9 +2,12 @@ package org.springframework.samples.gitvision.commit;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.regex.PatternSyntaxException;
+import java.util.stream.Stream;
 
 import org.kohsuke.github.GHCommit;
 import org.kohsuke.github.GHRepository;
+import org.kohsuke.github.GitHub;
 import org.springframework.samples.gitvision.commit.model.Commit;
 import org.springframework.samples.gitvision.issue.model.Issue;
 import org.springframework.samples.gitvision.relations.repository.GVRepoRepository;
@@ -29,6 +32,42 @@ public class CommitService {
         return GithubApi.connect(repositoryName, tokenToUse)
                         .getCommitsByPage(page, 30);
     }
+
+    @Transactional(readOnly = true)
+    public List<Commit> getCommitsByRepositoryWithFilter(String repositoryName, String login, String filter, boolean isRegex) throws IOException  {
+        GVRepo gvRepo = this.gvRepoRepository.findByNameAndUser_Username(repositoryName, login).get();
+        String tokenToUse = gvRepo.getToken();
+        GitHub gitHub = GitHub.connect(login, tokenToUse);
+
+        Stream<GHCommit> ghCommits;
+
+        if (!isRegex) {
+            ghCommits = gitHub.searchCommits()
+                    .repo(repositoryName)
+                    .q(filter)
+                    .list()
+                    .toList()
+                    .stream();
+        } else {
+            ghCommits = gitHub.getRepository(repositoryName)
+                    .listCommits()
+                    .toList()
+                    .stream()
+                    .filter(commit -> {
+                        try {
+                            String message = commit.getCommitShortInfo().getMessage();
+                            return message != null && message.matches(filter);
+                        } catch (IOException | PatternSyntaxException e) {
+                            return false;
+                        }
+                    });
+        }
+
+        return ghCommits
+                .map(Commit::parse)
+                .toList();
+    }
+
 
     @Transactional(readOnly = true)
     public Commit getCommitByRepositoryNameAndSha(GHRepository ghRepository, String sha) throws IOException {
