@@ -37,9 +37,9 @@ public class CommitController {
     @GetMapping("/{owner}/{repo}")
     public ResponseEntity<Information> getCommitsByRepository(@PathVariable String owner,
                                                   @PathVariable String repo,
-                                                  @RequestParam(required = false, defaultValue = "1") Integer page,
+                                                  @RequestParam(defaultValue = "1") Integer page,
                                                   @RequestParam(required = false) String filter,
-                                                  @RequestParam(required = false, defaultValue = "false") boolean isRegex,
+                                                  @RequestParam(defaultValue = "false") boolean isRegex,
                                                   @AuthenticationPrincipal UserDetailsImpl userDetailsImpl ) throws IOException{
         String repositoryName = owner + "/" + repo;
         String login = userDetailsImpl.getUsername();

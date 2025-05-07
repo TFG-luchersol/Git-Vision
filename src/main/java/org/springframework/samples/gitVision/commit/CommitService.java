@@ -9,6 +9,7 @@ import org.kohsuke.github.GHCommit;
 import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GitHub;
 import org.springframework.samples.gitvision.commit.model.Commit;
+import org.springframework.samples.gitvision.exceptions.ResourceNotFoundException;
 import org.springframework.samples.gitvision.issue.model.Issue;
 import org.springframework.samples.gitvision.relations.repository.GVRepoRepository;
 import org.springframework.samples.gitvision.relations.repository.model.GVRepo;
@@ -35,7 +36,8 @@ public class CommitService {
 
     @Transactional(readOnly = true)
     public List<Commit> getCommitsByRepositoryWithFilter(String repositoryName, String login, String filter, boolean isRegex) throws IOException  {
-        GVRepo gvRepo = this.gvRepoRepository.findByNameAndUser_Username(repositoryName, login).get();
+        GVRepo gvRepo = this.gvRepoRepository.findByNameAndUser_Username(repositoryName, login)
+            .orElseThrow(() -> ResourceNotFoundException.of(GVRepo.class));
         String tokenToUse = gvRepo.getToken();
         GitHub gitHub = GitHub.connect(login, tokenToUse);
 
