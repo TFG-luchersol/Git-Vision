@@ -56,15 +56,15 @@ const EditAlias = ({ state, setState, keyName, visible, onClose }) => {
 
     return (
         <Modal
-            title="Edit Alias"
+            title="Editar Alias"
             open={visible}
             onCancel={onClose}
             footer={[
                 <Button key="cancel" onClick={onClose}>
-                    Cancel
+                    Cancelar
                 </Button>,
                 <Button key="accept" type="primary" onClick={handleAccept}>
-                    Accept
+                    Aceptar
                 </Button>,
             ]}
         >
@@ -74,7 +74,7 @@ const EditAlias = ({ state, setState, keyName, visible, onClose }) => {
                     <List.Item
                         actions={[
                             <Button type="link" onClick={() => handleDelete(index)}>
-                                Delete
+                                Borrar
                             </Button>,
                         ]}
                     >
@@ -92,7 +92,7 @@ const EditAlias = ({ state, setState, keyName, visible, onClose }) => {
                     onChange={(e) => setNewValue(e.target.value)}
                 />
                 <Button type="primary" onClick={handleAdd}>
-                    Add
+                    Añadir
                 </Button>
             </Space>
         </Modal>
