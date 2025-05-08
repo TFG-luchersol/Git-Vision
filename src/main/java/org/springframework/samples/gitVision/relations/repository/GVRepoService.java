@@ -109,7 +109,6 @@ public class GVRepoService {
             .orElseThrow(() -> ResourceNotFoundException.of(GVRepo.class));
     }
 
-
     @Transactional(readOnly = true)
     public GitHub connect(String repositoryName, String login) throws ConnectionGithubException {
         try {

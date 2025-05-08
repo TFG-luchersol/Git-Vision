@@ -1,10 +1,13 @@
 package org.springframework.samples.gitvision.relations.repository;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import org.kohsuke.github.GHRelease;
 import org.kohsuke.github.GHRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.samples.gitvision.configuration.services.UserDetailsImpl;
@@ -12,6 +15,7 @@ import org.springframework.samples.gitvision.githubUser.model.GithubUser;
 import org.springframework.samples.gitvision.relations.repository.model.AliasesDTO;
 import org.springframework.samples.gitvision.relations.repository.model.GVRepo;
 import org.springframework.samples.gitvision.relations.repository.model.GVRepoUserConfig;
+import org.springframework.samples.gitvision.relations.repository.model.ReleaseInfo;
 import org.springframework.samples.gitvision.util.MessageResolver;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -82,6 +86,35 @@ public class GVRepoController {
         String respositoryName = owner + "/" + repo;
         GVRepo gvRepo = this.gvRepoService.getGvRepoByNameAndUser_Id(respositoryName, userId);
         return ResponseEntity.ok(gvRepo);
+    }
+
+    @GetMapping("/{owner}/{repo}/branches")
+    public ResponseEntity<Set<String>> getRepositoryBranches(@PathVariable String owner,
+                                           @PathVariable String repo,
+                                           @AuthenticationPrincipal UserDetailsImpl userDetailsImpl) throws Exception {
+        GHRepository ghRepository = this.gvRepoService.getRepository(owner, repo, userDetailsImpl.getUsername());
+        Set<String> branches = ghRepository.getBranches().keySet();
+        return ResponseEntity.ok(branches);
+    }
+
+    @GetMapping("/{owner}/{repo}/releases")
+    public ResponseEntity<List<ReleaseInfo>> getRepositoryReleases(@PathVariable String owner,
+                                           @PathVariable String repo,
+                                           @AuthenticationPrincipal UserDetailsImpl userDetailsImpl) throws Exception {
+        GHRepository ghRepository = this.gvRepoService.getRepository(owner, repo, userDetailsImpl.getUsername());
+        List<ReleaseInfo> res = ghRepository.listReleases().toList()
+                    .stream()
+                    .sorted(Comparator.comparing(GHRelease::getPublished_at).reversed())
+                    .map(new Function<GHRelease, ReleaseInfo>() {
+                        boolean first = true;
+                        @Override
+                        public ReleaseInfo apply(GHRelease release) {
+                            ReleaseInfo info = new ReleaseInfo(release.getName(), first);
+                            first = false;
+                            return info;
+                        }
+                    }).toList();
+        return ResponseEntity.ok(res);
     }
 
     @GetMapping("/{owner}/{repo}/contributors")
