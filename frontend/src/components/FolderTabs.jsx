@@ -1,8 +1,9 @@
 import "@css/components/folderTabs.css";
 import React, { useState } from 'react';
+import BackButton from "./BackButton";
 
 // {'file1': <div>Contenido 1</div>, 'file2': <div>Contenido 2</div>, 'file3': <div>Contenido 3</div>}
-export default function FolderTabs({sections={}, style}) {
+export default function FolderTabs({hasBackButton=true, sections={}, style}) {
   const [activeTab, setActiveTab] = useState(null);
 
   useState(() => {
@@ -14,6 +15,7 @@ export default function FolderTabs({sections={}, style}) {
   return (Object.keys(sections).length > 0 &&
     <div className="folder-container" style={{...style}}>
       <div className="tab-header">
+        {hasBackButton && <BackButton className="tab active" />}
         {
           Object.keys(sections).map((tag) => (
             <button
