@@ -1,6 +1,7 @@
 package org.springframework.samples.gitvision.commit;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.PatternSyntaxException;
 import java.util.stream.Stream;
@@ -12,7 +13,9 @@ import org.springframework.samples.gitvision.commit.model.Commit;
 import org.springframework.samples.gitvision.exceptions.ResourceNotFoundException;
 import org.springframework.samples.gitvision.issue.model.Issue;
 import org.springframework.samples.gitvision.relations.repository.GVRepoRepository;
+import org.springframework.samples.gitvision.relations.repository.GVRepoUserConfigRepository;
 import org.springframework.samples.gitvision.relations.repository.model.GVRepo;
+import org.springframework.samples.gitvision.relations.repository.model.GVRepoUserConfig;
 import org.springframework.samples.gitvision.util.GithubApi;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,9 +24,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class CommitService {
 
     private final GVRepoRepository gvRepoRepository;
+    private final GVRepoUserConfigRepository gvRepoUserConfigRepository;
 
-    public CommitService(GVRepoRepository gvRepoRepository){
+    public CommitService(GVRepoRepository gvRepoRepository, GVRepoUserConfigRepository gvRepoUserConfigRepository){
         this.gvRepoRepository = gvRepoRepository;
+        this.gvRepoUserConfigRepository = gvRepoUserConfigRepository;
     }
 
     @Transactional(readOnly = true)
@@ -35,7 +40,7 @@ public class CommitService {
     }
 
     @Transactional(readOnly = true)
-    public List<Commit> getCommitsByRepositoryWithFilter(String repositoryName, String login, String filter, boolean isRegex) throws IOException  {
+    public List<Commit> getCommitsByRepositoryWithFilter(String repositoryName, String login, String filter, boolean isRegex, boolean isOwner) throws IOException  {
         GVRepo gvRepo = this.gvRepoRepository.findByNameAndUser_Username(repositoryName, login)
             .orElseThrow(() -> ResourceNotFoundException.of(GVRepo.class));
         String tokenToUse = gvRepo.getToken();
@@ -43,14 +48,24 @@ public class CommitService {
 
         Stream<GHCommit> ghCommits;
 
-        if (!isRegex) {
-            ghCommits = gitHub.searchCommits()
-                    .repo(repositoryName)
-                    .q(filter)
-                    .list()
-                    .toList()
-                    .stream();
-        } else {
+        if (isOwner) {
+            GVRepoUserConfig gvRepoUserConfig = gvRepoUserConfigRepository.findByGvRepoAndUsername(gvRepo, filter).orElse(null);
+            if(gvRepoUserConfig == null) {
+                ghCommits = gitHub.getRepository(repositoryName)
+                    .queryCommits()
+                    .author(filter).list().toList().stream();
+            } else {
+                List<GHCommit> auxGhCommits = new ArrayList<>();
+                for (String alias : gvRepoUserConfig.getAllOptions()) {
+                    auxGhCommits.addAll(gitHub.getRepository(repositoryName)
+                        .queryCommits()
+                        .author(alias)
+                        .list().toList());
+                }
+                ghCommits = auxGhCommits.stream();
+            }
+
+        } else if (!isRegex) {
             ghCommits = gitHub.getRepository(repositoryName)
                     .listCommits()
                     .toList()
@@ -63,6 +78,13 @@ public class CommitService {
                             return false;
                         }
                     });
+        } else {
+            ghCommits = gitHub.searchCommits()
+            .repo(repositoryName)
+            .q(filter)
+            .list()
+            .toList()
+            .stream();
         }
 
         return ghCommits

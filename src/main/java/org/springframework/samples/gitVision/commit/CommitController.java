@@ -40,11 +40,12 @@ public class CommitController {
                                                   @RequestParam(defaultValue = "1") Integer page,
                                                   @RequestParam(required = false) String filter,
                                                   @RequestParam(defaultValue = "false") boolean isRegex,
+                                                  @RequestParam(defaultValue = "false") boolean isOwner,
                                                   @AuthenticationPrincipal UserDetailsImpl userDetailsImpl ) throws IOException{
         String repositoryName = owner + "/" + repo;
         String login = userDetailsImpl.getUsername();
         List<Commit> commits = filter != null && !filter.isBlank() ?
-            this.commitService.getCommitsByRepositoryWithFilter(repositoryName, login, filter, isRegex) :
+            this.commitService.getCommitsByRepositoryWithFilter(repositoryName, login, filter, isRegex, isOwner) :
             this.commitService.getCommitsByRepository(repositoryName, login, page);
         Information information = Information.create("commits", commits)
                                                 .put("page", page);

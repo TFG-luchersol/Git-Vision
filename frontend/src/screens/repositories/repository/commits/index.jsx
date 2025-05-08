@@ -3,7 +3,7 @@ import "@css/repositories/repository/commits";
 import fetchBackend from '@utils/fetchBackend.ts';
 import getBody from '@utils/getBody.ts';
 import React, { useEffect, useState } from 'react';
-import { FaSearch, FaSpinner, FaTimes } from 'react-icons/fa'; // Íconos para los botones
+import { FaSearch, FaSpinner, FaTimes, FaUserCircle } from 'react-icons/fa'; // Íconos para los botones
 import { VscRegex } from "react-icons/vsc";
 import { useParams } from 'react-router-dom';
 import { Button, Input } from 'reactstrap';
@@ -17,6 +17,7 @@ export default function Commits() {
     const [filterText, setFilterText] = useState('');
     const [page, setPage] = useState(1);
     const [isRegex, setIsRegex] = useState(false);
+    const [isOwner, setIsOwner] = useState(false);
     const [isFiltered, setIsFiltered] = useState(false);
     const [loading, setLoading] = useState(false);  // Nuevo estado para la carga de datos
 
@@ -46,7 +47,6 @@ export default function Commits() {
             setLoading(true);  // Inicia la carga
             // Construimos la URL con los parámetros de búsqueda y regex
             const filterParam = filterText ? encodeURIComponent(filterText) : '';
-            const regexParam = isRegex ? 'true' : 'false';
     
             // Si no hay texto en el filtro, simplemente volvemos a obtener todos los commits
             if (filterText === '') {
@@ -56,7 +56,13 @@ export default function Commits() {
                 return;
             }
 
-            const response = await fetchBackend(`/api/v1/commits/${owner}/${repo}?filter=${filterParam}&isRegex=${regexParam}`);
+            const queryParams = {
+                "filter": filterParam,
+                "isRegex": isRegex ? 'true' : 'false',
+                "isOwner": isOwner ? 'true' : 'false',
+            }
+
+            const response = await fetchBackend(`/api/v1/commits/${owner}/${repo}`, {}, queryParams);
 
             // Obtener la respuesta y actualizar el estado
             const { commits } = await getBody(response);
@@ -88,7 +94,17 @@ export default function Commits() {
     };
 
     const toggleRegexFilter = () => {
+        if (isOwner) {
+            setIsOwner(false);
+        }
         setIsRegex(!isRegex);
+    };
+
+    const toggleOwnerFilter = () => {
+        if (isRegex) {
+            setIsRegex(false);
+        }
+        setIsOwner(!isOwner);
     };
 
     const applyFilter = () => {
@@ -117,6 +133,21 @@ export default function Commits() {
                     title="Activar/Desactivar Regex"
                 >
                     <VscRegex />
+                </Button>
+                <Button
+                    onClick={toggleOwnerFilter}
+                    style={{
+                        marginRight: '10px',
+                        padding: '10px',
+                        backgroundColor: isOwner ? 'green' : 'lightgray',
+                        color: 'white',
+                        border: 'none',
+                        width: '50px',
+                        height: '50px',
+                    }}
+                    title="Activar/Desactivar Owner"
+                >
+                    <FaUserCircle />
                 </Button>
                 <Button
                     onClick={applyFilter}
