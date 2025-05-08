@@ -102,7 +102,7 @@ public class IssueService {
             Map<String, Object> dict = new HashMap<>();
             GHIssue ghIssue = ghRepository.getIssue(issueNumber);
             Issue issue = Issue.parse(ghIssue);
-            List<GithubUser> assigness = ghIssue.getAssignees().stream().map(t -> {
+            List<GithubUser> assignees = ghIssue.getAssignees().stream().map(t -> {
                 try {
                     return GithubUser.parse(t);
                 } catch (IOException e) {
@@ -117,7 +117,7 @@ public class IssueService {
             dict.put("commits", commits);
             dict.put("files", files);
             dict.put("changesByUser", changesByUser);
-            dict.put("assigness", assigness);
+            dict.put("assignees", assignees);
             // if (user.hasClockifyToken()) {
             // Task task =
             // ClockifyApi.getTaskByWorkspaceIdAndProjectIdAndTaksName("workspaceId",

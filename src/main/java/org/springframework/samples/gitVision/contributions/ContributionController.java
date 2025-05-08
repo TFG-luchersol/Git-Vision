@@ -5,9 +5,13 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.kohsuke.github.GHIssue;
+import org.kohsuke.github.GHIssueState;
+import org.kohsuke.github.GHPullRequest;
 import org.kohsuke.github.GHRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.samples.gitvision.configuration.services.UserDetailsImpl;
+import org.springframework.samples.gitvision.contributions.model.BasicStatistics;
 import org.springframework.samples.gitvision.contributions.model.Contribution;
 import org.springframework.samples.gitvision.contributions.model.ContributionByTime;
 import org.springframework.samples.gitvision.relations.repository.GVRepoService;
@@ -42,6 +46,46 @@ public class ContributionController {
         this.gvRepoService = gvRepoService;
         this.taskService = taskService;
         this.msg = msg;
+    }
+
+
+    @GetMapping("/{owner}/{repo}/basic_statistics")
+    public ResponseEntity<BasicStatistics> getRepositoryBasicStatistics(@PathVariable String owner,
+                                           @PathVariable String repo,
+                                           @AuthenticationPrincipal UserDetailsImpl userDetailsImpl) throws Exception {
+        GHRepository ghRepository = this.gvRepoService.getRepository(owner, repo, userDetailsImpl.getUsername());
+
+        int commitCount = ghRepository.listCommits().toList().size();
+
+        int openIssues = ghRepository.getOpenIssueCount();
+        int closedIssues = 0;
+
+        int openPRs = 0;
+        int closedPRs = 0;
+
+        for (GHPullRequest pr : ghRepository.queryPullRequests().state(GHIssueState.ALL).list()) {
+            if (pr.getState() == GHIssueState.OPEN) {
+                openPRs++;
+            } else {
+                closedPRs++;
+            }
+        }
+
+        for (GHIssue issue : ghRepository.getIssues(GHIssueState.CLOSED)) {
+            if (!issue.isPullRequest()) {
+                closedIssues++;
+            }
+        }
+
+        BasicStatistics basicStatistics = BasicStatistics.builder()
+            .commitCount(commitCount)
+            .openIssues(openIssues)
+            .closedIssues(closedIssues)
+            .openPRs(openPRs)
+            .closedPRs(closedPRs)
+            .build();
+
+        return ResponseEntity.ok(basicStatistics);
     }
 
     @GetMapping("/{owner}/{repo}/between_time")
