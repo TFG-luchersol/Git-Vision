@@ -230,7 +230,7 @@ Consulta todas las issues relacionadas con el repositorio.
 ![Issue_Commits](./img/issue_commits.png)
 ![Issue_Files](./img/issue_files.png)
 ![Issue_Changes_By_User](./img/issue_changes_by_user.png)
-![Issue_Assigness](./img/issue_assigness.png)
+![Issue_Assignees](./img/issue_assignees.png)
 
 ---
 

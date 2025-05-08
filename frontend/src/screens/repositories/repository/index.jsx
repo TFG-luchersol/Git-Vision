@@ -102,11 +102,11 @@ export default function Repository() {
         <div style={{ marginLeft: '40px', marginTop: "1%", display: 'flex', flexDirection: 'row', maxHeight: "80%" }}>
             <div className='contenedor-archivos'>
                 <ButtonGroup >
-                    <Button style={{backgroundColor: "#007bff", height:35}} onClick={() => window.location.href += "/details"}>DETAILS</Button>
+                    <Button style={{backgroundColor: "#007bff", height:35}} onClick={() => window.location.href += "/details"}>DETALLES</Button>
                     <Button style={{backgroundColor: "#28a745",height:35}} onClick={() => window.location.href += "/commits"}>COMMITS</Button>
                     <Button style={{backgroundColor: "#fd7e14",height:35}} onClick={() => window.location.href += "/issues"}>ISSUES</Button>
-                    <Button style={{backgroundColor: "#8ef9c0",height:35}} onClick={() => window.location.href += "/contributors"}>CONTRIBUTORS</Button>
-                    <Button style={{backgroundColor: "#777777",height:35}} onClick={() => window.location.href += "/configuration"}>CONFIGURATION</Button>
+                    <Button style={{backgroundColor: "#8ef9c0",height:35}} onClick={() => window.location.href += "/contributors"}>CONTRIBUIDORES</Button>
+                    <Button style={{backgroundColor: "#777777",height:35}} onClick={() => window.location.href += "/configuration"}>CONFIGURACIÓN</Button>
                 </ButtonGroup> 
                 <div style={{ display: "flex", flexDirection: "row" }}>
                     <Input type='text' value={filter} onChange={(e) => setFilter(e.target.value)}/>
@@ -114,17 +114,15 @@ export default function Repository() {
                     <MultiSelectDropdown
                         selectedOptions={selectedOptions}
                         setSelectedOptions={setSelectedOptions}
-                        width={400}
+                        width={350}
                         options={[...Object.keys(extensionCounter).filter(value => value !== "Unknown")].sort().concat("Unknown")}
                     />
                 </div>
                 <TreeFiles deepFilter root={files} filter={filter} filterExtension={selectedOptions} className={"archivo"} />
             </div>
-            <div style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", paddingLeft: '50px', width: "48%" }}>
-                {/* Primera fila: PieChart y Tabla */}
-                <div style={{ display: "flex", flexDirection: "row" }}>
-                    {/* PieChart */}
-                    <div style={{ flex: 1 }}>
+            <div style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", paddingInline: '30px', width: "48%" }}>
+                <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-around"  }}>
+                    <div style={{ flex: 1}}>
                         <PieChart 
                             numBytes={numBytes} 
                             showPercentaje={showPercentaje} 
@@ -142,7 +140,6 @@ export default function Repository() {
                         </div>
                     </div>
 
-                    {/* Tabla */}
                     <div className='extension-table' style={{ flex: 1, marginTop: 40 }}>
                         <table>
                             <thead>
@@ -221,7 +218,7 @@ export default function Repository() {
                                 >
                                     {release.name}
                                 </li>
-                            )) : <li>No releases available</li>
+                            )) : <li>Sin releases disponibles</li>
                         )}
                     </ul>
                 </div>

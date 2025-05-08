@@ -67,20 +67,20 @@ export default function RepositoryDownload() {
             <Form onSubmit={handleSubmit} className='auth-form-container' >
                 <div style={{ margin: "30px" }}>
                     <title className='center-title'>
-                        <h1>Download Repository</h1>
+                        <h1>Descargar Repositorio</h1>
                     </title>
 
                     <FormGroup>
                         <CustomInput
                             icon={userIcon}
-                            label={"Owner:"}
+                            label={"Dueño:"}
                             type='text'
                             name='owner'
                             value={values.owner}
                             onChange={handleChange}
                         />
                         <CustomInput
-                            label={"Repository:"}
+                            label={"Repositorio:"}
                             type='text'
                             name='repo'
                             value={values.repo}
@@ -97,7 +97,7 @@ export default function RepositoryDownload() {
                             onChange={handleChange}
                         />
                         <div style={{marginTop: 10}}>
-                            <Label style={{marginRight: 10}}>Use new token: </Label>
+                            <Label style={{marginRight: 10}}>Usar nuevo token: </Label>
                             <Input
                                 type='switch'
                                 value={validateToken}
@@ -107,9 +107,9 @@ export default function RepositoryDownload() {
                     </FormGroup>
 
                     <div className='button-group'>
-                        <Button type='submit'>Download</Button>
+                        <Button type='submit'>Descargar</Button>
                         <Button type='button'>
-                            <Link className='custom-link' to={"/"}>Cancel</Link>
+                            <Link className='custom-link' to={"/"}>Cancelar</Link>
                         </Button>
                     </div>
                 </div>

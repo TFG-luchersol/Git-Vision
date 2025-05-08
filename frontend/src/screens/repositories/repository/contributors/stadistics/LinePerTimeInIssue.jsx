@@ -68,18 +68,18 @@ const LinePerTimeInIssue = () => {
         }
     };
 
-    const colorsGraph = {
+    const colorsDataType = {
         additions: {
-            backgroundColor: "rgba(76, 175, 80, 0.6)", // Verde claro
-            borderColor: "rgba(76, 175, 80, 1)" // Verde fuerte
+            backgroundColor: "rgba(76, 175, 80, 0.6)", 
+            color: "white"
         },
         deletions: {
-            backgroundColor: "rgba(255, 99, 132, 0.6)", // Rojo claro
-            borderColor: "rgba(255, 99, 132, 1)" // Rojo fuerte
+            backgroundColor: "rgba(255, 99, 132, 0.6)", 
+            color: "white"
         },
         changes: {
-            backgroundColor: "rgba(255, 165, 0, 0.6)", // Naranja claro
-            borderColor: "rgba(255, 165, 0, 1)" // Naranja fuerte
+            backgroundColor: "rgba(255, 165, 0, 0.6)",
+            color: "white"
         },
     };
 
@@ -145,13 +145,13 @@ const LinePerTimeInIssue = () => {
                         size="small"
                         fullWidth
                     >
-                        <MenuItem value="name">Name</MenuItem>
-                        <MenuItem value="issueNumber">Issue Number</MenuItem>
+                        <MenuItem value="name">Nombre</MenuItem>
+                        <MenuItem value="issueNumber">Número</MenuItem>
                     </Select>
 
                     <TextField
                         size="small"
-                        label="Value"
+                        label="Valor"
                         value={queryParamValue}
                         onChange={(e) => setQueryParamValue(e.target.value)}
                         fullWidth
@@ -160,7 +160,7 @@ const LinePerTimeInIssue = () => {
                     {tokenService.hasClockifyToken() && (
                         <TextField
                             size="small"
-                            label="Task Name (Optional)"
+                            label="Nombre Task (Opcional)"
                             value={taskName}
                             onChange={(e) => setTaskName(e.target.value)}
                             fullWidth
@@ -172,10 +172,11 @@ const LinePerTimeInIssue = () => {
                         onChange={(e) => setDataType(e.target.value)}
                         size="small"
                         fullWidth
+                        style={colorsDataType[dataType]}
                     >
-                        <MenuItem value="additions">Additions</MenuItem>
-                        <MenuItem value="deletions">Deletions</MenuItem>
-                        <MenuItem value="changes">Changes</MenuItem>
+                        <MenuItem value="additions" style={colorsDataType.additions}>Adiciones</MenuItem>
+                        <MenuItem value="deletions" style={colorsDataType.deletions}>Borrados</MenuItem>
+                        <MenuItem value="changes" style={colorsDataType.changes}>Cambios</MenuItem>
                     </Select>
 
                     {tokenService.hasClockifyToken() && (
