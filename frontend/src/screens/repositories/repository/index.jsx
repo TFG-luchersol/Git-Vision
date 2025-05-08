@@ -208,8 +208,13 @@ export default function Repository() {
                     <ul style={{ margin: 0, padding: '10px' }}>
                         {selectedTab === 'branches' ? (
                             branches.length > 0 ? branches.map((branch, index) => (
-                                <li key={index}>{branch}</li>
-                            )) : <li>No branches available</li>
+                                <li 
+                                    key={index}
+                                    style={{ backgroundColor: branch.defaultBranch ? '#d4f8d4' : 'transparent', padding: '5px', borderRadius: '5px' }}
+                                >
+                                    {branch.name}
+                                </li>
+                            )) : <li>Sin ramas disponibles</li>
                         ) : (
                             releases.length > 0 ? releases.map((release, index) => (
                                 <li 

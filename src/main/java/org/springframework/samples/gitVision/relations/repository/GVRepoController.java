@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.samples.gitvision.configuration.services.UserDetailsImpl;
 import org.springframework.samples.gitvision.githubUser.model.GithubUser;
 import org.springframework.samples.gitvision.relations.repository.model.AliasesDTO;
+import org.springframework.samples.gitvision.relations.repository.model.BranchInfo;
 import org.springframework.samples.gitvision.relations.repository.model.GVRepo;
 import org.springframework.samples.gitvision.relations.repository.model.GVRepoUserConfig;
 import org.springframework.samples.gitvision.relations.repository.model.ReleaseInfo;
@@ -89,12 +90,17 @@ public class GVRepoController {
     }
 
     @GetMapping("/{owner}/{repo}/branches")
-    public ResponseEntity<Set<String>> getRepositoryBranches(@PathVariable String owner,
+    public ResponseEntity<List<BranchInfo>> getRepositoryBranches(@PathVariable String owner,
                                            @PathVariable String repo,
                                            @AuthenticationPrincipal UserDetailsImpl userDetailsImpl) throws Exception {
         GHRepository ghRepository = this.gvRepoService.getRepository(owner, repo, userDetailsImpl.getUsername());
-        Set<String> branches = ghRepository.getBranches().keySet();
-        return ResponseEntity.ok(branches);
+        String defaultBranch = ghRepository.getDefaultBranch();
+
+        List<BranchInfo> branchInfos = ghRepository.getBranches().keySet().stream()
+                .map(name -> new BranchInfo(name, name.equals(defaultBranch)))
+                .toList();
+
+        return ResponseEntity.ok(branchInfos);
     }
 
     @GetMapping("/{owner}/{repo}/releases")
