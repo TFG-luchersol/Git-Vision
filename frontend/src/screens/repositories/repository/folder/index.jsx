@@ -9,8 +9,8 @@ export default function Folder() {
     const { owner, repo, "*": path } = useParams();
     
     const sections = {
-        "Files": <FolderContent />,
-        "Contributions": <Contributions owner={owner} repo={repo} path={path} isFolder={true} />,
+        "Archivos": <FolderContent />,
+        "Contribuciones": <Contributions owner={owner} repo={repo} path={path} isFolder={true} />,
     }
 
     return (

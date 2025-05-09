@@ -5,7 +5,7 @@ import FilesChangesByUser from './sections/FilesChangesByUser';
 export default function Contributor() {
 
     const sections = {
-        "Files": <FilesChangesByUser />
+        "Archivos": <FilesChangesByUser />
     }
 
     return (

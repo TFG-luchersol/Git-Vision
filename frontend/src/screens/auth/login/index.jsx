@@ -64,13 +64,13 @@ export default function Login() {
             <Form onSubmit={handleSubmit} className='auth-form-container' >
                 <div style={{ margin: "30px" }}>
                     <title className='center-title'>
-                        <h1>Login</h1>
+                        <h1>Iniciar Sesión</h1>
                     </title>
 
                     <FormGroup>
                         <CustomInput
                             icon={userIcon}
-                            label={"Username:"}
+                            label={"Usuario:"}
                             type='text'
                             name='username'
                             value={values.username || ""}
@@ -80,7 +80,7 @@ export default function Login() {
                     <FormGroup>
                         <CustomInput
                             icon={showPassword ? passwordUnlockIcon : passwordLockIcon}
-                            label={"Password:"}
+                            label={"Contraseña:"}
                             type={showPassword ? 'text' : 'password'}
                             name='password'
                             value={values.password || ""}
@@ -89,9 +89,9 @@ export default function Login() {
                     </FormGroup>
 
                     <div className='button-group'>
-                        <Button type='submit'>Login</Button>
+                        <Button type='submit'>Aceptar</Button>
                         <Button type='button'>
-                            <Link className='custom-link' to={"/register"}>Registrer</Link>
+                            <Link className='custom-link' to={"/register"}>Registrarse</Link>
                         </Button>
                     </div>
                 </div>

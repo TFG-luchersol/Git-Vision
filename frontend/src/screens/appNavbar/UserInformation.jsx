@@ -43,7 +43,6 @@ export default function UserInformation() {
       <PopoverBody>
         <div className='information'>
           <Link to={'/details'} >Información de usuario</Link>
-          <Link to={'/register'}>Añadir cuenta</Link>
           <hr/>
           <Link onClick={sendLogoutRequest} >Cerrar sesión</Link>
         </div>

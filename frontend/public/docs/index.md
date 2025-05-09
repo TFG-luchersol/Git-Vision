@@ -156,7 +156,7 @@ Gestiona la relación que existe entre el usuario de Clockify de dicho Workspace
 
 ## Listado de Archivos
 
-Navegación por la estructura de carpetas y archivos de cada repositorio y visualización tanto de gráfica de lenguajes del repositorio con la posibilidad de ver el porcentaje o tamaño en bytes de su totalidad y tabla de contador de extensiones del archivo.
+Navegación por la estructura de carpetas y archivos de cada repositorio y visualización tanto de gráfica de lenguajes del repositorio con la posibilidad de ver el porcentaje o tamaño en bytes de su totalidad, tabla de contador de extensiones del archivo y listado de ramas y realeases del repositorio.
 
 > ℹ️ **Info**: Aquellos archivos que no tengan una extensión que se haya podido extraer serán marcados que su extensión es "Unknown".
 
@@ -194,6 +194,13 @@ Accede a un listado completo de commits por orden cronológico.
 
 ![Commits](./img/commits.png)
 
+> ℹ️ **Info**: Dentro del listado se puede realizar un filtrado de 3 diferentes formas:
+> - Contenido del mensaje (por defecto)
+> - Regex (pulsar el primer icono)
+> - Autor (pulsar el segundo icono)  
+> Para realizar dicho filtrado deberás pulsar a la lupa luego de introducir el contenido necesario en el input.
+Para realizar el filtrado por autor se debe de poner el nombre del usuario de github, de forma que así se realizará una búsqueda respecto a la configuración. En caso de querer limpiar los filtros, pulsa la X
+
 ### Detalles de Commit
 
 Visualiza detalles de cada commit:
@@ -217,6 +224,13 @@ Consulta todas las issues relacionadas con el repositorio.
 
 ![Issues](./img/issues.png)
 
+> ℹ️ **Info**: Dentro del listado se puede realizar un filtrado de 3 diferentes formas:
+> - Contenido del titulo (por defecto)
+> - Regex (pulsar el primer icono)
+> - Número de issues (pulsar el segundo icono)  
+> Para realizar dicho filtrado deberás pulsar a la lupa luego de introducir el contenido necesario en el input. 
+En el caso de filtrado por número de issues se debe de seguir el formato de números separados por comas (Ej: "1,2,3,4"). En caso de querer limpiar los filtros, pulsa la X.
+
 ### Detalles de Issue
 
 - Titulo de la issue
@@ -230,7 +244,7 @@ Consulta todas las issues relacionadas con el repositorio.
 ![Issue_Commits](./img/issue_commits.png)
 ![Issue_Files](./img/issue_files.png)
 ![Issue_Changes_By_User](./img/issue_changes_by_user.png)
-![Issue_Assigness](./img/issue_assigness.png)
+![Issue_Assignees](./img/issue_assignees.png)
 
 ---
 
@@ -238,7 +252,7 @@ Consulta todas las issues relacionadas con el repositorio.
 
 ## Contribuidores
 
-Dentro del apartado de contribuidores se pueden
+Dentro del apartado de contribuidores se pueden ver los siguientes puntos.
 
 ### Listado de Contribuidores
 
@@ -267,6 +281,18 @@ Además del listado de archivos cambiados junto a su número de cambios, se podr
 
 ---
 
+### Estadísticas básicas
+
+Tras pulsar el botón "Buscar", una vez carguen los datos, se podrá visualizar información básica del repositorio tales como:
+
+- Número de commits
+- Issues abiertas / cerradas
+- Pull request abiertas / cerradas
+
+![Basic_Statistics](./img/basic_statistics.png)
+
+---
+
 ### Visualización de Commits en el Tiempo
 
 Se puede realizar una visualización gráfica de los cambios realizados por cada usuario
@@ -289,7 +315,11 @@ Dichas contribuciones se pueden visualizar a través de adiciones, borrados o ca
 
 En caso de tener enlazada una cuenta de Clockify, podrás añadir otros campos y visualizar una nueva forma de la gráfica que representará dichas contribuciones partidas por el tiempo empleadas en ella a través de cierta trazabilidad por Clockify. Por defecto, se tomará que el nombre de las tasks enlazadas a dichas issues tendrá el mismo nombre que las mismas (Por ejemplo: Si buscas la issue número 1, la task será #1, si buscas la issue por nombre "Generar Login", las tasks asociadas serán "Generar Login"). En caso de querer que el nombre de la task sea otro diferente, se permitirá poner en el campo opcional existente
 
-![Contributions_Issue_With_Clockify](./img/contributors_issue_with_clockify.png)
+![Contributions_Issue_With_Clockify_Normal](./img/contributors_issue_with_clockify_normal.png)
+
+Además de esta forma de visualización, también estará disponible visualizar la versión invertida, realizando de esta forma la comparación de cuanto tiempo se requiere para realizar un cambio.
+
+![Contributions_Issue_With_Clockify_Inverted](./img/contributors_issue_with_clockify_inverted.png)
 
 ---
 

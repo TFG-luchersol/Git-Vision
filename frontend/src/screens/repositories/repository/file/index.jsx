@@ -9,8 +9,8 @@ export default function File() {
     const { owner, repo, "*": path } = useParams();
 
     const sections = {
-        "Content": <FileContent />,
-        "Contributions": <Contributions owner={owner} repo={repo} path={path} />,
+        "Contenido": <FileContent />,
+        "Contribuciones": <Contributions owner={owner} repo={repo} path={path} />,
     }
 
     return (

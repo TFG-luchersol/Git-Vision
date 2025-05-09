@@ -38,10 +38,15 @@ public class IssueController {
     public ResponseEntity<List<Issue>> getAllIssuesByRepositoryName(@PathVariable String owner,
                                                         @PathVariable String repo,
                                                         @RequestParam(defaultValue = "1") Integer page,
+                                                        @RequestParam(required = false) String filter,
+                                                        @RequestParam(defaultValue = "false") boolean isRegex,
+                                                        @RequestParam(defaultValue = "false") boolean isIssueNumber,
                                                         @AuthenticationPrincipal UserDetailsImpl userDetailsImpl) throws Exception {
         String login = userDetailsImpl.getUsername();
         String repositoryName = owner + "/" + repo;
-        List<Issue> issues = this.issueService.getAllIssuesByRepositoryName(repositoryName, login, page);
+        List<Issue> issues = filter != null && !filter.isBlank() ?
+            this.issueService.getAllIssuesByRepositoryNameWithFilter(repositoryName, login, filter, isRegex, isIssueNumber) :
+            this.issueService.getAllIssuesByRepositoryName(repositoryName, login, page);
         return ResponseEntity.ok(issues);
 
     }

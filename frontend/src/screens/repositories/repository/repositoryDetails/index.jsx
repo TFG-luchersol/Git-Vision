@@ -131,14 +131,14 @@ export default function RepositoryDetails() {
         subtitle="Se borrará toda configuración realizada y la relación a un workspace en caso de existir"
         handleDelete={handleDeleteRepository}
         isOpen={deleteModalRepository}
-        onClose={setDeleteModalRepository}
+        onClose={() => setDeleteModalRepository(false)}
       />
       <DeleteModal 
         text='¿Estas seguro de querer borrar la relación a este workspace?'
         subtitle="Se borrará toda configuración realizada en dicho workspace"
         handleDelete={handleDeleteRelationWorkspace}
         isOpen={deleteModalRelationWorkspace}
-        onClose={setDeleteModalRelationWorkspace}
+        onClose={() => setDeleteModalRelationWorkspace(false)}
       />
       <div className="profile-container">
         <div className="profile-image">
@@ -154,7 +154,7 @@ export default function RepositoryDetails() {
               alt="Avatar"
               id='avatar'
             /> :
-            <IoPersonCircleOutline id='avatar' title='Avatar Error' style={{ color: 'red', height: 350, width: 350, }} />
+            <IoPersonCircleOutline id='avatar' title='Avatar Error' style={{ color: 'grey', height: 350, width: 350, }} />
           }
           
         </div>

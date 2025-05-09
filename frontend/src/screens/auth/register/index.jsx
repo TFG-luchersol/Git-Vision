@@ -72,11 +72,11 @@ export default function Register() {
         <div className='center-screen'>
             <Form onSubmit={handleSubmit} className='auth-form-container'>
                 <div style={{ margin: "30px" }}>
-                    <title className='center-title'><h1>Register</h1></title>
+                    <title className='center-title'><h1>Registro</h1></title>
                     <FormGroup>
                         <CustomInput
                             icon={userIcon}
-                            label={"Username:"}
+                            label={"Usuario:"}
                             type='text'
                             name='username'
                             value={values.username || ""}
@@ -106,7 +106,7 @@ export default function Register() {
                     <FormGroup>
                         <CustomInput
                             icon={showPassword ? passwordUnlockIcon : passwordLockIcon}
-                            label={"Password:"}
+                            label={"Contraseña:"}
                             type={showPassword ? 'text' : 'password'}
                             name='password'
                             value={values.password || ""}
@@ -114,7 +114,7 @@ export default function Register() {
                         />
                     </FormGroup>
                     <div className='button-group'>
-                        <Button type='submit'>Register</Button>
+                        <Button type='submit'>Registrarse</Button>
                         <Button type='button'>
                             <Link className='custom-link' to={"/"}>Cancelar</Link>
                         </Button>

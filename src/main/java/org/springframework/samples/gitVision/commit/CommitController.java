@@ -1,5 +1,6 @@
 package org.springframework.samples.gitvision.commit;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.kohsuke.github.GHRepository;
@@ -37,10 +38,15 @@ public class CommitController {
     public ResponseEntity<Information> getCommitsByRepository(@PathVariable String owner,
                                                   @PathVariable String repo,
                                                   @RequestParam(defaultValue = "1") Integer page,
-                                                  @AuthenticationPrincipal UserDetailsImpl userDetailsImpl ){
+                                                  @RequestParam(required = false) String filter,
+                                                  @RequestParam(defaultValue = "false") boolean isRegex,
+                                                  @RequestParam(defaultValue = "false") boolean isOwner,
+                                                  @AuthenticationPrincipal UserDetailsImpl userDetailsImpl ) throws IOException{
         String repositoryName = owner + "/" + repo;
         String login = userDetailsImpl.getUsername();
-        List<Commit> commits = this.commitService.getCommitsByRepository(repositoryName, login, page);
+        List<Commit> commits = filter != null && !filter.isBlank() ?
+            this.commitService.getCommitsByRepositoryWithFilter(repositoryName, login, filter, isRegex, isOwner) :
+            this.commitService.getCommitsByRepository(repositoryName, login, page);
         Information information = Information.create("commits", commits)
                                                 .put("page", page);
         return ResponseEntity.ok(information);

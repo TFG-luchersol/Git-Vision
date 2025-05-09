@@ -33,7 +33,7 @@ const MultiSelectDropdown = ({width, options, selectedOptions, setSelectedOption
         <div style={{width}}>
             <div onClick={toggleDropdown} style={{border: '1px solid #ccc', padding: '10px', borderTopRightRadius: 10, borderTopLeftRadius: 10}}>
                 <FaFilter style={{fontSize: 20, marginInline: "10px", cursor: 'pointer', border: "1px solid #bbb", padding: 3, borderRadius: 2, boxShadow: 10 }} />
-                Filter Extensions: {selectedOptions.length > 0 && `(${selectedOptions.length})`}
+                Extensiones: {selectedOptions.length > 0 && `(${selectedOptions.length})`}
             </div>
             {isOpen && (
                 <div style={{width: "30%", maxHeight: "35%",  overflow: "auto", border: '1px solid #ccc', padding: '10px', position: 'absolute', background: 'white' }}>
@@ -61,7 +61,7 @@ const MultiSelectDropdown = ({width, options, selectedOptions, setSelectedOption
                                 checked={isSelectAll}
                                 onChange={handleSelectAll}
                             />
-                            &nbsp;&nbsp;&nbsp;Select all
+                            &nbsp;&nbsp;&nbsp;Seleccionar todo
                         </label>
                     </div>
                 </div>

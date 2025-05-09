@@ -99,9 +99,9 @@ export default function WorkspaceUsers() {
                 <Table>
                     <TableHead>
                         <TableRow>
-                            <TableCell className="table-header">Name</TableCell>
+                            <TableCell className="table-header">Nombre</TableCell>
                             <TableCell className="table-header">Email</TableCell>
-                            <TableCell className="table-header">Github User</TableCell>
+                            <TableCell className="table-header">Usuario Github</TableCell>
                             <TableCell className="table-header"></TableCell>
                         </TableRow>
                     </TableHead>

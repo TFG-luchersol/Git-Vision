@@ -56,7 +56,7 @@ const { showMessage } = useNotification();
                 <Form onSubmit={handleSubmit} className='auth-form-container' >
                     <div style={{margin: "30px"}}>
                         <title className='center-title'>
-                            <h1>Download Workspace</h1>
+                            <h1>Descargar Workspace</h1>
                         </title>
 
                         <FormGroup>
@@ -70,7 +70,7 @@ const { showMessage } = useNotification();
                         </FormGroup>
                         <FormGroup>
                             <CustomInput
-                                label="Name:"
+                                label="Nombre:"
                                 type='text'
                                 name='name'
                                 value={values.name}
@@ -79,9 +79,9 @@ const { showMessage } = useNotification();
                         </FormGroup>
 
                         <div className='button-group'>
-                            <Button type='submit'>Download</Button> 
+                            <Button type='submit'>Descargar</Button> 
                             <Button type='button'>
-                                <Link className='custom-link' to={"/repositories"}>Cancel</Link>
+                                <Link className='custom-link' to={"/repositories"}>Cancelar</Link>
                             </Button> 
                         </div>
                     </div>

@@ -91,32 +91,32 @@ export default function RepositoryWorkspaceLinker() {
             <Form onSubmit={handleSubmit} className='auth-form-container' >
                 <div className='flex-container'>
                     <title className='center-title'>
-                        <h1>Link Github/Clockify</h1>
+                        <h1>Enlazar Github/Clockify</h1>
                     </title>
                     <div style={{ display:"flex", alignItems: "center", flexDirection: "column"}}>
                         <FormGroup style={{width: "80%"}}>
                             <Dropdown isOpen={dropdownOwnerOpen} toggle={toggleOwner} >
                                 <DropdownToggle caret>
-                                    Owner
+                                    Dueño
                                 </DropdownToggle>
                                 <div class="mb-1"/>
                                 <DropdownMenu>
                                     {Object.keys(repositories).map(owner => <DropdownItem onClick={() => handleOwner(owner)}>{owner}</DropdownItem>)}
                                 </DropdownMenu>
                             </Dropdown>
-                            <Input value={owner || "Select a Owner"} readOnly/>
+                            <Input value={owner || "Selecciona un dueño"} readOnly/>
                         </FormGroup>
                         <FormGroup style={{width: "80%"}}>
                             <Dropdown isOpen={dropdownRepositoryOpen} toggle={toggleRepository}>
                                 <DropdownToggle caret>
-                                    Repository
+                                    Repositorio
                                 </DropdownToggle>
                                 <div class="mb-1"/>
                                 <DropdownMenu>
                                     {repositories[owner]?.map(repo => <DropdownItem id={repo} onClick={(event) => handleChange("repository", repo)}>{repo}</DropdownItem>)}
                                 </DropdownMenu>
                             </Dropdown>
-                            <Input value={values.repository || "Select a Repository"} readOnly/>
+                            <Input value={values.repository || "Selecciona un repositorio"} readOnly/>
                         </FormGroup>
                         <FormGroup style={{width: "80%"}}>
                             <Dropdown isOpen={dropdownWorkspaceOpen} toggle={toggleWorkspace}>
@@ -128,13 +128,13 @@ export default function RepositoryWorkspaceLinker() {
                                     {workspaces.map(ws => <DropdownItem onClick={(event) => handleChange("workspace", ws)}>{ws.name}</DropdownItem>)}
                                 </DropdownMenu>
                             </Dropdown>
-                            <Input value={values.workspace.name || "Select a Workspace"} readOnly/>
+                            <Input value={values.workspace.name || "Selecciona un workspace"} readOnly/>
                         </FormGroup>
                     </div>
                     <div className='button-group'>
-                        <Button disabled={!(owner && values.repository && values.workspace)} type='submit'>Link</Button>
+                        <Button disabled={!(owner && values.repository && values.workspace)} type='submit'>Enlazar</Button>
                         <Button type='button'>
-                            <Link className='custom-link' to={"/repositories"}>Cancel</Link>
+                            <Link className='custom-link' to={"/repositories"}>Cancelar</Link>
                         </Button>
                     </div>
                 </div>
