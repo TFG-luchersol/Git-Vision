@@ -1,15 +1,21 @@
 # Etapa de construcción
 FROM eclipse-temurin:23-jdk AS build
 
-# Establecer el directorio de trabajo
+# Establecer directorio de trabajo
 WORKDIR /workspace/app
 
-# Copiar los archivos necesarios y ejecutar maven
+# Copiar archivos necesarios
 COPY mvnw .
 COPY .mvn .mvn
 COPY pom.xml .
+
+# Asegurar que mvnw tenga el formato correcto (LF) y permisos de ejecución
+RUN sed -i 's/\r$//' mvnw && chmod +x mvnw
+
+# Descargar dependencias sin compilar todo
 RUN ./mvnw dependency:go-offline
-  
+
+# Copiar el código fuente y compilar
 COPY src src
 RUN ./mvnw package -DskipTests
 
