@@ -69,7 +69,7 @@ export default function UserConfiguration(){
                 <Table>
                     <TableHead>
                         <TableRow>
-                            <TableCell className="table-header">Username</TableCell>
+                            <TableCell className="table-header">Usuario Github</TableCell>
                             <TableCell className="table-header">Alias</TableCell>
                             <TableCell className="table-header"></TableCell>
                         </TableRow>

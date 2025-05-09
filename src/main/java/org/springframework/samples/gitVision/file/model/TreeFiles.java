@@ -10,11 +10,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 
 /**
- * <p>The class <strong>TreeFiles</strong> is used for structuring a set of folders. 
- * This structure does not allow the existence of child nodes 
+ * <p>The class <strong>TreeFiles</strong> is used for structuring a set of folders.
+ * This structure does not allow the existence of child nodes
  * of the same parent that have the same name.</p>
- * 
- * <p>A <strong>TreeNode</strong> is the instance where the name of 
+ *
+ * <p>A <strong>TreeNode</strong> is the instance where the name of
  * the node and information about the child nodes is stored.</p>
  */
 public class TreeFiles {
@@ -24,7 +24,7 @@ public class TreeFiles {
         private static final String NAME_ROOT = "/";
 
         private String name;
-        
+
         private List<TreeNode> children;
 
         @JsonProperty
@@ -53,14 +53,14 @@ public class TreeFiles {
         }
 
         public <T> T getInformation(String typeInformation, Class<T> clazz){
-            if (clazz == null) 
+            if (clazz == null)
                 throw new IllegalArgumentException("Class parameter cannot be null");
 
             Object value = information.get(typeInformation);
-            
+
             if (!clazz.isInstance(value))
                 throw new ClassCastException("Cannot cast " + value.getClass().getName() + " to " + clazz.getName());
-            
+
             return clazz.cast(value);
         }
 
@@ -102,7 +102,7 @@ public class TreeFiles {
                 if(child == null){
                     child = new TreeNode(part);
                     current.addChild(child);
-                }    
+                }
                 current = child;
             }
         }
@@ -143,16 +143,4 @@ public class TreeFiles {
         node.getChildren().forEach(child -> printTree(child, indent + " "));
     }
 
-    public static void main(String[] args) {
-        List<String> paths = List.of(
-                "src/components/Button.java",
-                "src/components/Input.java",
-                "src/utils/helpers.java",
-                "src/index.java",
-                "README.md"
-        );
-
-        TreeNode tree = buildTree(paths);
-        printTree(tree, "");
-    }
 }

@@ -201,7 +201,9 @@ export default function Contributions({ owner, repo, path = null, isFolder=false
       setContributions(prev => result);
       generateRanking();
     } catch (error) {
-      alert(error);
+      showMessage({
+        message: error.message,
+      })
     }
   }
 

@@ -31,8 +31,8 @@ export default function Commit() {
     }
 
     const sections = {
-        "Body":(<p>{commit.body || "No tiene cuerpo"}</p>),
-        "Files":
+        "Cuerpo":(<p>{commit.body || "No tiene cuerpo"}</p>),
+        "Archivos":
         (<ul className="file-container">
                 {commit.files?.map((file, index) => {
                     return (<li id={index} className='file-row'>

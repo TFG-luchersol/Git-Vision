@@ -18,7 +18,7 @@ export default function Issue() {
     const [commits, setCommits] = useState([])
     const [files, setFiles] = useState([])
     const [changesByUser, setChangesByUser] = useState({})
-    const [assigness, setAssigness] = useState([])
+    const [assignees, setAssignees] = useState([])
 
     useEffect(() => {
         getIssue()
@@ -27,12 +27,12 @@ export default function Issue() {
     const getIssue = async () => {
         try {
             const newIssues = await fetchBackend(`/api/v1/issues/${owner}/${repo}/${issueNumber}`)
-            const {issue, commits, files, changesByUser, assigness} = await getBody(newIssues)
+            const {issue, commits, files, changesByUser, assignees} = await getBody(newIssues)
             setIssue(issue)
             setCommits(commits)
             setFiles(files)
             setChangesByUser(changesByUser)
-            setAssigness(assigness)
+            setAssignees(assignees)
         } catch (error) {
             showMessage({
                 message: error.message
@@ -41,7 +41,7 @@ export default function Issue() {
     }
 
     const sections = {
-        "Body": (<p>{issue.body || "No tiene cuerpo"}</p>),
+        "Cuerpo": (<p>{issue.body || "No tiene cuerpo"}</p>),
         "Commits": (<ul className='commit-container'>
             {commits?.map((commit, index) =>
                 <li className="commit-row" key={index}>
@@ -55,7 +55,7 @@ export default function Issue() {
                 </li>
             )}
         </ul>),
-        "Files": (<ul className='commit-container'>
+        "Archivos": (<ul className='commit-container'>
             {files?.sort().map((file, index) =>
                 <li className="commit-row" key={index}>
                     <div>
@@ -64,7 +64,7 @@ export default function Issue() {
                 </li>
             )}
         </ul>),
-        "Changes by User": (<ul className='commit-container'>
+        "Cambios por Usuario": (<ul className='commit-container'>
             {Object.entries(changesByUser).map((entry, index) =>
                 <li className="commit-row" key={index}>
                     <div>
@@ -74,12 +74,12 @@ export default function Issue() {
                 </li>
             )}
         </ul>),
-        "Assigness": (<ul className='commit-container'>
-            {assigness.map((assigness, index) => 
+        "Asignados": (<ul className='commit-container'>
+            {assignees.map((assignee, index) => 
                 <li className="commit-row" key={index}>
-                    <img alt={assigness.username} src={assigness.avatarUrl}
+                    <img alt={assignee.username} src={assignee.avatarUrl}
                          style={{borderRadius: "50%", width: "100px", height: "100px"}}/>
-                    <p>{assigness.username}</p>
+                    <p>{assignee.username}</p>
                 </li>
             )}
         </ul>)
