@@ -89,7 +89,6 @@ export default function Repository() {
         try {
             let response = await fetchBackend(`/api/v1/relation/repository/${owner}/${repo}/releases`)
             const releases_ = await getBody(response)
-            console.log(releases_);
             setReleases(releases_);
         } catch (error) {
             showMessage({
