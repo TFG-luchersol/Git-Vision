@@ -7,21 +7,28 @@ export default function TreeFiles({styleText={}, href=null, root, filter = "", d
     const {repo, owner} = useParams();
 
     const filterTree = (node) => {
+        // Si no hay ningún filtro, se acepta todo
         if (!filter && filterExtension.length === 0) return true;
 
-        const nodeMatchesText = node.name.toLowerCase().includes(filter.toLowerCase());
-        if (filterExtension.length === 0 ) {
-            return nodeMatchesText;
-        }
+        const nodeMatchesText = filter
+            ? node.name.toLowerCase().includes(filter.toLowerCase())
+            : true;
 
+        const nodeMatchesExtension = node.leaf && filterExtension.length > 0
+            ? filterExtension.includes(node.extension)
+            : true;
+
+        // Si el nodo es hoja, se evalúan directamente sus criterios
         if (node.leaf) {
-            const nodeMatchesExtension = filterExtension.includes(node.extension);
             return nodeMatchesText && nodeMatchesExtension;
         }
-
-        const childrenMatch = deepFilter ? node.children?.some(child => filterTree(child)) : false;
-
-        return childrenMatch;
+        
+        // Si no es hoja y deepFilter está activo, revisar hijos recursivamente
+        if (!node.leaf && deepFilter) {
+            return nodeMatchesText || node.children.some(child => filterTree(child));
+        }
+        // Si no es hoja, no hay deepFilter, y no cumple el nombre, no pasa
+        return nodeMatchesText;
     };
 
     function removeCharsLeftOfFirstSlash(inputString) {
