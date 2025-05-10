@@ -1,9 +1,9 @@
 package org.springframework.samples.gitvision.util;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -201,11 +201,12 @@ public class GithubGraphQLApi {
     }
 
 
-
-
-    private static String readGraphQLQuery(String filePath) throws IOException {
-        String relativePath = "./src/main/java/org/springframework/samples/gitvision/util/graphQL";
-        Path path = Paths.get(relativePath, filePath);
-        return Files.readString(path);
+    private static String readGraphQLQuery(String fileName) throws IOException {
+        InputStream is = GithubGraphQLApi.class.getResourceAsStream("/graphQL/" + fileName);
+        if (is == null) {
+            throw new FileNotFoundException("Resource not found: " + fileName);
+        }
+        return new String(is.readAllBytes(), StandardCharsets.UTF_8);
     }
+
 }
