@@ -104,6 +104,11 @@ export default function Contributions({ owner, repo, path = null, isFolder=false
     7: "Domingo",
   };
 
+  const ordenDiaSemana = Object.entries(diasSemana).reduce((acc, [k, v]) => {
+    acc[v] = Number(k);
+    return acc;
+  }, {});
+
   const meses = {
     1: "Enero",
     2: "Febrero",
@@ -118,6 +123,11 @@ export default function Contributions({ owner, repo, path = null, isFolder=false
     11: "Noviembre",
     12: "Diciembre",
   };
+
+  const ordenMes = Object.entries(meses).reduce((acc, [k, v]) => {
+    acc[v] = Number(k);
+    return acc;
+  }, {});
 
   function generateRanking() {
     const pointsMap = {};
@@ -177,7 +187,6 @@ export default function Contributions({ owner, repo, path = null, isFolder=false
     }
 
     try {
-      console.log(queryParams)
       const response = await fetchBackend(url, {}, queryParams);
       const result = await getBody(response);
       if (minYear === null && result.length !== 0) {
@@ -286,6 +295,21 @@ export default function Contributions({ owner, repo, path = null, isFolder=false
           grouped[authorName].push({ x: period, y: value });
         }
       });
+    Object.keys(grouped).forEach(author => {
+      grouped[author].sort((a, b) => {
+        if (concreteSample === null) {
+          return Number(a.x) - Number(b.x);
+        } else {
+          if (selectedAgrupation === "month") {
+            return ordenMes[a.x] - ordenMes[b.x];
+          } else if (selectedAgrupation === "week") {
+            return ordenDiaSemana[a.x] - ordenDiaSemana[b.x];            
+          } else {
+            return a.x - b.x;
+          }
+        }
+      });
+    });
     return grouped;
   }
 

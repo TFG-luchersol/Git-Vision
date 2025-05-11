@@ -200,17 +200,16 @@ const LinePerTimeInIssue = () => {
                                 <MenuItem value="time">Por Tiempo</MenuItem>
                                 <MenuItem value="total">Total</MenuItem>
                             </Select>
+                            <Box sx={{ display: "flex", alignItems: "center" }}>
+                                <Checkbox
+                                    checked={inverseRatio}
+                                    onChange={(e) => setInverseRatio(e.target.checked)}
+                                    size="small"
+                                />
+                                <Typography variant="body2">Invertir razón (tiempo / línea)</Typography>
+                            </Box>
                         </>
                     )}
-
-                    <Box sx={{ display: "flex", alignItems: "center" }}>
-                        <Checkbox
-                            checked={inverseRatio}
-                            onChange={(e) => setInverseRatio(e.target.checked)}
-                            size="small"
-                        />
-                        <Typography variant="body2">Invertir razón (tiempo / línea)</Typography>
-                    </Box>
 
                     <DelayedButton text={"Buscar"} onClick={fetchData} disabled={isButtonDisabled} />
                 </Box>
