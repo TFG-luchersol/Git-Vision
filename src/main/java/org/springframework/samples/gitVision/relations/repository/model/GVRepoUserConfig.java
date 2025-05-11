@@ -41,6 +41,7 @@ public class GVRepoUserConfig extends EntityIdSequential {
     private String username;
 
     @ElementCollection
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @CollectionTable(name = "gv_repo_user_aliases", joinColumns = @JoinColumn(name = "user_id"))
     @Column(name = "alias")
     private Set<String> aliases;
