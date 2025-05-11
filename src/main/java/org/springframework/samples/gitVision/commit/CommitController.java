@@ -64,14 +64,4 @@ public class CommitController {
         return ResponseEntity.ok(commit);
     }
 
-    // @GetMapping("/{owner}/{repo}/byTime")
-    // public Map<TimePeriod, Map<Integer, Long>> getNumCommitsGroupByTime(@PathVariable String owner, @PathVariable String repo, @RequestParam String login){
-    //     try {
-    //         GHRepository ghRepository = this.gvRepoService.getRepository(owner, repo, login);
-    //         return this.commitService.getNumCommitsGroupByTime(ghRepository);
-    //     } catch (Exception e) {
-    //         return null;
-    //     }
-    // }
-
 }

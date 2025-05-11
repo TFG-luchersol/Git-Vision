@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GHRepository.Contributor;
 import org.kohsuke.github.GitHub;
+import org.kohsuke.github.GitHubBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.samples.gitvision.exceptions.ConnectionGithubException;
 import org.springframework.samples.gitvision.exceptions.LinkedException;
@@ -114,7 +115,7 @@ public class GVRepoService {
         try {
             GVRepo gvRepo = this.gvRepoRepository.findByNameAndUser_Username(repositoryName, login).get();
             String tokenToUse = gvRepo.getToken();
-            return GitHub.connect(login, tokenToUse);
+            return new GitHubBuilder().withOAuthToken(tokenToUse).build();
         } catch (Exception e) {
             throw new ConnectionGithubException(e.getMessage());
         }
@@ -237,7 +238,7 @@ public class GVRepoService {
             );
             String tokenToUse = Objects.requireNonNullElse(token, user.getGithubToken());
 
-            GitHub gitHub = GitHub.connect(login, tokenToUse);
+            GitHub gitHub = new GitHubBuilder().withOAuthToken(tokenToUse).build();
             GHRepository ghRepository = gitHub.getRepository(repositoryName);
             GVRepo gvRepo = new GVRepo();
             gvRepo.setName(repositoryName);
@@ -261,7 +262,7 @@ public class GVRepoService {
     public String refreshUrlImage(String login, String repositoryName) {
         try {
             GVRepo gvRepo = getGvRepoByNameAndUser_Username(repositoryName, login);
-            GitHub gitHub = GitHub.connect(login, gvRepo.getToken());
+            GitHub gitHub = new GitHubBuilder().withOAuthToken(gvRepo.getToken()).build();
             GHRepository ghRepository = gitHub.getRepository(repositoryName);
             String avatarUrl = ghRepository.getOwner().getAvatarUrl();
             gvRepo.setUrlImagen(avatarUrl);
