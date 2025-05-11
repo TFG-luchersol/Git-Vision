@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -15,6 +16,7 @@ import org.kohsuke.github.GHIssueEvent;
 import org.kohsuke.github.GHIssueState;
 import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GitHub;
+import org.kohsuke.github.GitHubBuilder;
 import org.springframework.samples.gitvision.change.model.Change;
 import org.springframework.samples.gitvision.commit.model.Commit;
 import org.springframework.samples.gitvision.exceptions.ResourceNotFoundException;
@@ -46,18 +48,19 @@ public class IssueService {
         GVRepo gvRepo = this.gvRepoRepository.findByNameAndUser_Username(repositoryName, login)
                 .orElseThrow(() -> ResourceNotFoundException.of(GVRepo.class));
         String tokenToUse = gvRepo.getToken();
-        GitHub gitHub = GitHub.connect(login, tokenToUse);
+        GitHub gitHub = new GitHubBuilder().withOAuthToken(tokenToUse).build();
         Stream<GHIssue> ghIssues;
         if (isRegex) {
-            ghIssues = gitHub.getRepository(repositoryName).getIssues(GHIssueState.ALL).stream()
+            try {
+                Pattern pattern = Pattern.compile(filterText);
+                ghIssues = gitHub.getRepository(repositoryName).getIssues(GHIssueState.ALL).stream()
                     .filter(issue -> {
-                        try {
-                            String title = issue.getTitle();
-                            return title != null && title.matches(filterText);
-                        } catch (PatternSyntaxException e) {
-                            return false;
-                        }
+                        String title = issue.getTitle();
+                        return title != null && pattern.matcher(title).find();
                     });
+            } catch (PatternSyntaxException e) {
+                ghIssues = Stream.empty();
+            }
         } else if (isIssueNumber) {
             List<GHIssue> ghIssuesList = new ArrayList<>();
             for (String numStr : filterText.split(",")) {
@@ -118,16 +121,7 @@ public class IssueService {
             dict.put("files", files);
             dict.put("changesByUser", changesByUser);
             dict.put("assignees", assignees);
-            // if (user.hasClockifyToken()) {
-            // Task task =
-            // ClockifyApi.getTaskByWorkspaceIdAndProjectIdAndTaksName("workspaceId",
-            // "projectId",
-            // issueNumber.toString(), user.getClockifyToken());
-            // if (task != null) {
-            // Duration duration = task.getDuration();
-            // dict.put("duration", duration);
-            // }
-            // }
+
             return dict;
         } catch (IOException e) {
             return null;
