@@ -14,7 +14,10 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: "./public/index.html", // Asegúrate de que este archivo existe
     }),
-    new Dotenv(),
+    new Dotenv({
+      path: "./.env", 
+      systemvars: true,
+    }),
   ],
   devServer: {
     static: path.resolve(__dirname, 'public'),

@@ -60,15 +60,6 @@ public class FileService {
         return cont;
     }
 
-    // public List<ChangesInFile> getChangesInFilesByUser(String repositoryName, String author, String login) throws IOException {
-    //     GVRepo gvRepo = this.gvRepoRepository.findByNameAndUser_Username(repositoryName, login)
-    //         .orElseThrow(() -> new ResourceNotFoundException("Not found repository"));
-    //     String tokenToUse = gvRepo.getToken();
-    //     GithubGraphQLApi githubGraphQLApi = GithubGraphQLApi.connect(tokenToUse);
-    //     List<ChangesInFile> changesInFiles = githubGraphQLApi.getChangesInFilesByUser(repositoryName, author);
-    //     return changesInFiles;
-    // }
-
     public List<ChangesInFile> getChangesInFilesByUser(GHRepository ghRepository, String author, LocalDate startDate, LocalDate endDate, Integer limit) throws Exception{
         Map<String, Change> fileChangesMap = new HashMap<>();
         Map<String, List<FileChangeDetail>> filePatchMap = new HashMap<>();

@@ -45,8 +45,6 @@ export default function Commits() {
     const filterCommits = async () => {
         try {
             setLoading(true);  // Inicia la carga
-            // Construimos la URL con los parámetros de búsqueda y regex
-            const filterParam = filterText ? encodeURIComponent(filterText) : '';
     
             // Si no hay texto en el filtro, simplemente volvemos a obtener todos los commits
             if (filterText === '') {
@@ -57,7 +55,7 @@ export default function Commits() {
             }
 
             const queryParams = {
-                "filter": filterParam,
+                "filter": filterText,
                 "isRegex": isRegex ? 'true' : 'false',
                 "isOwner": isOwner ? 'true' : 'false',
             }

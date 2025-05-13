@@ -5,7 +5,6 @@ export default async function fetchBackend(
     init: RequestInit = {},
     queryParams: Record<string, any> = {}
 ) {
-    console.log(queryParams)
     const token: string = tokenService.getLocalAccessToken();
     const headers = new Headers(init.headers);
 
