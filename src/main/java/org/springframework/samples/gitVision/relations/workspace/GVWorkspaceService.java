@@ -7,6 +7,7 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import org.springframework.samples.gitvision.exceptions.ExistingRelationException;
 import org.springframework.samples.gitvision.exceptions.ResourceNotFoundException;
 import org.springframework.samples.gitvision.relations.repository.model.GVRepo;
 import org.springframework.samples.gitvision.relations.workspace.model.AliasWorkspaceDTO;
@@ -59,7 +60,11 @@ public class GVWorkspaceService {
     }
 
     public void linkUserWithWorkspace(String workspaceId, String name, Long userId) {
-        GVUser user = gvUserRepository.findById(userId).get();
+        GVUser user = gvUserRepository.findById(userId)
+                .orElseThrow(() -> ResourceNotFoundException.of(GVUser.class));
+        if (gvWorkspaceRepository.existsByNameAndUser_Id(name, userId)) {
+            throw new ExistingRelationException("Ya tienes un workspace con el nombre " + name);
+        }
         String token = user.getClockifyToken();
         ClockifyApi.getWorkspace(workspaceId, token);
         List<UserProfile> userProfiles = ClockifyApi.getUsers(workspaceId, token);
