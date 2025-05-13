@@ -1,11 +1,11 @@
 # Git-Vision
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/0686fb60bd574220ab20c0631ae47871)](https://app.codacy.com/gh/TFG-luchersol/Git-Vision/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 
-Git-Vision es un proyecto diseñado para proporcionar una forma visual e interactiva de explorar repositorios Git. Combina un frontend en React con un backend en Spring Boot para ofrecer una experiencia fluida al analizar la historia y estructura de Git.
+Git-Vision es un proyecto diseñado para proporcionar una forma visual e interactiva de explorar repositorios Git. Combina un frontend en React con un backend en Spring Boot para ofrecer una experiencia fluida al analizar la historia y estructura de GitHub.
 
 ## Características
 
-- Representación visual de repositorios Git.
+- Representación visual de repositorios GitHub.
 - Exploración interactiva de commits, ramas y etiquetas.
 - API RESTful para comunicación con el backend.
 - Autenticación basada en JWT para acceso seguro.
