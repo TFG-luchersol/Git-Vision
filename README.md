@@ -23,9 +23,40 @@ Asegúrate de tener instalados los siguientes componentes en tu sistema:
 
 ## Ejecución Local
 
-### Configuración de la Base de Datos
+### Configuración
 
-Puedes modificar los ajustes de la base de datos en `application.properties` para conectarte a una base de datos externa o una que mantengas en local.
+#### Backend
+
+1. Inicialmente debes copiar el archivo `.env.example` y renombrarlo como `.env`.
+
+```bash
+  cp .env.example .env
+```
+
+2. Luego de ello, debes realizar las modificaciones necesarias a las variables de entorno en el apartado **Develop**, para que coincidan con tu base de datos. También puedes modificar cualquier otra variable que consideres necesaria, ya que las actuales son solo ejemplos.
+
+3. Si lo ves necesario, puedes modificar los ajustes de la base de datos en los archivos:
+
+   - `application.properties`
+   - `application-dev.properties`
+
+Estos archivos contienen configuraciones específicas que pueden requerir adaptación según tu entorno.
+
+#### Frontend
+
+1. Muevete a la carpeta `frontend`.
+
+```bash
+  cd frontend
+```
+
+2. Inicialmente debes copiar el archivo `.env.example` y renombrarlo como `.env`.
+
+```bash
+  cp .env.example .env
+```
+
+Actualmente la única variable existente es la variable `BACKEND_URL`, en ella debes de poner el dominio en el que se encuentra desplegado tu backend. Si no existe la variable, se tomará el dominio como `http://localhost:8080`.
 
 ### Ejecución Local del Backend
 
@@ -62,6 +93,7 @@ El frontend es una aplicación React ubicada en la carpeta `frontend`. Para ejec
   ```
   cd frontend
   ```
+  
 
 2. Instala las dependencias:
   ```
@@ -83,20 +115,28 @@ En caso de tener todo ya configurado, para futuras ocasiones puedes, en vez de e
 
 Puedes desplegar tanto el backend como el frontend utilizando Docker y `docker-compose`. Sigue estos pasos:
 
-1. Asegúrate de tener Docker y Docker Compose instalados en tu sistema.
+1. Inicialmente debes copiar el archivo `.env.example` y renombrarlo como `.env`.
 
-2. Clona el repositorio si aún no lo has hecho:
+```bash
+  cp .env.example .env
+```
+
+**Nota:** Si ve necesario, puede hacer modificaciones en las variables dentro del archivo `.env` debajo del apartado **Docker** y en los archivos `application.properties` y `application-docker.properties`.
+
+2. Asegúrate de tener Docker y Docker Compose instalados en tu sistema.
+
+3. Clona el repositorio si aún no lo has hecho:
   ```
   git clone https://github.com/TFG-luchersol/Git-Vision.git
   cd Git-Vision
   ```
 
-3. Construye y ejecuta los contenedores:
+4. Construye y ejecuta los contenedores:
   ```
   docker-compose up --build
   ```
 
-4. Accede a las aplicaciones:
+5. Accede a las aplicaciones:
   - Backend: http://localhost:8080/swagger-ui/index.html
   - Frontend: http://localhost:3000
 
@@ -119,10 +159,10 @@ Puedes desplegar tanto el backend como el frontend utilizando Docker y `docker-c
 | Propiedades del Backend  | [application.properties](https://github.com/TFG-luchersol/Git-Vision/blob/main/src/main/resources/application.properties) |
 | Punto de Entrada del Frontend| [index.jsx](https://github.com/TFG-luchersol/Git-Vision/blob/main/frontend/src/index.jsx) |
 
-## Contributing
+## Contribuciones
 
-Contributions are welcome! Please fork the repository and submit a pull request with your changes.
+¡Agradecemos sus contribuciones! Por favor, bifurque el repositorio y envíe una solicitud de incorporación de cambios.
 
-## License
+## Licencia
 
-This project is licensed under the MIT License. See the [LICENSE](https://github.com/TFG-luchersol/Git-Vision/blob/main/LICENSE) file for details.
+Este proyecto está licenciado bajo la Licencia MIT. Consulte el archivo [LICENSE](https://github.com/TFG-luchersol/Git-Vision/blob/main/LICENSE) por detalles.
