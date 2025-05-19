@@ -77,6 +77,7 @@ El backend es una aplicación Spring Boot construida con Maven. Para ejecutarlo 
   ```
   java -jar target/*.jar
   ```
+**Nota:** Se debe utilizar el nombre del .jar que se haya creado, por ejemplo si es `git-vision-2.2.0.2324.jar` se ejecutará `java -jar target/git-vision-2.2.0.2324.jar`
 
 4. Accede al backend en [http://localhost:8080/swagger-ui/index.html](http://localhost:8080/swagger-ui/index.html).
 
@@ -139,17 +140,6 @@ Puedes desplegar tanto el backend como el frontend utilizando Docker y `docker-c
 5. Accede a las aplicaciones:
   - Backend: http://localhost:8080/swagger-ui/index.html
   - Frontend: http://localhost:3000
-
-## Development Workflow
-
-### Backend
-
-- Usa tu IDE para abrir el proyecto y ejecutar la clase principal `GitVisionApplication`.
-- Modifica el código del backend y reinicia la aplicación para ver los cambios
-### Frontend
-
-- Usa el servidor de desarrollo de React para recarga en vivo.
-- Modifica los componentes de React y guarda para ver los cambios al instante.
 
 ## Estructura del Proyecto
 
