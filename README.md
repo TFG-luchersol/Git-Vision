@@ -33,7 +33,7 @@ Asegúrate de tener instalados los siguientes componentes en tu sistema:
   cp .env.example .env
 ```
 
-2. Luego de ello, debes realizar las modificaciones necesarias a las variables de entorno en el apartado **Develop**, para que coincidan con tu base de datos. También puedes modificar cualquier otra variable que consideres necesaria, ya que las actuales son solo ejemplos.
+2. Luego de ello, debes realizar las modificaciones necesarias a las variables de entorno dentro del archivo `.env` en el apartado **Develop**, para que coincidan con tu base de datos. También puedes modificar cualquier otra variable que consideres necesaria, ya que las actuales son solo ejemplos.
 
 3. Si lo ves necesario, puedes modificar los ajustes de la base de datos en los archivos:
 
